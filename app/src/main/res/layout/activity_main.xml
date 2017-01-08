@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +10,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="8">
 
         <LinearLayout
             android:orientation="vertical"
@@ -24,37 +26,32 @@
                 android:id="@+id/textView2" />
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/layout_mainview">
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/layout_icons">
-
-                </GridLayout>
-            </ScrollView>
+            android:layout_weight="6">
 
             <GridLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/layout_quickrow">
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_icons">
 
-                <TextView
-                    android:text="Quick"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView4" />
             </GridLayout>
+        </ScrollView>
 
-        </LinearLayout>
     </LinearLayout>
 
-</FrameLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shortcut_height"
+        android:id="@+id/layout_quickrow"
+        android:layout_weight="1">
+
+        <TextView
+            android:text="Quick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4" />
+    </GridLayout>
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.Locale;
@@ -30,6 +31,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
     private String mLabel;
     private volatile Drawable mIconDrawable;
     private volatile ImageView mIconImage;
+
 
     public AppShortcut(PackageManager pm, String packageName) throws PackageManager.NameNotFoundException {
         mPackageName = packageName;
@@ -70,7 +72,6 @@ public class AppShortcut implements Comparable<AppShortcut>{
             mIconImage.setImageDrawable(mIconDrawable);
         }
     }
-
 
 
     private void loadAppIconAsync(final PackageManager pm){

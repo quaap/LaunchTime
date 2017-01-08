@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadApplications() {
 
 
-        PackageManager pm = getApplicationContext().getPackageManager();
+        final PackageManager pm = getApplicationContext().getPackageManager();
 
         // Set MAIN and LAUNCHER filters, so we only get activities with that defined on their manifest
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
@@ -67,12 +68,23 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(shortcuts);
 
 
-        for (AppShortcut app: shortcuts) {
+        for (final AppShortcut app: shortcuts) {
 
 
             ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.shortcut_icon, (ViewGroup) null);
 
-            item.setTag(app.getPackageName());
+            item.setTag(app);
+
+            item.setClickable(true);
+
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = pm.getLaunchIntentForPackage(app.getPackageName());
+                    MainActivity.this.startActivity(i);
+                }
+            });
+
 
             ImageView iconImage = (ImageView)item.findViewById(R.id.shortcut_icon);
 
