@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < activities.size(); i++) {
             ResolveInfo ri = activities.get(i);
-            String pkgname = ri.activityInfo.packageName;
-
 
             shortcuts.add(new AppShortcut(pm, ri));
 

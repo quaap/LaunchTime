@@ -29,9 +29,15 @@ import java.util.Locale;
 public class AppShortcut implements Comparable<AppShortcut>{
     private String mPackageName;
     private String mLabel;
+    private String mCategory;
     private volatile Drawable mIconDrawable;
     private volatile ImageView mIconImage;
 
+    public AppShortcut(String packageName, String label, String category) {
+        mPackageName = packageName;
+        mLabel = label;
+        mCategory = category;
+    }
 
     public AppShortcut(PackageManager pm, String packageName) throws PackageManager.NameNotFoundException {
         mPackageName = packageName;
@@ -51,7 +57,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
     }
 
     public void setLabel(String label) {
-        this.mLabel = label;
+        mLabel = label;
     }
 
     public String getPackageName() {
@@ -60,6 +66,14 @@ public class AppShortcut implements Comparable<AppShortcut>{
 
     public void setPackageName(String packageName) {
         mPackageName = packageName;
+    }
+
+    public String getCategory() {
+        return mCategory;
+    }
+
+    public void setCategory(String category) {
+        mCategory = category;
     }
 
     public ImageView getIconImage() {
@@ -73,8 +87,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
         }
     }
 
-
-    private void loadAppIconAsync(final PackageManager pm){
+    public void loadAppIconAsync(final PackageManager pm){
 
         // Create an async task
         AsyncTask<Void,Void,Drawable> loadAppIconTask = new AsyncTask<Void, Void, Drawable>() {
