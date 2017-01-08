@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/shortcut_extra"
+        android:layout_gravity="center_horizontal" />
+
+    <ImageView
+        android:layout_width="@dimen/icon_width"
+        android:layout_height="@dimen/icon_width"
+        android:id="@+id/shortcut_icon"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="@dimen/icon_label_width"
+        android:layout_height="wrap_content"
+        android:id="@+id/shortcut_text"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
