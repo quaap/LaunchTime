@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.quaap.launchtime.components.AppShortcut;
 
@@ -33,13 +34,13 @@ public class DB extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String APP_TABLE = "apps";
-    public static final String PKGNAME = "pkgname";
-    public static final String LABEL = "label";
-    public static final String CATEGORY = "category";
-    public static final String INDEX = "index";
+    private static final String PKGNAME = "pkgname";
+    private static final String LABEL = "label";
+    private static final String CATEGORY = "category";
+    private static final String INDEX = "pos";
 
     private static final String[] appcolumns = {PKGNAME, LABEL, CATEGORY};
-    private static final String[] appcolumntypes = {"TEXT", "TEXT", "TEXT"};
+    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT", "TEXT"};
     private static final String APP_TABLE_CREATE = buildCreateTableStmt(APP_TABLE, appcolumns, appcolumntypes);
 
     private static final String[] appcolumnsindex = {PKGNAME, CATEGORY};
@@ -51,6 +52,9 @@ public class DB extends SQLiteOpenHelper {
 
     private static final String[] appordercolumnsindex = {CATEGORY + ", " + PKGNAME, INDEX};
 
+
+    private boolean firstRun;
+
     public DB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -58,14 +62,15 @@ public class DB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        firstRun = true;
         sqLiteDatabase.execSQL(APP_TABLE_CREATE);
         for(String createind: appcolumnsindex) {
-            sqLiteDatabase.execSQL(createind);
+            sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE, createind));
         }
 
         sqLiteDatabase.execSQL(APP_ORDER_TABLE_CREATE);
         for(String createind: appordercolumnsindex) {
-            sqLiteDatabase.execSQL(createind);
+            sqLiteDatabase.execSQL(buildIndexStmt(APP_ORDER_TABLE, createind));
         }
     }
 
@@ -73,6 +78,11 @@ public class DB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
+
+    public boolean isFirstRun() {
+        return firstRun;
+    }
+
 
     public List<String> getAppPkgNames() {
         List<String> pkgnames = new ArrayList<>();
@@ -138,16 +148,23 @@ public class DB extends SQLiteOpenHelper {
         return apps;
     }
 
+    public void addApp(AppShortcut shortcut) {
+        addApp(shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
+    }
 
     public void addApp(String pkgname, String label, String category) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(PKGNAME, pkgname);
-        values.put(LABEL, label);
-        values.put(CATEGORY, category);
+            ContentValues values = new ContentValues();
+            values.put(PKGNAME, pkgname);
+            values.put(LABEL, label);
+            values.put(CATEGORY, category);
 
-        db.insert(APP_TABLE, null, values);
+            db.insert(APP_TABLE, null, values);
+        } catch (Exception e) {
+            Log.e("LaunchDB", "Can't insert package " + pkgname, e);
+        }
     }
 
 

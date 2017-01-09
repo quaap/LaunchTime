@@ -1,5 +1,6 @@
 package com.quaap.launchtime;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -17,15 +18,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.db.DB;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    GridLayout mIconSheet;
-    GridLayout mQuickRow;
+    private GridLayout mIconSheet;
+    private GridLayout mQuickRow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +47,24 @@ public class MainActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
+        AppShortcut.init(this);
+
         mIconSheet = (GridLayout) findViewById(R.id.layout_icons);
         mIconSheet.setColumnCount(3);
+
         loadApplications();
+
     }
 
 
-    private void loadApplications() {
+    protected DB getDB() {
+        return ((GlobState)this.getApplicationContext()).getDB();
+    }
 
+    private void loadApplications() {
+        DB db = getDB();
+
+        List<String> dbpkgnames = db.getAppPkgNames();
 
         final PackageManager pm = getApplicationContext().getPackageManager();
 
@@ -56,11 +77,33 @@ public class MainActivity extends AppCompatActivity {
 
         List<AppShortcut> shortcuts = new ArrayList<>();
 
+        List<String> pmpkgnames = new ArrayList<>();
+
         for (int i = 0; i < activities.size(); i++) {
+
+            AppShortcut app;
+
             ResolveInfo ri = activities.get(i);
+            String pkgname = ri.activityInfo.packageName;
+            pmpkgnames.add(pkgname);
 
-            shortcuts.add(new AppShortcut(pm, ri));
+            if (dbpkgnames.contains(pkgname)) {
+                app = db.getApp(pkgname);
+                app.loadAppIconAsync(pm);
+            } else {
+                app = new AppShortcut(pm, ri);
+                db.addApp(app);
+            }
+            shortcuts.add(app);
+        }
 
+        //remove shortcuts if they are not in the system
+        for (Iterator<String> it=dbpkgnames.iterator(); it.hasNext();) {
+            String dbpkg = it.next();
+            if (!pmpkgnames.contains(dbpkg)) {
+                it.remove();
+                //db.remove(dbpkg);
+            }
         }
 
         Collections.sort(shortcuts);
@@ -70,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
 
             ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.shortcut_icon, (ViewGroup) null);
-
-            item.setTag(app);
 
             item.setClickable(true);
 
@@ -96,42 +137,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public static void loadAppIconAsync(final PackageManager pm, final String pkgname, final ImageView im ){
-
-        // Create an async task
-        AsyncTask<Void,Void,Drawable> loadAppIconTask = new AsyncTask<Void, Void, Drawable>() {
-
-            // Keep track of all the exceptions
-            private Exception exception = null;
-
-
-            @Override
-            protected Drawable doInBackground(Void... voids) {
-                // load the icon
-                Drawable app_icon = null;
-                try {
-                    app_icon = pm.getApplicationIcon(pkgname);
-
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                    exception = e;
-                }
-
-                return app_icon;
-            }
-
-            @Override
-            protected void onPostExecute(Drawable app_icon){
-                if (exception == null) {
-                    im.setImageDrawable(app_icon);
-
-                } else {
-                    Log.d("loadAppIconAsync", "ERROR Could not load app icon.");
-
-                }
-            }
-        };
-
-        loadAppIconTask.execute(null,null,null);
-    }
 }
