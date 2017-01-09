@@ -3,10 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+
+    <dimen name="quickbar_height">130dp</dimen>
     <dimen name="icon_width">60dp</dimen>
     <dimen name="icon_label_width">75dp</dimen>
-    <dimen name="shortcut_width">76dp</dimen>
-    <dimen name="shortcut_height">76dp</dimen>
+    <dimen name="shortcut_width">80dp</dimen>
+    <dimen name="shortcut_height">80dp</dimen>
     <dimen name="shortcut_fontsize">14sp</dimen>
 
     <dimen name="icon_width_sm">40dp</dimen>

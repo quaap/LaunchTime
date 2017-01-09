@@ -295,8 +295,6 @@ public class MainActivity extends AppCompatActivity implements
         return categoryTab;
     }
 
-    private String mDroppedOnCategory;
-
 
     @Override
     public boolean onDrag(View view, DragEvent event) {
@@ -344,8 +342,21 @@ public class MainActivity extends AppCompatActivity implements
                 if (mQuickRow != container) {
                     owner.removeView(view2);
                 } else {
+                    for (int i = 0; i < container.getChildCount(); i++) {
+                        AppShortcut dragging = (AppShortcut)view2.getTag();
+                        AppShortcut inbar = (AppShortcut)container.getChildAt(i).getTag();
+                        if (dragging.getPackageName().equals(inbar.getPackageName())) {
+                            return true;
+                        }
+                    }
+
                     view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()));
+                    LinearLayout sc = (LinearLayout)view2;
+
+                    sc.setScaleX(.8f);
+                    sc.setScaleY(.8f);
                 }
+
                 if (index == -1) {
                     container.addView(view2);
                 } else {

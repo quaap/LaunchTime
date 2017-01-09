@@ -11,7 +11,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="8">
+        android:layout_weight="7">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -50,9 +50,11 @@
 
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/shortcut_height"
+        android:layout_height="@dimen/quickbar_height"
         android:id="@+id/layout_quickrow"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:columnCount="5">
+
 
     </GridLayout>
 
