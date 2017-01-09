@@ -119,6 +119,18 @@ public class AppShortcut implements Comparable<AppShortcut>{
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AppShortcut) {
+            return mPackageName.equals(((AppShortcut)obj).mPackageName);
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return mPackageName.hashCode();
+    }
 
     @Override
     public int compareTo(AppShortcut appShortcut) {

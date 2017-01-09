@@ -4,16 +4,17 @@
     android:layout_width="@dimen/shortcut_width"
     android:layout_height="@dimen/shortcut_height"
     android:gravity="center_horizontal"
-    android:paddingEnd="8dp"
-    android:paddingStart="8dp"
+    android:paddingEnd="4dp"
+    android:paddingStart="4dp"
     android:paddingBottom="4dp"
-    android:paddingTop="4dp">
+    android:paddingTop="12dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/shortcut_extra"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
 
     <ImageView
         android:layout_width="@dimen/icon_width"
@@ -27,5 +28,7 @@
         android:id="@+id/shortcut_text"
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/shortcut_fontsize" />
+        android:textSize="@dimen/shortcut_fontsize"
+        android:maxLines="2"
+        android:height="32dp"/>
 </LinearLayout>

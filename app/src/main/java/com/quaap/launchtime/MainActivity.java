@@ -35,10 +35,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity implements
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Map<String, List<AppShortcut>> shortcuts = new LinkedHashMap<>();
 
-        List<String> pmpkgnames = new ArrayList<>();
+        Set<String> pmpkgnames = new HashSet<>();
 
         for (int i = 0; i < activities.size(); i++) {
 
@@ -136,21 +138,23 @@ public class MainActivity extends AppCompatActivity implements
 
             ResolveInfo ri = activities.get(i);
             String pkgname = ri.activityInfo.packageName;
-            pmpkgnames.add(pkgname);
+            if (!pmpkgnames.contains(pkgname)) {
+                pmpkgnames.add(pkgname);
 
-            if (dbpkgnames.contains(pkgname)) {
-                app = db.getApp(pkgname);
-                app.loadAppIconAsync(mPackageMan);
-            } else {
-                app = new AppShortcut(mPackageMan, ri);
-                db.addApp(app);
+                if (dbpkgnames.contains(pkgname)) {
+                    app = db.getApp(pkgname);
+                    app.loadAppIconAsync(mPackageMan);
+                } else {
+                    app = new AppShortcut(mPackageMan, ri);
+                    db.addApp(app);
+                }
+                List<AppShortcut> catapps = shortcuts.get(app.getCategory());
+                if (catapps == null) {
+                    catapps = new ArrayList<>();
+                    shortcuts.put(app.getCategory(), catapps);
+                }
+                catapps.add(app);
             }
-            List<AppShortcut> catapps= shortcuts.get(app.getCategory());
-            if (catapps==null) {
-                catapps = new ArrayList<>();
-                shortcuts.put(app.getCategory(), catapps);
-            }
-            catapps.add(app);
 
         }
 
