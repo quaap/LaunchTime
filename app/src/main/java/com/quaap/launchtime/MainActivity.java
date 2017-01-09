@@ -1,18 +1,14 @@
 package com.quaap.launchtime;
 
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,13 +24,8 @@ import android.widget.TextView;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.db.DB;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -53,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements
     private Map<String,GridLayout> mIconSheets;
     private Map<String,TextView> mCategoryTabs;
 
-    private String mCategory;
+    private volatile String mCategory;
 
     private GridLayout mQuickRow;
 
@@ -86,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements
         loadApplications();
 
         switchCategory(mCategory);
+
     }
 
 
@@ -102,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     protected DB getDB() {
-        return ((GlobState)this.getApplicationContext()).getDB();
+        return GlobState.getGlobState(this).getDB();
     }
 
     private void launchApp(final AppShortcut app) {
@@ -116,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadApplications() {
 
-        Map<String, List<AppShortcut>> shortcuts = new LinkedHashMap<>();
+        final Map<String, List<AppShortcut>> shortcuts = new LinkedHashMap<>();
 
 
         // Set MAIN and LAUNCHER filters, so we only get activities with that defined on their manifest
@@ -133,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements
 
         Set<String> pmpkgnames = new HashSet<>();
 
+        List<AppShortcut> newapps = new ArrayList<>();
+
         for (int i = 0; i < activities.size(); i++) {
 
             AppShortcut app;
@@ -147,7 +141,8 @@ public class MainActivity extends AppCompatActivity implements
                     app.loadAppIconAsync(mPackageMan);
                 } else {
                     app = new AppShortcut(mPackageMan, ri);
-                    db.addApp(app);
+                    //db.addApp(app);
+                    newapps.add(app);
                 }
                 List<AppShortcut> catapps = shortcuts.get(app.getCategory());
                 if (catapps == null) {
@@ -156,8 +151,9 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 catapps.add(app);
             }
-
         }
+
+        db.addApps(newapps);
 
         //remove shortcuts if they are not in the system
         for (Iterator<String> it=dbpkgnames.iterator(); it.hasNext();) {
@@ -170,28 +166,40 @@ public class MainActivity extends AppCompatActivity implements
 
         for (final String category: db.getCategories()) {
 
-            if (mCategory==null) mCategory = category;
-
-            final GridLayout iconSheet = new GridLayout(this);
+            if (mCategory==null) mCategory=category;
+            
+            final GridLayout iconSheet = new GridLayout(MainActivity.this);
             mIconSheets.put(category, iconSheet);
 
             iconSheet.setColumnCount(3);
-            iconSheet.setOnDragListener(this);
+            iconSheet.setOnDragListener(MainActivity.this);
+
 
             final TextView categoryTab = getCategoryTab(category, iconSheet);
 
             mCategoryTabs.put(category, categoryTab);
             mCategoriesLayout.addView(categoryTab);
 
-            List<AppShortcut> catapps = shortcuts.get(category);
+            final List<AppShortcut> catapps = shortcuts.get(category);
             Collections.sort(catapps);
 
-            for (final AppShortcut app : catapps) {
 
-                ViewGroup item = getShortcutView(app);
+            GlobState.getGlobState(this).runAsync(new Runnable() {
+                @Override
+                public void run() {
 
-                iconSheet.addView(item);
-            }
+
+
+                    for (final AppShortcut app : catapps) {
+
+                        ViewGroup item = getShortcutView(app);
+
+                        iconSheet.addView(item);
+                    }
+
+                }
+            });
+
         }
     }
 

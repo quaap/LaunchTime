@@ -155,9 +155,21 @@ public class DB extends SQLiteOpenHelper {
         addApp(shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
     }
 
+    public void addApps(List<AppShortcut> shortcuts) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (AppShortcut shortcut: shortcuts) {
+            addApp(db, shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
+        }
+    }
+
     public void addApp(String pkgname, String label, String category) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        addApp(db, pkgname, label, category);
+    }
+
+    private void addApp(SQLiteDatabase db, String pkgname, String label, String category) {
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
+
 
             ContentValues values = new ContentValues();
             values.put(PKGNAME, pkgname);
