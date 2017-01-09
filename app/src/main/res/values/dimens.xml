@@ -4,16 +4,15 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
 
-    <dimen name="quickbar_height">130dp</dimen>
-    <dimen name="icon_width">60dp</dimen>
-    <dimen name="icon_label_width">75dp</dimen>
+    <dimen name="quickbar_height">110dp</dimen>
+
     <dimen name="shortcut_width">80dp</dimen>
     <dimen name="shortcut_height">80dp</dimen>
-    <dimen name="shortcut_fontsize">14sp</dimen>
 
-    <dimen name="icon_width_sm">40dp</dimen>
-    <dimen name="icon_label_width_sm">60dp</dimen>
-    <dimen name="shortcut_width_sm">60dp</dimen>
-    <dimen name="shortcut_height_sm">60dp</dimen>
-    <dimen name="shortcut_fontsize_sm">12sp</dimen>
+    <dimen name="icon_width">50dp</dimen>
+    <dimen name="icon_label_width">75dp</dimen>
+    <dimen name="icont_label_height">28dp</dimen>
+    <dimen name="shortcut_fontsize">12sp</dimen>
+
+
 </resources>

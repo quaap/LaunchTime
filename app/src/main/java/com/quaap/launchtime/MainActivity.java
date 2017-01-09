@@ -5,22 +5,24 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.db.DB;
@@ -50,10 +52,12 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private volatile String mCategory;
-
     private GridLayout mQuickRow;
-
     private LinearLayout mCategoriesLayout;
+    private TextView mRemoveAppText;
+
+    private FrameLayout mRemoveDropzone;
+
 
     private PackageManager mPackageMan;
 
@@ -75,6 +79,13 @@ public class MainActivity extends AppCompatActivity implements
 
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
+
+        mRemoveDropzone = (FrameLayout)findViewById(R.id.remove_dropzone);
+        mRemoveDropzone.setOnDragListener(this);
+        mRemoveAppText = (TextView) findViewById(R.id.remove_dz_txt);
+
+        hideRemoveDropzone();
+
 
         mQuickRow = (GridLayout) findViewById(R.id.layout_quickrow);
         mQuickRow.setOnDragListener(this);
@@ -224,10 +235,10 @@ public class MainActivity extends AppCompatActivity implements
 //            GlobState.getGlobState(this).runAsync(new Runnable() {
 //                @Override
 //                public void run() {
-            Log.d("category--------", category);
+           // Log.d("category--------", category);
 
                     for (String pkgname: apporder) {
-                        Log.d("apporder", pkgname);
+                       // Log.d("apporder", pkgname);
                         for (AppShortcut app : catapps) {
                             if (app.getPackageName().equals(pkgname)) {
                                 ViewGroup item = getShortcutView(app);
@@ -239,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements
                     boolean reorder = false;
                     for (AppShortcut app : catapps) {
                         if (!apporder.contains(app.getPackageName())) {
-                            Log.d("no apporder", app.getPackageName());
+                          //  Log.d("no apporder", app.getPackageName());
 
                             ViewGroup item = getShortcutView(app);
 
@@ -318,20 +329,8 @@ public class MainActivity extends AppCompatActivity implements
                     case DragEvent.ACTION_DRAG_ENDED:
                           mBeingDragged = null;
                           mDragDropCategory = null;
-//                         mDragHoverCategory = null;
+                          hideRemoveDropzone();
                            break;
-//                    case DragEvent.ACTION_DRAG_ENTERED:
-//                        mDragHoverCategory = category;
-//                        categoryTab.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                if (mDragHoverCategory==category) {
-//                                    switchCategory(mDragHoverCategory);
-//                                    mDragHoverCategory=null;
-//                                }
-//                            }
-//                        }, 500);
-//                        break;
 
                     case DragEvent.ACTION_DROP:
                         //switchCategory(category);
@@ -347,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements
         return categoryTab;
     }
 
+    private View mBeingUninstalled;
 
     @Override
     public boolean onDrag(View view, DragEvent event) {
@@ -373,26 +373,36 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 }
 
-               // ViewGroup owner = (ViewGroup) view2.getParent();
-
-                GridLayout target;
-                if (view instanceof GridLayout) {
+                ViewGroup target;
+                if (view == mRemoveDropzone) {
+                    if (mQuickRow == mDragDropSource) {
+                        mDragDropSource.removeView(view2);
+                        getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                    } else {
+                        //uninstall app
+                        mBeingUninstalled = view2;
+                        launchUninstallIntent(mBeingDragged.getPackageName());
+                    }
+                    return true;
+                } else  if (view instanceof GridLayout) {
                     target = (GridLayout) view;
 
                 } else {
                     target = (GridLayout) view.getParent();
-
                 }
+
+
+                if (mQuickRow == mDragDropSource || mQuickRow != target) {
+                    mDragDropSource.removeView(view2);
+                }
+
+
 
                 int index = -1;
                 for (int i = 0; i < target.getChildCount(); i++) {
                     if (target.getChildAt(i) == view) {
                         index = i;
                     }
-                }
-
-                if (mQuickRow == mDragDropSource || mQuickRow != target) {
-                    mDragDropSource.removeView(view2);
                 }
 
                 if (target == mQuickRow) {
@@ -410,8 +420,6 @@ public class MainActivity extends AppCompatActivity implements
                     view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()));
                     LinearLayout sc = (LinearLayout)view2;
 
-//                    sc.setScaleX(.8f);
-//                    sc.setScaleY(.8f);
                 }
 
 
@@ -423,10 +431,12 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 getDB().setCategoryOrder(mRevCategoryMap.get(target), target);
+                getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
                 mBeingDragged = null;
+                hideRemoveDropzone();
                 break;
             default:
                 break;
@@ -443,7 +453,58 @@ public class MainActivity extends AppCompatActivity implements
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
         view.startDrag(data, shadowBuilder, view, 0);
         //view.setVisibility(View.INVISIBLE);
+
+        showRemoveDropzone();
+
         return true;
+    }
+
+
+    private void showRemoveDropzone() {
+        mRemoveDropzone.setVisibility(View.VISIBLE);
+        mRemoveDropzone.setBackgroundColor(Color.RED);
+
+        if (mDragDropSource == mQuickRow) {
+            mRemoveAppText.setText("Remove");
+        } else {
+            mRemoveAppText.setText("Uninstall");
+        }
+    }
+
+    private void hideRemoveDropzone() {
+        mRemoveDropzone.setVisibility(View.GONE);
+    }
+
+    private static final int UNINSTALL_RESULT = 3454;
+
+    private void launchUninstallIntent(String package_name) {
+        Uri packageUri = Uri.parse("package:"+package_name);
+        Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+        uninstallIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
+        startActivityForResult(uninstallIntent, UNINSTALL_RESULT);
+    }
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == UNINSTALL_RESULT) {
+
+            if (resultCode == RESULT_OK) {
+                mDragDropSource.removeView(mBeingUninstalled);
+                getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                Toast.makeText(this,"Application was uninstalled", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this,"Application was NOT uninstalled", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

@@ -39,23 +39,53 @@
                 android:id="@+id/layout_categories">
 
                 <TextView
-                    android:text="Categories"
+                    android:text="  "
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView2" />
+
             </LinearLayout>
         </ScrollView>
 
     </LinearLayout>
 
-    <GridLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/quickbar_height"
-        android:id="@+id/layout_quickrow"
-        android:layout_weight="1"
-        android:columnCount="5">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#ddff3333"
+            android:id="@+id/remove_dropzone">
+
+            <TextView
+                android:text="Remove"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/remove_dz_txt"
+                android:gravity="center"
+                android:layout_gravity="start"
+                android:rotation="-90" />
+        </FrameLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollIndicators="start|end"
+            android:background="#66cccccc">
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/quickbar_height"
+                android:id="@+id/layout_quickrow">
 
 
-    </GridLayout>
+            </GridLayout>
+        </HorizontalScrollView>
+
+    </LinearLayout>
 
 </LinearLayout>

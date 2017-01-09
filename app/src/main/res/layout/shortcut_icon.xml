@@ -30,5 +30,6 @@
         android:layout_gravity="center_horizontal"
         android:textSize="@dimen/shortcut_fontsize"
         android:maxLines="2"
-        android:height="32dp"/>
+        android:height="@dimen/icont_label_height"
+        android:textStyle="bold" />
 </LinearLayout>
