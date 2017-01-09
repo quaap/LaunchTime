@@ -2,6 +2,7 @@ package com.quaap.launchtime;
 
 import android.app.Application;
 
+import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.db.DB;
 
 /**
@@ -26,8 +27,17 @@ public class GlobState extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Categories.init(this);
+
         this.deleteDatabase(DB.DATABASE_NAME);
+
         mDB = new DB(this);
+        if (mDB.isFirstRun()) {
+            for (int i=0; i<Categories.DefCategoryOrder.length; i++) {
+                String cat = Categories.DefCategoryOrder[i];
+                mDB.addCategory(cat,cat,i);
+            }
+        }
     }
 
     public DB getDB() {

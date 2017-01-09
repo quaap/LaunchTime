@@ -38,6 +38,8 @@ public class DB extends SQLiteOpenHelper {
     private static final String LABEL = "label";
     private static final String CATEGORY = "category";
     private static final String INDEX = "pos";
+    private static final String ID = "id";
+
 
     private static final String[] appcolumns = {PKGNAME, LABEL, CATEGORY};
     private static final String[] appcolumntypes = {"TEXT primary key", "TEXT", "TEXT"};
@@ -53,11 +55,20 @@ public class DB extends SQLiteOpenHelper {
     private static final String[] appordercolumnsindex = {CATEGORY + ", " + PKGNAME, INDEX};
 
 
+    private static final String TAB_ORDER_TABLE = "tab_order";
+    private static final String[] tabordercolumns = {ID, CATEGORY, INDEX};
+    private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "INT"};
+    private static final String TAB_ORDER_TABLE_CREATE = buildCreateTableStmt(TAB_ORDER_TABLE, tabordercolumns, tabordercolumntypes);
+
+    private static final String[] tabordercolumnsindex = {ID, INDEX};
+
+
+
     private boolean firstRun;
 
     public DB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
+        this.getWritableDatabase();
     }
 
     @Override
@@ -71,6 +82,11 @@ public class DB extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(APP_ORDER_TABLE_CREATE);
         for(String createind: appordercolumnsindex) {
             sqLiteDatabase.execSQL(buildIndexStmt(APP_ORDER_TABLE, createind));
+        }
+
+        sqLiteDatabase.execSQL(TAB_ORDER_TABLE_CREATE);
+        for(String createind: tabordercolumnsindex) {
+            sqLiteDatabase.execSQL(buildIndexStmt(TAB_ORDER_TABLE, createind));
         }
     }
 
@@ -87,7 +103,7 @@ public class DB extends SQLiteOpenHelper {
     public List<String> getAppPkgNames() {
         List<String> pkgnames = new ArrayList<>();
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_TABLE, new String[]{PKGNAME}, null, null, null, null, null);
 
@@ -98,24 +114,11 @@ public class DB extends SQLiteOpenHelper {
         return pkgnames;
     }
 
-    public List<String> getCategories() {
-        List<String> categories = new ArrayList<>();
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.query(true, APP_TABLE, new String[]{CATEGORY}, null, null, null, null, CATEGORY, null);
-
-        while(cursor.moveToNext()) {
-            categories.add(cursor.getString(0));
-        }
-        cursor.close();
-        return categories;
-    }
 
     public AppShortcut getApp(String pkgname) {
 
         AppShortcut appShortcut = null;
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_TABLE, appcolumns, PKGNAME + "=?", new String[]{pkgname}, null, null, null);
 
@@ -133,7 +136,7 @@ public class DB extends SQLiteOpenHelper {
 
         List<AppShortcut> apps = new ArrayList<>();
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_TABLE, appcolumns, CATEGORY + "=?", new String[]{category}, null, null, null);
 
@@ -168,8 +171,66 @@ public class DB extends SQLiteOpenHelper {
     }
 
 
+    public void addCategory(String catID, String displayName, int index) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            Log.d("DB", "adding catagory " + catID);
+            ContentValues values = new ContentValues();
+            values.put(ID, catID);
+            values.put(CATEGORY, displayName);
+            values.put(INDEX, index);
+
+            db.insert(TAB_ORDER_TABLE, null, values);
+        } catch (Exception e) {
+            Log.e("LaunchDB", "Can't select category " + catID, e);
+        }
+    }
 
 
+    public List<String> getCategories() {
+        List<String> categories = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(true, TAB_ORDER_TABLE, new String[]{ID}, null, null, null, null, INDEX, null);
+
+        Log.d("DB", "getting catagories");
+        while(cursor.moveToNext()) {
+
+            categories.add(cursor.getString(0));
+            Log.d("DB", "got catagory " + cursor.getString(0));
+        }
+        cursor.close();
+        return categories;
+    }
+
+    public String getCategoryDisplay(String catID) {
+        String display = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{CATEGORY}, ID + "=?", new String[]{catID}, null, null, null, null);
+
+        if(cursor.moveToNext()) {
+            display = cursor.getString(0);
+        }
+        cursor.close();
+        return display;
+    }
+
+//    public List<String> getCategories() {
+//        List<String> categories = new ArrayList<>();
+//
+//        SQLiteDatabase db = this.getWritableDatabase();
+//
+//        Cursor cursor = db.query(true, APP_TABLE, new String[]{CATEGORY}, null, null, null, null, CATEGORY, null);
+//
+//        while(cursor.moveToNext()) {
+//            categories.add(cursor.getString(0));
+//        }
+//        cursor.close();
+//        return categories;
+//    }
     private static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {
 
         String create =  "CREATE TABLE " + tablename + " (";

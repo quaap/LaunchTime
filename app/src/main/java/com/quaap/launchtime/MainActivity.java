@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements
             actionBar.hide();
         }
         mPackageMan = getApplicationContext().getPackageManager();
-        AppShortcut.init(this);
 
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
@@ -115,10 +114,8 @@ public class MainActivity extends AppCompatActivity implements
     private volatile String mDragHoverCategory;
 
     private void loadApplications() {
-        DB db = getDB();
 
-        List<String> dbpkgnames = db.getAppPkgNames();
-
+        Map<String, List<AppShortcut>> shortcuts = new LinkedHashMap<>();
 
 
         // Set MAIN and LAUNCHER filters, so we only get activities with that defined on their manifest
@@ -128,7 +125,10 @@ public class MainActivity extends AppCompatActivity implements
         // Get all activities that have those filters
         List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
 
-        Map<String, List<AppShortcut>> shortcuts = new LinkedHashMap<>();
+        DB db = getDB();
+
+        List<String> dbpkgnames = db.getAppPkgNames();
+
 
         Set<String> pmpkgnames = new HashSet<>();
 
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements
     @NonNull
     private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
-        categoryTab.setText(category);
+        categoryTab.setText(getDB().getCategoryDisplay(category));
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.weight = 1;
