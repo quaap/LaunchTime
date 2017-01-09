@@ -410,8 +410,8 @@ public class MainActivity extends AppCompatActivity implements
                     view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()));
                     LinearLayout sc = (LinearLayout)view2;
 
-                    sc.setScaleX(.8f);
-                    sc.setScaleY(.8f);
+//                    sc.setScaleX(.8f);
+//                    sc.setScaleY(.8f);
                 }
 
 
