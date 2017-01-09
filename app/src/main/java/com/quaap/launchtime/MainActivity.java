@@ -245,12 +245,12 @@ public class MainActivity extends AppCompatActivity implements
 
         categoryTab.setOnDragListener(new View.OnDragListener() {
             @Override
-            public boolean onDrag(View view, DragEvent event) {
+            public boolean onDrag(View view, final DragEvent event) {
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_EXITED:
                     case DragEvent.ACTION_DRAG_ENDED:
                         mDragHoverCategory = null;
-
+                        break;
                     case DragEvent.ACTION_DRAG_ENTERED:
                         mDragHoverCategory = category;
                         categoryTab.postDelayed(new Runnable() {
@@ -262,8 +262,8 @@ public class MainActivity extends AppCompatActivity implements
                                 }
                             }
                         }, 500);
-
                         break;
+
                     case DragEvent.ACTION_DROP:
                         //switchCategory(category);
                         MainActivity.this.onDrag(iconSheet, event);
