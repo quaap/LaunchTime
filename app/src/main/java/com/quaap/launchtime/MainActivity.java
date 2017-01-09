@@ -1,5 +1,6 @@
 package com.quaap.launchtime;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,8 +12,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
@@ -37,8 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
 
+    public static final int BACKGROUND_COLOR = Color.TRANSPARENT;
 
     private ScrollView mIconSheetScroller;
 
@@ -89,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
     protected DB getDB() {
         return ((GlobState)this.getApplicationContext()).getDB();
     }
+
+
+    private volatile String mDragHoverCategory;
 
     private void loadApplications() {
         DB db = getDB();
@@ -146,18 +154,21 @@ public class MainActivity extends AppCompatActivity {
 
             if (mCategory==null) mCategory = category;
 
-            GridLayout iconSheet = new GridLayout(this);
+            final GridLayout iconSheet = new GridLayout(this);
             mIconSheets.put(category, iconSheet);
 
             iconSheet.setColumnCount(3);
 
-            TextView categoryTab = new TextView(this);
+            final TextView categoryTab = new TextView(this);
             categoryTab.setText(category);
 
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.weight = 1;
             lp.gravity = Gravity.CENTER;
+            lp.setMargins(2,4,2,4);
             categoryTab.setLayoutParams(lp);
+            categoryTab.setGravity(Gravity.CENTER);
+            categoryTab.setBackgroundColor(Color.rgb(127, 127, 255));
 
             categoryTab.setTextSize(16);
             categoryTab.setPadding(6,24,2,24);
@@ -166,7 +177,39 @@ public class MainActivity extends AppCompatActivity {
             categoryTab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switchCategory(category);
+                    if (mDragHoverCategory==null) {
+                        switchCategory(category);
+                    }
+                }
+            });
+
+            categoryTab.setOnDragListener(new View.OnDragListener() {
+                @Override
+                public boolean onDrag(View view, DragEvent event) {
+                    switch (event.getAction()) {
+                        case DragEvent.ACTION_DRAG_EXITED:
+                        case DragEvent.ACTION_DRAG_ENDED:
+                            mDragHoverCategory = null;
+
+                        case DragEvent.ACTION_DRAG_ENTERED:
+                            mDragHoverCategory = category;
+                            categoryTab.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mDragHoverCategory==category) {
+                                        switchCategory(mDragHoverCategory);
+                                        mDragHoverCategory=null;
+                                    }
+                                }
+                            }, 500);
+
+                            break;
+                        case DragEvent.ACTION_DROP:
+                            //switchCategory(category);
+                            MainActivity.this.onDrag(iconSheet, event);
+                            break;
+                    }
+                    return true;
                 }
             });
 
@@ -181,7 +224,10 @@ public class MainActivity extends AppCompatActivity {
 
                 ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.shortcut_icon, (ViewGroup) null);
 
+                item.setTag(app);
                 item.setClickable(true);
+                item.setOnLongClickListener(this);
+                item.setOnDragListener(this);
 
                 item.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -205,6 +251,80 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onDrag(View view, DragEvent event) {
+        boolean islayout = view instanceof GridLayout;
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_STARTED:
+                // do nothing
+                break;
+            case DragEvent.ACTION_DRAG_ENTERED:
+                if (!islayout) {
+                    view.setBackgroundColor(Color.BLUE);
+                    //view.setBackgroundResource(R.drawable.sort_drop_target);
+                }
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+
+                if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
+                break;
+            case DragEvent.ACTION_DROP:
+                if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
+                // Dropped, reassign View to ViewGroup
+                View view2 = (View) event.getLocalState();
+                if (view2 == view) {
+                    // Log.d("sort", "self drop");
+                    break;
+                }
+
+                ViewGroup owner = (ViewGroup) view2.getParent();
+
+                GridLayout container;
+                if (view instanceof GridLayout) {
+                    container = (GridLayout) view;
+
+                } else {
+                    container = (GridLayout) view.getParent();
+
+                }
+
+                int index = -1;
+                for (int i = 0; i < container.getChildCount(); i++) {
+                    if (container.getChildAt(i) == view) {
+                        index = i;
+                    }
+                }
+
+                owner.removeView(view2);
+                if (index == -1) {
+                    container.addView(view2);
+                } else {
+                    container.addView(view2, index);
+                }
 
 
+                break;
+            case DragEvent.ACTION_DRAG_ENDED:
+                if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        String label = ((AppShortcut)view.getTag()).getLabel();
+        ClipData data = ClipData.newPlainText(label, label);
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+        view.startDrag(data, shadowBuilder, view, 0);
+        //view.setVisibility(View.INVISIBLE);
+        return true;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
+    }
 }

@@ -13,19 +13,6 @@
         android:layout_height="match_parent"
         android:layout_weight="8">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/layout_categories">
-
-            <TextView
-                android:text="Categories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView2" />
-        </LinearLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -38,6 +25,25 @@
                 android:id="@+id/layout_icons">
 
             </GridLayout>
+        </ScrollView>
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#66cccccc">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_categories">
+
+                <TextView
+                    android:text="Categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2" />
+            </LinearLayout>
         </ScrollView>
 
     </LinearLayout>
