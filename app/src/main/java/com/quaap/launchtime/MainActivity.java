@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void switchCategory(String category) {
+        if (category==null) return;
         mCategory = category;
         for(TextView cat: mCategoryTabs.values()) {
             cat.setBackgroundColor(Color.TRANSPARENT);
@@ -251,22 +252,22 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public boolean onDrag(View view, final DragEvent event) {
                 switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_EXITED:
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        mDragHoverCategory = null;
-                        break;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        mDragHoverCategory = category;
-                        categoryTab.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mDragHoverCategory==category) {
-                                    switchCategory(mDragHoverCategory);
-                                    mDragHoverCategory=null;
-                                }
-                            }
-                        }, 500);
-                        break;
+//                    case DragEvent.ACTION_DRAG_EXITED:
+//                    case DragEvent.ACTION_DRAG_ENDED:
+//                        mDragHoverCategory = null;
+//                        break;
+//                    case DragEvent.ACTION_DRAG_ENTERED:
+//                        mDragHoverCategory = category;
+//                        categoryTab.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (mDragHoverCategory==category) {
+//                                    switchCategory(mDragHoverCategory);
+//                                    mDragHoverCategory=null;
+//                                }
+//                            }
+//                        }, 500);
+//                        break;
 
                     case DragEvent.ACTION_DROP:
                         //switchCategory(category);
