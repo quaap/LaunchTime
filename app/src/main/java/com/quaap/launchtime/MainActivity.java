@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -38,11 +40,14 @@ public class MainActivity extends AppCompatActivity implements
         View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
 
     public static final int BACKGROUND_COLOR = Color.TRANSPARENT;
+    public static final String QUICK_ROW = "QuickRow";
 
     private ScrollView mIconSheetScroller;
 
     private Map<String,GridLayout> mIconSheets;
     private Map<String,TextView> mCategoryTabs;
+    private Map<View, String> mRevCategoryMap;
+
 
     private volatile String mCategory;
 
@@ -52,7 +57,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private PackageManager mPackageMan;
 
-    private AppShortcut beingDragged;
+    private AppShortcut mBeingDragged;
+
+    //private volatile String mDragHoverCategory;
+    private volatile String mDragDropCategory;
+    private volatile ViewGroup mDragDropSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements
 
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
+        mRevCategoryMap = new HashMap<>();
+        mRevCategoryMap.put(mQuickRow, QUICK_ROW);
 
         loadApplications();
 
@@ -106,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private volatile String mDragHoverCategory;
+
 
     private void loadApplications() {
 
@@ -120,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements
         // Get all activities that have those filters
         List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
 
-        DB db = getDB();
+        final DB db = getDB();
 
         List<String> dbpkgnames = db.getAppPkgNames();
 
@@ -128,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements
         Set<String> pmpkgnames = new HashSet<>();
 
         List<AppShortcut> newapps = new ArrayList<>();
+        List<AppShortcut> quickRowApps = new ArrayList<>();
+        final List<String> quickRowOrder = db.getCategoryOrder(QUICK_ROW);
 
         for (int i = 0; i < activities.size(); i++) {
 
@@ -145,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements
                     app = new AppShortcut(mPackageMan, ri);
                     //db.addApp(app);
                     newapps.add(app);
-
                 }
                 List<AppShortcut> catapps = shortcuts.get(app.getCategory());
                 if (catapps == null) {
@@ -153,6 +165,12 @@ public class MainActivity extends AppCompatActivity implements
                     shortcuts.put(app.getCategory(), catapps);
                 }
                 catapps.add(app);
+
+                if (quickRowOrder.contains(app.getPackageName())) {
+                    AppShortcut qapp = new AppShortcut(app);
+                    qapp.loadAppIconAsync(mPackageMan);
+                    quickRowApps.add(qapp);
+                }
             }
         }
 
@@ -167,12 +185,27 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
+
+        mQuickRow.removeAllViews();
+        for (String pkgname: quickRowOrder) {
+            for (AppShortcut app : quickRowApps) {
+                if (app.getPackageName().equals(pkgname)) {
+                    ViewGroup item = getShortcutView(app);
+                    mQuickRow.addView(item);
+                }
+            }
+        }
+
+
         for (final String category: db.getCategories()) {
 
             if (mCategory==null) mCategory=category;
 
             final GridLayout iconSheet = new GridLayout(MainActivity.this);
             mIconSheets.put(category, iconSheet);
+            mRevCategoryMap.put(iconSheet, category);
+
+            final List<String> apporder = db.getCategoryOrder(category);
 
             iconSheet.setColumnCount(3);
             iconSheet.setOnDragListener(MainActivity.this);
@@ -181,29 +214,48 @@ public class MainActivity extends AppCompatActivity implements
             final TextView categoryTab = getCategoryTab(category, iconSheet);
 
             mCategoryTabs.put(category, categoryTab);
+            mRevCategoryMap.put(categoryTab, category);
             mCategoriesLayout.addView(categoryTab);
 
             final List<AppShortcut> catapps = shortcuts.get(category);
             Collections.sort(catapps);
 
 
-            GlobState.getGlobState(this).runAsync(new Runnable() {
-                @Override
-                public void run() {
+//            GlobState.getGlobState(this).runAsync(new Runnable() {
+//                @Override
+//                public void run() {
+            Log.d("category--------", category);
 
-
-
-                    for (final AppShortcut app : catapps) {
-
-                        ViewGroup item = getShortcutView(app);
-
-                        iconSheet.addView(item);
+                    for (String pkgname: apporder) {
+                        Log.d("apporder", pkgname);
+                        for (AppShortcut app : catapps) {
+                            if (app.getPackageName().equals(pkgname)) {
+                                ViewGroup item = getShortcutView(app);
+                                iconSheet.addView(item);
+                            }
+                        }
                     }
 
-                }
-            });
+                    boolean reorder = false;
+                    for (AppShortcut app : catapps) {
+                        if (!apporder.contains(app.getPackageName())) {
+                            Log.d("no apporder", app.getPackageName());
+
+                            ViewGroup item = getShortcutView(app);
+
+                            iconSheet.addView(item);
+                            reorder = true;
+                        }
+                    }
+                    if (reorder) {
+                        db.setCategoryOrder(category, iconSheet);
+                    }
+
+//                }
+//            });
 
         }
+
     }
 
     @NonNull
@@ -252,10 +304,9 @@ public class MainActivity extends AppCompatActivity implements
         categoryTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("CategoryTab " + category);
-                if (mDragHoverCategory==null) {
-                    switchCategory(category);
-                }
+                //System.out.println("CategoryTab " + category);
+                switchCategory(category);
+
             }
         });
 
@@ -263,10 +314,10 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public boolean onDrag(View view, final DragEvent event) {
                 switch (event.getAction()) {
-//                    case DragEvent.ACTION_DRAG_EXITED:
-                      case DragEvent.ACTION_DRAG_ENDED:
-                          beingDragged = null;
-
+                    case DragEvent.ACTION_DRAG_EXITED:
+                    case DragEvent.ACTION_DRAG_ENDED:
+                          mBeingDragged = null;
+                          mDragDropCategory = null;
 //                         mDragHoverCategory = null;
                            break;
 //                    case DragEvent.ACTION_DRAG_ENTERED:
@@ -284,8 +335,9 @@ public class MainActivity extends AppCompatActivity implements
 
                     case DragEvent.ACTION_DROP:
                         //switchCategory(category);
+                        mDragDropCategory = category;
 
-                        getDB().updateAppCategory(beingDragged.getPackageName(), category);
+                        getDB().updateAppCategory(mBeingDragged.getPackageName(), category);
                         MainActivity.this.onDrag(iconSheet, event);
                         break;
                 }
@@ -321,32 +373,37 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 }
 
-                ViewGroup owner = (ViewGroup) view2.getParent();
+               // ViewGroup owner = (ViewGroup) view2.getParent();
 
-                GridLayout container;
+                GridLayout target;
                 if (view instanceof GridLayout) {
-                    container = (GridLayout) view;
+                    target = (GridLayout) view;
 
                 } else {
-                    container = (GridLayout) view.getParent();
+                    target = (GridLayout) view.getParent();
 
                 }
 
                 int index = -1;
-                for (int i = 0; i < container.getChildCount(); i++) {
-                    if (container.getChildAt(i) == view) {
+                for (int i = 0; i < target.getChildCount(); i++) {
+                    if (target.getChildAt(i) == view) {
                         index = i;
                     }
                 }
 
-                if (mQuickRow != container) {
-                    owner.removeView(view2);
-                } else {
-                    for (int i = 0; i < container.getChildCount(); i++) {
-                        AppShortcut dragging = (AppShortcut)view2.getTag();
-                        AppShortcut inbar = (AppShortcut)container.getChildAt(i).getTag();
-                        if (dragging.getPackageName().equals(inbar.getPackageName())) {
-                            return true;
+                if (mQuickRow == mDragDropSource || mQuickRow != target) {
+                    mDragDropSource.removeView(view2);
+                }
+
+                if (target == mQuickRow) {
+                    mDragDropCategory = QUICK_ROW;
+                    if (mQuickRow != mDragDropSource) {
+                        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+                            AppShortcut dragging = (AppShortcut) view2.getTag();
+                            AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+                            if (dragging.getPackageName().equals(inbar.getPackageName())) {
+                                return true;
+                            }
                         }
                     }
 
@@ -357,17 +414,19 @@ public class MainActivity extends AppCompatActivity implements
                     sc.setScaleY(.8f);
                 }
 
+
+
                 if (index == -1) {
-                    container.addView(view2);
+                    target.addView(view2);
                 } else {
-                    container.addView(view2, index);
+                    target.addView(view2, index);
                 }
 
-
+                getDB().setCategoryOrder(mRevCategoryMap.get(target), target);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
-                beingDragged = null;
+                mBeingDragged = null;
                 break;
             default:
                 break;
@@ -377,8 +436,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onLongClick(View view) {
-        beingDragged = (AppShortcut)view.getTag();
-        String label = beingDragged.getLabel();
+        mBeingDragged = (AppShortcut)view.getTag();
+        mDragDropSource = (ViewGroup)view.getParent();
+        String label = mBeingDragged.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
         view.startDrag(data, shadowBuilder, view, 0);

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import com.quaap.launchtime.components.AppShortcut;
 
@@ -243,20 +244,58 @@ public class DB extends SQLiteOpenHelper {
         return display;
     }
 
-//    public List<String> getCategories() {
-//        List<String> categories = new ArrayList<>();
-//
-//        SQLiteDatabase db = this.getWritableDatabase();
-//
-//        Cursor cursor = db.query(true, APP_TABLE, new String[]{CATID}, null, null, null, null, CATID, null);
-//
-//        while(cursor.moveToNext()) {
-//            categories.add(cursor.getString(0));
-//        }
-//        cursor.close();
-//        return categories;
-//    }
+    public void setCategoryOrder(String catID, ViewGroup container) {
 
+        List<AppShortcut> apps = new ArrayList<>();
+
+        for (int i = 0; i < container.getChildCount(); i++) {
+            Object tag = container.getChildAt(i).getTag();
+            if (tag instanceof AppShortcut) {
+                apps.add((AppShortcut)tag);
+            }
+        }
+
+        setCategoryOrder(catID, apps);
+    }
+
+    public void setCategoryOrder(String catID, List<AppShortcut> apps) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+            db.delete(APP_ORDER_TABLE, CATID +"=?", new String[]{catID}); //CATID, PKGNAME, INDEX};
+
+            for (int i=0; i<apps.size();i++) {
+                ContentValues values = new ContentValues();
+                values.put(CATID, catID);
+                values.put(PKGNAME, apps.get(i).getPackageName());
+                values.put(INDEX, i);
+                db.insert(APP_ORDER_TABLE, null, values);
+            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e){
+            Log.e("LaunchDB", "Can't setCategoryOrder for catID " + catID, e);
+
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
+    public List<String> getCategoryOrder(String catID) {
+        List<String> pkgnames = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(APP_ORDER_TABLE, new String[]{PKGNAME}, CATID +"=?", new String[]{catID}, null, null, INDEX);
+
+        while(cursor.moveToNext()) {
+            pkgnames.add(cursor.getString(0));
+        }
+        cursor.close();
+        return pkgnames;
+
+    }
 
 
     private static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {
