@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private PackageManager mPackageMan;
 
+    private AppShortcut beingDragged;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements
                     app = new AppShortcut(mPackageMan, ri);
                     //db.addApp(app);
                     newapps.add(app);
+
                 }
                 List<AppShortcut> catapps = shortcuts.get(app.getCategory());
                 if (catapps == null) {
@@ -167,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements
         for (final String category: db.getCategories()) {
 
             if (mCategory==null) mCategory=category;
-            
+
             final GridLayout iconSheet = new GridLayout(MainActivity.this);
             mIconSheets.put(category, iconSheet);
 
@@ -261,9 +264,11 @@ public class MainActivity extends AppCompatActivity implements
             public boolean onDrag(View view, final DragEvent event) {
                 switch (event.getAction()) {
 //                    case DragEvent.ACTION_DRAG_EXITED:
-//                    case DragEvent.ACTION_DRAG_ENDED:
-//                        mDragHoverCategory = null;
-//                        break;
+                      case DragEvent.ACTION_DRAG_ENDED:
+                          beingDragged = null;
+
+//                         mDragHoverCategory = null;
+                           break;
 //                    case DragEvent.ACTION_DRAG_ENTERED:
 //                        mDragHoverCategory = category;
 //                        categoryTab.postDelayed(new Runnable() {
@@ -279,6 +284,8 @@ public class MainActivity extends AppCompatActivity implements
 
                     case DragEvent.ACTION_DROP:
                         //switchCategory(category);
+
+                        getDB().updateAppCategory(beingDragged.getPackageName(), category);
                         MainActivity.this.onDrag(iconSheet, event);
                         break;
                 }
@@ -287,6 +294,8 @@ public class MainActivity extends AppCompatActivity implements
         });
         return categoryTab;
     }
+
+    private String mDroppedOnCategory;
 
 
     @Override
@@ -299,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (!islayout) {
                     view.setBackgroundColor(Color.BLUE);
-                    //view.setBackgroundResource(R.drawable.sort_drop_target);
                 }
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
@@ -348,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
+                beingDragged = null;
                 break;
             default:
                 break;
@@ -357,7 +366,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onLongClick(View view) {
-        String label = ((AppShortcut)view.getTag()).getLabel();
+        beingDragged = (AppShortcut)view.getTag();
+        String label = beingDragged.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
         view.startDrag(data, shadowBuilder, view, 0);

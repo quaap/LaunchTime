@@ -33,30 +33,30 @@ public class DB extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String APP_TABLE = "apps";
     private static final String PKGNAME = "pkgname";
     private static final String LABEL = "label";
-    private static final String CATEGORY = "category";
+    private static final String CATID = "catID";
     private static final String INDEX = "pos";
     private static final String ID = "id";
 
 
-    private static final String[] appcolumns = {PKGNAME, LABEL, CATEGORY};
+    private static final String APP_TABLE = "apps";
+    private static final String[] appcolumns = {PKGNAME, LABEL, CATID};
     private static final String[] appcolumntypes = {"TEXT primary key", "TEXT", "TEXT"};
     private static final String APP_TABLE_CREATE = buildCreateTableStmt(APP_TABLE, appcolumns, appcolumntypes);
 
-    private static final String[] appcolumnsindex = {PKGNAME, CATEGORY};
+    private static final String[] appcolumnsindex = {PKGNAME, CATID};
 
     private static final String APP_ORDER_TABLE = "apps_order";
-    private static final String[] appordercolumns = {CATEGORY, PKGNAME, INDEX};
+    private static final String[] appordercolumns = {CATID, PKGNAME, INDEX};
     private static final String[] appordercolumntypes = {"TEXT", "TEXT", "INT"};
     private static final String APP_ORDER_TABLE_CREATE = buildCreateTableStmt(APP_ORDER_TABLE, appordercolumns, appordercolumntypes);
 
-    private static final String[] appordercolumnsindex = {CATEGORY + ", " + PKGNAME, INDEX};
+    private static final String[] appordercolumnsindex = {CATID + ", " + PKGNAME, INDEX};
 
 
     private static final String TAB_ORDER_TABLE = "tab_order";
-    private static final String[] tabordercolumns = {ID, CATEGORY, INDEX};
+    private static final String[] tabordercolumns = {ID, CATID, INDEX};
     private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "INT"};
     private static final String TAB_ORDER_TABLE_CREATE = buildCreateTableStmt(TAB_ORDER_TABLE, tabordercolumns, tabordercolumntypes);
 
@@ -124,27 +124,28 @@ public class DB extends SQLiteOpenHelper {
 
         if(cursor.moveToNext()) {
             String label = cursor.getString(1);
-            String category = cursor.getString(2);
+            String catID = cursor.getString(2);
 
-            appShortcut = new AppShortcut(pkgname, label, category);
+           // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
+            appShortcut = new AppShortcut(pkgname, label, catID);
         }
         cursor.close();
         return appShortcut;
     }
 
-    public List<AppShortcut> getApps(String category) {
+    public List<AppShortcut> getApps(String catID) {
 
         List<AppShortcut> apps = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, appcolumns, CATEGORY + "=?", new String[]{category}, null, null, null);
+        Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=?", new String[]{catID}, null, null, null);
 
         while(cursor.moveToNext()) {
             String pkgname = cursor.getString(0);
             String label = cursor.getString(1);
 
-            apps.add(new AppShortcut(pkgname, label, category));
+            apps.add(new AppShortcut(pkgname, label, catID));
         }
         cursor.close();
 
@@ -162,19 +163,19 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
-    public void addApp(String pkgname, String label, String category) {
+    public void addApp(String pkgname, String label, String catID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        addApp(db, pkgname, label, category);
+        addApp(db, pkgname, label, catID);
     }
 
-    private void addApp(SQLiteDatabase db, String pkgname, String label, String category) {
+    private void addApp(SQLiteDatabase db, String pkgname, String label, String catID) {
         try {
 
 
             ContentValues values = new ContentValues();
             values.put(PKGNAME, pkgname);
             values.put(LABEL, label);
-            values.put(CATEGORY, category);
+            values.put(CATID, catID);
 
             db.insert(APP_TABLE, null, values);
         } catch (Exception e) {
@@ -182,20 +183,32 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
+    public void updateAppCategory(String pkgname, String catID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+
+        ContentValues values = new ContentValues();
+        values.put(CATID, catID);
+
+        db.update(APP_TABLE, values, PKGNAME + "=?", new String[] {pkgname});
+
+       // Log.d("LaunchDB", "update " + pkgname + " " + catID);
+    }
+
 
     public void addCategory(String catID, String displayName, int index) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
 
-            Log.d("DB", "adding catagory " + catID);
+           // Log.d("DB", "adding catID " + catID);
             ContentValues values = new ContentValues();
             values.put(ID, catID);
-            values.put(CATEGORY, displayName);
+            values.put(CATID, displayName);
             values.put(INDEX, index);
 
             db.insert(TAB_ORDER_TABLE, null, values);
         } catch (Exception e) {
-            Log.e("LaunchDB", "Can't select category " + catID, e);
+            Log.e("LaunchDB", "Can't select catID " + catID, e);
         }
     }
 
@@ -207,11 +220,11 @@ public class DB extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(true, TAB_ORDER_TABLE, new String[]{ID}, null, null, null, null, INDEX, null);
 
-        Log.d("DB", "getting catagories");
+        //Log.d("DB", "getting catagories");
         while(cursor.moveToNext()) {
 
             categories.add(cursor.getString(0));
-            Log.d("DB", "got catagory " + cursor.getString(0));
+  //          Log.d("DB", "got catID " + cursor.getString(0));
         }
         cursor.close();
         return categories;
@@ -221,7 +234,7 @@ public class DB extends SQLiteOpenHelper {
         String display = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{CATEGORY}, ID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{CATID}, ID + "=?", new String[]{catID}, null, null, null, null);
 
         if(cursor.moveToNext()) {
             display = cursor.getString(0);
@@ -235,7 +248,7 @@ public class DB extends SQLiteOpenHelper {
 //
 //        SQLiteDatabase db = this.getWritableDatabase();
 //
-//        Cursor cursor = db.query(true, APP_TABLE, new String[]{CATEGORY}, null, null, null, null, CATEGORY, null);
+//        Cursor cursor = db.query(true, APP_TABLE, new String[]{CATID}, null, null, null, null, CATID, null);
 //
 //        while(cursor.moveToNext()) {
 //            categories.add(cursor.getString(0));
@@ -243,6 +256,9 @@ public class DB extends SQLiteOpenHelper {
 //        cursor.close();
 //        return categories;
 //    }
+
+
+
     private static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {
 
         String create =  "CREATE TABLE " + tablename + " (";
