@@ -54,11 +54,6 @@
         android:id="@+id/layout_quickrow"
         android:layout_weight="1">
 
-        <TextView
-            android:text="Quick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView4" />
     </GridLayout>
 
 </LinearLayout>

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -54,7 +55,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private GridLayout mQuickRow;
 
-    LinearLayout mCategoriesLayout;
+    private LinearLayout mCategoriesLayout;
+
+    private PackageManager mPackageMan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +67,15 @@ public class MainActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.hide();
         }
-
+        mPackageMan = getApplicationContext().getPackageManager();
         AppShortcut.init(this);
 
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
+
+        mQuickRow = (GridLayout) findViewById(R.id.layout_quickrow);
+        mQuickRow.setOnDragListener(this);
+
 //        mIconSheet = (GridLayout) findViewById(R.id.layout_icons);
 //        mIconSheet.setColumnCount(3);
 
@@ -82,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void switchCategory(String category) {
+        mCategory = category;
         for(TextView cat: mCategoryTabs.values()) {
             cat.setBackgroundColor(Color.TRANSPARENT);
         }
@@ -95,6 +103,12 @@ public class MainActivity extends AppCompatActivity implements
         return ((GlobState)this.getApplicationContext()).getDB();
     }
 
+    private void launchApp(final AppShortcut app) {
+
+        Intent intent = mPackageMan.getLaunchIntentForPackage(app.getPackageName());
+        MainActivity.this.startActivity(intent);
+    }
+
 
     private volatile String mDragHoverCategory;
 
@@ -103,14 +117,14 @@ public class MainActivity extends AppCompatActivity implements
 
         List<String> dbpkgnames = db.getAppPkgNames();
 
-        final PackageManager pm = getApplicationContext().getPackageManager();
+
 
         // Set MAIN and LAUNCHER filters, so we only get activities with that defined on their manifest
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         // Get all activities that have those filters
-        List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
+        List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
 
         Map<String, List<AppShortcut>> shortcuts = new LinkedHashMap<>();
 
@@ -126,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements
 
             if (dbpkgnames.contains(pkgname)) {
                 app = db.getApp(pkgname);
-                app.loadAppIconAsync(pm);
+                app.loadAppIconAsync(mPackageMan);
             } else {
-                app = new AppShortcut(pm, ri);
+                app = new AppShortcut(mPackageMan, ri);
                 db.addApp(app);
             }
             List<AppShortcut> catapps= shortcuts.get(app.getCategory());
@@ -149,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-
         for (final String category: db.getCategories()) {
 
             if (mCategory==null) mCategory = category;
@@ -158,60 +171,9 @@ public class MainActivity extends AppCompatActivity implements
             mIconSheets.put(category, iconSheet);
 
             iconSheet.setColumnCount(3);
+            iconSheet.setOnDragListener(this);
 
-            final TextView categoryTab = new TextView(this);
-            categoryTab.setText(category);
-
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.weight = 1;
-            lp.gravity = Gravity.CENTER;
-            lp.setMargins(2,4,2,4);
-            categoryTab.setLayoutParams(lp);
-            categoryTab.setGravity(Gravity.CENTER);
-            categoryTab.setBackgroundColor(Color.rgb(127, 127, 255));
-
-            categoryTab.setTextSize(16);
-            categoryTab.setPadding(6,24,2,24);
-
-            categoryTab.setClickable(true);
-            categoryTab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mDragHoverCategory==null) {
-                        switchCategory(category);
-                    }
-                }
-            });
-
-            categoryTab.setOnDragListener(new View.OnDragListener() {
-                @Override
-                public boolean onDrag(View view, DragEvent event) {
-                    switch (event.getAction()) {
-                        case DragEvent.ACTION_DRAG_EXITED:
-                        case DragEvent.ACTION_DRAG_ENDED:
-                            mDragHoverCategory = null;
-
-                        case DragEvent.ACTION_DRAG_ENTERED:
-                            mDragHoverCategory = category;
-                            categoryTab.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (mDragHoverCategory==category) {
-                                        switchCategory(mDragHoverCategory);
-                                        mDragHoverCategory=null;
-                                    }
-                                }
-                            }, 500);
-
-                            break;
-                        case DragEvent.ACTION_DROP:
-                            //switchCategory(category);
-                            MainActivity.this.onDrag(iconSheet, event);
-                            break;
-                    }
-                    return true;
-                }
-            });
+            final TextView categoryTab = getCategoryTab(category, iconSheet);
 
             mCategoryTabs.put(category, categoryTab);
             mCategoriesLayout.addView(categoryTab);
@@ -221,33 +183,96 @@ public class MainActivity extends AppCompatActivity implements
 
             for (final AppShortcut app : catapps) {
 
-
-                ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.shortcut_icon, (ViewGroup) null);
-
-                item.setTag(app);
-                item.setClickable(true);
-                item.setOnLongClickListener(this);
-                item.setOnDragListener(this);
-
-                item.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent i = pm.getLaunchIntentForPackage(app.getPackageName());
-                        MainActivity.this.startActivity(i);
-                    }
-                });
-
-
-                ImageView iconImage = (ImageView) item.findViewById(R.id.shortcut_icon);
-
-                app.setIconImage(iconImage);
-
-                TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
-                iconLabel.setText(app.getLabel());
+                ViewGroup item = getShortcutView(app);
 
                 iconSheet.addView(item);
             }
         }
+    }
+
+    @NonNull
+    private ViewGroup getShortcutView(final AppShortcut app) {
+        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.shortcut_icon, (ViewGroup) null);
+
+        item.setTag(app);
+        item.setClickable(true);
+        item.setOnLongClickListener(this);
+        item.setOnDragListener(this);
+
+        item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchApp(app);
+            }
+        });
+
+
+        ImageView iconImage = (ImageView) item.findViewById(R.id.shortcut_icon);
+
+        app.setIconImage(iconImage);
+
+        TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
+        iconLabel.setText(app.getLabel());
+        return item;
+    }
+
+    @NonNull
+    private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
+        final TextView categoryTab = new TextView(this);
+        categoryTab.setText(category);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.weight = 1;
+        lp.gravity = Gravity.CENTER;
+        lp.setMargins(2,4,2,4);
+        categoryTab.setLayoutParams(lp);
+        categoryTab.setGravity(Gravity.CENTER);
+        categoryTab.setBackgroundColor(Color.rgb(127, 127, 255));
+
+        categoryTab.setTextSize(16);
+        categoryTab.setPadding(6,24,2,24);
+
+        categoryTab.setClickable(true);
+        categoryTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("CategoryTab " + category);
+                if (mDragHoverCategory==null) {
+                    switchCategory(category);
+                }
+            }
+        });
+
+        categoryTab.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent event) {
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_EXITED:
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        mDragHoverCategory = null;
+
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        mDragHoverCategory = category;
+                        categoryTab.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mDragHoverCategory==category) {
+                                    switchCategory(mDragHoverCategory);
+                                    mDragHoverCategory=null;
+                                }
+                            }
+                        }, 500);
+
+                        break;
+                    case DragEvent.ACTION_DROP:
+                        //switchCategory(category);
+                        MainActivity.this.onDrag(iconSheet, event);
+                        break;
+                }
+                return true;
+            }
+        });
+        return categoryTab;
     }
 
 
@@ -295,7 +320,11 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
 
-                owner.removeView(view2);
+                if (mQuickRow != container) {
+                    owner.removeView(view2);
+                } else {
+                    view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()));
+                }
                 if (index == -1) {
                     container.addView(view2);
                 } else {

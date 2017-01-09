@@ -57,6 +57,15 @@ public class AppShortcut implements Comparable<AppShortcut>{
         mCategory = category;
     }
 
+
+    public AppShortcut(AppShortcut shortcut) {
+        mPackageName = shortcut.getPackageName();
+        mLabel = shortcut.getLabel();
+        mCategory = shortcut.getCategory();
+        mIconDrawable = shortcut.mIconDrawable;
+
+    }
+
 //    public AppShortcut(PackageManager pm, String packageName) throws PackageManager.NameNotFoundException {
 //        mPackageName = packageName;
 //        ApplicationInfo info = pm.getApplicationInfo(mPackageName, PackageManager.GET_META_DATA);

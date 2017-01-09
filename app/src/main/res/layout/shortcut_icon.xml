@@ -26,5 +26,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/shortcut_text"
         android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/shortcut_fontsize" />
 </LinearLayout>
