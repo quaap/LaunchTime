@@ -120,8 +120,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-//        mIconSheet = (GridLayout) findViewById(R.id.layout_icons);
-//        mIconSheet.setColumnCount(3);
 
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();

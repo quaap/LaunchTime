@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollIndicators="start|end"
-            android:background="#66cccccc"
+            android:background="#22aaccaa"
             android:layout_weight="8"
             android:id="@+id/layout_quickrow_scroll">
 
