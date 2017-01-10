@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
     private GridLayout mQuickRow;
     private HorizontalScrollView mQuickRowScroller;
 
+    //private ScrollView mCategoriesScroller;
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
 
@@ -93,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements
 
         setColors();
 
+        //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
+
+
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
         mIconSheetScroller.setOnDragListener(new View.OnDragListener() {
             @Override
@@ -423,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public boolean onDrag(View view, final DragEvent event) {
                 switch (event.getAction()) {
+
                     case DragEvent.ACTION_DRAG_EXITED:
                     case DragEvent.ACTION_DRAG_ENDED:
                           mBeingDragged = null;
@@ -486,7 +491,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
 
-                if (mQuickRow == mDragDropSource || mQuickRow != target) {
+                if ((mDragDropSource == mQuickRow && mQuickRow == target) || (mDragDropSource != mQuickRow && mQuickRow != target)) {
                     mDragDropSource.removeView(view2);
                 }
 
@@ -510,15 +515,19 @@ public class MainActivity extends AppCompatActivity implements
                         }
                     }
 
-                    view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()));
+                    view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()), true);
 
                 }
 
-                if (index == -1) {
-                    target.addView(view2);
-                } else {
-                    target.addView(view2, index);
+                if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
+
+                    if (index == -1) {
+                        target.addView(view2);
+                    } else {
+                        target.addView(view2, index);
+                    }
                 }
+
 
                 getDB().setCategoryOrder(mRevCategoryMap.get(target), target);
                 getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
