@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private volatile String mCategory;
     private GridLayout mQuickRow;
+    private HorizontalScrollView mQuickRowScroller;
+
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
 
@@ -89,6 +93,14 @@ public class MainActivity extends AppCompatActivity implements
 
         mQuickRow = (GridLayout) findViewById(R.id.layout_quickrow);
         mQuickRow.setOnDragListener(this);
+
+        mQuickRowScroller = (HorizontalScrollView) findViewById(R.id.layout_quickrow_scroll);
+        mQuickRowScroller.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                return MainActivity.this.onDrag(mQuickRow, dragEvent);
+            }
+        });
 
 //        mIconSheet = (GridLayout) findViewById(R.id.layout_icons);
 //        mIconSheet.setColumnCount(3);
@@ -495,12 +507,18 @@ public class MainActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == UNINSTALL_RESULT) {
 
-            if (resultCode == RESULT_OK) {
-                mDragDropSource.removeView(mBeingUninstalled);
-                getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
-                Toast.makeText(this,"Application was uninstalled", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this,"Application was NOT uninstalled", Toast.LENGTH_SHORT).show();
+            switch (resultCode) {
+                case RESULT_OK:
+                    mDragDropSource.removeView(mBeingUninstalled);
+                    getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                    Toast.makeText(this, "Application was uninstalled", Toast.LENGTH_SHORT).show();
+                    break;
+                case RESULT_CANCELED:
+                    Toast.makeText(this, "Uninstall cancelled", Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    Toast.makeText(this,"Application could not be uninstalled", Toast.LENGTH_LONG).show();
+
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

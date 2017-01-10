@@ -22,7 +22,8 @@
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/layout_icons">
+                android:id="@+id/layout_icons"
+                android:fadingEdge="vertical">
 
             </GridLayout>
         </ScrollView>
@@ -55,11 +56,29 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollIndicators="start|end"
+            android:background="#66cccccc"
+            android:layout_weight="8"
+            android:id="@+id/layout_quickrow_scroll">
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/quickbar_height"
+                android:id="@+id/layout_quickrow">
+
+
+            </GridLayout>
+        </HorizontalScrollView>
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="#ddff3333"
-            android:id="@+id/remove_dropzone">
+            android:id="@+id/remove_dropzone"
+            android:layout_weight="1">
 
             <TextView
                 android:text="Remove"
@@ -70,21 +89,6 @@
                 android:layout_gravity="start"
                 android:rotation="-90" />
         </FrameLayout>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollIndicators="start|end"
-            android:background="#66cccccc">
-
-            <GridLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/quickbar_height"
-                android:id="@+id/layout_quickrow">
-
-
-            </GridLayout>
-        </HorizontalScrollView>
 
     </LinearLayout>
 
