@@ -4,4 +4,9 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="remove_shortcut">Remove</string>
+    <string name="uninstall_app">Uninstall</string>
+    <string name="app_was_uninstalled">Application was uninstalled</string>
+    <string name="uninstall_canceled">Uninstall cancelled</string>
+    <string name="could_not_uninstall">Application could not be uninstalled</string>
 </resources>

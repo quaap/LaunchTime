@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements
         for (String pkgname: quickRowOrder) {
             for (AppShortcut app : quickRowApps) {
                 if (app.getPackageName().equals(pkgname)) {
-                    ViewGroup item = getShortcutView(app);
+                    ViewGroup item = getShortcutView(app, true);
                     mQuickRow.addView(item);
                 }
             }
@@ -329,10 +329,10 @@ public class MainActivity extends AppCompatActivity implements
             Collections.sort(catapps);
 
 
-//            GlobState.getGlobState(this).runAsync(new Runnable() {
-//                @Override
-//                public void run() {
-           // Log.d("category--------", category);
+            GlobState.getGlobState(this).runAsync(new Runnable() {
+                @Override
+                public void run() {
+         //   Log.d("category--------", category);
 
                     for (String pkgname: apporder) {
                        // Log.d("apporder", pkgname);
@@ -359,16 +359,20 @@ public class MainActivity extends AppCompatActivity implements
                         db.setCategoryOrder(category, iconSheet);
                     }
 
-//                }
-//            });
+                }
+            });
 
         }
 
     }
-
-    @NonNull
     private ViewGroup getShortcutView(final AppShortcut app) {
-        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.shortcut_icon, (ViewGroup) null);
+        return getShortcutView(app, false);
+    }
+
+    private ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
+
+
+        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon?R.layout.shortcut_small_icon:R.layout.shortcut_icon, (ViewGroup) null);
 
         item.setTag(app);
         item.setClickable(true);
@@ -382,17 +386,17 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-
         ImageView iconImage = (ImageView) item.findViewById(R.id.shortcut_icon);
-
         app.setIconImage(iconImage);
 
-        TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
-        iconLabel.setText(app.getLabel());
+        if (!smallIcon) {
+            TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
+            iconLabel.setText(app.getLabel());
+        }
         return item;
     }
 
-    @NonNull
+
     private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(getDB().getCategoryDisplay(category));
@@ -510,10 +514,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()));
 
-
                 }
-
-
 
                 if (index == -1) {
                     target.addView(view2);
@@ -556,9 +557,9 @@ public class MainActivity extends AppCompatActivity implements
         mRemoveDropzone.setBackgroundColor(Color.RED);
 
         if (mDragDropSource == mQuickRow) {
-            mRemoveAppText.setText("Remove");
+            mRemoveAppText.setText(R.string.remove_shortcut);
         } else {
-            mRemoveAppText.setText("Uninstall");
+            mRemoveAppText.setText(R.string.uninstall_app);
         }
     }
 
@@ -575,13 +576,7 @@ public class MainActivity extends AppCompatActivity implements
         startActivityForResult(uninstallIntent, UNINSTALL_RESULT);
     }
 
-    /**
-     * Dispatch incoming result to the correct fragment.
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == UNINSTALL_RESULT) {
@@ -590,13 +585,13 @@ public class MainActivity extends AppCompatActivity implements
                 case RESULT_OK:
                     mDragDropSource.removeView(mBeingUninstalled);
                     getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
-                    Toast.makeText(this, "Application was uninstalled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
                     break;
                 case RESULT_CANCELED:
-                    Toast.makeText(this, "Uninstall cancelled", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
                     break;
                 default:
-                    Toast.makeText(this,"Application could not be uninstalled", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.could_not_uninstall, Toast.LENGTH_LONG).show();
 
             }
         } else {

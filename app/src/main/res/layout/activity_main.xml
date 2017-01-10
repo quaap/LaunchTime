@@ -60,7 +60,9 @@
             <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/quickbar_height"
-                android:id="@+id/layout_quickrow">
+                android:id="@+id/layout_quickrow"
+                android:useDefaultMargins="false"
+                android:alignmentMode="alignBounds">
 
 
             </GridLayout>
