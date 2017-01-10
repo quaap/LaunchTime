@@ -42,15 +42,17 @@ public class AppShortcut implements Comparable<AppShortcut>{
     private String mActivityName;
     private String mLabel;
     private String mCategory;
+    private boolean mWidget;
     private volatile Drawable mIconDrawable;
     private volatile ImageView mIconImage;
 
 
-    public AppShortcut(String activityName, String packageName, String label, String category) {
+    public AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
         mPackageName = packageName;
         mLabel = label;
         mCategory = category;
+        mWidget = isWidget;
     }
 
 
@@ -60,6 +62,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
         mLabel = shortcut.getLabel();
         mCategory = shortcut.getCategory();
         mIconDrawable = shortcut.mIconDrawable;
+        mWidget = shortcut.mWidget;
 
     }
 
@@ -75,6 +78,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
         mCategory = Categories.getCategoryForPackage(mPackageName);
+        mWidget = false;
 
         Log.d("LaunchTime", mPackageName  + ", " +  ri.activityInfo.name + ", " + mLabel);
 
@@ -86,10 +90,6 @@ public class AppShortcut implements Comparable<AppShortcut>{
         return mLabel;
     }
 
-    public void setLabel(String label) {
-        mLabel = label;
-    }
-
     public String getPackageName() {
         return mPackageName;
     }
@@ -98,21 +98,14 @@ public class AppShortcut implements Comparable<AppShortcut>{
         return mActivityName;
     }
 
-    public void setPackageName(String packageName) {
-        mPackageName = packageName;
-    }
-
     public String getCategory() {
         return mCategory;
     }
 
-    public void setCategory(String category) {
-        mCategory = category;
+    public boolean isWidget() {
+        return mWidget;
     }
 
-    public ImageView getIconImage() {
-        return mIconImage;
-    }
 
     public void setIconImage(ImageView iconImage) {
         mIconImage = iconImage;

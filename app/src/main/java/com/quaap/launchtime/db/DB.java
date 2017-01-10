@@ -38,13 +38,14 @@ public class DB extends SQLiteOpenHelper {
     private static final String PKGNAME = "pkgname";
     private static final String LABEL = "label";
     private static final String CATID = "catID";
+    private static final String ISWIDGET = "iswidget";
     private static final String INDEX = "pos";
     private static final String ID = "id";
 
 
     private static final String APP_TABLE = "apps";
-    private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID};
-    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT","TEXT", "TEXT"};
+    private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID, ISWIDGET};
+    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT","TEXT", "TEXT", "SHORT"};
     private static final String APP_TABLE_CREATE = buildCreateTableStmt(APP_TABLE, appcolumns, appcolumntypes);
 
     private static final String[] appcolumnsindex = {PKGNAME, CATID};
@@ -128,9 +129,10 @@ public class DB extends SQLiteOpenHelper {
             String pkgname = cursor.getString(1);
             String label = cursor.getString(2);
             String catID = cursor.getString(3);
+            boolean widget = cursor.getShort(4)==1;
 
            // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-            appShortcut = new AppShortcut(actvname, pkgname, label, catID);
+            appShortcut = new AppShortcut(actvname, pkgname, label, catID, widget);
         }
         cursor.close();
         return appShortcut;
@@ -148,8 +150,9 @@ public class DB extends SQLiteOpenHelper {
             String actvname = cursor.getString(0);
             String pkgname = cursor.getString(1);
             String label = cursor.getString(2);
+            boolean widget = cursor.getShort(4)==1;
 
-            apps.add(new AppShortcut(actvname, pkgname, label, catID));
+            apps.add(new AppShortcut(actvname, pkgname, label, catID, widget));
         }
         cursor.close();
 
@@ -157,22 +160,22 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public void addApp(AppShortcut shortcut) {
-        addApp(shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
+        addApp(shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
     }
 
     public void addApps(List<AppShortcut> shortcuts) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (AppShortcut shortcut: shortcuts) {
-            addApp(db, shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
+            addApp(db, shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
         }
     }
 
-    public void addApp(String actvname, String pkgname, String label, String catID) {
+    public void addApp(String actvname, String pkgname, String label, String catID, boolean widget) {
         SQLiteDatabase db = this.getWritableDatabase();
-        addApp(db, actvname, pkgname, label, catID);
+        addApp(db, actvname, pkgname, label, catID, widget);
     }
 
-    private void addApp(SQLiteDatabase db, String actvname, String pkgname, String label, String catID) {
+    private void addApp(SQLiteDatabase db, String actvname, String pkgname, String label, String catID, boolean widget) {
         try {
 
 
@@ -181,6 +184,7 @@ public class DB extends SQLiteOpenHelper {
             values.put(PKGNAME, pkgname);
             values.put(LABEL, label);
             values.put(CATID, catID);
+            values.put(ISWIDGET, widget);
 
             db.insert(APP_TABLE, null, values);
         } catch (Exception e) {

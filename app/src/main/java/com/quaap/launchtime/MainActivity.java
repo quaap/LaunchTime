@@ -1,5 +1,6 @@
 package com.quaap.launchtime;
 
+import android.appwidget.AppWidgetHostView;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
@@ -32,6 +34,7 @@ import android.widget.Toast;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.Utils;
+import com.quaap.launchtime.components.Widget;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
@@ -67,14 +70,17 @@ public class MainActivity extends AppCompatActivity implements
     private PackageManager mPackageMan;
     private AppShortcut mBeingDragged;
     private volatile ViewGroup mDragDropSource;
+    private SharedPreferences mPrefs;
+    private View mBeingUninstalled;
+    private Widget mWidgetHost;
+
+
     private int cattabBackground;
     private int cattabSelectedBackground;
     private int dragoverBackground;
     private int backgroundDefault = Color.TRANSPARENT;
-    private SharedPreferences mPrefs;
     private float categoryTabFontSize = 16;
     private float categoryTabFontSizeHidden = 12;
-    private View mBeingUninstalled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements
             actionBar.hide();
         }
         mPackageMan = getApplicationContext().getPackageManager();
+        mWidgetHost = new Widget(this);
 
         setColors();
         initUI();
@@ -103,10 +110,26 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+
+
         loadApplications();
+
+        Button settButt = (Button)findViewById(R.id.settings_button);
+        settButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setupWidget();
+            }
+        });
+
+       // mCategoriesLayout
 
         mPrefs = getSharedPreferences("default",MODE_PRIVATE);
 
+    }
+
+    private void setupWidget() {
+        mWidgetHost.popupSelectWidget();
     }
 
 
@@ -147,9 +170,6 @@ public class MainActivity extends AppCompatActivity implements
         mIconSheetScroller.addView(mIconSheet);
         mCategoryTabs.get(category).setBackgroundColor(cattabSelectedBackground);
 
-        if (mCategory.equals("Other")) {
-
-        }
 
     }
 
@@ -593,7 +613,12 @@ public class MainActivity extends AppCompatActivity implements
 
             }
         } else {
-            super.onActivityResult(requestCode, resultCode, data);
+            AppWidgetHostView wid = mWidgetHost.onActivityResult(requestCode, resultCode, data);
+            if (wid==null) {
+                super.onActivityResult(requestCode, resultCode, data);
+            } else {
+                mIconSheet.addView(wid);
+            }
         }
     }
 
