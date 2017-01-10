@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements
 
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setClassName(app.getPackageName(), app.getActivityName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
