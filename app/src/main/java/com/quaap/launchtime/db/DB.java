@@ -127,7 +127,7 @@ public class DB extends SQLiteOpenHelper {
         if(cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
             String pkgname = cursor.getString(1);
             String label = cursor.getString(2);
-            String catID = cursor.getString(4);
+            String catID = cursor.getString(3);
 
            // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
             appShortcut = new AppShortcut(actvname, pkgname, label, catID);

@@ -46,7 +46,7 @@ public class GlobState extends Application {
         mExecutor = new CachedThreadPool();
         Categories.init(this);
 
-       // this.deleteDatabase(DB.DATABASE_NAME);
+        //this.deleteDatabase(DB.DATABASE_NAME);
 
         mDB = new DB(this);
         if (mDB.isFirstRun()) {

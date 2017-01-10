@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
@@ -343,7 +344,10 @@ public class MainActivity extends AppCompatActivity implements
             mRevCategoryMap.put(categoryTab, category);
             mCategoriesLayout.addView(categoryTab);
 
-            final List<AppShortcut> catapps = shortcuts.get(category);
+            List<AppShortcut> capps = shortcuts.get(category);
+            if (capps==null) capps = new ArrayList<>();
+
+            final List<AppShortcut> catapps = capps;
             Collections.sort(catapps);
 
 
@@ -415,21 +419,31 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    private float categoryTabFontSize = 16;
+    private float categoryTabFontSizeHidden = 12;
+
+
     private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(getDB().getCategoryDisplay(category));
+        final boolean ishidden = category.equals(Categories.CAT_HIDDEN);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.weight = 1;
-        lp.gravity = Gravity.CENTER;
-        lp.setMargins(2,6,2,4);
-        categoryTab.setLayoutParams(lp);
+        if (!ishidden) {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.weight = 1;
+            lp.gravity = Gravity.CENTER;
+            lp.setMargins(2, 6, 2, 4);
+            categoryTab.setLayoutParams(lp);
+
+            categoryTab.setBackgroundColor(cattabBackground);
+
+            categoryTab.setTextSize(categoryTabFontSize);
+            categoryTab.setPadding(6, 24, 2, 24);
+        } else {
+            categoryTab.setTextSize(categoryTabFontSizeHidden);
+        }
+
         categoryTab.setGravity(Gravity.CENTER);
-        categoryTab.setBackgroundColor(cattabBackground);
-
-        categoryTab.setTextSize(16);
-        categoryTab.setPadding(6,24,2,24);
-
         categoryTab.setClickable(true);
         categoryTab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -444,11 +458,23 @@ public class MainActivity extends AppCompatActivity implements
             public boolean onDrag(View view, final DragEvent event) {
                 switch (event.getAction()) {
 
-                    case DragEvent.ACTION_DRAG_EXITED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        if (ishidden) {
+                            categoryTab.setTextSize(categoryTabFontSize);
+                            categoryTab.setPadding(6, 24, 2, 24);
+                        }
+                        break;
+
+
                     case DragEvent.ACTION_DRAG_ENDED:
-                          mBeingDragged = null;
-                          hideRemoveDropzone();
-                           break;
+                        mBeingDragged = null;
+                        hideRemoveDropzone();
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        if (ishidden) {
+                            categoryTab.setTextSize(categoryTabFontSizeHidden);
+                            categoryTab.setPadding(1,1,1,1);
+                        }
+                        break;
 
                     case DragEvent.ACTION_DROP:
                         getDB().updateAppCategory(mBeingDragged.getActivityName(), category);

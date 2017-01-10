@@ -59,6 +59,10 @@ public class Categories {
         return category;
     }
 
+
+    public static final String CAT_SETTINGS = "Settings";
+    public static final String CAT_HIDDEN = "Hidden";
+
     public static final String [] DefCategoryOrder = {
             "Phone",
             "Games",
@@ -66,8 +70,9 @@ public class Categories {
             "Media",
             "Graphics",
             "Accessories",
-            "Settings",
-            "Other"
+            "Other",
+            CAT_SETTINGS,
+            CAT_HIDDEN
     };
 
     public static Map<String, String[]> getCategoryKeywords(Context ctx)
@@ -80,7 +85,7 @@ public class Categories {
         keywordsDict.put("Media", new String[]{"radio", "voice", "speech", "pod", "music", "sound", "mp3", "record", "sfx", "mic"});
         keywordsDict.put("Graphics", new String[]{"pic", "pix", "gallery", "photo", "foto", "cam", "tube", "tv", "video", "draw", "graph", "gfx", "image", "img", "svg", "png"});
         keywordsDict.put("Accessories", new String[]{"editor", "calc", "calendar", "organize", "clock", "time", "viewer", "file", "manager", "memo", "note"});
-        keywordsDict.put("Settings", new String[]{"settings", "config", "keyboard", "launcher", "sync", "backup"});
+        keywordsDict.put(CAT_SETTINGS, new String[]{"settings", "config", "keyboard", "launcher", "sync", "backup"});
 
 
         return keywordsDict;
