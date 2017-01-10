@@ -30,20 +30,13 @@
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#66cccccc">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/layout_categories">
-
-                <TextView
-                    android:text="  "
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView2" />
 
             </LinearLayout>
         </ScrollView>

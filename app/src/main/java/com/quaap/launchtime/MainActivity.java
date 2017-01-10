@@ -6,11 +6,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,12 +43,14 @@ import java.util.TreeMap;
 public class MainActivity extends AppCompatActivity implements
         View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
 
-    public static final int BACKGROUND_COLOR = Color.TRANSPARENT;
+
+
     public static final String QUICK_ROW = "QuickRow";
 
     private ScrollView mIconSheetScroller;
 
     private Map<String,GridLayout> mIconSheets;
+    private GridLayout mIconSheet;
     private Map<String,TextView> mCategoryTabs;
     private Map<View, String> mRevCategoryMap;
 
@@ -71,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements
     private volatile String mDragDropCategory;
     private volatile ViewGroup mDragDropSource;
 
+    private int cattabBackground;
+    private int cattabSelectedBackground;
+    private int dragoverBackground;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +87,16 @@ public class MainActivity extends AppCompatActivity implements
         }
         mPackageMan = getApplicationContext().getPackageManager();
 
+        setColors();
+
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
+        mIconSheetScroller.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                return MainActivity.this.onDrag(mIconSheet, dragEvent);
+            }
+        });
 
         mRemoveDropzone = (FrameLayout)findViewById(R.id.remove_dropzone);
         mRemoveDropzone.setOnDragListener(this);
@@ -116,17 +130,32 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    private void setColors() {
+        cattabBackground = getResColor(R.color.cattab_background);
+        cattabSelectedBackground = getResColor(R.color.cattabselected_background);
+        dragoverBackground = getResColor(R.color.dragover_background);
+    }
+
+    private int getResColor(int res) {
+        if (Build.VERSION.SDK_INT>=23) {
+            return getColor(res);
+        } else {
+            return getResources().getColor(res);
+        }
+    }
+
 
     private void switchCategory(String category) {
         if (category==null) return;
         mCategory = category;
         for(TextView cat: mCategoryTabs.values()) {
-            cat.setBackgroundColor(Color.TRANSPARENT);
+            cat.setBackgroundColor(cattabBackground);
         }
 
         mIconSheetScroller.removeAllViews();
-        mIconSheetScroller.addView(mIconSheets.get(category));
-        mCategoryTabs.get(category).setBackgroundColor(Color.argb(127,127,127,250));
+        mIconSheet = mIconSheets.get(category);
+        mIconSheetScroller.addView(mIconSheet);
+        mCategoryTabs.get(category).setBackgroundColor(cattabSelectedBackground);
     }
 
     protected DB getDB() {
@@ -318,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements
         lp.setMargins(2,4,2,4);
         categoryTab.setLayoutParams(lp);
         categoryTab.setGravity(Gravity.CENTER);
-        categoryTab.setBackgroundColor(Color.rgb(127, 127, 255));
+        categoryTab.setBackgroundColor(cattabBackground);
 
         categoryTab.setTextSize(16);
         categoryTab.setPadding(6,24,2,24);
@@ -369,15 +398,15 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (!islayout) {
-                    view.setBackgroundColor(Color.BLUE);
+                    view.setBackgroundColor(dragoverBackground);
                 }
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
 
-                if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
+                if (!islayout) view.setBackgroundColor(Color.TRANSPARENT);
                 break;
             case DragEvent.ACTION_DROP:
-                if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
+                if (!islayout) view.setBackgroundColor(Color.TRANSPARENT);
                 // Dropped, reassign View to ViewGroup
                 View view2 = (View) event.getLocalState();
                 if (view2 == view) {
@@ -446,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements
                 getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                if (!islayout) view.setBackgroundColor(BACKGROUND_COLOR);
+                if (!islayout) view.setBackgroundColor(Color.TRANSPARENT);
                 mBeingDragged = null;
                 hideRemoveDropzone();
                 break;
