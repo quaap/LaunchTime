@@ -2,8 +2,10 @@ package com.quaap.launchtime;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -69,13 +71,15 @@ public class MainActivity extends AppCompatActivity implements
 
     private AppShortcut mBeingDragged;
 
-    //private volatile String mDragHoverCategory;
-    private volatile String mDragDropCategory;
+
     private volatile ViewGroup mDragDropSource;
 
     private int cattabBackground;
     private int cattabSelectedBackground;
     private int dragoverBackground;
+    private int backgroundDefault = Color.TRANSPARENT;
+
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +130,39 @@ public class MainActivity extends AppCompatActivity implements
 
         loadApplications();
 
-        switchCategory(mCategory);
+        mPrefs = getSharedPreferences("default",MODE_PRIVATE);
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        checkConfig();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPrefs.edit().putString("category", mCategory).apply();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCategory = mPrefs.getString("category", mCategory);
+        switchCategory(mCategory);
+    }
+
+
+    private void checkConfig() {
+        if (isLandscape()) {
+            changeColumnCount(mIconSheet, 6);
+        } else {
+            changeColumnCount(mIconSheet, 3);
+        }
     }
 
     private void setColors() {
@@ -154,8 +189,29 @@ public class MainActivity extends AppCompatActivity implements
 
         mIconSheetScroller.removeAllViews();
         mIconSheet = mIconSheets.get(category);
+
+        checkConfig();
+
         mIconSheetScroller.addView(mIconSheet);
         mCategoryTabs.get(category).setBackgroundColor(cattabSelectedBackground);
+    }
+
+    private void changeColumnCount(GridLayout gridLayout, int columnCount) {
+        if (gridLayout.getColumnCount() != columnCount) {
+            final int viewsCount = gridLayout.getChildCount();
+            for (int i = 0; i < viewsCount; i++) {
+                View view = gridLayout.getChildAt(i);
+                //new GridLayout.LayoutParams created with Spec.UNSPECIFIED
+                //which are package visible
+                view.setLayoutParams(new GridLayout.LayoutParams());
+            }
+            gridLayout.setColumnCount(columnCount);
+        }
+    }
+
+    public boolean isLandscape() {
+        int orientation = getResources().getConfiguration().orientation;
+        return orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     protected DB getDB() {
@@ -344,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.weight = 1;
         lp.gravity = Gravity.CENTER;
-        lp.setMargins(2,4,2,4);
+        lp.setMargins(2,6,2,4);
         categoryTab.setLayoutParams(lp);
         categoryTab.setGravity(Gravity.CENTER);
         categoryTab.setBackgroundColor(cattabBackground);
@@ -356,7 +412,6 @@ public class MainActivity extends AppCompatActivity implements
         categoryTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //System.out.println("CategoryTab " + category);
                 switchCategory(category);
 
             }
@@ -369,14 +424,10 @@ public class MainActivity extends AppCompatActivity implements
                     case DragEvent.ACTION_DRAG_EXITED:
                     case DragEvent.ACTION_DRAG_ENDED:
                           mBeingDragged = null;
-                          mDragDropCategory = null;
                           hideRemoveDropzone();
                            break;
 
                     case DragEvent.ACTION_DROP:
-                        //switchCategory(category);
-                        mDragDropCategory = category;
-
                         getDB().updateAppCategory(mBeingDragged.getPackageName(), category);
                         MainActivity.this.onDrag(iconSheet, event);
                         break;
@@ -403,10 +454,10 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
 
-                if (!islayout) view.setBackgroundColor(Color.TRANSPARENT);
+                if (!islayout) view.setBackgroundColor(backgroundDefault);
                 break;
             case DragEvent.ACTION_DROP:
-                if (!islayout) view.setBackgroundColor(Color.TRANSPARENT);
+                if (!islayout) view.setBackgroundColor(backgroundDefault);
                 // Dropped, reassign View to ViewGroup
                 View view2 = (View) event.getLocalState();
                 if (view2 == view) {
@@ -447,7 +498,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 if (target == mQuickRow) {
-                    mDragDropCategory = QUICK_ROW;
                     if (mQuickRow != mDragDropSource) {
                         for (int i = 0; i < mQuickRow.getChildCount(); i++) {
                             AppShortcut dragging = (AppShortcut) view2.getTag();
@@ -459,7 +509,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
 
                     view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()));
-                    LinearLayout sc = (LinearLayout)view2;
+
 
                 }
 
@@ -475,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements
                 getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                if (!islayout) view.setBackgroundColor(Color.TRANSPARENT);
+                if (!islayout) view.setBackgroundColor(backgroundDefault);
                 mBeingDragged = null;
                 hideRemoveDropzone();
                 break;
