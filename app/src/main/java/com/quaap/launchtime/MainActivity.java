@@ -10,9 +10,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -196,6 +196,11 @@ public class MainActivity extends AppCompatActivity implements
 
         mIconSheetScroller.addView(mIconSheet);
         mCategoryTabs.get(category).setBackgroundColor(cattabSelectedBackground);
+
+        if (mCategory.equals("Other")) {
+
+        }
+
     }
 
     private void changeColumnCount(GridLayout gridLayout, int columnCount) {
@@ -222,8 +227,15 @@ public class MainActivity extends AppCompatActivity implements
 
     private void launchApp(final AppShortcut app) {
 
-        Intent intent = mPackageMan.getLaunchIntentForPackage(app.getPackageName());
-        MainActivity.this.startActivity(intent);
+//        Intent intent = mPackageMan.getLaunchIntentForPackage(app.getPackageName());
+//        startActivity(intent);
+//        Intent intent = new Intent(Intent.ACTION_MAIN);
+//        intent.setClassName("com.android.contacts", "com.android.contacts.activities.DialtactsActivity");
+//        startActivity(intent);
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClassName(app.getPackageName(), app.getActivityName());
+        startActivity(intent);
     }
 
 
@@ -243,10 +255,10 @@ public class MainActivity extends AppCompatActivity implements
 
         final DB db = getDB();
 
-        List<String> dbpkgnames = db.getAppPkgNames();
+        List<String> dbactvnames = db.getAppActvNames();
 
 
-        Set<String> pmpkgnames = new HashSet<>();
+        Set<String> pmactvnames = new HashSet<>();
 
         List<AppShortcut> newapps = new ArrayList<>();
         List<AppShortcut> quickRowApps = new ArrayList<>();
@@ -257,18 +269,20 @@ public class MainActivity extends AppCompatActivity implements
             AppShortcut app;
 
             ResolveInfo ri = activities.get(i);
-            String pkgname = ri.activityInfo.packageName;
-            if (!pmpkgnames.contains(pkgname)) {
-                pmpkgnames.add(pkgname);
+            String actvname = ri.activityInfo.name;
+            if (!pmactvnames.contains(actvname)) {
+                pmactvnames.add(actvname);
 
-                if (dbpkgnames.contains(pkgname)) {
-                    app = db.getApp(pkgname);
+                if (dbactvnames.contains(actvname)) {
+                    app = db.getApp(actvname);
                     app.loadAppIconAsync(mPackageMan);
                 } else {
                     app = new AppShortcut(mPackageMan, ri);
                     //db.addApp(app);
                     newapps.add(app);
                 }
+
+
                 List<AppShortcut> catapps = shortcuts.get(app.getCategory());
                 if (catapps == null) {
                     catapps = new ArrayList<>();
@@ -276,20 +290,22 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 catapps.add(app);
 
-                if (quickRowOrder.contains(app.getPackageName())) {
+                if (quickRowOrder.contains(app.getActivityName())) {
                     AppShortcut qapp = new AppShortcut(app);
                     qapp.loadAppIconAsync(mPackageMan);
                     quickRowApps.add(qapp);
                 }
+            } else {
+                Log.d("Launch", actvname + " " + ri.activityInfo.name);
             }
         }
 
         db.addApps(newapps);
 
         //remove shortcuts if they are not in the system
-        for (Iterator<String> it=dbpkgnames.iterator(); it.hasNext();) {
-            String dbpkg = it.next();
-            if (!pmpkgnames.contains(dbpkg)) {
+        for (Iterator<String> it=dbactvnames.iterator(); it.hasNext();) {
+            String dbactv = it.next();
+            if (!pmactvnames.contains(dbactv)) {
                 it.remove();
                 //db.remove(dbpkg);
             }
@@ -297,9 +313,9 @@ public class MainActivity extends AppCompatActivity implements
 
 
         mQuickRow.removeAllViews();
-        for (String pkgname: quickRowOrder) {
+        for (String actvname: quickRowOrder) {
             for (AppShortcut app : quickRowApps) {
-                if (app.getPackageName().equals(pkgname)) {
+                if (app.getActivityName().equals(actvname)) {
                     ViewGroup item = getShortcutView(app, true);
                     mQuickRow.addView(item);
                 }
@@ -336,10 +352,10 @@ public class MainActivity extends AppCompatActivity implements
                 public void run() {
          //   Log.d("category--------", category);
 
-                    for (String pkgname: apporder) {
+                    for (String actvname: apporder) {
                        // Log.d("apporder", pkgname);
                         for (AppShortcut app : catapps) {
-                            if (app.getPackageName().equals(pkgname)) {
+                            if (app.getActivityName().equals(actvname)) {
                                 ViewGroup item = getShortcutView(app);
                                 iconSheet.addView(item);
                             }
@@ -348,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     boolean reorder = false;
                     for (AppShortcut app : catapps) {
-                        if (!apporder.contains(app.getPackageName())) {
+                        if (!apporder.contains(app.getActivityName())) {
                           //  Log.d("no apporder", app.getPackageName());
 
                             ViewGroup item = getShortcutView(app);
@@ -435,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements
                            break;
 
                     case DragEvent.ACTION_DROP:
-                        getDB().updateAppCategory(mBeingDragged.getPackageName(), category);
+                        getDB().updateAppCategory(mBeingDragged.getActivityName(), category);
                         MainActivity.this.onDrag(iconSheet, event);
                         break;
                 }
@@ -509,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements
                         for (int i = 0; i < mQuickRow.getChildCount(); i++) {
                             AppShortcut dragging = (AppShortcut) view2.getTag();
                             AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
-                            if (dragging.getPackageName().equals(inbar.getPackageName())) {
+                            if (dragging.getActivityName().equals(inbar.getActivityName())) {
                                 return true;
                             }
                         }

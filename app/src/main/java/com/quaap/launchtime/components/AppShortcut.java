@@ -1,6 +1,7 @@
 package com.quaap.launchtime.components;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -38,13 +39,15 @@ import java.util.Map;
  */
 public class AppShortcut implements Comparable<AppShortcut>{
     private String mPackageName;
+    private String mActivityName;
     private String mLabel;
     private String mCategory;
     private volatile Drawable mIconDrawable;
     private volatile ImageView mIconImage;
 
 
-    public AppShortcut(String packageName, String label, String category) {
+    public AppShortcut(String activityName, String packageName, String label, String category) {
+        mActivityName = activityName;
         mPackageName = packageName;
         mLabel = label;
         mCategory = category;
@@ -52,6 +55,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
 
 
     public AppShortcut(AppShortcut shortcut) {
+        mActivityName = shortcut.getActivityName();
         mPackageName = shortcut.getPackageName();
         mLabel = shortcut.getLabel();
         mCategory = shortcut.getCategory();
@@ -67,6 +71,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
 //    }
 
     public AppShortcut(PackageManager pm, ResolveInfo ri) {
+        mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
         mCategory = Categories.getCategoryForPackage(mPackageName);
@@ -87,6 +92,10 @@ public class AppShortcut implements Comparable<AppShortcut>{
 
     public String getPackageName() {
         return mPackageName;
+    }
+
+    public String getActivityName() {
+        return mActivityName;
     }
 
     public void setPackageName(String packageName) {
@@ -115,14 +124,14 @@ public class AppShortcut implements Comparable<AppShortcut>{
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AppShortcut) {
-            return mPackageName.equals(((AppShortcut)obj).mPackageName);
+            return mActivityName.equals(((AppShortcut)obj).mActivityName);
         }
         return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return mPackageName.hashCode();
+        return mActivityName.hashCode();
     }
 
     @Override
@@ -145,7 +154,10 @@ public class AppShortcut implements Comparable<AppShortcut>{
                 // load the icon
                 Drawable app_icon = null;
                 try {
-                    app_icon = pm.getApplicationIcon(mPackageName);
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.setClassName(mPackageName, mActivityName);
+                    app_icon = pm.getActivityIcon(intent);
+                    //app_icon = pm.getApplicationIcon(mPackageName);
 
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();

@@ -34,6 +34,7 @@ public class DB extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "db";
     private static final int DATABASE_VERSION = 1;
 
+    private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
     private static final String LABEL = "label";
     private static final String CATID = "catID";
@@ -42,18 +43,18 @@ public class DB extends SQLiteOpenHelper {
 
 
     private static final String APP_TABLE = "apps";
-    private static final String[] appcolumns = {PKGNAME, LABEL, CATID};
-    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT", "TEXT"};
+    private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID};
+    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT","TEXT", "TEXT"};
     private static final String APP_TABLE_CREATE = buildCreateTableStmt(APP_TABLE, appcolumns, appcolumntypes);
 
     private static final String[] appcolumnsindex = {PKGNAME, CATID};
 
     private static final String APP_ORDER_TABLE = "apps_order";
-    private static final String[] appordercolumns = {CATID, PKGNAME, INDEX};
+    private static final String[] appordercolumns = {CATID, ACTVNAME, INDEX};
     private static final String[] appordercolumntypes = {"TEXT", "TEXT", "INT"};
     private static final String APP_ORDER_TABLE_CREATE = buildCreateTableStmt(APP_ORDER_TABLE, appordercolumns, appordercolumntypes);
 
-    private static final String[] appordercolumnsindex = {CATID + ", " + PKGNAME, INDEX};
+    private static final String[] appordercolumnsindex = {CATID + ", " + ACTVNAME, INDEX};
 
 
     private static final String TAB_ORDER_TABLE = "tab_order";
@@ -101,34 +102,35 @@ public class DB extends SQLiteOpenHelper {
     }
 
 
-    public List<String> getAppPkgNames() {
-        List<String> pkgnames = new ArrayList<>();
+    public List<String> getAppActvNames() {
+        List<String> actvnames = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, new String[]{PKGNAME}, null, null, null, null, null);
+        Cursor cursor = db.query(APP_TABLE, new String[]{ACTVNAME}, null, null, null, null, null);
 
         while(cursor.moveToNext()) {
-            pkgnames.add(cursor.getString(0));
+            actvnames.add(cursor.getString(0));
         }
         cursor.close();
-        return pkgnames;
+        return actvnames;
     }
 
 
-    public AppShortcut getApp(String pkgname) {
+    public AppShortcut getApp(String actvname) {
 
         AppShortcut appShortcut = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, appcolumns, PKGNAME + "=?", new String[]{pkgname}, null, null, null);
+        Cursor cursor = db.query(APP_TABLE, appcolumns, ACTVNAME + "=?", new String[]{actvname}, null, null, null);
 
-        if(cursor.moveToNext()) {
-            String label = cursor.getString(1);
-            String catID = cursor.getString(2);
+        if(cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
+            String pkgname = cursor.getString(1);
+            String label = cursor.getString(2);
+            String catID = cursor.getString(4);
 
            // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-            appShortcut = new AppShortcut(pkgname, label, catID);
+            appShortcut = new AppShortcut(actvname, pkgname, label, catID);
         }
         cursor.close();
         return appShortcut;
@@ -143,10 +145,11 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=?", new String[]{catID}, null, null, null);
 
         while(cursor.moveToNext()) {
-            String pkgname = cursor.getString(0);
-            String label = cursor.getString(1);
+            String actvname = cursor.getString(0);
+            String pkgname = cursor.getString(1);
+            String label = cursor.getString(2);
 
-            apps.add(new AppShortcut(pkgname, label, catID));
+            apps.add(new AppShortcut(actvname, pkgname, label, catID));
         }
         cursor.close();
 
@@ -154,26 +157,27 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public void addApp(AppShortcut shortcut) {
-        addApp(shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
+        addApp(shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
     }
 
     public void addApps(List<AppShortcut> shortcuts) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (AppShortcut shortcut: shortcuts) {
-            addApp(db, shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
+            addApp(db, shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory());
         }
     }
 
-    public void addApp(String pkgname, String label, String catID) {
+    public void addApp(String actvname, String pkgname, String label, String catID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        addApp(db, pkgname, label, catID);
+        addApp(db, actvname, pkgname, label, catID);
     }
 
-    private void addApp(SQLiteDatabase db, String pkgname, String label, String catID) {
+    private void addApp(SQLiteDatabase db, String actvname, String pkgname, String label, String catID) {
         try {
 
 
             ContentValues values = new ContentValues();
+            values.put(ACTVNAME, actvname);
             values.put(PKGNAME, pkgname);
             values.put(LABEL, label);
             values.put(CATID, catID);
@@ -184,14 +188,14 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
-    public void updateAppCategory(String pkgname, String catID) {
+    public void updateAppCategory(String actvname, String catID) {
         SQLiteDatabase db = this.getWritableDatabase();
 
 
         ContentValues values = new ContentValues();
         values.put(CATID, catID);
 
-        db.update(APP_TABLE, values, PKGNAME + "=?", new String[] {pkgname});
+        db.update(APP_TABLE, values, ACTVNAME + "=?", new String[] {actvname});
 
        // Log.d("LaunchDB", "update " + pkgname + " " + catID);
     }
@@ -268,7 +272,7 @@ public class DB extends SQLiteOpenHelper {
             for (int i=0; i<apps.size();i++) {
                 ContentValues values = new ContentValues();
                 values.put(CATID, catID);
-                values.put(PKGNAME, apps.get(i).getPackageName());
+                values.put(ACTVNAME, apps.get(i).getActivityName());
                 values.put(INDEX, i);
                 db.insert(APP_ORDER_TABLE, null, values);
             }
@@ -284,16 +288,16 @@ public class DB extends SQLiteOpenHelper {
 
 
     public List<String> getCategoryOrder(String catID) {
-        List<String> pkgnames = new ArrayList<>();
+        List<String> actvnames = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_ORDER_TABLE, new String[]{PKGNAME}, CATID +"=?", new String[]{catID}, null, null, INDEX);
+        Cursor cursor = db.query(APP_ORDER_TABLE, new String[]{ACTVNAME}, CATID +"=?", new String[]{catID}, null, null, INDEX);
 
         while(cursor.moveToNext()) {
-            pkgnames.add(cursor.getString(0));
+            actvnames.add(cursor.getString(0));
         }
         cursor.close();
-        return pkgnames;
+        return actvnames;
 
     }
 
