@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements
     private float categoryTabFontSize = 16;
     private float categoryTabFontSizeHidden = 12;
 
-    private int mColumns = 4;
-    private int mColumnsLandscape = 7;
+    private int mColumns = 3;
+    private int mColumnsLandscape = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
