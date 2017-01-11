@@ -1,5 +1,7 @@
 package com.quaap.launchtime;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ClipData;
@@ -9,12 +11,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -49,7 +51,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends Activity implements
         View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
 
 
@@ -76,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements
     private Widget mWidgetHost;
 
 
+    private int textColor;
+    private int textColorInvert;
+
     private int cattabBackground;
     private int cattabSelectedBackground;
     private int dragoverBackground;
@@ -91,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
@@ -165,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements
         mCategory = category;
         for(TextView cat: mCategoryTabs.values()) {
             cat.setBackgroundColor(cattabBackground);
+            cat.setTextColor(textColor);
         }
 
         mIconSheetScroller.removeAllViews();
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mIconSheetScroller.addView(mIconSheet);
         mCategoryTabs.get(category).setBackgroundColor(cattabSelectedBackground);
+        mCategoryTabs.get(category).setTextColor(textColorInvert);
 
 
     }
@@ -237,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements
         iconSheet.setOnDragListener(MainActivity.this);
 
         final TextView categoryTab = getCategoryTab(category, iconSheet);
+
 
         mCategoryTabs.put(category, categoryTab);
         mRevCategoryMap.put(categoryTab, category);
@@ -413,22 +421,25 @@ public class MainActivity extends AppCompatActivity implements
     private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(getDB().getCategoryDisplay(category));
+        categoryTab.setTextColor(textColor);
+        categoryTab.setTypeface(null, Typeface.BOLD);
+
         final boolean ishidden = category.equals(Categories.CAT_HIDDEN);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         if (!ishidden) {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.weight = 1;
-            lp.gravity = Gravity.CENTER;
-            lp.setMargins(2, 6, 2, 8);
-            categoryTab.setLayoutParams(lp);
-
-            categoryTab.setBackgroundColor(cattabBackground);
-
             categoryTab.setTextSize(categoryTabFontSize);
             categoryTab.setPadding(6, 24, 2, 24);
         } else {
             categoryTab.setTextSize(categoryTabFontSizeHidden);
         }
+        lp.gravity = Gravity.CENTER;
+        lp.setMargins(2, 6, 2, 8);
+        categoryTab.setLayoutParams(lp);
+
+        categoryTab.setBackgroundColor(cattabBackground);
+
 
         categoryTab.setGravity(Gravity.CENTER);
         categoryTab.setClickable(true);
@@ -687,6 +698,10 @@ public class MainActivity extends AppCompatActivity implements
         cattabBackground = getResColor(R.color.cattab_background);
         cattabSelectedBackground = getResColor(R.color.cattabselected_background);
         dragoverBackground = getResColor(R.color.dragover_background);
+
+        textColor = getResColor(R.color.textcolor);
+        textColorInvert = getResColor(R.color.textcolorinv);
+
     }
 
     private int getResColor(int res) {

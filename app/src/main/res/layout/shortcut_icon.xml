@@ -31,5 +31,6 @@
         android:textSize="@dimen/shortcut_fontsize"
         android:maxLines="2"
         android:height="@dimen/icont_label_height"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/textcolor" />
 </LinearLayout>
