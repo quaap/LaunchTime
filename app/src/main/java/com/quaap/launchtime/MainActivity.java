@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import android.util.Log;
@@ -312,6 +314,7 @@ public class MainActivity extends Activity implements
 
             ResolveInfo ri = activities.get(i);
             String actvname = ri.activityInfo.name;
+
             if (!pmactvnames.contains(actvname)) {
                 pmactvnames.add(actvname);
 
@@ -356,8 +359,16 @@ public class MainActivity extends Activity implements
         List<AppShortcut> quickRowApps = new ArrayList<>();
         final List<String> quickRowOrder = db.getCategoryOrder(QUICK_ROW);
 
+        List<String> defactivities = new ArrayList<>();
+        if (quickRowOrder.isEmpty()) {
+            defactivities = getDefaultActivities();
+        }
         for (List<AppShortcut> catlist: shortcuts.values()) {
             for (AppShortcut app: catlist) {
+                if (defactivities.contains(app.getActivityName()) || defactivities.contains(app.getPackageName())) {
+                    quickRowOrder.add(app.getActivityName());
+                }
+
                 if (quickRowOrder.contains(app.getActivityName())) {
                     AppShortcut qapp = new AppShortcut(app);
                     qapp.loadAppIconAsync(mPackageMan);
@@ -376,9 +387,54 @@ public class MainActivity extends Activity implements
             }
         }
 
+        if (!defactivities.isEmpty()) {
+            getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+        }
+
+
 
     }
 
+    public List<String> getDefaultActivities() {
+
+        List<String> activities = new ArrayList<>();
+
+
+
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
+            ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
+
+            if (resolveInfo!=null) {
+                Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
+                activities.add(resolveInfo.activityInfo.name);
+                activities.add(resolveInfo.activityInfo.packageName);
+            }
+        }
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www"));
+            ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
+
+            if (resolveInfo!=null) {
+                Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
+                activities.add(resolveInfo.activityInfo.name);
+                activities.add(resolveInfo.activityInfo.packageName);
+            }
+        }
+        {
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:123"));
+            ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
+
+            if (resolveInfo!=null) {
+                Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
+                activities.add(resolveInfo.activityInfo.name);
+                activities.add(resolveInfo.activityInfo.packageName);
+            }
+
+        }
+        return activities;
+    }
 
 
     private ViewGroup getShortcutView(final AppShortcut app) {
