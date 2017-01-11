@@ -63,6 +63,22 @@ public class Categories {
     public static final String CAT_SETTINGS = "Settings";
     public static final String CAT_HIDDEN = "Hidden";
 
+
+    public static String getCatLabel(Context context, String category) {
+        Map<String, Integer> catmap = new HashMap<>();
+        catmap.put("Phone",R.string.category_Phone);
+        catmap.put("Games",R.string.category_Games);
+        catmap.put("Internet",R.string.category_Internet);
+        catmap.put("Media",R.string.category_Media);
+        catmap.put("Graphics",R.string.category_Graphics);
+        catmap.put("Accessories",R.string.category_Accessories);
+        catmap.put("Other",R.string.category_Other);
+        catmap.put("Settings",R.string.category_Settings);
+        catmap.put("Hidden",R.string.category_Hidden);
+        return context.getString(catmap.get(category));
+    }
+
+
     public static final String [] DefCategoryOrder = {
             "Phone",
             "Games",

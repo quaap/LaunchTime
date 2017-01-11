@@ -9,4 +9,16 @@
     <string name="app_was_uninstalled">Application was uninstalled</string>
     <string name="uninstall_canceled">Uninstall cancelled</string>
     <string name="could_not_uninstall">Application could not be uninstalled</string>
+
+
+
+    <string name="category_Phone">Phone</string>
+    <string name="category_Games">Games</string>,
+    <string name="category_Internet">Internet</string>,
+    <string name="category_Media">Media</string>,
+    <string name="category_Graphics">Graphics</string>,
+    <string name="category_Accessories">Accessories</string>,
+    <string name="category_Other">Other</string>,
+    <string name="category_Settings">Settings</string>,
+    <string name="category_Hidden">Hidden</string>
 </resources>
