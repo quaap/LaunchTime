@@ -32,7 +32,7 @@ public class Utils {
                 //which are package visible
 
                 GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-                lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, view.getWidth()/cellWidth+1);
+               // lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, view.getWidth()/cellWidth+1);
                 view.setLayoutParams(lp);
             }
             gridLayout.setColumnCount(columnCount);

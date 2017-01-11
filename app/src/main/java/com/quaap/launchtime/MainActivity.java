@@ -83,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements
     private float categoryTabFontSize = 16;
     private float categoryTabFontSizeHidden = 12;
 
+    private int mColumns = 4;
+    private int mColumnsLandscape = 7;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void checkConfig() {
         if (Utils.isLandscape(this)) {
-            Utils.changeColumnCount(mIconSheet, mColumns*2, (int)getResources().getDimension(R.dimen.shortcut_width));
+            Utils.changeColumnCount(mIconSheet, mColumnsLandscape, (int)getResources().getDimension(R.dimen.shortcut_width));
         } else {
             Utils.changeColumnCount(mIconSheet, mColumns, (int)getResources().getDimension(R.dimen.shortcut_width));
         }
@@ -223,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private int mColumns = 4;
     @NonNull
     private GridLayout getIconSheet(String category) {
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
