@@ -254,7 +254,7 @@ public class MainActivity extends Activity implements
     }
 
     private void processIconSheet(final DB db, final String category, final GridLayout iconSheet, final List<AppShortcut> catapps) {
-        final List<String> apporder = db.getCategoryOrder(category);
+        final List<String> apporder = db.getAppCategoryOrder(category);
 
         GlobState.getGlobState(this).runAsync(new Runnable() {
             @Override
@@ -283,7 +283,7 @@ public class MainActivity extends Activity implements
                     }
                 }
                 if (reorder) {
-                    db.setCategoryOrder(category, iconSheet);
+                    db.setAppCategoryOrder(category, iconSheet);
                 }
 
             }
@@ -355,7 +355,7 @@ public class MainActivity extends Activity implements
 
     private void processQuickApps(DB db, Map<String, List<AppShortcut>> shortcuts) {
         List<AppShortcut> quickRowApps = new ArrayList<>();
-        final List<String> quickRowOrder = db.getCategoryOrder(QUICK_ROW);
+        final List<String> quickRowOrder = db.getAppCategoryOrder(QUICK_ROW);
 
         MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
 
@@ -379,7 +379,7 @@ public class MainActivity extends Activity implements
                 }
             }
         }
-        getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+        getDB().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
 
     }
 
@@ -427,6 +427,7 @@ public class MainActivity extends Activity implements
         categoryTab.setText(getDB().getCategoryDisplay(category));
         categoryTab.setTextColor(textColor);
         categoryTab.setTypeface(null, Typeface.BOLD);
+        categoryTab.setTag(category);
 
         final boolean ishidden = category.equals(Categories.CAT_HIDDEN);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -454,6 +455,16 @@ public class MainActivity extends Activity implements
 
             }
         });
+        categoryTab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ClipData data = ClipData.newPlainText(category, category);
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                view.startDrag(data, shadowBuilder, view, 0);
+
+                return true;
+            }
+        });
 
         categoryTab.setOnDragListener(new View.OnDragListener() {
             @Override
@@ -479,8 +490,29 @@ public class MainActivity extends Activity implements
                         break;
 
                     case DragEvent.ACTION_DROP:
-                        getDB().updateAppCategory(mBeingDragged.getActivityName(), category);
-                        MainActivity.this.onDrag(iconSheet, event);
+                        View view2 = (View) event.getLocalState();
+                        if (view2.getTag() instanceof AppShortcut) {
+                            getDB().updateAppCategory(mBeingDragged.getActivityName(), category);
+                            MainActivity.this.onDrag(iconSheet, event);
+                        } else {
+                            ViewGroup container1 = (ViewGroup)view.getParent();
+                            ViewGroup container2 = (ViewGroup)view2.getParent();
+
+
+                            int index = -1;
+                            for (int i = 0; i < container1.getChildCount(); i++) {
+                                if (container1.getChildAt(i) == view) {
+                                    index = i;
+                                }
+                            }
+                            container2.removeView(view2);
+                            if (index == -1) {
+                                container1.addView(view2);
+                            } else {
+                                container1.addView(view2, index);
+                            }
+                            getDB().setCategoryOrder(container1);
+                        }
                         break;
                 }
                 return true;
@@ -491,6 +523,10 @@ public class MainActivity extends Activity implements
 
     @Override
     public boolean onDrag(View view, DragEvent event) {
+        View view2 = (View) event.getLocalState();
+        if (view2.getTag()==null || !(view2.getTag() instanceof AppShortcut)) {
+            return false;
+        }
         boolean islayout = view instanceof GridLayout;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
@@ -508,7 +544,7 @@ public class MainActivity extends Activity implements
             case DragEvent.ACTION_DROP:
                 if (!islayout) view.setBackgroundColor(backgroundDefault);
                 // Dropped, reassign View to ViewGroup
-                View view2 = (View) event.getLocalState();
+
                 if (view2 == view) {
                     // Log.d("sort", "self drop");
                     break;
@@ -518,7 +554,7 @@ public class MainActivity extends Activity implements
                 if (view == mRemoveDropzone) {
                     if (mQuickRow == mDragDropSource) {
                         mDragDropSource.removeView(view2);
-                        getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                        getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                     } else {
                         //uninstall app
                         mBeingUninstalled = view2;
@@ -571,8 +607,8 @@ public class MainActivity extends Activity implements
                 }
 
 
-                getDB().setCategoryOrder(mRevCategoryMap.get(target), target);
-                getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                getDB().setAppCategoryOrder(mRevCategoryMap.get(target), target);
+                getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 if (!islayout) view.setBackgroundColor(backgroundDefault);
@@ -630,7 +666,7 @@ public class MainActivity extends Activity implements
             switch (resultCode) {
                 case RESULT_OK:
                     mDragDropSource.removeView(mBeingUninstalled);
-                    getDB().setCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                    getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                     Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
                     break;
                 case RESULT_CANCELED:

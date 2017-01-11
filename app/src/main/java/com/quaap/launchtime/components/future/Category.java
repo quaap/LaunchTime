@@ -94,7 +94,7 @@ public class Category {
 //    }
 
     private void processIconSheet(final DB db, final List<AppShortcut> catapps) {
-        final List<String> apporder = db.getCategoryOrder(mCategory);
+        final List<String> apporder = db.getAppCategoryOrder(mCategory);
 
         GlobState.getGlobState(mContext).runAsync(new Runnable() {
             @Override
@@ -123,7 +123,7 @@ public class Category {
                     }
                 }
                 if (reorder) {
-                    db.setCategoryOrder(mCategory, mIconSheet);
+                    db.setAppCategoryOrder(mCategory, mIconSheet);
                 }
 
             }

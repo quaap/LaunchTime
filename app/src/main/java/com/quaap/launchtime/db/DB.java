@@ -40,7 +40,6 @@ public class DB extends SQLiteOpenHelper {
     private static final String CATID = "catID";
     private static final String ISWIDGET = "iswidget";
     private static final String INDEX = "pos";
-    private static final String ID = "id";
 
 
     private static final String APP_TABLE = "apps";
@@ -59,11 +58,11 @@ public class DB extends SQLiteOpenHelper {
 
 
     private static final String TAB_ORDER_TABLE = "tab_order";
-    private static final String[] tabordercolumns = {ID, CATID, INDEX};
+    private static final String[] tabordercolumns = {CATID, LABEL, INDEX};
     private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "INT"};
     private static final String TAB_ORDER_TABLE_CREATE = buildCreateTableStmt(TAB_ORDER_TABLE, tabordercolumns, tabordercolumntypes);
 
-    private static final String[] tabordercolumnsindex = {ID, INDEX};
+    private static final String[] tabordercolumnsindex = {INDEX};
 
 
 
@@ -211,8 +210,8 @@ public class DB extends SQLiteOpenHelper {
 
            // Log.d("DB", "adding catID " + catID);
             ContentValues values = new ContentValues();
-            values.put(ID, catID);
-            values.put(CATID, displayName);
+            values.put(CATID, catID);
+            values.put(LABEL, displayName);
             values.put(INDEX, index);
 
             db.insert(TAB_ORDER_TABLE, null, values);
@@ -227,7 +226,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(true, TAB_ORDER_TABLE, new String[]{ID}, null, null, null, null, INDEX, null);
+        Cursor cursor = db.query(true, TAB_ORDER_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
 
         //Log.d("DB", "getting catagories");
         while(cursor.moveToNext()) {
@@ -243,7 +242,7 @@ public class DB extends SQLiteOpenHelper {
         String display = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{CATID}, ID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{CATID}, CATID + "=?", new String[]{catID}, null, null, null, null);
 
         if(cursor.moveToNext()) {
             display = cursor.getString(0);
@@ -252,7 +251,48 @@ public class DB extends SQLiteOpenHelper {
         return display;
     }
 
-    public void setCategoryOrder(String catID, ViewGroup container) {
+
+    public void setCategoryOrder(ViewGroup container) {
+
+        List<String> cats = new ArrayList<>();
+
+        for (int i = 0; i < container.getChildCount(); i++) {
+            Object tag = container.getChildAt(i).getTag();
+            if (tag instanceof String) {
+                cats.add((String)tag);
+            }
+        }
+
+        setCategoryOrder(cats);
+    }
+
+    public void setCategoryOrder(List<String> apps) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            for (int i=0; i<apps.size();i++) {
+
+                ContentValues values = new ContentValues();
+
+                values.put(INDEX, i);
+
+                db.update(TAB_ORDER_TABLE,values, CATID+"=?", new String[]{apps.get(i)});
+            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e){
+            Log.e("LaunchDB", "Can't setCategoryOrder ", e);
+
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
+
+    public void setAppCategoryOrder(String catID, ViewGroup container) {
 
         List<AppShortcut> apps = new ArrayList<>();
 
@@ -263,10 +303,10 @@ public class DB extends SQLiteOpenHelper {
             }
         }
 
-        setCategoryOrder(catID, apps);
+        setAppCategoryOrder(catID, apps);
     }
 
-    public void setCategoryOrder(String catID, List<AppShortcut> apps) {
+    public void setAppCategoryOrder(String catID, List<AppShortcut> apps) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
@@ -283,7 +323,7 @@ public class DB extends SQLiteOpenHelper {
 
             db.setTransactionSuccessful();
         } catch (Exception e){
-            Log.e("LaunchDB", "Can't setCategoryOrder for catID " + catID, e);
+            Log.e("LaunchDB", "Can't setAppCategoryOrder for catID " + catID, e);
 
         } finally {
             db.endTransaction();
@@ -291,7 +331,7 @@ public class DB extends SQLiteOpenHelper {
     }
 
 
-    public List<String> getCategoryOrder(String catID) {
+    public List<String> getAppCategoryOrder(String catID) {
         List<String> actvnames = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
