@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ClipData;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,7 +15,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import android.util.Log;
@@ -43,7 +41,6 @@ import com.quaap.launchtime.components.Widget;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,7 +56,7 @@ public class MainActivity extends Activity implements
 
 
 
-    public static final String QUICK_ROW = "QuickRow";
+    public static final String QUICK_ROW = "MainHelper";
     private static final int UNINSTALL_RESULT = 3454;
     private ScrollView mIconSheetScroller;
     private Map<String,GridLayout> mIconSheets;
@@ -360,7 +357,7 @@ public class MainActivity extends Activity implements
         List<AppShortcut> quickRowApps = new ArrayList<>();
         final List<String> quickRowOrder = db.getCategoryOrder(QUICK_ROW);
 
-        checkDefaultApps(shortcuts, quickRowOrder);
+        MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
 
         for (List<AppShortcut> catlist: shortcuts.values()) {
             for (AppShortcut app: catlist) {
@@ -382,116 +379,10 @@ public class MainActivity extends Activity implements
                 }
             }
         }
+        getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
 
     }
 
-    private void checkDefaultApps(Map<String, List<AppShortcut>> shortcuts, List<String> quickRowOrder) {
-        if (quickRowOrder.isEmpty()) {
-            Map<String,List<String>> defactivities = getDefaultActivities();
-            boolean addeddefault = false;
-            int max = 1;
-            for (List<String> tests: defactivities.values()) {
-                if (tests.size()>max) max = tests.size();
-            }
-
-            AppShortcut firstapp=null;
-            for (int i=0; i<max; i++) { // try the tests in order.
-                for (List<AppShortcut> catlist : shortcuts.values()) {
-                    for (AppShortcut app : catlist) {
-                        if (firstapp==null) firstapp = app;
-                        Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
-                        //try the app for each one of the activities
-                        for (Iterator<Map.Entry<String, List<String>>> defactit = defactivities.entrySet().iterator(); defactit.hasNext(); ) {
-                            Map.Entry<String, List<String>> defactent = defactit.next();
-
-                            //if we have a test, search the app name
-                            if (defactent.getValue().size()>i) {
-                                String test = defactent.getValue().get(i);
-                                if (contains(app, test)) {
-                                    Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
-                                    quickRowOrder.add(app.getActivityName());
-                                    defactit.remove(); // remove this group
-                                    addeddefault = true;
-                                    break;  //we're using this app for something
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (quickRowOrder.isEmpty() && firstapp!=null) { //nothing found? add first app found.
-                quickRowOrder.add(firstapp.getActivityName());
-            }
-            String toastmsg = null;
-
-            if (addeddefault) {
-                getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
-                toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
-            } else if (quickRowOrder.size()<3) {
-                toastmsg = "You can add more apps to your Quickrow at the bottom of the screen.";
-            }
-            if (toastmsg!=null) {
-                final String toastmsgfinal = toastmsg;
-                mQuickRow.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MainActivity.this, toastmsgfinal, Toast.LENGTH_LONG).show();
-                    }
-                }, 3000);
-            }
-        }
-    }
-
-    private boolean contains(AppShortcut app, String test) {
-        return app.getActivityName().toLowerCase().contains(test.toLowerCase())
-                || app.getPackageName().toLowerCase().contains(test.toLowerCase());
-    }
-
-
-    public Map<String,List<String>> getDefaultActivities() {
-
-        Map<String,List<String>> activities = new TreeMap<>();
-
-
-        ComponentName browseapp = getpkg(Intent.ACTION_VIEW, "http://", null);
-        activities.put("browser", Arrays.asList(browseapp.getClassName(), browseapp.getPackageName(), "firefox", "mozilla", "browser", "chrome"));
-
-        ComponentName msgapp = getpkg(Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
-        activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
-
-        activities.put("camera", Arrays.asList("camera", "cam", "photo", "foto"));
-        activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
-
-        activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
-        activities.put("email", Arrays.asList("k9", "inbox", "gmail", "outlook", "mail"));
-
-
-        return activities;
-    }
-
-    private ComponentName getpkg(String intentaction, String intenturi, String intentcategory) {
-
-        ComponentName cn=new ComponentName("_fakename","_fakename");
-
-        Intent intent;
-        if (intenturi==null) {
-            intent = new Intent(intentaction);
-        } else {
-            intent = new Intent(intentaction, Uri.parse(intenturi));
-        }
-        if (intentcategory!=null) {
-            intent.addCategory(intentcategory);
-        }
-        ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
-
-        if (resolveInfo!=null) {
-            Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
-
-            cn = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
-        }
-        return cn;
-
-    }
 
     private ViewGroup getShortcutView(final AppShortcut app) {
         return getShortcutView(app, false);
