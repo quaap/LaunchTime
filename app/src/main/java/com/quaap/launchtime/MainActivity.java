@@ -364,21 +364,43 @@ public class MainActivity extends Activity implements
         Map<String,List<String>> defactivities = new LinkedHashMap<>();
         if (quickRowOrder.isEmpty()) {
             defactivities = getDefaultActivities();
-        }
-        for (List<AppShortcut> catlist: shortcuts.values()) {
-            for (AppShortcut app: catlist) {
-                Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
-                for (Iterator<Map.Entry<String,List<String>>> defactit=defactivities.entrySet().iterator(); defactit.hasNext();) {
-                    Map.Entry<String,List<String>> defactent = defactit.next();
+            int max = 1;
+            for (List<String> tests: defactivities.values()) {
+                if (tests.size()>max) max = tests.size();
+            }
 
-                    if (containsOneOf(app.getActivityName(),defactent.getValue()) || containsOneOf(app.getPackageName(),defactent.getValue())) {
-                        Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
-                        quickRowOrder.add(app.getActivityName());
-                        defactit.remove();
-                        addeddefault = true;
-                        break;
+            AppShortcut firstapp=null;
+            for (int i=0; i<max; i++) { // try the tests in order.
+                for (List<AppShortcut> catlist : shortcuts.values()) {
+                    for (AppShortcut app : catlist) {
+                        if (firstapp==null) firstapp = app;
+                        Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
+                        //try the app for each one of the activities
+                        for (Iterator<Map.Entry<String, List<String>>> defactit = defactivities.entrySet().iterator(); defactit.hasNext(); ) {
+                            Map.Entry<String, List<String>> defactent = defactit.next();
+
+                            //if we have a test, search the app name
+                            if (defactent.getValue().size()>i) {
+                                String test = defactent.getValue().get(i);
+                                if (contains(app, test)) {
+                                    Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
+                                    quickRowOrder.add(app.getActivityName());
+                                    defactit.remove(); // remove this group
+                                    addeddefault = true;
+                                    break;  //we're using this app for something
+                                }
+                            }
+                        }
                     }
                 }
+            }
+            if (quickRowOrder.isEmpty()) { //nothing found? add first app found.
+                quickRowOrder.add(firstapp.getActivityName());
+            }
+        }
+
+        for (List<AppShortcut> catlist: shortcuts.values()) {
+            for (AppShortcut app: catlist) {
 
                 if (quickRowOrder.contains(app.getActivityName())) {
                     AppShortcut qapp = new AppShortcut(app);
@@ -398,50 +420,47 @@ public class MainActivity extends Activity implements
             }
         }
 
+        String toastmsg = null;
 
         if (addeddefault) {
             getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+            toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
+        } else if (!defactivities.isEmpty() || quickRowOrder.size()<3) {
+            toastmsg = "You can add apps to your Quickrow at the bottom of the screen.";
+        }
+        if (toastmsg!=null) {
+            final String toastmsgfinal = toastmsg;
             mQuickRow.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MainActivity.this, "Don't like the apps in your Quickbar? Long click and drag them away!", Toast.LENGTH_LONG).show();
-                }
-            }, 3000);
-        } else if (!defactivities.isEmpty()) {
-            mQuickRow.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(MainActivity.this, "You can add apps to your Quickrow at the bottom of the screen.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, toastmsgfinal, Toast.LENGTH_LONG).show();
                 }
             }, 3000);
         }
-
-
-
-
     }
 
-    private boolean containsOneOf(String text, List<String> tests) {
-        for (String test: tests) {
-            if (text.contains(test)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean contains(AppShortcut app, String test) {
+        return app.getActivityName().toLowerCase().contains(test.toLowerCase())
+                || app.getPackageName().toLowerCase().contains(test.toLowerCase());
     }
+
 
     public Map<String,List<String>> getDefaultActivities() {
 
         Map<String,List<String>> activities = new TreeMap<>();
 
+
         ComponentName browseapp = getpkg(Intent.ACTION_VIEW, "http://", null);
-        activities.put("browser", Arrays.asList(browseapp.getClassName(), browseapp.getPackageName(), "firefox", "browser", "chrome"));
+        activities.put("browser", Arrays.asList(browseapp.getClassName(), browseapp.getPackageName(), "firefox", "mozilla", "browser", "chrome"));
 
         ComponentName msgapp = getpkg(Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
         activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
 
-        activities.put("camera", Arrays.asList("camera", "cam"));
-        activities.put("phone", Arrays.asList("DialtactsActivity","dial"));
+        activities.put("camera", Arrays.asList("camera", "cam", "photo", "foto"));
+        activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
+
+        activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
+        activities.put("email", Arrays.asList("k9", "inbox", "gmail", "outlook", "mail"));
 
 
         return activities;
