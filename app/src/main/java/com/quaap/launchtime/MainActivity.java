@@ -43,6 +43,7 @@ import com.quaap.launchtime.components.Widget;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -359,14 +360,24 @@ public class MainActivity extends Activity implements
         List<AppShortcut> quickRowApps = new ArrayList<>();
         final List<String> quickRowOrder = db.getCategoryOrder(QUICK_ROW);
 
-        List<String> defactivities = new ArrayList<>();
+        boolean addeddefault = false;
+        Map<String,List<String>> defactivities = new LinkedHashMap<>();
         if (quickRowOrder.isEmpty()) {
             defactivities = getDefaultActivities();
         }
         for (List<AppShortcut> catlist: shortcuts.values()) {
             for (AppShortcut app: catlist) {
-                if (defactivities.contains(app.getActivityName()) || defactivities.contains(app.getPackageName())) {
-                    quickRowOrder.add(app.getActivityName());
+                Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
+                for (Iterator<Map.Entry<String,List<String>>> defactit=defactivities.entrySet().iterator(); defactit.hasNext();) {
+                    Map.Entry<String,List<String>> defactent = defactit.next();
+
+                    if (containsOneOf(app.getActivityName(),defactent.getValue()) || containsOneOf(app.getPackageName(),defactent.getValue())) {
+                        Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
+                        quickRowOrder.add(app.getActivityName());
+                        defactit.remove();
+                        addeddefault = true;
+                        break;
+                    }
                 }
 
                 if (quickRowOrder.contains(app.getActivityName())) {
@@ -387,55 +398,78 @@ public class MainActivity extends Activity implements
             }
         }
 
-        if (!defactivities.isEmpty()) {
+
+        if (addeddefault) {
             getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+            mQuickRow.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, "Don't like the apps in your Quickbar? Long click and drag them away!", Toast.LENGTH_LONG).show();
+                }
+            }, 3000);
+        } else if (!defactivities.isEmpty()) {
+            mQuickRow.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, "You can add apps to your Quickrow at the bottom of the screen.", Toast.LENGTH_LONG).show();
+                }
+            }, 3000);
         }
+
 
 
 
     }
 
-    public List<String> getDefaultActivities() {
-
-        List<String> activities = new ArrayList<>();
-
-
-
-        {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
-            ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
-
-            if (resolveInfo!=null) {
-                Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
-                activities.add(resolveInfo.activityInfo.name);
-                activities.add(resolveInfo.activityInfo.packageName);
+    private boolean containsOneOf(String text, List<String> tests) {
+        for (String test: tests) {
+            if (text.contains(test)) {
+                return true;
             }
         }
-        {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www"));
-            ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
+        return false;
+    }
 
-            if (resolveInfo!=null) {
-                Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
-                activities.add(resolveInfo.activityInfo.name);
-                activities.add(resolveInfo.activityInfo.packageName);
-            }
-        }
-        {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:123"));
-            ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
+    public Map<String,List<String>> getDefaultActivities() {
 
-            if (resolveInfo!=null) {
-                Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
-                activities.add(resolveInfo.activityInfo.name);
-                activities.add(resolveInfo.activityInfo.packageName);
-            }
+        Map<String,List<String>> activities = new TreeMap<>();
 
-        }
+        ComponentName browseapp = getpkg(Intent.ACTION_VIEW, "http://", null);
+        activities.put("browser", Arrays.asList(browseapp.getClassName(), browseapp.getPackageName(), "firefox", "browser", "chrome"));
+
+        ComponentName msgapp = getpkg(Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
+        activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
+
+        activities.put("camera", Arrays.asList("camera", "cam"));
+        activities.put("phone", Arrays.asList("DialtactsActivity","dial"));
+
+
         return activities;
     }
 
+    private ComponentName getpkg(String intentaction, String intenturi, String intentcategory) {
+
+        ComponentName cn=new ComponentName("_fakename","_fakename");
+
+        Intent intent;
+        if (intenturi==null) {
+            intent = new Intent(intentaction);
+        } else {
+            intent = new Intent(intentaction, Uri.parse(intenturi));
+        }
+        if (intentcategory!=null) {
+            intent.addCategory(intentcategory);
+        }
+        ResolveInfo resolveInfo = mPackageMan.resolveActivity(intent, 0);
+
+        if (resolveInfo!=null) {
+            Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
+
+            cn = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+        }
+        return cn;
+
+    }
 
     private ViewGroup getShortcutView(final AppShortcut app) {
         return getShortcutView(app, false);
