@@ -152,7 +152,6 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onPause() {
-        super.onPause();
         mPrefs.edit().putString("category", mCategory).apply();
 
     }
@@ -212,7 +211,6 @@ public class MainActivity extends Activity implements
     private void loadApplications() {
 
         final DB db = getDB();
-
 
         final Map<String, List<AppShortcut>> shortcuts = processActivities(db);
 
