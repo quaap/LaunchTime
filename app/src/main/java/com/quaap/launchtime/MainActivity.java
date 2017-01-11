@@ -101,6 +101,7 @@ public class MainActivity extends Activity implements
             actionBar.hide();
         }
         mPackageMan = getApplicationContext().getPackageManager();
+
         mWidgetHost = new Widget(this);
 
         setColors();
@@ -153,7 +154,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onPause() {
         mPrefs.edit().putString("category", mCategory).apply();
-
+        super.onPause();
     }
 
     @Override
