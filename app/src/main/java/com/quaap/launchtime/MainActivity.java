@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private int mColumns = 3;
     private int mColumnsLandscape = 6;
+    private int mColumnMargin = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements
 
         iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(MainActivity.this);
-
 
         final TextView categoryTab = getCategoryTab(category, iconSheet);
 
@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.weight = 1;
             lp.gravity = Gravity.CENTER;
-            lp.setMargins(2, 6, 2, 4);
+            lp.setMargins(2, 6, 2, 8);
             categoryTab.setLayoutParams(lp);
 
             categoryTab.setBackgroundColor(cattabBackground);

@@ -4,8 +4,8 @@
     android:layout_width="@dimen/shortcut_width"
     android:layout_height="@dimen/shortcut_height"
     android:gravity="center_horizontal"
-    android:paddingEnd="2dp"
-    android:paddingStart="2dp"
+    android:paddingEnd="@dimen/shortcut_padding_side"
+    android:paddingStart="@dimen/shortcut_padding_side"
     android:paddingBottom="4dp"
     android:paddingTop="8dp">
 
