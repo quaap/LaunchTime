@@ -360,10 +360,35 @@ public class MainActivity extends Activity implements
         List<AppShortcut> quickRowApps = new ArrayList<>();
         final List<String> quickRowOrder = db.getCategoryOrder(QUICK_ROW);
 
-        boolean addeddefault = false;
-        Map<String,List<String>> defactivities = new LinkedHashMap<>();
+        checkDefaultApps(shortcuts, quickRowOrder);
+
+        for (List<AppShortcut> catlist: shortcuts.values()) {
+            for (AppShortcut app: catlist) {
+
+                if (quickRowOrder.contains(app.getActivityName())) {
+                    AppShortcut qapp = new AppShortcut(app);
+                    qapp.loadAppIconAsync(mPackageMan);
+                    quickRowApps.add(qapp);
+                }
+            }
+        }
+
+        mQuickRow.removeAllViews();
+        for (String actvname: quickRowOrder) {
+            for (AppShortcut app : quickRowApps) {
+                if (app.getActivityName().equals(actvname)) {
+                    ViewGroup item = getShortcutView(app, true);
+                    mQuickRow.addView(item);
+                }
+            }
+        }
+
+    }
+
+    private void checkDefaultApps(Map<String, List<AppShortcut>> shortcuts, List<String> quickRowOrder) {
         if (quickRowOrder.isEmpty()) {
-            defactivities = getDefaultActivities();
+            Map<String,List<String>> defactivities = getDefaultActivities();
+            boolean addeddefault = false;
             int max = 1;
             for (List<String> tests: defactivities.values()) {
                 if (tests.size()>max) max = tests.size();
@@ -394,48 +419,26 @@ public class MainActivity extends Activity implements
                     }
                 }
             }
-            if (quickRowOrder.isEmpty()) { //nothing found? add first app found.
+            if (quickRowOrder.isEmpty() && firstapp!=null) { //nothing found? add first app found.
                 quickRowOrder.add(firstapp.getActivityName());
             }
-        }
+            String toastmsg = null;
 
-        for (List<AppShortcut> catlist: shortcuts.values()) {
-            for (AppShortcut app: catlist) {
-
-                if (quickRowOrder.contains(app.getActivityName())) {
-                    AppShortcut qapp = new AppShortcut(app);
-                    qapp.loadAppIconAsync(mPackageMan);
-                    quickRowApps.add(qapp);
-                }
+            if (addeddefault) {
+                getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+                toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
+            } else if (quickRowOrder.size()<3) {
+                toastmsg = "You can add more apps to your Quickrow at the bottom of the screen.";
             }
-        }
-
-        mQuickRow.removeAllViews();
-        for (String actvname: quickRowOrder) {
-            for (AppShortcut app : quickRowApps) {
-                if (app.getActivityName().equals(actvname)) {
-                    ViewGroup item = getShortcutView(app, true);
-                    mQuickRow.addView(item);
-                }
+            if (toastmsg!=null) {
+                final String toastmsgfinal = toastmsg;
+                mQuickRow.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, toastmsgfinal, Toast.LENGTH_LONG).show();
+                    }
+                }, 3000);
             }
-        }
-
-        String toastmsg = null;
-
-        if (addeddefault) {
-            getDB().setCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
-            toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
-        } else if (!defactivities.isEmpty() || quickRowOrder.size()<3) {
-            toastmsg = "You can add apps to your Quickrow at the bottom of the screen.";
-        }
-        if (toastmsg!=null) {
-            final String toastmsgfinal = toastmsg;
-            mQuickRow.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(MainActivity.this, toastmsgfinal, Toast.LENGTH_LONG).show();
-                }
-            }, 3000);
         }
     }
 
