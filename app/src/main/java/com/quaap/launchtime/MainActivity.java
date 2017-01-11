@@ -171,6 +171,7 @@ public class MainActivity extends Activity implements
         for(TextView cat: mCategoryTabs.values()) {
             cat.setBackgroundColor(cattabBackground);
             cat.setTextColor(textColor);
+            cat.setShadowLayer(0,0,0,0);
         }
 
         mIconSheetScroller.removeAllViews();
@@ -180,7 +181,8 @@ public class MainActivity extends Activity implements
 
         mIconSheetScroller.addView(mIconSheet);
         mCategoryTabs.get(category).setBackgroundColor(cattabSelectedBackground);
-        mCategoryTabs.get(category).setTextColor(textColorInvert);
+        mCategoryTabs.get(category).setTextColor(textColor);
+        mCategoryTabs.get(category).setShadowLayer(8,4,4,textColorInvert);
 
 
     }
