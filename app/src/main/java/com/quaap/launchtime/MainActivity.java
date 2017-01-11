@@ -1,6 +1,7 @@
 package com.quaap.launchtime;
 
 import android.appwidget.AppWidgetHostView;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -175,9 +176,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private void checkConfig() {
         if (Utils.isLandscape(this)) {
-            Utils.changeColumnCount(mIconSheet, 6);
+            Utils.changeColumnCount(mIconSheet, mColumns*2, (int)getResources().getDimension(R.dimen.shortcut_width));
         } else {
-            Utils.changeColumnCount(mIconSheet, 3);
+            Utils.changeColumnCount(mIconSheet, mColumns, (int)getResources().getDimension(R.dimen.shortcut_width));
         }
     }
 
@@ -222,13 +223,14 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    private int mColumns = 4;
     @NonNull
     private GridLayout getIconSheet(String category) {
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
         mIconSheets.put(category, iconSheet);
         mRevCategoryMap.put(iconSheet, category);
 
-        iconSheet.setColumnCount(3);
+        iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(MainActivity.this);
 
 
@@ -366,12 +368,13 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
+
     private ViewGroup getShortcutView(final AppShortcut app) {
         return getShortcutView(app, false);
     }
 
     private ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
-
 
         ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon?R.layout.shortcut_small_icon:R.layout.shortcut_icon, (ViewGroup) null);
 
@@ -394,6 +397,14 @@ public class MainActivity extends AppCompatActivity implements
             TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
             iconLabel.setText(app.getLabel());
         }
+        return item;
+    }
+
+    private View getWidgetView(View item, final AppShortcut app) {
+        item.setTag(app);
+        item.setClickable(true);
+        item.setOnLongClickListener(this);
+        item.setOnDragListener(this);
         return item;
     }
 
@@ -617,7 +628,24 @@ public class MainActivity extends AppCompatActivity implements
             if (wid==null) {
                 super.onActivityResult(requestCode, resultCode, data);
             } else {
-                mIconSheet.addView(wid);
+                AppWidgetProviderInfo pinfo = wid.getAppWidgetInfo();
+                String actvname = pinfo.provider.getClassName();
+                String pkgname = pinfo.provider.getPackageName();
+                String label;
+                if (Build.VERSION.SDK_INT>=21) {
+                    label = pinfo.loadLabel(mPackageMan);
+                } else {
+                    label = pinfo.label;
+                }
+                AppShortcut app = new AppShortcut(actvname, pkgname, label, mCategory, true);
+                GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+
+                float wf = pinfo.minResizeWidth / getResources().getDimension(R.dimen.shortcut_width);
+                if (wf>1.1) {
+                    lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, (int)wf);
+                }
+
+                mIconSheet.addView(getWidgetView(wid, app), lp);
             }
         }
     }

@@ -4,11 +4,11 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
 
-    <dimen name="shortcut_width">80dp</dimen>
-    <dimen name="shortcut_height">80dp</dimen>
+    <dimen name="shortcut_width">70dp</dimen>
+    <dimen name="shortcut_height">70dp</dimen>
 
     <dimen name="icon_width">50dp</dimen>
-    <dimen name="icon_label_width">75dp</dimen>
+    <dimen name="icon_label_width">68dp</dimen>
     <dimen name="icont_label_height">28dp</dimen>
     <dimen name="shortcut_fontsize">12sp</dimen>
 

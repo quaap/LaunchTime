@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -202,6 +203,20 @@ public class Widget {
             }
         }
         return null;
+    }
+
+    public static class AppShortcutWidgetHostView  {
+
+        private AppShortcut mApp;
+        private AppWidgetHostView mAppWidgetHostView;
+
+        public AppShortcutWidgetHostView(AppWidgetHostView appWidgetHostView, AppShortcut app) {
+            mApp = app;
+            mAppWidgetHostView = appWidgetHostView;
+        }
+
+
+
     }
 
 }
