@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.quaap.launchtime.components.AppShortcut;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +41,8 @@ public class DB extends SQLiteOpenHelper {
     private static final String CATID = "catID";
     private static final String ISWIDGET = "iswidget";
     private static final String INDEX = "pos";
+    private static final String TIME = "time";
+    private static final String TOTAL = "total";
 
 
     private static final String APP_TABLE = "apps";
@@ -65,6 +68,13 @@ public class DB extends SQLiteOpenHelper {
     private static final String[] tabordercolumnsindex = {INDEX};
 
 
+    private static final String APP_HISTORY_TABLE = "apps_hist";
+    private static final String[] apphistorycolumns = {ACTVNAME, TIME};
+    private static final String[] apphistorycolumntypes = {"TEXT", "DATETIME"};
+    private static final String APP_HISTORY_TABLE_CREATE = buildCreateTableStmt(APP_HISTORY_TABLE, apphistorycolumns, apphistorycolumntypes);
+
+    private static final String[] apphistorycolumnsindex = {TIME, ACTVNAME};
+
 
     private boolean firstRun;
 
@@ -89,6 +99,11 @@ public class DB extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(TAB_ORDER_TABLE_CREATE);
         for(String createind: tabordercolumnsindex) {
             sqLiteDatabase.execSQL(buildIndexStmt(TAB_ORDER_TABLE, createind));
+        }
+
+        sqLiteDatabase.execSQL(APP_HISTORY_TABLE_CREATE);
+        for(String createind: apphistorycolumnsindex) {
+            sqLiteDatabase.execSQL(buildIndexStmt(APP_HISTORY_TABLE, createind));
         }
     }
 
@@ -344,6 +359,42 @@ public class DB extends SQLiteOpenHelper {
         return actvnames;
 
     }
+
+
+    public void appLaunched(String activityname) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(ACTVNAME, activityname);
+        values.put(TIME, System.currentTimeMillis());
+        db.insert(APP_HISTORY_TABLE, null, values);
+
+    }
+
+    public int getAppLaunchedCount(String activityname) {
+        return getAppLaunchedCount(activityname,  new Date(0));
+    }
+
+    public int getAppLaunchedCount(String activityname, Date after) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                TAB_ORDER_TABLE,
+                new String[]{"count(*)"},
+                ACTVNAME + "=? and " + TIME + ">?",
+                new String[]{activityname, after.getTime()+""},
+                null, null, null, null);
+
+        int count = 0;
+        if(cursor.moveToNext()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+
+    }
+
 
 
     private static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {

@@ -200,8 +200,10 @@ public class MainActivity extends Activity implements
         return GlobState.getGlobState(this).getDB();
     }
 
+
     private void launchApp(final AppShortcut app) {
 
+        getDB().appLaunched(app.getActivityName());
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setClassName(app.getPackageName(), app.getActivityName());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -249,7 +251,6 @@ public class MainActivity extends Activity implements
 
         mCategoryTabs.put(category, categoryTab);
         mRevCategoryMap.put(categoryTab, category);
-        mCategoriesLayout.addView(categoryTab);
         return iconSheet;
     }
 
@@ -461,7 +462,7 @@ public class MainActivity extends Activity implements
                 ClipData data = ClipData.newPlainText(category, category);
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 view.startDrag(data, shadowBuilder, view, 0);
-
+                mDragDropSource = mCategoriesLayout;
                 return true;
             }
         });
@@ -518,6 +519,8 @@ public class MainActivity extends Activity implements
                 return true;
             }
         });
+        mCategoriesLayout.addView(categoryTab);
+
         return categoryTab;
     }
 
@@ -555,6 +558,9 @@ public class MainActivity extends Activity implements
                     if (mQuickRow == mDragDropSource) {
                         mDragDropSource.removeView(view2);
                         getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                    } else if (mDragDropSource == mCategoriesLayout) {
+                        //delete category tab
+
                     } else {
                         //uninstall app
                         mBeingUninstalled = view2;
@@ -651,8 +657,8 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.GONE);
     }
 
-    private void launchUninstallIntent(String package_name) {
-        Uri packageUri = Uri.parse("package:"+package_name);
+    private void launchUninstallIntent(String packageName) {
+        Uri packageUri = Uri.parse("package:"+packageName);
         Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
         uninstallIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
         startActivityForResult(uninstallIntent, UNINSTALL_RESULT);
