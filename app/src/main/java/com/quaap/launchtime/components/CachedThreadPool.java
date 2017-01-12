@@ -2,6 +2,7 @@ package com.quaap.launchtime.components;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -32,6 +33,14 @@ public class CachedThreadPool extends ThreadPoolExecutor {
 
     public CachedThreadPool(int corePoolSize, int maximumPoolSize) {
         super(corePoolSize, maximumPoolSize, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
+        this.submit(new Runnable() {
+            @Override
+            public void run() {
+                Thread.yield();
+                //Just a no-op to start a thread for use later
+            }
+        });
 
     }
 
