@@ -170,9 +170,7 @@ public class MainActivity extends Activity implements
         if (category==null) return;
         mCategory = category;
         for(TextView cat: mCategoryTabs.values()) {
-            cat.setBackgroundColor(cattabBackground);
-            cat.setTextColor(textColor);
-            cat.setShadowLayer(0,0,0,0);
+            styleCategorySpecial(cat,true, false);
         }
 
         mIconSheetScroller.removeAllViews();
@@ -181,9 +179,8 @@ public class MainActivity extends Activity implements
         checkConfig();
 
         mIconSheetScroller.addView(mIconSheet);
-        mCategoryTabs.get(category).setBackgroundColor(cattabSelectedBackground);
-        mCategoryTabs.get(category).setTextColor(textColor);
-        mCategoryTabs.get(category).setShadowLayer(8,4,4,textColorInvert);
+
+        styleCategorySpecial(mCategoryTabs.get(category),false, true);
 
 
     }
@@ -424,17 +421,24 @@ public class MainActivity extends Activity implements
         return item;
     }
 
-    private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
-        final TextView categoryTab = new TextView(this);
-        categoryTab.setText(getDB().getCategoryDisplay(category));
+    private void styleCategorySpecial(TextView categoryTab, boolean normal, boolean selected) {
+        if (normal){
+            categoryTab.setBackgroundColor(cattabBackground);
+            categoryTab.setTextColor(textColor);
+            categoryTab.setShadowLayer(0, 0, 0, 0);
+        } else if (selected) {
+            categoryTab.setBackgroundColor(cattabSelectedBackground);
+            categoryTab.setTextColor(textColor);
+            categoryTab.setShadowLayer(8, 4, 4, textColorInvert);
+        }
+    }
+
+    private void styleCategoryTab(TextView categoryTab, boolean small) {
         categoryTab.setTextColor(textColor);
         categoryTab.setTypeface(null, Typeface.BOLD);
-        categoryTab.setTag(category);
-
-        final boolean ishidden = category.equals(Categories.CAT_HIDDEN);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (!ishidden) {
+        if (!small) {
             lp.weight = 1;
             categoryTab.setTextSize(categoryTabFontSize);
             categoryTab.setPadding(6, 24, 2, 24);
@@ -447,8 +451,19 @@ public class MainActivity extends Activity implements
 
         categoryTab.setBackgroundColor(cattabBackground);
 
-
         categoryTab.setGravity(Gravity.CENTER);
+    }
+
+    private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
+        final TextView categoryTab = new TextView(this);
+        categoryTab.setText(getDB().getCategoryDisplay(category));
+        categoryTab.setTag(category);
+
+
+        final boolean ishidden = category.equals(Categories.CAT_HIDDEN);
+        styleCategoryTab(categoryTab,ishidden);
+
+
         categoryTab.setClickable(true);
         categoryTab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -715,11 +730,11 @@ public class MainActivity extends Activity implements
         return false;
     }
 
-
+    private TextView searchCategory;
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
-
+        searchCategory = (TextView) findViewById(R.id.seach_category);
 
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
 
