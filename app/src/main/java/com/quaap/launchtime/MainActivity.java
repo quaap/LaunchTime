@@ -441,7 +441,7 @@ public class MainActivity extends Activity implements
         if (!small) {
             lp.weight = 1;
             categoryTab.setTextSize(categoryTabFontSize);
-            categoryTab.setPadding(6, 24, 2, 24);
+            categoryTab.setPadding(6, 18, 2, 18);
         } else {
             categoryTab.setTextSize(categoryTabFontSizeHidden);
         }
