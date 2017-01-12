@@ -96,12 +96,12 @@ public class Categories {
         Map<String, String[]> keywordsDict = new LinkedHashMap<>();
 
         keywordsDict.put("Phone", new String[]{"phone", "conv", "call", "sms", "mms", "contacts", "stk"});  // stk stands for "SIM Toolkit"
-        keywordsDict.put("Games", new String[]{"game", "play"});
+        keywordsDict.put("Games", new String[]{"game", "play", "puzz", "com.ea", "com.king", "com.halfbrick"});
         keywordsDict.put("Internet", new String[]{"download", "mail", "vending", "browser", "maps", "twitter", "whatsapp", "outlook", "dropbox", "chrome", "drive"});
         keywordsDict.put("Media", new String[]{"radio", "voice", "audio", "speech", "pod", "music", "sound", "mp3", "record", "sfx", "mic"});
         keywordsDict.put("Graphics", new String[]{"pic", "pix", "gallery", "photo", "foto", "cam", "tube", "tv", "video", "draw", "graph", "gfx", "image", "img", "svg", "png"});
         keywordsDict.put("Accessories", new String[]{"editor", "calc", "calendar", "organize", "clock", "time", "viewer", "file", "manager", "memo", "note"});
-        keywordsDict.put(CAT_SETTINGS, new String[]{"settings", "config", "keyboard", "launcher", "sync", "backup"});
+        keywordsDict.put(CAT_SETTINGS, new String[]{"setting", "config", "keyboard", "launch", "sync", "backup", "prefer", "prefs"});
 
 
         return keywordsDict;
