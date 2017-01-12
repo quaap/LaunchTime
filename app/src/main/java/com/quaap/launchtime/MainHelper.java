@@ -104,12 +104,16 @@ public class MainHelper {
 
 
         ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://", null);
-        activities.put("browser", Arrays.asList(browseapp.getClassName(), browseapp.getPackageName(), "firefox", "mozilla", "browser", "chrome"));
+        activities.put("browser", Arrays.asList(
+                browseapp.getClassName(), browseapp.getPackageName(),
+                "opera", "dolphin", "firefox", "mozilla", "chromium",
+                "uc.browser", "brave.browser", "TunnyBrowser", "chrome",
+                ".browser", "browser"));
 
         ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
         activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
 
-        activities.put("camera", Arrays.asList("camera", "cam", "photo", "foto"));
+        activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", ".camera", "camera", "cam", "photo", "foto"));
         activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
 
         activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
