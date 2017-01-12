@@ -1,12 +1,15 @@
 package com.quaap.launchtime.components.future;
 
-import android.view.DragEvent;
-import android.view.View;
+import android.content.Context;
+import android.view.ViewGroup;
 
-import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.db.DB;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by tom on 1/10/17.
+ * Created by tom on 1/12/17.
  * <p>
  * Copyright (C) 2017  tom
  * <p>
@@ -20,9 +23,20 @@ import com.quaap.launchtime.components.AppShortcut;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-public interface CategoryListener {
+public class CategoryBar {
+    Map<CategoryTab,CategoryView> mContents;
+    private Context mContext;
+    private ViewGroup mTabLayout;
+    private DB mDb;
 
-    void onAppShortcutClickListener(CategoryView categoryView, AppShortcut app, View view);
-    void onAppShortcutLongClickListener(CategoryView categoryView, AppShortcut app, View view);
-    void onAppShortcutDragListener(CategoryView categoryView, AppShortcut app, View view, DragEvent dragEvent);
+    public CategoryBar(Context context, ViewGroup tabLayout, DB db) {
+        mContext = context;
+        mTabLayout = tabLayout;
+        mDb = db;
+        mContents = new HashMap<>();
+    }
+
+    public void loadCategories() {
+
+    }
 }

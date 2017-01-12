@@ -1,12 +1,10 @@
 package com.quaap.launchtime.components.future;
 
-import android.view.DragEvent;
-import android.view.View;
-
-import com.quaap.launchtime.components.AppShortcut;
+import android.content.Context;
+import android.widget.TextView;
 
 /**
- * Created by tom on 1/10/17.
+ * Created by tom on 1/12/17.
  * <p>
  * Copyright (C) 2017  tom
  * <p>
@@ -20,9 +18,15 @@ import com.quaap.launchtime.components.AppShortcut;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-public interface CategoryListener {
+public class CategoryTab {
+    private Context mContext;
+    private String mCategory;
+    private String mLabel;
 
-    void onAppShortcutClickListener(CategoryView categoryView, AppShortcut app, View view);
-    void onAppShortcutLongClickListener(CategoryView categoryView, AppShortcut app, View view);
-    void onAppShortcutDragListener(CategoryView categoryView, AppShortcut app, View view, DragEvent dragEvent);
+    private TextView mTextView;
+
+    public CategoryTab(Context mContext, String mCategory) {
+        this.mContext = mContext;
+        this.mCategory = mCategory;
+    }
 }
