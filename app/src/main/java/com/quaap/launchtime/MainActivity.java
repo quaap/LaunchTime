@@ -54,7 +54,8 @@ import java.util.TreeMap;
 public class MainActivity extends Activity implements
         View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
 
-
+   //TODO: everything needs a major refactor.
+    // custom views or fragments?
 
     public static final String QUICK_ROW = "MainHelper";
     private static final int UNINSTALL_RESULT = 3454;
