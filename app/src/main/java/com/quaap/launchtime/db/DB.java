@@ -234,6 +234,22 @@ public class DB extends SQLiteOpenHelper {
        // Log.d("LaunchDB", "update " + pkgname + " " + catID);
     }
 
+    public boolean deleteApp(String actvname) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            db.delete(APP_TABLE, ACTVNAME + "=?", new String[]{actvname});
+        } catch (Exception e) {
+            Log.e("LaunchDB", "Can't delete app " + actvname, e);
+            return false;
+        }
+        return true;
+    }
+
+
+
     public boolean addCategory(String catID, String displayName, String displayNameFull) {
         return addCategory(catID, displayName, displayNameFull, -1);
     }

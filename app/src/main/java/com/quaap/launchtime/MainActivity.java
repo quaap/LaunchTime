@@ -302,18 +302,14 @@ public class MainActivity extends Activity implements
     private void populateRecentApps(GridLayout iconSheet) {
         DB db = getDB();
 
-        for (int i=iconSheet.getChildCount()-1; i>=0; i--) {
-            View child = iconSheet.getChildAt(i);
-
-            if (child!=null && child.getTag()!=null && child.getTag() instanceof AppShortcut) {
-                iconSheet.removeView(child);
-            }
-        }
+        iconSheet.removeAllViews();
 
         for (String actvname: db.getAppLaunchedList()) {
             AppShortcut app = db.getApp(actvname);
-            app.loadAppIconAsync(mPackageMan);
-            iconSheet.addView(getShortcutView(app));
+            if (app!=null) {
+                app.loadAppIconAsync(mPackageMan);
+                iconSheet.addView(getShortcutView(app));
+            }
         }
     }
 
@@ -327,9 +323,11 @@ public class MainActivity extends Activity implements
 
         for(String actvname: apporder) {
             AppShortcut app = db.getApp(actvname);
-            ViewGroup item = getShortcutView(app);
-            app.loadAppIconAsync(mPackageMan);
-            iconSheet.addView(item);
+            if (app!=null) {
+                ViewGroup item = getShortcutView(app);
+                app.loadAppIconAsync(mPackageMan);
+                iconSheet.addView(item);
+            }
         }
 
     }
@@ -398,12 +396,11 @@ public class MainActivity extends Activity implements
             if (!pmactvnames.contains(actvname)) {
                 pmactvnames.add(actvname);
 
-                if (dbactvnames.contains(actvname)) {
-                    app = db.getApp(actvname);
+                app = db.getApp(actvname);
+                if (dbactvnames.contains(actvname) && app!=null) {
                     app.loadAppIconAsync(mPackageMan);
                 } else {
                     app = new AppShortcut(mPackageMan, ri);
-                    //db.addApp(app);
                     newapps.add(app);
                 }
 
@@ -426,7 +423,7 @@ public class MainActivity extends Activity implements
             String dbactv = it.next();
             if (!pmactvnames.contains(dbactv)) {
                 it.remove();
-                //db.remove(dbpkg);
+                db.deleteApp(dbactv);
             }
         }
 
@@ -830,6 +827,7 @@ public class MainActivity extends Activity implements
                     mDragDropSource.removeView(mBeingUninstalled);
                     getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                     Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
+                    getDB().deleteApp(((AppShortcut)mBeingUninstalled.getTag()).getActivityName());
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
