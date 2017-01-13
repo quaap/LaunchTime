@@ -210,7 +210,12 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
-        Cursor cursor = db.rawQuery("select " + ACTVNAME + " _id, " + LABEL + " label from " + APP_TABLE + " where label like ?", new String[] {filter});
+        Cursor cursor = db.rawQuery(
+                "select " + ACTVNAME + " _id, " + LABEL + " label " +
+                " from " + APP_TABLE +
+                " where " + LABEL + " like ? or " + ACTVNAME + " like ? " +
+                " order by 2 ",
+                new String[] {filter, filter});
 
         return cursor;
     }
