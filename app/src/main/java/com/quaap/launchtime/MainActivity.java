@@ -61,6 +61,8 @@ public class MainActivity extends Activity implements
 
     public static final String QUICK_ROW_CAT = "QuickRow";
     private static final int UNINSTALL_RESULT = 3454;
+
+    private FrameLayout mIconSheetTopFrame;
     private ScrollView mIconSheetScroller;
     private Map<String,GridLayout> mIconSheets;
     private GridLayout mIconSheet;
@@ -94,6 +96,7 @@ public class MainActivity extends Activity implements
 
     private int mColumns = 3;
     private int mColumnsLandscape = 6;
+    private int mColumnsPortrait = 3;
     private int mColumnMargin = 12;
 
     @Override
@@ -185,7 +188,10 @@ public class MainActivity extends Activity implements
 
         styleCategorySpecial(mCategoryTabs.get(category),false, true);
 
+        mIconSheetTopFrame.removeAllViews();
         if (category.equals(Categories.CAT_SEARCH)) {
+
+            mIconSheetTopFrame.addView(mSearchView);
             populateRecentApps(mIconSheet);
         }
 
@@ -194,10 +200,13 @@ public class MainActivity extends Activity implements
 
     private void checkConfig() {
         if (Utils.isLandscape(this)) {
-            Utils.changeColumnCount(mIconSheet, mColumnsLandscape, (int)getResources().getDimension(R.dimen.shortcut_width));
+            mColumns = mColumnsLandscape;
         } else {
-            Utils.changeColumnCount(mIconSheet, mColumns, (int)getResources().getDimension(R.dimen.shortcut_width));
+            mColumns = mColumnsPortrait;
         }
+
+        Utils.changeColumnCount(mIconSheet, mColumns, (int)getResources().getDimension(R.dimen.shortcut_width));
+
     }
 
 
@@ -254,13 +263,7 @@ public class MainActivity extends Activity implements
         iconSheet.setOnDragListener(MainActivity.this);
 
         if (category.equals(Categories.CAT_SEARCH)) {
-            GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
 
-
-            lp.columnSpec = GridLayout.spec(0, mColumns);
-            mSearchView.setLayoutParams(lp);
-
-            iconSheet.addView(mSearchView);
 
             populateRecentApps(iconSheet);
         }
@@ -788,6 +791,7 @@ public class MainActivity extends Activity implements
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
 
+        mIconSheetTopFrame = (FrameLayout)findViewById(R.id.layout_icons_topframe);
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
 
         mRemoveDropzone = (FrameLayout)findViewById(R.id.remove_dropzone);

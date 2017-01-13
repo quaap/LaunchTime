@@ -13,20 +13,33 @@
         android:layout_height="match_parent"
         android:layout_weight="7">
 
-        <ScrollView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:id="@+id/layout_icons_scroller">
+            android:layout_weight="6">
 
-            <GridLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/layout_icons"
-                android:fadingEdge="vertical">
+                android:id="@+id/layout_icons_topframe">
 
-            </GridLayout>
-        </ScrollView>
+            </FrameLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/layout_icons_scroller">
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/layout_icons"
+                    android:fadingEdge="vertical">
+
+                </GridLayout>
+            </ScrollView>
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
