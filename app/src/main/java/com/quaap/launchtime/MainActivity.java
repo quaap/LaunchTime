@@ -932,6 +932,55 @@ public class MainActivity extends Activity implements
 
     }
 
+    private void promptAddCategory() {
+
+        promptGetCategoryName("Add Category",
+                "Add a category",
+                "",
+                "",
+                "",
+                new CategoryChangerListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName) {
+                        try {
+                            addCategory(category, newDisplayName, newDisplayFullName);
+                        } catch (IllegalArgumentException e){
+
+                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
+    }
+
+    private void addCategory(String category, String newDisplayName, String newDisplayFullName) {
+        category = category.trim();
+        newDisplayName = newDisplayName.trim();
+        newDisplayFullName = newDisplayFullName.trim();
+
+        if (category.length()==0) {
+            category = newDisplayName;
+        }
+        if (newDisplayName.length()==0) {
+            category = newDisplayName;
+        }
+
+        if (newDisplayFullName.length()==0) {
+            newDisplayFullName = newDisplayName;
+        }
+
+        if (newDisplayName.length()<1) {
+            throw new IllegalArgumentException("Must give a name");
+        }
+
+        getDB().addCategory(category, newDisplayName, newDisplayFullName);
+
+        getIconSheet(category);
+
+        switchCategory(category);
+    }
+
+
+
 
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
@@ -979,6 +1028,13 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 promptRenameCategory(mCategory);
+            }
+        });
+
+        mAddCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptAddCategory();
             }
         });
 

@@ -233,6 +233,9 @@ public class DB extends SQLiteOpenHelper {
        // Log.d("LaunchDB", "update " + pkgname + " " + catID);
     }
 
+    public void addCategory(String catID, String displayName, String displayNameFull) {
+        addCategory(catID, displayName, displayNameFull, -1);
+    }
 
     public void addCategory(String catID, String displayName, String displayNameFull, int index) {
         try {
