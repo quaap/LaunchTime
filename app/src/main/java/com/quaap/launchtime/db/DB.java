@@ -213,9 +213,9 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(
                 "select " + ACTVNAME + " _id, " + LABEL + " label " +
                 " from " + APP_TABLE +
-                " where " + LABEL + " like ? or " + ACTVNAME + " like ? " +
+                " where " + LABEL + " like ?" +
                 " order by 2 ",
-                new String[] {filter, filter});
+                new String[] {filter});
 
         return cursor;
     }

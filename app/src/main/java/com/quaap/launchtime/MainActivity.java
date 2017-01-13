@@ -164,7 +164,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mCategory = mPrefs.getString("category", mCategory);
+        mCategory = mPrefs.getString("category", Categories.CAT_PHONE);
         switchCategory(mCategory);
     }
 
@@ -184,6 +184,10 @@ public class MainActivity extends Activity implements
         mIconSheetScroller.addView(mIconSheet);
 
         styleCategorySpecial(mCategoryTabs.get(category),false, true);
+
+        if (category.equals(Categories.CAT_SEARCH)) {
+            populateRecentApps(mIconSheet);
+        }
 
 
     }
@@ -228,9 +232,6 @@ public class MainActivity extends Activity implements
 
         for (final String category: db.getCategories()) {
 
-            if (mCategory==null) mCategory=category;
-
-
             List<AppShortcut> capps = shortcuts.get(category);
             if (capps==null) capps = new ArrayList<>();
 
@@ -261,12 +262,7 @@ public class MainActivity extends Activity implements
 
             iconSheet.addView(mSearchView);
 
-            DB db = getDB();
-            for (String actvname: db.getAppLaunchedList()) {
-                AppShortcut app = db.getApp(actvname);
-                app.loadAppIconAsync(mPackageMan);
-                iconSheet.addView(getShortcutView(app));
-            }
+            populateRecentApps(iconSheet);
         }
 
 
@@ -276,6 +272,24 @@ public class MainActivity extends Activity implements
         mCategoryTabs.put(category, categoryTab);
         mRevCategoryMap.put(categoryTab, category);
         return iconSheet;
+    }
+
+    private void populateRecentApps(GridLayout iconSheet) {
+        DB db = getDB();
+
+        for (int i=iconSheet.getChildCount()-1; i>=0; i--) {
+            View child = iconSheet.getChildAt(i);
+
+            if (child!=null && child.getTag()!=null && child.getTag() instanceof AppShortcut) {
+                iconSheet.removeView(child);
+            }
+        }
+
+        for (String actvname: db.getAppLaunchedList()) {
+            AppShortcut app = db.getApp(actvname);
+            app.loadAppIconAsync(mPackageMan);
+            iconSheet.addView(getShortcutView(app));
+        }
     }
 
     private void processIconSheet(final DB db, final String category, final GridLayout iconSheet, final List<AppShortcut> catapps) {
