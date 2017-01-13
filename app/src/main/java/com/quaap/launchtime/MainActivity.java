@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -34,6 +35,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quaap.launchtime.components.AppCursorAdapter;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.Utils;
@@ -57,7 +59,7 @@ public class MainActivity extends Activity implements
    //TODO: everything needs a major refactor.
     // custom views or fragments?
 
-    public static final String QUICK_ROW = "MainHelper";
+    public static final String QUICK_ROW_CAT = "QuickRow";
     private static final int UNINSTALL_RESULT = 3454;
     private ScrollView mIconSheetScroller;
     private Map<String,GridLayout> mIconSheets;
@@ -67,7 +69,7 @@ public class MainActivity extends Activity implements
     private volatile String mCategory;
     private GridLayout mQuickRow;
     private HorizontalScrollView mQuickRowScroller;
-    //private ScrollView mCategoriesScroller;
+
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
     private FrameLayout mRemoveDropzone;
@@ -77,6 +79,7 @@ public class MainActivity extends Activity implements
     private SharedPreferences mPrefs;
     private View mBeingUninstalled;
     private Widget mWidgetHost;
+    private ViewGroup mSearchView;
 
 
     private int textColor;
@@ -122,7 +125,7 @@ public class MainActivity extends Activity implements
             }
         });
 
-
+        mSearchView = getSearchView();
 
         loadApplications();
 
@@ -194,16 +197,22 @@ public class MainActivity extends Activity implements
     }
 
 
-    protected DB getDB() {
+    public DB getDB() {
         return GlobState.getGlobState(this).getDB();
     }
 
+    public void launchApp(String activityname) {
+        launchApp(getDB().getApp(activityname));
+    }
 
-    private void launchApp(final AppShortcut app) {
+    public void launchApp(final AppShortcut app) {
+        launchApp(app.getActivityName(),app.getPackageName());
+    }
 
-        getDB().appLaunched(app.getActivityName());
+    public void launchApp(String activityname, String packagename) {
+        getDB().appLaunched(activityname);
         Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setClassName(app.getPackageName(), app.getActivityName());
+        intent.setClassName(packagename, activityname);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -240,9 +249,19 @@ public class MainActivity extends Activity implements
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
         mIconSheets.put(category, iconSheet);
         mRevCategoryMap.put(iconSheet, category);
-
         iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(MainActivity.this);
+
+        if (category.equals(Categories.CAT_SEARCH)) {
+            GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+
+
+            lp.columnSpec = GridLayout.spec(0, mColumns);
+            mSearchView.setLayoutParams(lp);
+
+            iconSheet.addView(mSearchView);
+        }
+
 
         final TextView categoryTab = getCategoryTab(category, iconSheet);
 
@@ -354,7 +373,7 @@ public class MainActivity extends Activity implements
 
     private void processQuickApps(DB db, Map<String, List<AppShortcut>> shortcuts) {
         List<AppShortcut> quickRowApps = new ArrayList<>();
-        final List<String> quickRowOrder = db.getAppCategoryOrder(QUICK_ROW);
+        final List<String> quickRowOrder = db.getAppCategoryOrder(QUICK_ROW_CAT);
 
         MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
 
@@ -383,11 +402,11 @@ public class MainActivity extends Activity implements
     }
 
 
-    private ViewGroup getShortcutView(final AppShortcut app) {
+    public ViewGroup getShortcutView(final AppShortcut app) {
         return getShortcutView(app, false);
     }
 
-    private ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
+    public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
 
         ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon?R.layout.shortcut_small_icon:R.layout.shortcut_icon, (ViewGroup) null);
 
@@ -420,6 +439,20 @@ public class MainActivity extends Activity implements
         item.setOnDragListener(this);
         return item;
     }
+
+
+
+    private ViewGroup getSearchView() {
+        ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
+
+        final AutoCompleteTextView searchbox = (AutoCompleteTextView)searchView.findViewById(R.id.search_box);
+        AppCursorAdapter searchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, getDB().getAppCursor("XXXXXX"), 0);
+        searchbox.setAdapter(searchAdapter);
+        searchbox.setOnItemClickListener(searchAdapter);
+
+        return searchView;
+    }
+
 
     private void styleCategorySpecial(TextView categoryTab, boolean normal, boolean selected) {
         if (normal){
@@ -730,11 +763,9 @@ public class MainActivity extends Activity implements
         return false;
     }
 
-    private TextView searchCategory;
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
-        searchCategory = (TextView) findViewById(R.id.seach_category);
 
         mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
 
@@ -753,7 +784,7 @@ public class MainActivity extends Activity implements
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
         mRevCategoryMap = new HashMap<>();
-        mRevCategoryMap.put(mQuickRow, QUICK_ROW);
+        mRevCategoryMap.put(mQuickRow, QUICK_ROW_CAT);
     }
 
     private void setColors() {
@@ -773,5 +804,7 @@ public class MainActivity extends Activity implements
             return getResources().getColor(res);
         }
     }
+
+
 
 }

@@ -206,6 +206,15 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
+    public Cursor getAppCursor(String filter) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
+        Cursor cursor = db.rawQuery("select " + ACTVNAME + " _id, " + LABEL + " label from " + APP_TABLE + " where label like ?", new String[] {filter});
+
+        return cursor;
+    }
+
     public void updateAppCategory(String actvname, String catID) {
         SQLiteDatabase db = this.getWritableDatabase();
 

@@ -62,18 +62,20 @@ public class Categories {
 
 
     //Don't change these values here.  Change them in strings.xml
-    public static final String CAT_PHONE = "Phone";
-    public static final String CAT_GAMES = "Games";
-    public static final String CAT_INTERNET = "Internet";
-    public static final String CAT_MEDIA = "Media";
-    public static final String CAT_GRAPHICS = "Graphics";
+    public static final String CAT_SEARCH      = "Search";
+    public static final String CAT_PHONE       = "Phone";
+    public static final String CAT_GAMES       = "Games";
+    public static final String CAT_INTERNET    = "Internet";
+    public static final String CAT_MEDIA       = "Media";
+    public static final String CAT_GRAPHICS    = "Graphics";
     public static final String CAT_ACCESSORIES = "Accessories";
-    public static final String CAT_OTHER = "Other";
-    public static final String CAT_SETTINGS = "Settings";
-    public static final String CAT_HIDDEN = "Hidden";
+    public static final String CAT_OTHER       = "Other";
+    public static final String CAT_SETTINGS    = "Settings";
+    public static final String CAT_HIDDEN      = "Hidden";
 
     public static String getCatLabel(Context context, String category) {
         Map<String, Integer> catmap = new HashMap<>();
+        catmap.put(CAT_SEARCH,R.string.category_Search);
         catmap.put(CAT_PHONE,R.string.category_Phone);
         catmap.put(CAT_GAMES,R.string.category_Games);
         catmap.put(CAT_INTERNET,R.string.category_Internet);
@@ -88,6 +90,7 @@ public class Categories {
 
 
     public static final String [] DefCategoryOrder = {
+            CAT_SEARCH,
             CAT_PHONE,
             CAT_GAMES,
             CAT_INTERNET,
