@@ -2,9 +2,11 @@ package com.quaap.launchtime;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
@@ -56,7 +59,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class MainActivity extends Activity implements
-        View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
+        View.OnLongClickListener, View.OnDragListener {
 
    //TODO: everything needs a major refactor.
     // custom views or fragments?
@@ -75,6 +78,15 @@ public class MainActivity extends Activity implements
     private volatile String mCategory;
     private GridLayout mQuickRow;
     private HorizontalScrollView mQuickRowScroller;
+
+
+    private ImageView mShowButtons;
+    private View mAddCategoryButton;
+    private View mRenameCategoryButton;
+    private View mDeleteCategoryButton;
+    private View mEditWidgetsButton;
+
+
 
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
@@ -134,41 +146,19 @@ public class MainActivity extends Activity implements
                 return MainActivity.this.onDrag(mIconSheet, dragEvent);
             }
         });
-//        mIconSheetScroller.setOnPositionChangedListener(new InteractiveScrollView.OnPositionChangedListener() {
-//            @Override
-//            public void onPositionChanged(float percentUp, float percentDown, int distFromTop, int distFromBottom) {
-//                if (distFromBottom > mIconSheetBottomFrame.getHeight()) {
-//                    mIconSheetBottomFrame.setVisibility(View.GONE);
-//                } else {
-//                    mIconSheetBottomFrame.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
 
         mSearchView = getSearchView();
 
         loadApplications();
 
-        View settButt = findViewById(R.id.settings_button);
-        settButt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int vis = mIconSheetBottomFrame.getVisibility();
-                if (vis==View.VISIBLE) {
-                    mIconSheetBottomFrame.setVisibility(View.GONE);
-                    ((ImageView)view).setImageResource(android.R.drawable.arrow_up_float);
-                } else {
-                    mIconSheetBottomFrame.setVisibility(View.VISIBLE);
-                    ((ImageView)view).setImageResource(android.R.drawable.arrow_down_float);
-                }
-            }
-        });
 
        // mCategoriesLayout
 
         mPrefs = getSharedPreferences("default",MODE_PRIVATE);
 
     }
+
+
 
     private void setupWidget() {
         mWidgetHost.popupSelectWidget();
@@ -851,10 +841,64 @@ public class MainActivity extends Activity implements
         }
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        return false;
+    private void promptRenameCategory(final String category) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Rename category");
+
+        ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.category_name, (ViewGroup) null);
+
+        final EditText shortname = (EditText)view.findViewById(R.id.shortname);
+        final EditText fullname = (EditText)view.findViewById(R.id.fullname);
+
+        shortname.setText(getDB().getCategoryDisplay(category));
+        fullname.setText(getDB().getCategoryDisplayFull(category));
+
+        builder.setView(view);
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    renameCategory(category, shortname.getText().toString(), fullname.getText().toString());
+                } catch (IllegalArgumentException e){
+
+                    Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT);
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
+
+    private void renameCategory(String category, String newDisplayName, String newDisplayFullName) {
+        newDisplayName = newDisplayName.trim();
+        newDisplayFullName = newDisplayFullName.trim();
+
+        if (newDisplayFullName.length()==0) {
+            newDisplayFullName = newDisplayName;
+        }
+
+        if (newDisplayName.length()<1) {
+            throw new IllegalArgumentException("Must give a name");
+        }
+
+        getDB().updateCategory(category, newDisplayName, newDisplayFullName);
+
+        TextView categoryTab = mCategoryTabs.get(category);
+        if (category.equals(mCategory)) {
+            categoryTab.setText(newDisplayFullName);
+        } else {
+            categoryTab.setText(newDisplayName);
+        }
+
+    }
+
 
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
@@ -883,7 +927,44 @@ public class MainActivity extends Activity implements
         mCategoryTabs = new TreeMap<>();
         mRevCategoryMap = new HashMap<>();
         mRevCategoryMap.put(mQuickRow, QUICK_ROW_CAT);
+
+        mShowButtons = (ImageView)findViewById(R.id.settings_button);
+
+        mShowButtons.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleButtonBar();
+            }
+        });
+
+        mAddCategoryButton = findViewById(R.id.btn_add_cat);
+        mRenameCategoryButton = findViewById(R.id.btn_rename_cat);
+        mDeleteCategoryButton = findViewById(R.id.btn_delete_cat);
+        mEditWidgetsButton = findViewById(R.id.btn_widgets);
+
+        mRenameCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptRenameCategory(mCategory);
+            }
+        });
+
+
     }
+
+    private void toggleButtonBar() {
+        int vis = mIconSheetBottomFrame.getVisibility();
+        if (vis== View.VISIBLE) {
+            mIconSheetBottomFrame.setVisibility(View.GONE);
+            mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
+        } else {
+            mIconSheetBottomFrame.setVisibility(View.VISIBLE);
+            mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
+        }
+    }
+
+
+
 
     private void setColors() {
         cattabBackground = getResColor(R.color.cattab_background);

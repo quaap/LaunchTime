@@ -251,6 +251,23 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
+    public void updateCategory(String catID, String displayName, String displayNameFull) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            // Log.d("DB", "adding catID " + catID);
+            ContentValues values = new ContentValues();
+
+            values.put(LABEL, displayName);
+            values.put(LABELFULL, displayNameFull);
+
+            db.update(TAB_ORDER_TABLE, values, CATID+"=?", new String[]{catID});
+        } catch (Exception e) {
+            Log.e("LaunchDB", "Can't select catID " + catID, e);
+        }
+    }
+
+
 
     public List<String> getCategories() {
         List<String> categories = new ArrayList<>();
