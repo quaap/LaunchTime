@@ -168,7 +168,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mCategory = mPrefs.getString("category", Categories.CAT_PHONE);
+        mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         switchCategory(mCategory);
     }
 

@@ -63,7 +63,7 @@ public class Categories {
 
     //Don't change these values here.  Change them in strings.xml
     public static final String CAT_SEARCH      = "Search";
-    public static final String CAT_PHONE       = "Phone";
+    public static final String CAT_TALK = "Communicate";
     public static final String CAT_GAMES       = "Games";
     public static final String CAT_INTERNET    = "Internet";
     public static final String CAT_MEDIA       = "Media";
@@ -76,7 +76,7 @@ public class Categories {
     public static String getCatLabel(Context context, String category) {
         Map<String, Integer> catmap = new HashMap<>();
         catmap.put(CAT_SEARCH,R.string.category_Search);
-        catmap.put(CAT_PHONE,R.string.category_Phone);
+        catmap.put(CAT_TALK,R.string.category_Talk);
         catmap.put(CAT_GAMES,R.string.category_Games);
         catmap.put(CAT_INTERNET,R.string.category_Internet);
         catmap.put(CAT_MEDIA,R.string.category_Media);
@@ -91,7 +91,7 @@ public class Categories {
 
     public static final String [] DefCategoryOrder = {
             CAT_SEARCH,
-            CAT_PHONE,
+            CAT_TALK,
             CAT_GAMES,
             CAT_INTERNET,
             CAT_MEDIA,
@@ -106,11 +106,11 @@ public class Categories {
     {
         Map<String, String[]> keywordsDict = new LinkedHashMap<>();
 
-        keywordsDict.put(CAT_PHONE, new String[]{"phone", "conv", "call", "sms", "mms", "contacts", "stk"});  // stk stands for "SIM Toolkit"
+        keywordsDict.put(CAT_TALK, new String[]{"phone", "conv", "call", "sms", "mms", "contacts", "stk", "mail", "twitter", "whatsapp", "outlook", "talk", "facebook", "social", "chat"});  // stk stands for "SIM Toolkit"
         keywordsDict.put(CAT_GAMES, new String[]{"game", "play", "puzz", "com.ea", "com.king", "com.halfbrick"});
-        keywordsDict.put(CAT_INTERNET, new String[]{"download", "mail", "vending", "browser", "maps", "twitter", "whatsapp", "outlook", "dropbox", "chrome", "drive"});
+        keywordsDict.put(CAT_INTERNET, new String[]{"download", "vending", "browser", "maps", "dropbox", "chrome", "drive"});
         keywordsDict.put(CAT_MEDIA, new String[]{"radio", "voice", "audio", "speech", "pod", "music", "sound", "mp3", "record", "sfx", "mic"});
-        keywordsDict.put(CAT_GRAPHICS, new String[]{"pic", "pix", "gallery", "photo", "foto", "cam", "tube", "tv", "video", "draw", "graph", "gfx", "image", "img", "svg", "png"});
+        keywordsDict.put(CAT_GRAPHICS, new String[]{"pic", "pix", "gallery", "photo", "foto", "cam", "tube", "vid", "video", "draw", "graph", "gfx", "image", "img", "svg", "png"});
         keywordsDict.put(CAT_ACCESSORIES, new String[]{"editor", "calc", "calendar", "organize", "clock", "time", "viewer", "file", "manager", "memo", "note"});
         keywordsDict.put(CAT_SETTINGS, new String[]{"setting", "config", "keyboard", "launch", "sync", "backup", "prefer", "prefs"});
 
