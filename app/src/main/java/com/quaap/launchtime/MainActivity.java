@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.quaap.launchtime.components.AppCursorAdapter;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.components.InteractiveScrollView;
 import com.quaap.launchtime.components.Utils;
 import com.quaap.launchtime.components.Widget;
 import com.quaap.launchtime.db.DB;
@@ -64,7 +65,9 @@ public class MainActivity extends Activity implements
     private static final int UNINSTALL_RESULT = 3454;
 
     private FrameLayout mIconSheetTopFrame;
-    private ScrollView mIconSheetScroller;
+    private InteractiveScrollView mIconSheetScroller;
+    private ViewGroup mIconSheetBottomFrame;
+    private ViewGroup mIconSheetHolder;
     private Map<String,GridLayout> mIconSheets;
     private GridLayout mIconSheet;
     private Map<String,TextView> mCategoryTabs;
@@ -125,22 +128,39 @@ public class MainActivity extends Activity implements
                 return MainActivity.this.onDrag(mQuickRow, dragEvent);
             }
         });
-        mIconSheetScroller.setOnDragListener(new View.OnDragListener() {
+        mIconSheetHolder.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
                 return MainActivity.this.onDrag(mIconSheet, dragEvent);
             }
         });
+//        mIconSheetScroller.setOnPositionChangedListener(new InteractiveScrollView.OnPositionChangedListener() {
+//            @Override
+//            public void onPositionChanged(float percentUp, float percentDown, int distFromTop, int distFromBottom) {
+//                if (distFromBottom > mIconSheetBottomFrame.getHeight()) {
+//                    mIconSheetBottomFrame.setVisibility(View.GONE);
+//                } else {
+//                    mIconSheetBottomFrame.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
         mSearchView = getSearchView();
 
         loadApplications();
 
-        Button settButt = (Button)findViewById(R.id.settings_button);
+        View settButt = findViewById(R.id.settings_button);
         settButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setupWidget();
+                int vis = mIconSheetBottomFrame.getVisibility();
+                if (vis==View.VISIBLE) {
+                    mIconSheetBottomFrame.setVisibility(View.GONE);
+                    ((ImageView)view).setImageResource(android.R.drawable.arrow_up_float);
+                } else {
+                    mIconSheetBottomFrame.setVisibility(View.VISIBLE);
+                    ((ImageView)view).setImageResource(android.R.drawable.arrow_down_float);
+                }
             }
         });
 
@@ -186,12 +206,12 @@ public class MainActivity extends Activity implements
 
         mCategoryTabs.get(category).setText(getDB().getCategoryDisplayFull(category));
 
-        mIconSheetScroller.removeAllViews();
+        mIconSheetHolder.removeAllViews();
         mIconSheet = mIconSheets.get(category);
 
         checkConfig();
 
-        mIconSheetScroller.addView(mIconSheet);
+        mIconSheetHolder.addView(mIconSheet);
 
 
         mIconSheetTopFrame.removeAllViews();
@@ -841,7 +861,11 @@ public class MainActivity extends Activity implements
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
 
         mIconSheetTopFrame = (FrameLayout)findViewById(R.id.layout_icons_topframe);
-        mIconSheetScroller = (ScrollView)findViewById(R.id.layout_icons_scroller);
+        mIconSheetScroller = (InteractiveScrollView)findViewById(R.id.layout_icons_scroller);
+
+        mIconSheetHolder = (ViewGroup)findViewById(R.id.icon_sheet_holder);
+
+        mIconSheetBottomFrame = (ViewGroup)findViewById(R.id.layout_icons_bottomframe);
 
         mRemoveDropzone = (FrameLayout)findViewById(R.id.remove_dropzone);
         mRemoveDropzone.setOnDragListener(this);

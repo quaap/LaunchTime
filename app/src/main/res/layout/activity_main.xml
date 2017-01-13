@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:id="@+id/activity_main"
@@ -11,41 +12,59 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="7">
+        android:layout_weight="7"
+        android:id="@+id/icon_and_cat_wrap">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="6">
+            android:layout_weight="8"
+            android:id="@+id/iconarea_wrap">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/layout_icons_topframe">
-
-            </FrameLayout>
-
-            <ScrollView
+            <com.quaap.launchtime.components.InteractiveScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/layout_icons_scroller">
+                android:id="@+id/layout_icons_scroller"
+                android:layout_weight="8">
 
-                <GridLayout
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/layout_icons"
-                    android:fadingEdge="vertical">
+                    android:layout_height="wrap_content">
 
-                </GridLayout>
-            </ScrollView>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/layout_icons_topframe">
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/icon_sheet_holder">
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/layout_icons"
+                            android:fadingEdge="vertical">
+
+                        </GridLayout>
+                    </FrameLayout>
+
+                </LinearLayout>
+            </com.quaap.launchtime.components.InteractiveScrollView>
+
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="110dp"
             android:layout_height="match_parent"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            android:id="@+id/category_tabs_wrap">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -61,13 +80,18 @@
                 </LinearLayout>
             </ScrollView>
 
-            <Button
-                android:text="Settings"
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:id="@+id/settings_button"
                 android:layout_weight="1"
-                android:visibility="gone" />
+                android:clickable="true"
+                android:gravity="end"
+                android:layout_gravity="center"
+                android:background="@color/btn_background"
+                android:src="@android:drawable/arrow_up_float"
+                android:layout_margin="2dp"
+                android:alpha=".8" />
 
         </LinearLayout>
 
@@ -76,8 +100,68 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_height="@dimen/btnbar_height"
+        android:id="@+id/layout_icons_bottomframe"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="@dimen/shortcut_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_add_cat"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Add Category"
+            android:textSize="@dimen/btnbar_textsize"
+            android:layout_margin="2dp"
+            android:background="@color/btn_background"
+            android:textColor="@color/textcolor" />
+
+        <TextView
+            android:layout_width="@dimen/shortcut_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_rename_cat"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Rename Category"
+            android:textSize="@dimen/btnbar_textsize"
+            android:layout_margin="2dp"
+            android:background="@color/btn_background"
+            android:textColor="@color/textcolor" />
+
+        <TextView
+            android:layout_width="@dimen/shortcut_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_delete_cat"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Delete Category"
+            android:textSize="@dimen/btnbar_textsize"
+            android:layout_margin="2dp"
+            android:background="@color/btn_background"
+            android:textColor="@color/textcolor" />
+
+        <TextView
+            android:layout_width="@dimen/shortcut_width"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_widgets"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Edit Widgets"
+            android:textSize="@dimen/btnbar_textsize"
+            android:layout_margin="2dp"
+            android:background="@color/btn_background"
+            android:textColor="@color/textcolor" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/quickbar_height"
+        android:layout_weight="1"
+        android:id="@+id/quickrow_wrap">
 
         <HorizontalScrollView
             android:layout_width="match_parent"

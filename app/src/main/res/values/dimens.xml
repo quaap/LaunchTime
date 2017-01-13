@@ -16,6 +16,10 @@
 
 
 
+    <dimen name="btnbar_height">75dp</dimen>
+    <dimen name="btnbar_textsize">16dp</dimen>
+
+
     <dimen name="quickbar_height">75dp</dimen>
 
     <dimen name="shortcut_sm_width">50dp</dimen>

@@ -3,6 +3,7 @@
     <color name="textcolor">#eeffffff</color>
     <color name="textcolorinv">#ee111111</color>
 
+    <color name="btn_background">#99125912</color>
     <color name="cattab_background">#99119911</color>
     <color name="cattabdraghover_background">#aa7777ee</color>
     <color name="cattabselected_background">#aa77ee77</color>
