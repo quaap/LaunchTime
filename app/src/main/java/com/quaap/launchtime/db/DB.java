@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.components.Categories;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -270,6 +271,39 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
+    public void deleteCategory(String catID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+
+            db.beginTransaction();
+
+            {
+                //Update existing apps with the deleted category to category other
+                ContentValues values = new ContentValues();
+                values.put(CATID, Categories.CAT_OTHER);
+                db.update(APP_TABLE, values, CATID + "=?", new String[]{catID});
+            }
+
+            {
+                //Move old cat app order to category other
+                List<String> oldAppOrder = getAppCategoryOrder(catID);
+                List<String> otherAppOrder = getAppCategoryOrder(Categories.CAT_OTHER);
+
+                otherAppOrder.addAll(oldAppOrder);
+                setAppCategoryOrder(Categories.CAT_OTHER, otherAppOrder, true);
+            }
+
+            db.delete(TAB_ORDER_TABLE, CATID+"=?", new String[]{catID});
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e("LaunchDB", "Can't delete catID " + catID, e);
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+
 
 
     public List<String> getCategories() {
@@ -371,16 +405,24 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public void setAppCategoryOrder(String catID, List<AppShortcut> apps) {
+        List<String> actvnames = new ArrayList<>();
+        for (AppShortcut app: apps) {
+            actvnames.add(app.getActivityName());
+        }
+        setAppCategoryOrder(catID, actvnames, true);
+    }
+
+    public void setAppCategoryOrder(String catID, List<String> actvnames, boolean dummy) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             db.beginTransaction();
             db.delete(APP_ORDER_TABLE, CATID +"=?", new String[]{catID}); //CATID, PKGNAME, INDEX};
 
-            for (int i=0; i<apps.size();i++) {
+            for (int i=0; i<actvnames.size();i++) {
                 ContentValues values = new ContentValues();
                 values.put(CATID, catID);
-                values.put(ACTVNAME, apps.get(i).getActivityName());
+                values.put(ACTVNAME, actvnames.get(i));
                 values.put(INDEX, i);
                 db.insert(APP_ORDER_TABLE, null, values);
             }

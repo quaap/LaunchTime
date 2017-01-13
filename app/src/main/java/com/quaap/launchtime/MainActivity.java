@@ -979,7 +979,43 @@ public class MainActivity extends Activity implements
         switchCategory(category);
     }
 
+    private void promptDeleteCategory(final String category) {
 
+        new AlertDialog.Builder(MainActivity.this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Delete category?")
+                .setMessage("Are you sure you want to delete this category?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteCategory(category);
+                        Toast.makeText(MainActivity.this, "Category deleted", Toast.LENGTH_SHORT);
+                    }
+
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+
+    }
+
+    private void deleteCategory(final String category) {
+        TextView categoryTab = mCategoryTabs.get(category);
+
+        View iconSheet = mIconSheets.get(category);
+        mRevCategoryMap.remove(iconSheet);
+
+
+        mCategoryTabs.remove(category);
+        mRevCategoryMap.remove(categoryTab);
+
+        mCategoriesLayout.removeView(categoryTab);
+
+        getDB().deleteCategory(category);
+
+        String newcat = mCategoryTabs.keySet().iterator().next();
+
+        switchCategory(newcat);
+    }
 
 
     private void initUI() {
@@ -1038,6 +1074,12 @@ public class MainActivity extends Activity implements
             }
         });
 
+        mDeleteCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptDeleteCategory(mCategory);
+            }
+        });
 
     }
 
