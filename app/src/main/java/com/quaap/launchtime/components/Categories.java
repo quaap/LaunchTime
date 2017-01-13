@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -75,6 +76,13 @@ public class Categories {
 
     public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
 
+
+    public static boolean isTinyCategory(String category) {
+        return Arrays.asList(Categories.CAT_TINY).contains(category);
+    }
+    public static boolean isSpeacialCategory(String category) {
+        return Arrays.asList(CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH).contains(category);
+    }
 
     public static String getCatLabel(Context context, String category) {
         Map<String, Integer> catmap = new HashMap<>();

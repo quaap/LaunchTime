@@ -234,11 +234,11 @@ public class DB extends SQLiteOpenHelper {
        // Log.d("LaunchDB", "update " + pkgname + " " + catID);
     }
 
-    public void addCategory(String catID, String displayName, String displayNameFull) {
-        addCategory(catID, displayName, displayNameFull, -1);
+    public boolean addCategory(String catID, String displayName, String displayNameFull) {
+        return addCategory(catID, displayName, displayNameFull, -1);
     }
 
-    public void addCategory(String catID, String displayName, String displayNameFull, int index) {
+    public boolean addCategory(String catID, String displayName, String displayNameFull, int index) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -251,11 +251,13 @@ public class DB extends SQLiteOpenHelper {
 
             db.insert(TAB_ORDER_TABLE, null, values);
         } catch (Exception e) {
-            Log.e("LaunchDB", "Can't select catID " + catID, e);
+            Log.e("LaunchDB", "Can't add catID " + catID, e);
+            return false;
         }
+        return true;
     }
 
-    public void updateCategory(String catID, String displayName, String displayNameFull) {
+    public boolean updateCategory(String catID, String displayName, String displayNameFull) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -268,10 +270,12 @@ public class DB extends SQLiteOpenHelper {
             db.update(TAB_ORDER_TABLE, values, CATID+"=?", new String[]{catID});
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't select catID " + catID, e);
+            return false;
         }
+        return true;
     }
 
-    public void deleteCategory(String catID) {
+    public boolean deleteCategory(String catID) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
 
@@ -297,10 +301,11 @@ public class DB extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't delete catID " + catID, e);
+            return false;
         } finally {
             db.endTransaction();
         }
-
+        return true;
     }
 
 

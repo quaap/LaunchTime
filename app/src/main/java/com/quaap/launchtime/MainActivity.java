@@ -213,7 +213,7 @@ public class MainActivity extends Activity implements
             populateRecentApps(mIconSheet);
         }
 
-
+        showButtonBar(false);
     }
 
     private void checkConfig() {
@@ -246,6 +246,8 @@ public class MainActivity extends Activity implements
         intent.setClassName(packagename, activityname);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        showButtonBar(false);
+
     }
 
 
@@ -295,6 +297,8 @@ public class MainActivity extends Activity implements
         return iconSheet;
     }
 
+
+
     private void populateRecentApps(GridLayout iconSheet) {
         DB db = getDB();
 
@@ -312,6 +316,24 @@ public class MainActivity extends Activity implements
             iconSheet.addView(getShortcutView(app));
         }
     }
+
+    private void repopulateIconSheet(String category) {
+        GridLayout iconSheet = mIconSheets.get(category);
+
+        iconSheet.removeAllViews();
+        DB db = getDB();
+
+        final List<String> apporder = db.getAppCategoryOrder(category);
+
+        for(String actvname: apporder) {
+            AppShortcut app = db.getApp(actvname);
+            ViewGroup item = getShortcutView(app);
+            app.loadAppIconAsync(mPackageMan);
+            iconSheet.addView(item);
+        }
+
+    }
+
 
     private void processIconSheet(final DB db, final String category, final GridLayout iconSheet, final List<AppShortcut> catapps) {
         final List<String> apporder = db.getAppCategoryOrder(category);
@@ -502,7 +524,7 @@ public class MainActivity extends Activity implements
 
         if (category.equals(mCategory)) {
             catstyle = CategoryTabStyle.Selected;
-        } else if (Arrays.asList(Categories.CAT_TINY).contains(category)) {
+        } else if (Categories.isTinyCategory(category)) {
             catstyle = CategoryTabStyle.Tiny;
         }
         return catstyle;
@@ -903,7 +925,7 @@ public class MainActivity extends Activity implements
                             renameCategory(category,newDisplayName, newDisplayFullName);
                         } catch (IllegalArgumentException e){
 
-                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT);
+                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -921,13 +943,16 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        getDB().updateCategory(category, newDisplayName, newDisplayFullName);
+        if (getDB().updateCategory(category, newDisplayName, newDisplayFullName)) {
 
-        TextView categoryTab = mCategoryTabs.get(category);
-        if (category.equals(mCategory)) {
-            categoryTab.setText(newDisplayFullName);
+            TextView categoryTab = mCategoryTabs.get(category);
+            if (category.equals(mCategory)) {
+                categoryTab.setText(newDisplayFullName);
+            } else {
+                categoryTab.setText(newDisplayName);
+            }
         } else {
-            categoryTab.setText(newDisplayName);
+            Toast.makeText(MainActivity.this, "Couldn't rename category", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -946,7 +971,7 @@ public class MainActivity extends Activity implements
                             addCategory(category, newDisplayName, newDisplayFullName);
                         } catch (IllegalArgumentException e){
 
-                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT);
+                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -972,11 +997,13 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        getDB().addCategory(category, newDisplayName, newDisplayFullName);
+        if (getDB().addCategory(category, newDisplayName, newDisplayFullName)) {
+            getIconSheet(category);
 
-        getIconSheet(category);
-
-        switchCategory(category);
+            switchCategory(category);
+        } else {
+            Toast.makeText(MainActivity.this, "Couldn't add category", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void promptDeleteCategory(final String category) {
@@ -989,7 +1016,7 @@ public class MainActivity extends Activity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteCategory(category);
-                        Toast.makeText(MainActivity.this, "Category deleted", Toast.LENGTH_SHORT);
+                        Toast.makeText(MainActivity.this, "Category deleted", Toast.LENGTH_SHORT).show();
                     }
 
                 })
@@ -1001,20 +1028,25 @@ public class MainActivity extends Activity implements
     private void deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);
 
-        View iconSheet = mIconSheets.get(category);
-        mRevCategoryMap.remove(iconSheet);
+        if (getDB().deleteCategory(category) ) {
+
+            View iconSheet = mIconSheets.get(category);
+            mRevCategoryMap.remove(iconSheet);
 
 
-        mCategoryTabs.remove(category);
-        mRevCategoryMap.remove(categoryTab);
+            mCategoryTabs.remove(category);
+            mRevCategoryMap.remove(categoryTab);
 
-        mCategoriesLayout.removeView(categoryTab);
+            mCategoriesLayout.removeView(categoryTab);
 
-        getDB().deleteCategory(category);
+            repopulateIconSheet(Categories.CAT_OTHER);
+            String newcat = mCategoryTabs.keySet().iterator().next();
 
-        String newcat = mCategoryTabs.keySet().iterator().next();
+            switchCategory(newcat);
 
-        switchCategory(newcat);
+        } else {
+            Toast.makeText(MainActivity.this, "Couldn't delete category", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -1064,6 +1096,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 promptRenameCategory(mCategory);
+                showButtonBar(false);
             }
         });
 
@@ -1071,6 +1104,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 promptAddCategory();
+                showButtonBar(false);
             }
         });
 
@@ -1078,6 +1112,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 promptDeleteCategory(mCategory);
+                showButtonBar(false);
             }
         });
 
@@ -1085,12 +1120,22 @@ public class MainActivity extends Activity implements
 
     private void toggleButtonBar() {
         int vis = mIconSheetBottomFrame.getVisibility();
-        if (vis== View.VISIBLE) {
-            mIconSheetBottomFrame.setVisibility(View.GONE);
-            mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
-        } else {
+        showButtonBar(vis != View.VISIBLE);
+    }
+
+    private void showButtonBar(boolean visible) {
+
+        if (visible) {
+            if (Categories.isSpeacialCategory(mCategory)) {
+                mDeleteCategoryButton.setVisibility(View.INVISIBLE);
+            } else {
+                mDeleteCategoryButton.setVisibility(View.VISIBLE);
+            }
             mIconSheetBottomFrame.setVisibility(View.VISIBLE);
             mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
+        } else {
+            mIconSheetBottomFrame.setVisibility(View.GONE);
+            mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
     }
 
