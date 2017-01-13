@@ -16,10 +16,21 @@
     <string name="category_Talk">Communicate</string>
     <string name="category_Games">Games</string>,
     <string name="category_Internet">Internet</string>,
-    <string name="category_Media">Media</string>,
+    <string name="category_Media">Audio</string>,
     <string name="category_Graphics">Graphics</string>,
     <string name="category_Accessories">Accessories</string>,
     <string name="category_Other">Other</string>,
     <string name="category_Settings">Settings</string>,
     <string name="category_Hidden">Hidden</string>
+
+    <string name="category_Search_full">Search &amp; Recent</string>
+    <string name="category_Talk_full">Communication</string>
+    <string name="category_Games_full">Games &amp; amusements</string>,
+    <string name="category_Internet_full">Internet</string>,
+    <string name="category_Media_full">Audio &amp; Music</string>,
+    <string name="category_Graphics_full">Video &amp; Graphics</string>,
+    <string name="category_Accessories_full">Accessories</string>,
+    <string name="category_Other_full">Other</string>,
+    <string name="category_Settings_full">Settings &amp; System</string>,
+    <string name="category_Hidden_full">Hidden</string>
 </resources>

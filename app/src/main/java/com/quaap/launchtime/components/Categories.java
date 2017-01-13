@@ -73,6 +73,9 @@ public class Categories {
     public static final String CAT_SETTINGS    = "Settings";
     public static final String CAT_HIDDEN      = "Hidden";
 
+    public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
+
+
     public static String getCatLabel(Context context, String category) {
         Map<String, Integer> catmap = new HashMap<>();
         catmap.put(CAT_SEARCH,R.string.category_Search);
@@ -97,8 +100,8 @@ public class Categories {
             CAT_MEDIA,
             CAT_GRAPHICS,
             CAT_ACCESSORIES,
-            CAT_OTHER,
             CAT_SETTINGS,
+            CAT_OTHER,
             CAT_HIDDEN
     };
 

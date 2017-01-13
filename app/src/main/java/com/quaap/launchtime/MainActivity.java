@@ -43,6 +43,7 @@ import com.quaap.launchtime.components.Widget;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -94,6 +95,8 @@ public class MainActivity extends Activity implements
     private int backgroundDefault = Color.TRANSPARENT;
     private float categoryTabFontSize = 16;
     private float categoryTabFontSizeHidden = 12;
+    private int categoryTabPaddingHeight = 16;
+
 
     private int mColumns = 3;
     private int mColumnsLandscape = 5;
@@ -176,9 +179,12 @@ public class MainActivity extends Activity implements
     private void switchCategory(String category) {
         if (category==null) return;
         mCategory = category;
-        for(TextView cat: mCategoryTabs.values()) {
-            styleCategorySpecial(cat, mRevCategoryMap.get(cat).equals(Categories.CAT_HIDDEN)?CategoryTabStyle.Tiny:CategoryTabStyle.Normal);
+        for(TextView catTab: mCategoryTabs.values()) {
+//            styleCategorySpecial(cat, mRevCategoryMap.get(cat).equals(Categories.CAT_HIDDEN)?CategoryTabStyle.Tiny:CategoryTabStyle.Normal);
+            styleCategorySpecial(catTab, CategoryTabStyle.Default);
         }
+        //styleCategorySpecial(mCategoryTabs.get(category),CategoryTabStyle.Selected);
+
 
         mIconSheetScroller.removeAllViews();
         mIconSheet = mIconSheets.get(category);
@@ -187,7 +193,6 @@ public class MainActivity extends Activity implements
 
         mIconSheetScroller.addView(mIconSheet);
 
-        styleCategorySpecial(mCategoryTabs.get(category),CategoryTabStyle.Selected);
 
         mIconSheetTopFrame.removeAllViews();
         if (category.equals(Categories.CAT_SEARCH)) {
@@ -478,9 +483,30 @@ public class MainActivity extends Activity implements
         return searchView;
     }
 
-    enum CategoryTabStyle {Normal, Selected, DragHover, Tiny}
+    enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
+
+    private CategoryTabStyle getDefaultCategoryStyle(String category) {
+        CategoryTabStyle catstyle = CategoryTabStyle.Normal;
+
+        if (category.equals(mCategory)) {
+            catstyle = CategoryTabStyle.Selected;
+        } else if (Arrays.asList(Categories.CAT_TINY).contains(category)) {
+            catstyle = CategoryTabStyle.Tiny;
+        }
+        return catstyle;
+    }
 
     private void styleCategorySpecial(TextView categoryTab, CategoryTabStyle catstyle) {
+        styleCategorySpecial(categoryTab, catstyle, mRevCategoryMap.get(categoryTab));
+    }
+
+
+    private void styleCategorySpecial(TextView categoryTab, CategoryTabStyle catstyle, String category) {
+
+        if (catstyle == CategoryTabStyle.Default) {
+            catstyle = getDefaultCategoryStyle(category);
+        }
+
         switch (catstyle) {
             case Tiny:
                 categoryTab.setPadding(6, 0, 2, 0);
@@ -489,52 +515,51 @@ public class MainActivity extends Activity implements
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 break;
             case DragHover:
-                categoryTab.setPadding(6, 18, 2, 18);
+                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
                 categoryTab.setBackgroundColor(cattabDragHoverBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 break;
             case Selected:
-                categoryTab.setPadding(6, 18, 2, 18);
+                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
                 categoryTab.setBackgroundColor(cattabSelectedBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(8, 4, 4, textColorInvert);
                 break;
             case Normal:
             default:
-                categoryTab.setPadding(6, 18, 2, 18);
+                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
         }
     }
 
-    private void styleCategoryTab(TextView categoryTab, boolean small) {
-        categoryTab.setTextColor(textColor);
-        categoryTab.setTypeface(null, Typeface.BOLD);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (!small) {
-            lp.weight = 1;
-            styleCategorySpecial(categoryTab,CategoryTabStyle.Normal);
-        } else {
-            styleCategorySpecial(categoryTab,CategoryTabStyle.Tiny);
-        }
-        lp.gravity = Gravity.CENTER;
-        lp.setMargins(2, 6, 2, 8);
-        categoryTab.setLayoutParams(lp);
 
-        categoryTab.setGravity(Gravity.CENTER);
-    }
 
     private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(getDB().getCategoryDisplay(category));
         categoryTab.setTag(category);
 
+        categoryTab.setTextColor(textColor);
+        categoryTab.setTypeface(null, Typeface.BOLD);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        final boolean ishidden = category.equals(Categories.CAT_HIDDEN);
-        styleCategoryTab(categoryTab,ishidden);
+        final CategoryTabStyle catstyle = getDefaultCategoryStyle(category);
+
+        if (catstyle == CategoryTabStyle.Normal) {
+            lp.weight = 1;
+        }
+        styleCategorySpecial(categoryTab,CategoryTabStyle.Default, category);
+        lp.gravity = Gravity.CENTER;
+        lp.setMargins(2, 6, 2, 8);
+        categoryTab.setLayoutParams(lp);
+
+        categoryTab.setGravity(Gravity.CENTER);
+
+
 
 
         categoryTab.setClickable(true);
@@ -564,9 +589,7 @@ public class MainActivity extends Activity implements
                 boolean isSearch = category.equals(Categories.CAT_SEARCH);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        if (ishidden) {
-                            styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
-                        } else if (!isAppShortcut || !isSearch) {
+                        if (catstyle==CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
                             styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
                         }
                         break;
@@ -576,14 +599,15 @@ public class MainActivity extends Activity implements
                         mBeingDragged = null;
                         hideRemoveDropzone();
                     case DragEvent.ACTION_DRAG_EXITED:
-                        if (ishidden) {
-                            styleCategorySpecial(categoryTab, CategoryTabStyle.Tiny);
-                        } else if (!isAppShortcut || !isSearch) {
-                            styleCategorySpecial(categoryTab, CategoryTabStyle.Normal);
-                        }
-                        if (category.equals(mCategory)) {
-                            styleCategorySpecial(categoryTab, CategoryTabStyle.Selected);
-                        }
+//                        if (catstyle==CategoryTabStyle.Tiny) {
+//                            styleCategorySpecial(categoryTab, CategoryTabStyle.Tiny);
+//                        } else if (!isAppShortcut || !isSearch) {
+//                            styleCategorySpecial(categoryTab, CategoryTabStyle.Normal);
+//                        }
+//                        if (category.equals(mCategory)) {
+//                            styleCategorySpecial(categoryTab, CategoryTabStyle.Selected);
+//                        }
+                        styleCategorySpecial(categoryTab, CategoryTabStyle.Default);
                         break;
 
                     case DragEvent.ACTION_DROP:
