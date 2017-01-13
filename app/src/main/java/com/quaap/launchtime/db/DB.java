@@ -386,6 +386,27 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
+    public List<String> getAppLaunchedList() {
+
+        List<String> activitynames = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                true,
+                APP_HISTORY_TABLE,
+                new String[]{ACTVNAME},
+                null,null,  null, null, TIME + " desc", null);
+
+
+        while(cursor.moveToNext()) {
+            activitynames.add(cursor.getString(0));
+        }
+        cursor.close();
+        return activitynames;
+
+    }
+
     public int getAppLaunchedCount(String activityname) {
         return getAppLaunchedCount(activityname,  new Date(0));
     }
@@ -394,7 +415,7 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(
-                TAB_ORDER_TABLE,
+                APP_HISTORY_TABLE,
                 new String[]{"count(*)"},
                 ACTVNAME + "=? and " + TIME + ">?",
                 new String[]{activityname, after.getTime()+""},

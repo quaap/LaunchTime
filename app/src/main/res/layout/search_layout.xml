@@ -24,11 +24,13 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:text="Recent Apps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/textView2"
         android:layout_weight="1"
-        android:id="@+id/results_area"></LinearLayout>
+        android:layout_marginTop="16dp"
+        android:textSize="24sp" />
 
 </LinearLayout>

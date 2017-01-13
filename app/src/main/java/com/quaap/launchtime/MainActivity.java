@@ -260,6 +260,13 @@ public class MainActivity extends Activity implements
             mSearchView.setLayoutParams(lp);
 
             iconSheet.addView(mSearchView);
+
+            DB db = getDB();
+            for (String actvname: db.getAppLaunchedList()) {
+                AppShortcut app = db.getApp(actvname);
+                app.loadAppIconAsync(mPackageMan);
+                iconSheet.addView(getShortcutView(app));
+            }
         }
 
 
