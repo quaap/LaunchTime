@@ -89,13 +89,14 @@ public class MainActivity extends Activity implements
 
     private int cattabBackground;
     private int cattabSelectedBackground;
+    private int cattabDragHoverBackground;
     private int dragoverBackground;
     private int backgroundDefault = Color.TRANSPARENT;
     private float categoryTabFontSize = 16;
     private float categoryTabFontSizeHidden = 12;
 
     private int mColumns = 3;
-    private int mColumnsLandscape = 6;
+    private int mColumnsLandscape = 5;
     private int mColumnsPortrait = 3;
     private int mColumnMargin = 12;
 
@@ -176,7 +177,7 @@ public class MainActivity extends Activity implements
         if (category==null) return;
         mCategory = category;
         for(TextView cat: mCategoryTabs.values()) {
-            styleCategorySpecial(cat,true, false);
+            styleCategorySpecial(cat, mRevCategoryMap.get(cat).equals(Categories.CAT_HIDDEN)?CategoryTabStyle.Tiny:CategoryTabStyle.Normal);
         }
 
         mIconSheetScroller.removeAllViews();
@@ -186,7 +187,7 @@ public class MainActivity extends Activity implements
 
         mIconSheetScroller.addView(mIconSheet);
 
-        styleCategorySpecial(mCategoryTabs.get(category),false, true);
+        styleCategorySpecial(mCategoryTabs.get(category),CategoryTabStyle.Selected);
 
         mIconSheetTopFrame.removeAllViews();
         if (category.equals(Categories.CAT_SEARCH)) {
@@ -477,16 +478,34 @@ public class MainActivity extends Activity implements
         return searchView;
     }
 
+    enum CategoryTabStyle {Normal, Selected, DragHover, Tiny}
 
-    private void styleCategorySpecial(TextView categoryTab, boolean normal, boolean selected) {
-        if (normal){
-            categoryTab.setBackgroundColor(cattabBackground);
-            categoryTab.setTextColor(textColor);
-            categoryTab.setShadowLayer(0, 0, 0, 0);
-        } else if (selected) {
-            categoryTab.setBackgroundColor(cattabSelectedBackground);
-            categoryTab.setTextColor(textColor);
-            categoryTab.setShadowLayer(8, 4, 4, textColorInvert);
+    private void styleCategorySpecial(TextView categoryTab, CategoryTabStyle catstyle) {
+        switch (catstyle) {
+            case Tiny:
+                categoryTab.setPadding(6, 0, 2, 0);
+                categoryTab.setBackgroundColor(cattabBackground);
+                categoryTab.setTextSize(categoryTabFontSizeHidden);
+                categoryTab.setShadowLayer(0, 0, 0, 0);
+                break;
+            case DragHover:
+                categoryTab.setPadding(6, 18, 2, 18);
+                categoryTab.setBackgroundColor(cattabDragHoverBackground);
+                categoryTab.setTextSize(categoryTabFontSize);
+                categoryTab.setShadowLayer(0, 0, 0, 0);
+                break;
+            case Selected:
+                categoryTab.setPadding(6, 18, 2, 18);
+                categoryTab.setBackgroundColor(cattabSelectedBackground);
+                categoryTab.setTextSize(categoryTabFontSize);
+                categoryTab.setShadowLayer(8, 4, 4, textColorInvert);
+                break;
+            case Normal:
+            default:
+                categoryTab.setPadding(6, 18, 2, 18);
+                categoryTab.setBackgroundColor(cattabBackground);
+                categoryTab.setTextSize(categoryTabFontSize);
+                categoryTab.setShadowLayer(0, 0, 0, 0);
         }
     }
 
@@ -497,16 +516,13 @@ public class MainActivity extends Activity implements
 
         if (!small) {
             lp.weight = 1;
-            categoryTab.setTextSize(categoryTabFontSize);
-            categoryTab.setPadding(6, 18, 2, 18);
+            styleCategorySpecial(categoryTab,CategoryTabStyle.Normal);
         } else {
-            categoryTab.setTextSize(categoryTabFontSizeHidden);
+            styleCategorySpecial(categoryTab,CategoryTabStyle.Tiny);
         }
         lp.gravity = Gravity.CENTER;
         lp.setMargins(2, 6, 2, 8);
         categoryTab.setLayoutParams(lp);
-
-        categoryTab.setBackgroundColor(cattabBackground);
 
         categoryTab.setGravity(Gravity.CENTER);
     }
@@ -543,12 +559,15 @@ public class MainActivity extends Activity implements
         categoryTab.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, final DragEvent event) {
+                View view2 = (View) event.getLocalState();
+                boolean isAppShortcut = view2.getTag() instanceof AppShortcut;
+                boolean isSearch = category.equals(Categories.CAT_SEARCH);
                 switch (event.getAction()) {
-
                     case DragEvent.ACTION_DRAG_ENTERED:
                         if (ishidden) {
-                            categoryTab.setTextSize(categoryTabFontSize);
-                            categoryTab.setPadding(6, 24, 2, 24);
+                            styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
+                        } else if (!isAppShortcut || !isSearch) {
+                            styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
                         }
                         break;
 
@@ -558,16 +577,18 @@ public class MainActivity extends Activity implements
                         hideRemoveDropzone();
                     case DragEvent.ACTION_DRAG_EXITED:
                         if (ishidden) {
-                            categoryTab.setTextSize(categoryTabFontSizeHidden);
-                            categoryTab.setPadding(1,1,1,1);
+                            styleCategorySpecial(categoryTab, CategoryTabStyle.Tiny);
+                        } else if (!isAppShortcut || !isSearch) {
+                            styleCategorySpecial(categoryTab, CategoryTabStyle.Normal);
                         }
                         break;
 
                     case DragEvent.ACTION_DROP:
-                        View view2 = (View) event.getLocalState();
-                        if (view2.getTag() instanceof AppShortcut) {
-                            getDB().updateAppCategory(mBeingDragged.getActivityName(), category);
-                            MainActivity.this.onDrag(iconSheet, event);
+                        if (isAppShortcut) {
+                            if (!isSearch) {
+                                getDB().updateAppCategory(mBeingDragged.getActivityName(), category);
+                                MainActivity.this.onDrag(iconSheet, event);
+                            }
                         } else {
                             ViewGroup container1 = (ViewGroup)view.getParent();
                             ViewGroup container2 = (ViewGroup)view2.getParent();
@@ -815,6 +836,7 @@ public class MainActivity extends Activity implements
     private void setColors() {
         cattabBackground = getResColor(R.color.cattab_background);
         cattabSelectedBackground = getResColor(R.color.cattabselected_background);
+        cattabDragHoverBackground = getResColor(R.color.cattabdraghover_background);
         dragoverBackground = getResColor(R.color.dragover_background);
 
         textColor = getResColor(R.color.textcolor);
