@@ -3,14 +3,15 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/search_sugg"
-    android:gravity="center_vertical|start">
+    android:gravity="center_vertical|start"
+    android:layout_gravity="center_vertical|start">
 
 
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/shortcut_width"
         android:layout_height="@dimen/shortcut_height"
-        android:layout_weight="1"
-        android:id="@+id/icontarget">
+        android:id="@+id/icontarget"
+        android:layout_gravity="center_vertical|start">
 
     </FrameLayout>
 
@@ -19,6 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/label"
-        android:layout_weight="1"
-        android:textSize="24sp" />
+        android:textSize="22sp"
+        android:layout_gravity="center_vertical|start" />
 </LinearLayout>
