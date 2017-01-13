@@ -54,7 +54,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
             return getFilterQueryProvider().runQuery(constraint);
         }
 
-        Cursor cursor = mDB.getAppCursor("%" + constraint.toString() + "%");
+        Cursor cursor = mDB.getAppCursor("%" + ( constraint==null ? "XXXXXX" : constraint.toString() ) + "%");
 
         return cursor;
     }
