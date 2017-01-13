@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -841,39 +843,70 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private void promptRenameCategory(final String category) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Rename category");
+
+
+    interface CategoryChangerListener {
+        void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName);
+    }
+    private void promptGetCategoryName(String title, String message, final String category, String defName,
+                                       String defFullName, final CategoryChangerListener categoryChangerListener) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
 
         ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.category_name, (ViewGroup) null);
 
+        TextView messageView = (TextView)view.findViewById(R.id.message_txt);
         final EditText shortname = (EditText)view.findViewById(R.id.shortname);
         final EditText fullname = (EditText)view.findViewById(R.id.fullname);
 
-        shortname.setText(getDB().getCategoryDisplay(category));
-        fullname.setText(getDB().getCategoryDisplayFull(category));
+        shortname.setSelectAllOnFocus(true);
+        fullname.setSelectAllOnFocus(true);
+
+        messageView.setText(message);
+        shortname.setText(defName);
+        fullname.setText(defFullName);
 
         builder.setView(view);
 
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                try {
-                    renameCategory(category, shortname.getText().toString(), fullname.getText().toString());
-                } catch (IllegalArgumentException e){
-
-                    Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT);
-                }
+                categoryChangerListener.onClick(dialog, which, category, shortname.getText().toString(), fullname.getText().toString());
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
         });
 
+
         builder.show();
+    }
+
+    private void promptRenameCategory(final String category) {
+
+        promptGetCategoryName("Rename Category",
+                "Rename this category",
+                category,
+                getDB().getCategoryDisplay(category),
+                getDB().getCategoryDisplayFull(category),
+                new CategoryChangerListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName) {
+                        try {
+                            renameCategory(category,newDisplayName, newDisplayFullName);
+                        } catch (IllegalArgumentException e){
+
+                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
     }
 
     private void renameCategory(String category, String newDisplayName, String newDisplayFullName) {
