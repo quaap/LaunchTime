@@ -581,6 +581,9 @@ public class MainActivity extends Activity implements
                         } else if (!isAppShortcut || !isSearch) {
                             styleCategorySpecial(categoryTab, CategoryTabStyle.Normal);
                         }
+                        if (category.equals(mCategory)) {
+                            styleCategorySpecial(categoryTab, CategoryTabStyle.Selected);
+                        }
                         break;
 
                     case DragEvent.ACTION_DROP:
