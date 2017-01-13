@@ -91,6 +91,20 @@ public class Categories {
         return context.getString(catmap.get(category));
     }
 
+    public static String getCatFullLabel(Context context, String category) {
+        Map<String, Integer> catmap = new HashMap<>();
+        catmap.put(CAT_SEARCH,R.string.category_Search_full);
+        catmap.put(CAT_TALK,R.string.category_Talk_full);
+        catmap.put(CAT_GAMES,R.string.category_Games_full);
+        catmap.put(CAT_INTERNET,R.string.category_Internet_full);
+        catmap.put(CAT_MEDIA,R.string.category_Media_full);
+        catmap.put(CAT_GRAPHICS,R.string.category_Graphics_full);
+        catmap.put(CAT_ACCESSORIES,R.string.category_Accessories_full);
+        catmap.put(CAT_OTHER,R.string.category_Other_full);
+        catmap.put(CAT_SETTINGS,R.string.category_Settings_full);
+        catmap.put(CAT_HIDDEN,R.string.category_Hidden_full);
+        return context.getString(catmap.get(category));
+    }
 
     public static final String [] DefCategoryOrder = {
             CAT_SEARCH,

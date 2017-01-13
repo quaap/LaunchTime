@@ -180,11 +180,11 @@ public class MainActivity extends Activity implements
         if (category==null) return;
         mCategory = category;
         for(TextView catTab: mCategoryTabs.values()) {
-//            styleCategorySpecial(cat, mRevCategoryMap.get(cat).equals(Categories.CAT_HIDDEN)?CategoryTabStyle.Tiny:CategoryTabStyle.Normal);
             styleCategorySpecial(catTab, CategoryTabStyle.Default);
+            catTab.setText(getDB().getCategoryDisplay(mRevCategoryMap.get(catTab)));
         }
-        //styleCategorySpecial(mCategoryTabs.get(category),CategoryTabStyle.Selected);
 
+        mCategoryTabs.get(category).setText(getDB().getCategoryDisplayFull(category));
 
         mIconSheetScroller.removeAllViews();
         mIconSheet = mIconSheets.get(category);
@@ -536,12 +536,13 @@ public class MainActivity extends Activity implements
     }
 
 
-
+    private int categoryTabWidth = 108;
 
     private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(getDB().getCategoryDisplay(category));
         categoryTab.setTag(category);
+       // categoryTab.setWidth((int)Utils.dpToPx(this,categoryTabWidth));
 
         categoryTab.setTextColor(textColor);
         categoryTab.setTypeface(null, Typeface.BOLD);

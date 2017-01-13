@@ -38,6 +38,7 @@ public class DB extends SQLiteOpenHelper {
     private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
     private static final String LABEL = "label";
+    private static final String LABELFULL = "labelfull";
     private static final String CATID = "catID";
     private static final String ISWIDGET = "iswidget";
     private static final String INDEX = "pos";
@@ -61,8 +62,8 @@ public class DB extends SQLiteOpenHelper {
 
 
     private static final String TAB_ORDER_TABLE = "tab_order";
-    private static final String[] tabordercolumns = {CATID, LABEL, INDEX};
-    private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "INT"};
+    private static final String[] tabordercolumns = {CATID, LABEL, LABELFULL, INDEX};
+    private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "TEXT", "INT"};
     private static final String TAB_ORDER_TABLE_CREATE = buildCreateTableStmt(TAB_ORDER_TABLE, tabordercolumns, tabordercolumntypes);
 
     private static final String[] tabordercolumnsindex = {INDEX};
@@ -233,7 +234,7 @@ public class DB extends SQLiteOpenHelper {
     }
 
 
-    public void addCategory(String catID, String displayName, int index) {
+    public void addCategory(String catID, String displayName, String displayNameFull, int index) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -241,6 +242,7 @@ public class DB extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(CATID, catID);
             values.put(LABEL, displayName);
+            values.put(LABELFULL, displayNameFull);
             values.put(INDEX, index);
 
             db.insert(TAB_ORDER_TABLE, null, values);
@@ -271,7 +273,20 @@ public class DB extends SQLiteOpenHelper {
         String display = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{CATID}, CATID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABEL}, CATID + "=?", new String[]{catID}, null, null, null, null);
+
+        if(cursor.moveToNext()) {
+            display = cursor.getString(0);
+        }
+        cursor.close();
+        return display;
+    }
+
+    public String getCategoryDisplayFull(String catID) {
+        String display = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABELFULL}, CATID + "=?", new String[]{catID}, null, null, null, null);
 
         if(cursor.moveToNext()) {
             display = cursor.getString(0);

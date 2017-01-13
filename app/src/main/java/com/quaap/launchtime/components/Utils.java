@@ -2,6 +2,8 @@ package com.quaap.launchtime.components;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.GridLayout;
 
@@ -22,6 +24,10 @@ import android.widget.GridLayout;
  */
 public class Utils {
 
+    public static float dpToPx(Context context, int px) {
+        Resources r = context.getResources();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, r.getDisplayMetrics());
+    }
 
     public static void changeColumnCount(GridLayout gridLayout, int columnCount, int cellWidth) {
         if (gridLayout.getColumnCount() != columnCount) {
