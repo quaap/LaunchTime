@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="Search for Apps"
+        android:text="@string/search_apps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
@@ -25,7 +25,7 @@
     </LinearLayout>
 
     <TextView
-        android:text="Recent Apps"
+        android:text="@string/recent_apps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"

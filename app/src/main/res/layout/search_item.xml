@@ -16,7 +16,7 @@
     </FrameLayout>
 
     <TextView
-        android:text="TextView"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/label"

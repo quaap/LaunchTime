@@ -955,7 +955,7 @@ public class MainActivity extends Activity implements
 
         builder.setView(view);
 
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 categoryChangerListener.onClick(dialog, which, category, shortname.getText().toString(), fullname.getText().toString());
@@ -963,7 +963,7 @@ public class MainActivity extends Activity implements
                 imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -982,8 +982,8 @@ public class MainActivity extends Activity implements
 
     private void promptRenameCategory(final String category) {
 
-        promptGetCategoryName("Rename Category",
-                "Rename this category",
+        promptGetCategoryName(getString(R.string.rename_cat),
+                getString(R.string.rename_cat2),
                 category,
                 getDB().getCategoryDisplay(category),
                 getDB().getCategoryDisplayFull(category),
@@ -994,7 +994,7 @@ public class MainActivity extends Activity implements
                             renameCategory(category, newDisplayName, newDisplayFullName);
                         } catch (IllegalArgumentException e) {
 
-                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -1021,15 +1021,15 @@ public class MainActivity extends Activity implements
                 categoryTab.setText(newDisplayName);
             }
         } else {
-            Toast.makeText(MainActivity.this, "Couldn't rename category", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.no_rename, Toast.LENGTH_SHORT).show();
         }
 
     }
 
     private void promptAddCategory() {
 
-        promptGetCategoryName("Add Category",
-                "Add a category",
+        promptGetCategoryName(getString(R.string.add_cat),
+                getString(R.string.add_cat2),
                 "",
                 "",
                 "",
@@ -1040,7 +1040,7 @@ public class MainActivity extends Activity implements
                             addCategory(category, newDisplayName, newDisplayFullName);
                         } catch (IllegalArgumentException e) {
 
-                            Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -1071,7 +1071,7 @@ public class MainActivity extends Activity implements
 
             switchCategory(category);
         } else {
-            Toast.makeText(MainActivity.this, "Couldn't add category", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.no_add_cat, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1079,17 +1079,17 @@ public class MainActivity extends Activity implements
 
         new AlertDialog.Builder(MainActivity.this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Delete category?")
-                .setMessage("Are you sure you want to delete this category?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.delete_cat)
+                .setMessage(R.string.delete_cat_prompt)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteCategory(category);
-                        Toast.makeText(MainActivity.this, "Category deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.cat_deleted, Toast.LENGTH_SHORT).show();
                     }
 
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
 
     }
@@ -1114,7 +1114,7 @@ public class MainActivity extends Activity implements
             switchCategory(newcat);
 
         } else {
-            Toast.makeText(MainActivity.this, "Couldn't delete category", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.no_delete_cat, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -11,7 +11,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:text="Short Name"
+        android:text="@string/short_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView3" />
@@ -24,7 +24,7 @@
         android:id="@+id/shortname" />
 
     <TextView
-        android:text="Full Name (optional)"
+        android:text="@string/full_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView4" />

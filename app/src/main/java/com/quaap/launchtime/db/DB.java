@@ -478,7 +478,7 @@ public class DB extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(CATID, catID);
             values.put(ACTVNAME, actvname);
-            values.put(INDEX, 1000);
+            values.put(INDEX, -1);
             db.insert(APP_ORDER_TABLE, null, values);
 
         } catch (Exception e) {

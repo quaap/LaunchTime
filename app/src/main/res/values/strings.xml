@@ -33,4 +33,29 @@
     <string name="category_Other_full">Other</string>
     <string name="category_Settings_full">Settings &amp; System</string>
     <string name="category_Hidden_full">Hidden</string>
+
+
+    <string name="search_apps">Search for Apps</string>
+    <string name="recent_apps">Recent Apps</string>
+    <string name="short_name">Short Name</string>
+    <string name="full_name">Full Name (optional)</string>
+    <string name="add_widgets">Add Widgets</string>
+    <string name="add_category">Add Category</string>
+    <string name="rename_category">Rename Category</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="remove">Remove</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="rename_cat">Rename Category</string>
+    <string name="rename_cat2">Rename this category</string>
+    <string name="need_name">You must give a name</string>
+    <string name="no_rename">Couldn\'t rename category</string>
+    <string name="add_cat">Add Category</string>
+    <string name="add_cat2">Add a category</string>
+    <string name="no_add_cat">Couldn\'t add category</string>
+    <string name="delete_cat">Delete category?</string>
+    <string name="delete_cat_prompt">Are you sure you want to delete this category?</string>
+    <string name="delete">Delete</string>
+    <string name="cat_deleted">Category deleted</string>
+    <string name="no_delete_cat">Couldn\'t delete category</string>
 </resources>
