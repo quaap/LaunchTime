@@ -31,90 +31,19 @@ import java.util.Map;
 public class Categories {
 
 
-    private static Map<String, String> mPrefCategories;
-    private static Map<String, String[]> mCategorKeywords;
-
-    public static void init(Context context) {
-        mPrefCategories = getPredefinedCategories(context);
-        mCategorKeywords = getCategoryKeywords(context);
-    }
-
-
-    public static String getCategoryForPackage(String pkgname) {
-
-        String category = mPrefCategories.get(pkgname);
-        if (category==null) {
-            OUTER: for (String cat: mCategorKeywords.keySet()) {
-                for (String pkg: mCategorKeywords.get(cat)) {
-                    if (pkgname.contains(pkg)) {
-                        category = cat;
-                        break OUTER;
-                    }
-                }
-            }
-        }
-        if (category==null) {
-            category = CAT_OTHER;
-        }
-
-        return category;
-    }
-
-
-
     //Don't change these values here.  Change them in strings.xml
-    public static final String CAT_SEARCH      = "Search";
+    public static final String CAT_SEARCH = "Search";
     public static final String CAT_TALK = "Communicate";
-    public static final String CAT_GAMES       = "Games";
-    public static final String CAT_INTERNET    = "Internet";
-    public static final String CAT_MEDIA       = "Media";
-    public static final String CAT_GRAPHICS    = "Graphics";
+    public static final String CAT_GAMES = "Games";
+    public static final String CAT_INTERNET = "Internet";
+    public static final String CAT_MEDIA = "Media";
+    public static final String CAT_GRAPHICS = "Graphics";
     public static final String CAT_ACCESSORIES = "Accessories";
-    public static final String CAT_OTHER       = "Other";
-    public static final String CAT_SETTINGS    = "Settings";
-    public static final String CAT_HIDDEN      = "Hidden";
-
+    public static final String CAT_OTHER = "Other";
+    public static final String CAT_SETTINGS = "Settings";
+    public static final String CAT_HIDDEN = "Hidden";
     public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
-
-
-    public static boolean isTinyCategory(String category) {
-        return Arrays.asList(Categories.CAT_TINY).contains(category);
-    }
-    public static boolean isSpeacialCategory(String category) {
-        return Arrays.asList(CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH).contains(category);
-    }
-
-    public static String getCatLabel(Context context, String category) {
-        Map<String, Integer> catmap = new HashMap<>();
-        catmap.put(CAT_SEARCH,R.string.category_Search);
-        catmap.put(CAT_TALK,R.string.category_Talk);
-        catmap.put(CAT_GAMES,R.string.category_Games);
-        catmap.put(CAT_INTERNET,R.string.category_Internet);
-        catmap.put(CAT_MEDIA,R.string.category_Media);
-        catmap.put(CAT_GRAPHICS,R.string.category_Graphics);
-        catmap.put(CAT_ACCESSORIES,R.string.category_Accessories);
-        catmap.put(CAT_OTHER,R.string.category_Other);
-        catmap.put(CAT_SETTINGS,R.string.category_Settings);
-        catmap.put(CAT_HIDDEN,R.string.category_Hidden);
-        return context.getString(catmap.get(category));
-    }
-
-    public static String getCatFullLabel(Context context, String category) {
-        Map<String, Integer> catmap = new HashMap<>();
-        catmap.put(CAT_SEARCH,R.string.category_Search_full);
-        catmap.put(CAT_TALK,R.string.category_Talk_full);
-        catmap.put(CAT_GAMES,R.string.category_Games_full);
-        catmap.put(CAT_INTERNET,R.string.category_Internet_full);
-        catmap.put(CAT_MEDIA,R.string.category_Media_full);
-        catmap.put(CAT_GRAPHICS,R.string.category_Graphics_full);
-        catmap.put(CAT_ACCESSORIES,R.string.category_Accessories_full);
-        catmap.put(CAT_OTHER,R.string.category_Other_full);
-        catmap.put(CAT_SETTINGS,R.string.category_Settings_full);
-        catmap.put(CAT_HIDDEN,R.string.category_Hidden_full);
-        return context.getString(catmap.get(category));
-    }
-
-    public static final String [] DefCategoryOrder = {
+    public static final String[] DefCategoryOrder = {
             CAT_SEARCH,
             CAT_TALK,
             CAT_GAMES,
@@ -126,9 +55,74 @@ public class Categories {
             CAT_OTHER,
             CAT_HIDDEN
     };
+    private static Map<String, String> mPrefCategories;
+    private static Map<String, String[]> mCategorKeywords;
 
-    public static Map<String, String[]> getCategoryKeywords(Context ctx)
-    {
+    public static void init(Context context) {
+        mPrefCategories = getPredefinedCategories(context);
+        mCategorKeywords = getCategoryKeywords(context);
+    }
+
+    public static String getCategoryForPackage(String pkgname) {
+
+        String category = mPrefCategories.get(pkgname);
+        if (category == null) {
+            OUTER:
+            for (String cat : mCategorKeywords.keySet()) {
+                for (String pkg : mCategorKeywords.get(cat)) {
+                    if (pkgname.contains(pkg)) {
+                        category = cat;
+                        break OUTER;
+                    }
+                }
+            }
+        }
+        if (category == null) {
+            category = CAT_OTHER;
+        }
+
+        return category;
+    }
+
+    public static boolean isTinyCategory(String category) {
+        return Arrays.asList(Categories.CAT_TINY).contains(category);
+    }
+
+    public static boolean isSpeacialCategory(String category) {
+        return Arrays.asList(CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH).contains(category);
+    }
+
+    public static String getCatLabel(Context context, String category) {
+        Map<String, Integer> catmap = new HashMap<>();
+        catmap.put(CAT_SEARCH, R.string.category_Search);
+        catmap.put(CAT_TALK, R.string.category_Talk);
+        catmap.put(CAT_GAMES, R.string.category_Games);
+        catmap.put(CAT_INTERNET, R.string.category_Internet);
+        catmap.put(CAT_MEDIA, R.string.category_Media);
+        catmap.put(CAT_GRAPHICS, R.string.category_Graphics);
+        catmap.put(CAT_ACCESSORIES, R.string.category_Accessories);
+        catmap.put(CAT_OTHER, R.string.category_Other);
+        catmap.put(CAT_SETTINGS, R.string.category_Settings);
+        catmap.put(CAT_HIDDEN, R.string.category_Hidden);
+        return context.getString(catmap.get(category));
+    }
+
+    public static String getCatFullLabel(Context context, String category) {
+        Map<String, Integer> catmap = new HashMap<>();
+        catmap.put(CAT_SEARCH, R.string.category_Search_full);
+        catmap.put(CAT_TALK, R.string.category_Talk_full);
+        catmap.put(CAT_GAMES, R.string.category_Games_full);
+        catmap.put(CAT_INTERNET, R.string.category_Internet_full);
+        catmap.put(CAT_MEDIA, R.string.category_Media_full);
+        catmap.put(CAT_GRAPHICS, R.string.category_Graphics_full);
+        catmap.put(CAT_ACCESSORIES, R.string.category_Accessories_full);
+        catmap.put(CAT_OTHER, R.string.category_Other_full);
+        catmap.put(CAT_SETTINGS, R.string.category_Settings_full);
+        catmap.put(CAT_HIDDEN, R.string.category_Hidden_full);
+        return context.getString(catmap.get(category));
+    }
+
+    public static Map<String, String[]> getCategoryKeywords(Context ctx) {
         Map<String, String[]> keywordsDict = new LinkedHashMap<>();
 
         keywordsDict.put(CAT_TALK, new String[]{"phone", "conv", "call", "sms", "mms", "contacts", "stk", "mail", "twitter", "whatsapp", "outlook", "talk", "facebook", "social", "chat"});  // stk stands for "SIM Toolkit"
@@ -143,8 +137,7 @@ public class Categories {
         return keywordsDict;
     }
 
-    public static Map<String, String> getPredefinedCategories(Context ctx)
-    {
+    public static Map<String, String> getPredefinedCategories(Context ctx) {
         Map<String, String> predefCategories = new HashMap<>();
 
         InputStream inputStream = ctx.getResources().openRawResource(R.raw.package_category);
@@ -155,7 +148,7 @@ public class Categories {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
             while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty()){
+                if (!line.isEmpty()) {
                     lineSplit = line.split("=");
                     predefCategories.put(lineSplit[0], lineSplit[1]);
                 }
@@ -165,8 +158,10 @@ public class Categories {
             ex.printStackTrace();
         } finally {
             try {
-                if(inputStream != null) inputStream.close();
-            } catch (IOException e) { e.printStackTrace(); }
+                if (inputStream != null) inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return predefCategories;

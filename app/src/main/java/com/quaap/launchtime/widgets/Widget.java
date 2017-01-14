@@ -1,7 +1,6 @@
 package com.quaap.launchtime.widgets;
 
 import android.app.Activity;
-import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
@@ -20,7 +19,7 @@ import java.util.List;
  * Modified from Silverfish:
  * Copyright 2016 Stanislav Pintjuk
  * E-mail: stanislav.pintjuk@gmail.com
- *
+ * <p>
  * <p>
  * Copyright (C) 2017  tom kliethermes
  * <p>
@@ -37,14 +36,13 @@ import java.util.List;
 
 
 public class Widget {
-    private AppWidgetManager mAppWidgetManager;
-    private LaunchAppWidgetHost mAppWidgetHost;
-    private Activity mParent;
-
     private static final int WIDGET_HOST_ID = 3455;
     final private int REQUEST_PICK_APPWIDGET = 3535;
     final private int REQUEST_CREATE_APPWIDGET = 6756;
     final private int REQUEST_BIND_APPWIDGET = 5645;
+    private AppWidgetManager mAppWidgetManager;
+    private LaunchAppWidgetHost mAppWidgetHost;
+    private Activity mParent;
 
 
     public Widget(Activity parent) {
@@ -83,7 +81,7 @@ public class Widget {
 
         return hostView;
         // And place the widget in widget area and save.
-       // placeWidget(hostView);
+        // placeWidget(hostView);
         //sqlHelper.updateWidget(appWidgetInfo.provider.getPackageName(), appWidgetInfo.provider.getClassName());
     }
 
@@ -187,17 +185,15 @@ public class Widget {
     }
 
 
-
     public AppWidgetHostView onActivityResult(int requestCode, int resultCode, Intent data) {
         // listen for widget manager response
-        if (resultCode == Activity.RESULT_OK ) {
+        if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_PICK_APPWIDGET) {
                 return configureWidget(data);
-            } else if (requestCode == REQUEST_CREATE_APPWIDGET  || requestCode == REQUEST_BIND_APPWIDGET) {
+            } else if (requestCode == REQUEST_CREATE_APPWIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
                 return createWidget(data);
             }
-        }
-        else if (resultCode == Activity.RESULT_CANCELED && data != null) {
+        } else if (resultCode == Activity.RESULT_CANCELED && data != null) {
             int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
             if (appWidgetId != -1) {
                 mAppWidgetHost.deleteAppWidgetId(appWidgetId);
@@ -206,7 +202,7 @@ public class Widget {
         return null;
     }
 
-    public static class AppShortcutWidgetHostView  {
+    public static class AppShortcutWidgetHostView {
 
         private AppShortcut mApp;
         private AppWidgetHostView mAppWidgetHostView;
@@ -215,7 +211,6 @@ public class Widget {
             mApp = app;
             mAppWidgetHostView = appWidgetHostView;
         }
-
 
 
     }

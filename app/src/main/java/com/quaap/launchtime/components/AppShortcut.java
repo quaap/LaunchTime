@@ -25,7 +25,7 @@ import java.util.Locale;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-public class AppShortcut implements Comparable<AppShortcut>{
+public class AppShortcut implements Comparable<AppShortcut> {
     private String mPackageName;
     private String mActivityName;
     private String mLabel;
@@ -71,7 +71,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
         mCategory = Categories.getCategoryForPackage(mPackageName);
         mWidget = false;
 
-        Log.d("LaunchTime", mPackageName  + ", " +  ri.activityInfo.name + ", " + mLabel);
+        Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel);
 
 
         loadAppIconAsync(pm);
@@ -98,12 +98,12 @@ public class AppShortcut implements Comparable<AppShortcut>{
     }
 
     public boolean iconLoaded() {
-        return mIconDrawable!=null;
+        return mIconDrawable != null;
     }
 
     public void setIconImage(ImageView iconImage) {
         mIconImage = iconImage;
-        if (mIconDrawable!=null) {
+        if (mIconDrawable != null) {
             mIconImage.setImageDrawable(mIconDrawable);
         }
     }
@@ -111,7 +111,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AppShortcut) {
-            return mActivityName.equals(((AppShortcut)obj).mActivityName);
+            return mActivityName.equals(((AppShortcut) obj).mActivityName);
         }
         return super.equals(obj);
     }
@@ -127,10 +127,10 @@ public class AppShortcut implements Comparable<AppShortcut>{
     }
 
 
-    public void loadAppIconAsync(final PackageManager pm){
+    public void loadAppIconAsync(final PackageManager pm) {
         if (iconLoaded() || isWidget()) return;
         // Create an async task
-        AsyncTask<Void,Void,Drawable> loadAppIconTask = new AsyncTask<Void, Void, Drawable>() {
+        AsyncTask<Void, Void, Drawable> loadAppIconTask = new AsyncTask<Void, Void, Drawable>() {
 
             // Keep track of all the exceptions
             private Exception exception = null;
@@ -155,10 +155,10 @@ public class AppShortcut implements Comparable<AppShortcut>{
             }
 
             @Override
-            protected void onPostExecute(Drawable app_icon){
+            protected void onPostExecute(Drawable app_icon) {
                 if (exception == null) {
                     mIconDrawable = app_icon;
-                    if (mIconImage!=null) {
+                    if (mIconImage != null) {
                         mIconImage.setImageDrawable(mIconDrawable);
                     }
                 } else {
@@ -168,7 +168,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
             }
         };
 
-        loadAppIconTask.execute(null,null,null);
+        loadAppIconTask.execute(null, null, null);
     }
 
 }

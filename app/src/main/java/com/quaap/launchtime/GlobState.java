@@ -27,7 +27,7 @@ public class GlobState extends Application {
 
 
     public static GlobState getGlobState(Context context) {
-        return (GlobState)context.getApplicationContext();
+        return (GlobState) context.getApplicationContext();
     }
 
     @Override
@@ -53,10 +53,9 @@ public class GlobState extends Application {
     }
 
 
-
     @Override
     public void onTerminate() {
-        if (mDB!=null) {
+        if (mDB != null) {
             mDB.close();
         }
 

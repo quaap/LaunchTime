@@ -38,25 +38,25 @@ public class MainHelper {
 
     public static void checkDefaultApps(final Context context, List<AppShortcut> shortcuts, List<String> quickRowOrder, View quickRow) {
         if (quickRowOrder.isEmpty()) {
-            Map<String,List<String>> defactivities = getDefaultActivities(context);
+            Map<String, List<String>> defactivities = getDefaultActivities(context);
             boolean addeddefault = false;
             int max = 1;
-            for (List<String> tests: defactivities.values()) {
-                if (tests.size()>max) max = tests.size();
+            for (List<String> tests : defactivities.values()) {
+                if (tests.size() > max) max = tests.size();
             }
 
-            AppShortcut firstapp=null;
-            for (int i=0; i<max; i++) { // try the tests in order.
+            AppShortcut firstapp = null;
+            for (int i = 0; i < max; i++) { // try the tests in order.
 
                 for (AppShortcut app : shortcuts) {
-                    if (firstapp==null) firstapp = app;
+                    if (firstapp == null) firstapp = app;
                     //Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
                     //try the app for each one of the activities
                     for (Iterator<Map.Entry<String, List<String>>> defactit = defactivities.entrySet().iterator(); defactit.hasNext(); ) {
                         Map.Entry<String, List<String>> defactent = defactit.next();
 
                         //if we have a test, search the app name
-                        if (defactent.getValue().size()>i) {
+                        if (defactent.getValue().size() > i) {
                             String test = defactent.getValue().get(i);
                             if (contains(app, test)) {
                                 Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
@@ -70,17 +70,17 @@ public class MainHelper {
                 }
 
             }
-            if (quickRowOrder.isEmpty() && firstapp!=null) { //nothing found? add first app found.
+            if (quickRowOrder.isEmpty() && firstapp != null) { //nothing found? add first app found.
                 quickRowOrder.add(firstapp.getActivityName());
             }
             String toastmsg = null;
 
             if (addeddefault) {
                 toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
-            } else if (quickRowOrder.size()<3) {
+            } else if (quickRowOrder.size() < 3) {
                 toastmsg = "You can add more apps to your Quickrow at the bottom of the screen.";
             }
-            if (toastmsg!=null) {
+            if (toastmsg != null) {
                 final String toastmsgfinal = toastmsg;
                 quickRow.postDelayed(new Runnable() {
                     @Override
@@ -92,15 +92,15 @@ public class MainHelper {
         }
     }
 
-    public static  boolean contains(AppShortcut app, String test) {
+    public static boolean contains(AppShortcut app, String test) {
         return app.getActivityName().toLowerCase().contains(test.toLowerCase())
                 || app.getPackageName().toLowerCase().contains(test.toLowerCase());
     }
 
 
-    public static  Map<String,List<String>> getDefaultActivities(Context context) {
+    public static Map<String, List<String>> getDefaultActivities(Context context) {
 
-        Map<String,List<String>> activities = new TreeMap<>();
+        Map<String, List<String>> activities = new TreeMap<>();
 
 
         ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://", null);
@@ -123,22 +123,22 @@ public class MainHelper {
         return activities;
     }
 
-    public static  ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory) {
+    public static ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory) {
 
-        ComponentName cn=new ComponentName("_fakename","_fakename");
+        ComponentName cn = new ComponentName("_fakename", "_fakename");
 
         Intent intent;
-        if (intenturi==null) {
+        if (intenturi == null) {
             intent = new Intent(intentaction);
         } else {
             intent = new Intent(intentaction, Uri.parse(intenturi));
         }
-        if (intentcategory!=null) {
+        if (intentcategory != null) {
             intent.addCategory(intentcategory);
         }
         ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, 0);
 
-        if (resolveInfo!=null) {
+        if (resolveInfo != null) {
             Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
 
             cn = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);

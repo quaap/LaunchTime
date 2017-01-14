@@ -15,6 +15,7 @@ package com.quaap.launchtime.components;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -23,11 +24,9 @@ import android.widget.ScrollView;
 
 /**
  * Triggers a event when scrolling reaches bottom.
- *
+ * <p>
  * Created by martinsandstrom on 2010-05-12.
  * Updated by martinsandstrom on 2014-07-22.
- *
- *
  */
 public class InteractiveScrollView extends ScrollView {
     OnPositionChangedListener mListener;
@@ -47,10 +46,9 @@ public class InteractiveScrollView extends ScrollView {
     }
 
 
-
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        if (mListener!=null) {
+        if (mListener != null) {
             View view = getChildAt(getChildCount() - 1);
 
             float bottom = (float) view.getBottom();
@@ -78,7 +76,6 @@ public class InteractiveScrollView extends ScrollView {
     }
 
 
-
     public OnPositionChangedListener getOnPositionChangedListener() {
         return mListener;
     }
@@ -89,11 +86,12 @@ public class InteractiveScrollView extends ScrollView {
     }
 
 
-   // public enum InteractiveScrollViewPosition {Top, Body, Bottom}
+    // public enum InteractiveScrollViewPosition {Top, Body, Bottom}
+
     /**
      * Event listener.
      */
-    public interface OnPositionChangedListener{
+    public interface OnPositionChangedListener {
         void onPositionChanged(float percentUp, float percentDown, int distFromTop, int distFromBottom);
     }
 

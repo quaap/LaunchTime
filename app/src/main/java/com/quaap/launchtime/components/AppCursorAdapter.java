@@ -48,10 +48,11 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
             return getFilterQueryProvider().runQuery(constraint);
         }
 
-        Cursor cursor = mDB.getAppCursor("%" + ( constraint==null ? "XXXXXX" : constraint.toString() ) + "%");
+        Cursor cursor = mDB.getAppCursor("%" + (constraint == null ? "XXXXXX" : constraint.toString()) + "%");
 
         return cursor;
     }
+
     // The bindView method is used to bind all data to a given view
     // such as setting the text on a TextView.
     @Override
@@ -63,7 +64,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
         appholder.removeAllViews();
 
         AppShortcut app = mMain.getDB().getApp(activityName);
-        if (app!=null) {
+        if (app != null) {
             app.loadAppIconAsync(context.getPackageManager());
             appholder.addView(mMain.getShortcutView(app));
         }
@@ -75,7 +76,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
 
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view,  int position, long id) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
         String activityName = cursor.getString(0);
         String label = cursor.getString(1);

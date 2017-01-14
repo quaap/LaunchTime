@@ -42,9 +42,8 @@ import com.quaap.launchtime.components.AppCursorAdapter;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.InteractiveScrollView;
-import com.quaap.launchtime.components.Utils;
-import com.quaap.launchtime.widgets.Widget;
 import com.quaap.launchtime.db.DB;
+import com.quaap.launchtime.widgets.Widget;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +57,7 @@ import java.util.TreeMap;
 public class MainActivity extends Activity implements
         View.OnLongClickListener, View.OnDragListener {
 
-   //TODO: everything needs a major refactor.
+    //TODO: everything needs a major refactor.
     // custom views or fragments?
 
     public static final String QUICK_ROW_CAT = "QuickRow";
@@ -68,23 +67,18 @@ public class MainActivity extends Activity implements
     private InteractiveScrollView mIconSheetScroller;
     private ViewGroup mIconSheetBottomFrame;
     private ViewGroup mIconSheetHolder;
-    private Map<String,GridLayout> mIconSheets;
+    private Map<String, GridLayout> mIconSheets;
     private GridLayout mIconSheet;
-    private Map<String,TextView> mCategoryTabs;
+    private Map<String, TextView> mCategoryTabs;
     private Map<View, String> mRevCategoryMap;
     private volatile String mCategory;
     private GridLayout mQuickRow;
     private HorizontalScrollView mQuickRowScroller;
-
-
     private ImageView mShowButtons;
     private View mAddCategoryButton;
     private View mRenameCategoryButton;
     private View mDeleteCategoryButton;
     private View mEditWidgetsButton;
-
-
-
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
     private FrameLayout mRemoveDropzone;
@@ -95,11 +89,8 @@ public class MainActivity extends Activity implements
     private View mBeingUninstalled;
     private Widget mWidgetHost;
     private ViewGroup mSearchView;
-
-
     private int textColor;
     private int textColorInvert;
-
     private int cattabBackground;
     private int cattabSelectedBackground;
     private int cattabDragHoverBackground;
@@ -108,12 +99,37 @@ public class MainActivity extends Activity implements
     private float categoryTabFontSize = 16;
     private float categoryTabFontSizeHidden = 12;
     private int categoryTabPaddingHeight = 16;
-
-
     private int mColumns = 3;
     private int mColumnsLandscape = 5;
     private int mColumnsPortrait = 3;
     private int mColumnMargin = 12;
+    private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
+    private int categoryTabWidth = 108;
+
+    private BroadcastReceiver installReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+                Uri data = intent.getData();
+                String packageName = data.getEncodedSchemeSpecificPart();
+                Log.i("InstallCatch", "The installed package is: " + packageName);
+
+                try {
+                    PackageManager pm = MainActivity.this.getPackageManager();
+
+                    Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
+                    ResolveInfo ri = MainActivity.this.getPackageManager().resolveActivity(packageIntent, 0);
+
+                    AppShortcut app = new AppShortcut(MainActivity.this.getPackageManager(), ri);
+                    getDB().addApp(app);
+                } catch (Exception e) {
+                    Log.e("InstallCatch", "Could not get " + packageName, e);
+                }
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,12 +165,11 @@ public class MainActivity extends Activity implements
         loadApplications();
 
 
-       // mCategoriesLayout
+        // mCategoriesLayout
 
-        mPrefs = getSharedPreferences("default",MODE_PRIVATE);
+        mPrefs = getSharedPreferences("default", MODE_PRIVATE);
 
     }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -183,35 +198,10 @@ public class MainActivity extends Activity implements
         registerReceiver(installReceiver, intentFilter);
     }
 
-    BroadcastReceiver installReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
-                Uri data = intent.getData();
-                String packageName = data.getEncodedSchemeSpecificPart();
-                Log.i("InstallCatch", "The installed package is: "+ packageName);
-
-                try {
-                    PackageManager pm = MainActivity.this.getPackageManager();
-
-                    Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
-                    ResolveInfo ri = MainActivity.this.getPackageManager().resolveActivity(packageIntent, 0);
-
-                    AppShortcut app = new AppShortcut(MainActivity.this.getPackageManager(), ri);
-                    getDB().addApp(app);
-                } catch (Exception e) {
-                    Log.e("InstallCatch", "Could not get "+ packageName, e);
-                }
-
-            }
-        }
-    };
-
     private void switchCategory(String category) {
-        if (category==null) return;
+        if (category == null) return;
         mCategory = category;
-        for(TextView catTab: mCategoryTabs.values()) {
+        for (TextView catTab : mCategoryTabs.values()) {
             styleCategorySpecial(catTab, CategoryTabStyle.Default);
             catTab.setText(getDB().getCategoryDisplay(mRevCategoryMap.get(catTab)));
         }
@@ -236,12 +226,11 @@ public class MainActivity extends Activity implements
         mIconSheetHolder.addView(mIconSheet);
 
 
-
         showButtonBar(false);
     }
 
     private void checkConfig() {
-        if (Utils.isLandscape(this)) {
+        if (isLandscape()) {
             mColumns = mColumnsLandscape;
         } else {
             mColumns = mColumnsPortrait;
@@ -250,7 +239,6 @@ public class MainActivity extends Activity implements
         changeColumnCount(mIconSheet, mColumns);
 
     }
-
 
     public DB getDB() {
         return GlobState.getGlobState(this).getDB();
@@ -261,7 +249,7 @@ public class MainActivity extends Activity implements
     }
 
     public void launchApp(final AppShortcut app) {
-        launchApp(app.getActivityName(),app.getPackageName());
+        launchApp(app.getActivityName(), app.getPackageName());
     }
 
     public void launchApp(String activityname, String packagename) {
@@ -278,7 +266,6 @@ public class MainActivity extends Activity implements
 
     }
 
-
     private void loadApplications() {
 
         final DB db = getDB();
@@ -287,7 +274,7 @@ public class MainActivity extends Activity implements
 
         processQuickApps(db, shortcuts);
 
-        for (final String category: db.getCategories()) {
+        for (final String category : db.getCategories()) {
 
             createIconSheet(category);
         }
@@ -303,7 +290,6 @@ public class MainActivity extends Activity implements
         iconSheet.setOnDragListener(MainActivity.this);
 
 
-
         final TextView categoryTab = createCategoryTab(category, iconSheet);
 
 
@@ -312,14 +298,12 @@ public class MainActivity extends Activity implements
         return iconSheet;
     }
 
-
-
     private void populateRecentApps(GridLayout iconSheet) {
         DB db = getDB();
 
         iconSheet.removeAllViews();
 
-        for (String actvname: db.getAppLaunchedList()) {
+        for (String actvname : db.getAppLaunchedList()) {
             AppShortcut app = db.getApp(actvname);
 
             addAppToIconSheet(iconSheet, app);
@@ -336,8 +320,8 @@ public class MainActivity extends Activity implements
         final List<String> apporder = db.getAppCategoryOrder(category);
         List<AppShortcut> apps = db.getApps(category);
 
-        for(String actvname: apporder) {
-            for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext();) {
+        for (String actvname : apporder) {
+            for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
                 AppShortcut app = it.next();
                 if (actvname.equals(app.getActivityName())) {
                     addAppToIconSheet(iconSheet, app);
@@ -346,14 +330,14 @@ public class MainActivity extends Activity implements
             }
         }
 
-        for (AppShortcut app: apps) {
+        for (AppShortcut app : apps) {
             addAppToIconSheet(iconSheet, app);
         }
 
     }
 
     private void addAppToIconSheet(GridLayout iconSheet, AppShortcut app) {
-        if (app!=null && Utils.isAppInstalled(this, app.getPackageName())) {
+        if (app != null && isAppInstalled(app.getPackageName())) {
             ViewGroup item = getShortcutView(app);
             if (!app.iconLoaded()) {
                 app.loadAppIconAsync(mPackageMan);
@@ -368,15 +352,14 @@ public class MainActivity extends Activity implements
         int w = getShortCutWidth(app);
         int h = getShortCutHeight(app);
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        if (w>1) {
+        if (w > 1) {
             lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, w);
         }
-        if (h>1) {
+        if (h > 1) {
             lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, h);
         }
         return lp;
     }
-
 
     public void changeColumnCount(GridLayout gridLayout, int columnCount) {
         if (gridLayout.getColumnCount() != columnCount) {
@@ -385,7 +368,7 @@ public class MainActivity extends Activity implements
                 View view = gridLayout.getChildAt(i);
 
                 GridLayout.LayoutParams lp;
-                if (view.getTag() instanceof  AppShortcut) {
+                if (view.getTag() instanceof AppShortcut) {
                     AppShortcut app = (AppShortcut) view.getTag();
 
                     lp = getAppShortcutLayoutParams(app);
@@ -424,7 +407,7 @@ public class MainActivity extends Activity implements
                 pmactvnames.add(actvname);
 
                 app = db.getApp(actvname);
-                if (dbactvnames.contains(actvname) && app!=null) {
+                if (dbactvnames.contains(actvname) && app != null) {
                     app.loadAppIconAsync(mPackageMan);
                 } else {
                     app = new AppShortcut(mPackageMan, ri);
@@ -435,16 +418,16 @@ public class MainActivity extends Activity implements
 
             }
             //else {
-               // Log.d("Launch", actvname + " " + ri.activityInfo.name);
+            // Log.d("Launch", actvname + " " + ri.activityInfo.name);
             //}
         }
 
         //remove shortcuts if they are not in the system
-        for (Iterator<String> it = dbactvnames.iterator(); it.hasNext();) {
+        for (Iterator<String> it = dbactvnames.iterator(); it.hasNext(); ) {
             String dbactv = it.next();
             if (!pmactvnames.contains(dbactv)) {
                 AppShortcut app = db.getApp(dbactv);
-                if (!Utils.isAppInstalled(this, app.getPackageName())) {  //might be a widget, check packagename
+                if (!isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
                     Log.d("Launch", "Removing " + dbactv);
                     it.remove();
                     db.deleteApp(dbactv);
@@ -465,7 +448,7 @@ public class MainActivity extends Activity implements
         MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
 
 
-        for (AppShortcut app: shortcuts) {
+        for (AppShortcut app : shortcuts) {
 
             if (quickRowOrder.contains(app.getActivityName())) {
                 AppShortcut qapp = new AppShortcut(app);
@@ -476,7 +459,7 @@ public class MainActivity extends Activity implements
 
 
         mQuickRow.removeAllViews();
-        for (String actvname: quickRowOrder) {
+        for (String actvname : quickRowOrder) {
             for (AppShortcut app : quickRowApps) {
                 if (app.getActivityName().equals(actvname)) {
                     ViewGroup item = getShortcutView(app, true);
@@ -489,16 +472,13 @@ public class MainActivity extends Activity implements
     }
 
     private void removeFromQuickApps(String actvname) {
-        for (int i=0; i<mQuickRow.getChildCount(); i++) {
-            AppShortcut app = (AppShortcut)mQuickRow.getChildAt(i).getTag();
-            if (app!=null && actvname.equals(app.getPackageName())) {
+        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+            AppShortcut app = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+            if (app != null && actvname.equals(app.getPackageName())) {
                 mQuickRow.removeView(mQuickRow.getChildAt(i));
             }
         }
     }
-
-
-    private Map<String,AppWidgetHostView> mLoadedWidgets = new HashMap<>();
 
     public ViewGroup getShortcutView(final AppShortcut app) {
         return getShortcutView(app, false);
@@ -511,13 +491,13 @@ public class MainActivity extends Activity implements
             item = new FrameLayout(this);
 
             AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
-            if (appwid==null) {
+            if (appwid == null) {
                 appwid = mWidgetHost.loadWidget(app);
                 mLoadedWidgets.put(app.getActivityName(), appwid);
             }
-            if (appwid!=null) {
-                ViewGroup parent = (ViewGroup)appwid.getParent();
-                if (parent!=null) {
+            if (appwid != null) {
+                ViewGroup parent = (ViewGroup) appwid.getParent();
+                if (parent != null) {
                     parent.removeView(appwid);
                 }
                 item.addView(appwid);
@@ -536,7 +516,7 @@ public class MainActivity extends Activity implements
                 });
 
             } else {
-                Log.d("Widget2", "AppWidgetHostView was null for "  + app.getActivityName() + " " + app.getPackageName());
+                Log.d("Widget2", "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
             }
 
         } else {
@@ -564,13 +544,9 @@ public class MainActivity extends Activity implements
         return item;
     }
 
-
-
     private void setupWidget() {
         mWidgetHost.popupSelectWidget();
     }
-
-
 
     private void addWidget(AppWidgetHostView wid) {
         AppWidgetProviderInfo pinfo = wid.getAppWidgetInfo();
@@ -579,7 +555,7 @@ public class MainActivity extends Activity implements
 
         Log.d("Widget", actvname + " " + pkgname);
         String label;
-        if (Build.VERSION.SDK_INT>=21) {
+        if (Build.VERSION.SDK_INT >= 21) {
             label = pinfo.loadLabel(mPackageMan);
         } else {
             label = pinfo.label;
@@ -591,10 +567,9 @@ public class MainActivity extends Activity implements
         getDB().addAppCategoryOrder(mCategory, app.getActivityName());
 
 
+        int wf = (int) Math.ceil(pinfo.minWidth / getResources().getDimension(R.dimen.shortcut_width));
 
-        int wf = (int)Math.ceil(pinfo.minWidth / getResources().getDimension(R.dimen.shortcut_width));
-
-        int hf = (int)Math.ceil(pinfo.minHeight / getResources().getDimension(R.dimen.shortcut_height));
+        int hf = (int) Math.ceil(pinfo.minHeight / getResources().getDimension(R.dimen.shortcut_height));
 
         storeShortCutDimen(app, wf, hf);
     }
@@ -609,26 +584,25 @@ public class MainActivity extends Activity implements
         ePrefs.apply();
 
     }
+
     private int getShortCutWidth(AppShortcut app) {
         return mPrefs.getInt(app.getActivityName() + "_width", 1);
     }
+
     private int getShortCutHeight(AppShortcut app) {
         return mPrefs.getInt(app.getActivityName() + "_height", 1);
     }
 
-
     private ViewGroup getSearchView() {
         ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
 
-        final AutoCompleteTextView searchbox = (AutoCompleteTextView)searchView.findViewById(R.id.search_box);
+        final AutoCompleteTextView searchbox = (AutoCompleteTextView) searchView.findViewById(R.id.search_box);
         AppCursorAdapter searchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, getDB().getAppCursor("XXXXXX"), 0);
         searchbox.setAdapter(searchAdapter);
         searchbox.setOnItemClickListener(searchAdapter);
 
         return searchView;
     }
-
-    enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
 
     private CategoryTabStyle getDefaultCategoryStyle(String category) {
         CategoryTabStyle catstyle = CategoryTabStyle.Normal;
@@ -680,14 +654,11 @@ public class MainActivity extends Activity implements
         }
     }
 
-
-    private int categoryTabWidth = 108;
-
     private TextView createCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(getDB().getCategoryDisplay(category));
         categoryTab.setTag(category);
-       // categoryTab.setWidth((int)Utils.dpToPx(this,categoryTabWidth));
+        // categoryTab.setWidth((int)Utils.dpToPx(this,categoryTabWidth));
 
         categoryTab.setTextColor(textColor);
         categoryTab.setTypeface(null, Typeface.BOLD);
@@ -698,14 +669,12 @@ public class MainActivity extends Activity implements
         if (catstyle == CategoryTabStyle.Normal) {
             lp.weight = 1;
         }
-        styleCategorySpecial(categoryTab,CategoryTabStyle.Default, category);
+        styleCategorySpecial(categoryTab, CategoryTabStyle.Default, category);
         lp.gravity = Gravity.CENTER;
         lp.setMargins(2, 6, 2, 8);
         categoryTab.setLayoutParams(lp);
 
         categoryTab.setGravity(Gravity.CENTER);
-
-
 
 
         categoryTab.setClickable(true);
@@ -735,7 +704,7 @@ public class MainActivity extends Activity implements
                 boolean isSearch = category.equals(Categories.CAT_SEARCH);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        if (catstyle==CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
+                        if (catstyle == CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
                             styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
                         }
                         break;
@@ -763,8 +732,8 @@ public class MainActivity extends Activity implements
                                 MainActivity.this.onDrag(iconSheet, event);
                             }
                         } else {
-                            ViewGroup container1 = (ViewGroup)view.getParent();
-                            ViewGroup container2 = (ViewGroup)view2.getParent();
+                            ViewGroup container1 = (ViewGroup) view.getParent();
+                            ViewGroup container2 = (ViewGroup) view2.getParent();
 
 
                             int index = -1;
@@ -794,7 +763,7 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onDrag(View view, DragEvent event) {
         View view2 = (View) event.getLocalState();
-        if (view2.getTag()==null || !(view2.getTag() instanceof AppShortcut)) {
+        if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut)) {
             return false;
         }
         boolean islayout = view instanceof GridLayout;
@@ -840,7 +809,7 @@ public class MainActivity extends Activity implements
                         launchUninstallIntent(mBeingDragged.getPackageName());
                     }
                     return true;
-                } else  if (view instanceof GridLayout) {
+                } else if (view instanceof GridLayout) {
                     target = (GridLayout) view;
 
                 } else {
@@ -851,7 +820,6 @@ public class MainActivity extends Activity implements
                 if ((mDragDropSource == mQuickRow && mQuickRow == target) || (mDragDropSource != mQuickRow && mQuickRow != target)) {
                     mDragDropSource.removeView(view2);
                 }
-
 
 
                 int index = -1;
@@ -872,7 +840,7 @@ public class MainActivity extends Activity implements
                         }
                     }
 
-                    view2 = getShortcutView(new AppShortcut((AppShortcut)view2.getTag()), true);
+                    view2 = getShortcutView(new AppShortcut((AppShortcut) view2.getTag()), true);
 
                 }
 
@@ -902,8 +870,8 @@ public class MainActivity extends Activity implements
 
     @Override
     public boolean onLongClick(View view) {
-        mBeingDragged = (AppShortcut)view.getTag();
-        mDragDropSource = (ViewGroup)view.getParent();
+        mBeingDragged = (AppShortcut) view.getTag();
+        mDragDropSource = (ViewGroup) view.getParent();
         String label = mBeingDragged.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
@@ -930,14 +898,12 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.GONE);
     }
 
-
     private void launchUninstallIntent(String packageName) {
-        Uri packageUri = Uri.parse("package:"+packageName);
+        Uri packageUri = Uri.parse("package:" + packageName);
         Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
         uninstallIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
         startActivityForResult(uninstallIntent, UNINSTALL_RESULT);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -948,7 +914,7 @@ public class MainActivity extends Activity implements
                     mDragDropSource.removeView(mBeingUninstalled);
                     getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                     Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
-                    String actvname = ((AppShortcut)mBeingUninstalled.getTag()).getActivityName();
+                    String actvname = ((AppShortcut) mBeingUninstalled.getTag()).getActivityName();
                     getDB().deleteApp(actvname);
                     removeFromQuickApps(actvname);
                     break;
@@ -961,7 +927,7 @@ public class MainActivity extends Activity implements
             }
         } else {
             AppWidgetHostView wid = mWidgetHost.onActivityResult(requestCode, resultCode, data);
-            if (wid==null) {
+            if (wid == null) {
                 super.onActivityResult(requestCode, resultCode, data);
             } else {
                 addWidget(wid);
@@ -969,13 +935,6 @@ public class MainActivity extends Activity implements
         }
     }
 
-
-    ///////////
-    // Category manipulation
-
-    interface CategoryChangerListener {
-        void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName);
-    }
     private void promptGetCategoryName(String title, String message, final String category, String defName,
                                        String defFullName, final CategoryChangerListener categoryChangerListener) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -983,9 +942,9 @@ public class MainActivity extends Activity implements
 
         ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.category_name, (ViewGroup) null);
 
-        TextView messageView = (TextView)view.findViewById(R.id.message_txt);
-        final EditText shortname = (EditText)view.findViewById(R.id.shortname);
-        final EditText fullname = (EditText)view.findViewById(R.id.fullname);
+        TextView messageView = (TextView) view.findViewById(R.id.message_txt);
+        final EditText shortname = (EditText) view.findViewById(R.id.shortname);
+        final EditText fullname = (EditText) view.findViewById(R.id.fullname);
 
         shortname.setSelectAllOnFocus(true);
         fullname.setSelectAllOnFocus(true);
@@ -1000,7 +959,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 categoryChangerListener.onClick(dialog, which, category, shortname.getText().toString(), fullname.getText().toString());
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
         });
@@ -1008,7 +967,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
         });
@@ -1016,6 +975,10 @@ public class MainActivity extends Activity implements
 
         builder.show();
     }
+
+
+    ///////////
+    // Category manipulation
 
     private void promptRenameCategory(final String category) {
 
@@ -1028,8 +991,8 @@ public class MainActivity extends Activity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName) {
                         try {
-                            renameCategory(category,newDisplayName, newDisplayFullName);
-                        } catch (IllegalArgumentException e){
+                            renameCategory(category, newDisplayName, newDisplayFullName);
+                        } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT).show();
                         }
@@ -1041,11 +1004,11 @@ public class MainActivity extends Activity implements
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
 
-        if (newDisplayFullName.length()==0) {
+        if (newDisplayFullName.length() == 0) {
             newDisplayFullName = newDisplayName;
         }
 
-        if (newDisplayName.length()<1) {
+        if (newDisplayName.length() < 1) {
             throw new IllegalArgumentException("Must give a name");
         }
 
@@ -1075,7 +1038,7 @@ public class MainActivity extends Activity implements
                     public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName) {
                         try {
                             addCategory(category, newDisplayName, newDisplayFullName);
-                        } catch (IllegalArgumentException e){
+                        } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, "You must give a name", Toast.LENGTH_SHORT).show();
                         }
@@ -1088,18 +1051,18 @@ public class MainActivity extends Activity implements
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
 
-        if (category.length()==0) {
+        if (category.length() == 0) {
             category = newDisplayName;
         }
-        if (newDisplayName.length()==0) {
+        if (newDisplayName.length() == 0) {
             category = newDisplayName;
         }
 
-        if (newDisplayFullName.length()==0) {
+        if (newDisplayFullName.length() == 0) {
             newDisplayFullName = newDisplayName;
         }
 
-        if (newDisplayName.length()<1) {
+        if (newDisplayName.length() < 1) {
             throw new IllegalArgumentException("Must give a name");
         }
 
@@ -1134,7 +1097,7 @@ public class MainActivity extends Activity implements
     private void deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);
 
-        if (getDB().deleteCategory(category) ) {
+        if (getDB().deleteCategory(category)) {
 
             View iconSheet = mIconSheets.get(category);
             mRevCategoryMap.remove(iconSheet);
@@ -1155,21 +1118,18 @@ public class MainActivity extends Activity implements
         }
     }
 
-
-    //initialize the form members
-
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
-        mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
+        mCategoriesLayout = (LinearLayout) findViewById(R.id.layout_categories);
 
-        mIconSheetTopFrame = (FrameLayout)findViewById(R.id.layout_icons_topframe);
-        mIconSheetScroller = (InteractiveScrollView)findViewById(R.id.layout_icons_scroller);
+        mIconSheetTopFrame = (FrameLayout) findViewById(R.id.layout_icons_topframe);
+        mIconSheetScroller = (InteractiveScrollView) findViewById(R.id.layout_icons_scroller);
 
-        mIconSheetHolder = (ViewGroup)findViewById(R.id.icon_sheet_holder);
+        mIconSheetHolder = (ViewGroup) findViewById(R.id.icon_sheet_holder);
 
-        mIconSheetBottomFrame = (ViewGroup)findViewById(R.id.layout_icons_bottomframe);
+        mIconSheetBottomFrame = (ViewGroup) findViewById(R.id.layout_icons_bottomframe);
 
-        mRemoveDropzone = (FrameLayout)findViewById(R.id.remove_dropzone);
+        mRemoveDropzone = (FrameLayout) findViewById(R.id.remove_dropzone);
         mRemoveDropzone.setOnDragListener(this);
         mRemoveAppText = (TextView) findViewById(R.id.remove_dz_txt);
 
@@ -1186,7 +1146,7 @@ public class MainActivity extends Activity implements
         mRevCategoryMap = new HashMap<>();
         mRevCategoryMap.put(mQuickRow, QUICK_ROW_CAT);
 
-        mShowButtons = (ImageView)findViewById(R.id.settings_button);
+        mShowButtons = (ImageView) findViewById(R.id.settings_button);
 
         mShowButtons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1238,6 +1198,9 @@ public class MainActivity extends Activity implements
         showButtonBar(vis != View.VISIBLE);
     }
 
+
+    //initialize the form members
+
     private void showButtonBar(boolean visible) {
 
         if (visible) {
@@ -1254,9 +1217,6 @@ public class MainActivity extends Activity implements
         }
     }
 
-
-
-
     private void setColors() {
         cattabBackground = getResColor(R.color.cattab_background);
         cattabSelectedBackground = getResColor(R.color.cattabselected_background);
@@ -1269,13 +1229,35 @@ public class MainActivity extends Activity implements
     }
 
     private int getResColor(int res) {
-        if (Build.VERSION.SDK_INT>=23) {
+        if (Build.VERSION.SDK_INT >= 23) {
             return getColor(res);
         } else {
             return getResources().getColor(res);
         }
     }
 
+
+    public boolean isAppInstalled(String packageName) {
+        try {
+            getPackageManager().getApplicationInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+
+    public boolean isLandscape() {
+        int orientation = getResources().getConfiguration().orientation;
+        return orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+
+    enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
+
+    interface CategoryChangerListener {
+        void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName);
+    }
 
 
 }

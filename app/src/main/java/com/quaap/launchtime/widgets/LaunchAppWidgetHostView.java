@@ -2,12 +2,11 @@ package com.quaap.launchtime.widgets;
 
 import android.appwidget.AppWidgetHostView;
 import android.content.Context;
-
 import android.support.v4.view.MotionEventCompat;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
-
 import android.view.ViewConfiguration;
+
 /**
  * Created by tom on 1/14/17.
  * <p>
@@ -30,7 +29,6 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
     private long mLongClickStarted = -1;
 
 
-
     public LaunchAppWidgetHostView(Context context) {
         super(context);
     }
@@ -47,14 +45,14 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        switch(MotionEventCompat.getActionMasked( ev ) ) {
+        switch (MotionEventCompat.getActionMasked(ev)) {
             case MotionEvent.ACTION_DOWN:
                 mLongClickStarted = System.currentTimeMillis();
                 break;
             case MotionEvent.ACTION_MOVE:
                 boolean upVal = System.currentTimeMillis() - mLongClickStarted > ViewConfiguration.getLongPressTimeout();
-                if( upVal && mLongClickListener!=null) {
-                    mLongClickListener.onLongClick( LaunchAppWidgetHostView.this );
+                if (upVal && mLongClickListener != null) {
+                    mLongClickListener.onLongClick(LaunchAppWidgetHostView.this);
                     performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                 }
                 break;

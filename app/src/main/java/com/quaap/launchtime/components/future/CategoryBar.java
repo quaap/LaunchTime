@@ -24,7 +24,7 @@ import java.util.Map;
  * GNU General Public License for more details.
  */
 public class CategoryBar {
-    Map<CategoryTab,CategoryView> mContents;
+    Map<CategoryTab, CategoryView> mContents;
     private Context mContext;
     private ViewGroup mTabLayout;
     private DB mDb;

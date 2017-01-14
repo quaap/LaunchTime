@@ -23,6 +23,8 @@ import com.quaap.launchtime.components.AppShortcut;
 public interface CategoryListener {
 
     void onAppShortcutClickListener(CategoryView categoryView, AppShortcut app, View view);
+
     void onAppShortcutLongClickListener(CategoryView categoryView, AppShortcut app, View view);
+
     void onAppShortcutDragListener(CategoryView categoryView, AppShortcut app, View view, DragEvent dragEvent);
 }
