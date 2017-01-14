@@ -124,7 +124,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, new String[]{ACTVNAME}, null, null, null, null, null);
+        Cursor cursor = db.query(APP_TABLE, new String[]{ACTVNAME}, null, null, null, null, LABEL);
 
         while(cursor.moveToNext()) {
             actvnames.add(cursor.getString(0));
@@ -160,7 +160,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=?", new String[]{catID}, null, null, null);
+        Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=?", new String[]{catID}, null, null, LABEL);
 
         while(cursor.moveToNext()) {
             String actvname = cursor.getString(0);

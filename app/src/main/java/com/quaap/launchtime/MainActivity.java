@@ -304,7 +304,7 @@ public class MainActivity extends Activity implements
             Collections.sort(catapps);
 
             final GridLayout iconSheet = getIconSheet(category);
-            processIconSheet(db, category, iconSheet, catapps);
+           // processIconSheet(db, category, iconSheet, catapps);
 
         }
 
@@ -384,38 +384,38 @@ public class MainActivity extends Activity implements
     }
 
 
-    private void processIconSheet(final DB db, final String category, final GridLayout iconSheet, final List<AppShortcut> catapps) {
-        final List<String> apporder = db.getAppCategoryOrder(category);
-
-        GlobState.getGlobState(this).runAsync(new Runnable() {
-            @Override
-            public void run() {
-     //   Log.d("category--------", category);
-
-                for (String actvname: apporder) {
-                   // Log.d("apporder", pkgname);
-                    for (AppShortcut app : catapps) {
-                        if (app.getActivityName().equals(actvname)) {
-                            addAppToIconSheet(iconSheet, app);
-                        }
-                    }
-                }
-
-                boolean reorder = false;
-                for (AppShortcut app : catapps) {
-                    if (!apporder.contains(app.getActivityName())) {
-                      //  Log.d("no apporder", app.getPackageName());
-                        addAppToIconSheet(iconSheet, app);
-                        reorder = true;
-                    }
-                }
-                if (reorder) {
-                    db.setAppCategoryOrder(category, iconSheet);
-                }
-
-            }
-        });
-    }
+//    private void processIconSheet(final DB db, final String category, final GridLayout iconSheet, final List<AppShortcut> catapps) {
+//        final List<String> apporder = db.getAppCategoryOrder(category);
+//
+//        GlobState.getGlobState(this).runAsync(new Runnable() {
+//            @Override
+//            public void run() {
+//     //   Log.d("category--------", category);
+//
+//                for (String actvname: apporder) {
+//                   // Log.d("apporder", pkgname);
+//                    for (AppShortcut app : catapps) {
+//                        if (app.getActivityName().equals(actvname)) {
+//                            addAppToIconSheet(iconSheet, app);
+//                        }
+//                    }
+//                }
+//
+//                boolean reorder = false;
+//                for (AppShortcut app : catapps) {
+//                    if (!apporder.contains(app.getActivityName())) {
+//                      //  Log.d("no apporder", app.getPackageName());
+//                        addAppToIconSheet(iconSheet, app);
+//                        reorder = true;
+//                    }
+//                }
+//                if (reorder) {
+//                    db.setAppCategoryOrder(category, iconSheet);
+//                }
+//
+//            }
+//        });
+//    }
 
 
     private Map<String, List<AppShortcut>> processActivities(DB db) {
@@ -471,6 +471,7 @@ public class MainActivity extends Activity implements
             if (!pmactvnames.contains(dbactv)) {
                 it.remove();
                 db.deleteApp(dbactv);
+                removeFromQuickApps(dbactv);
             }
         }
 
@@ -509,6 +510,14 @@ public class MainActivity extends Activity implements
 
     }
 
+    private void removeFromQuickApps(String actvnames) {
+        for (int i=0; i<mQuickRow.getChildCount(); i++) {
+            AppShortcut app = (AppShortcut)mQuickRow.getChildAt(i).getTag();
+            if (app!=null && actvnames.equals(app.getPackageName())) {
+                mQuickRow.removeView(mQuickRow.getChildAt(i));
+            }
+        }
+    }
 
     public ViewGroup getShortcutView(final AppShortcut app) {
         return getShortcutView(app, false);
@@ -874,7 +883,9 @@ public class MainActivity extends Activity implements
                     mDragDropSource.removeView(mBeingUninstalled);
                     getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                     Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
-                    getDB().deleteApp(((AppShortcut)mBeingUninstalled.getTag()).getActivityName());
+                    String actvname = ((AppShortcut)mBeingUninstalled.getTag()).getActivityName();
+                    getDB().deleteApp(actvname);
+                    removeFromQuickApps(actvname);
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
