@@ -303,7 +303,7 @@ public class MainActivity extends Activity implements
             final List<AppShortcut> catapps = capps;
             Collections.sort(catapps);
 
-            final GridLayout iconSheet = getIconSheet(category);
+            final GridLayout iconSheet = createIconSheet(category);
            // processIconSheet(db, category, iconSheet, catapps);
 
         }
@@ -311,21 +311,21 @@ public class MainActivity extends Activity implements
     }
 
     @NonNull
-    private GridLayout getIconSheet(String category) {
+    private GridLayout createIconSheet(String category) {
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
         mIconSheets.put(category, iconSheet);
         mRevCategoryMap.put(iconSheet, category);
         iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(MainActivity.this);
+//
+//        if (category.equals(Categories.CAT_SEARCH)) {
+//
+//
+//            populateRecentApps(iconSheet);
+//        }
 
-        if (category.equals(Categories.CAT_SEARCH)) {
 
-
-            populateRecentApps(iconSheet);
-        }
-
-
-        final TextView categoryTab = getCategoryTab(category, iconSheet);
+        final TextView categoryTab = createCategoryTab(category, iconSheet);
 
 
         mCategoryTabs.put(category, categoryTab);
@@ -625,7 +625,7 @@ public class MainActivity extends Activity implements
 
     private int categoryTabWidth = 108;
 
-    private TextView getCategoryTab(final String category, final GridLayout iconSheet) {
+    private TextView createCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(getDB().getCategoryDisplay(category));
         categoryTab.setTag(category);
@@ -1054,7 +1054,7 @@ public class MainActivity extends Activity implements
         }
 
         if (getDB().addCategory(category, newDisplayName, newDisplayFullName)) {
-            getIconSheet(category);
+            createIconSheet(category);
 
             switchCategory(category);
         } else {
