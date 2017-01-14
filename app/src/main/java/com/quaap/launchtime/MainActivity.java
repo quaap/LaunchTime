@@ -47,7 +47,6 @@ import com.quaap.launchtime.components.Widget;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -297,15 +296,7 @@ public class MainActivity extends Activity implements
 
         for (final String category: db.getCategories()) {
 
-            List<AppShortcut> capps = shortcuts.get(category);
-            if (capps==null) capps = new ArrayList<>();
-
-            final List<AppShortcut> catapps = capps;
-            Collections.sort(catapps);
-
-            final GridLayout iconSheet = createIconSheet(category);
-           // processIconSheet(db, category, iconSheet, catapps);
-
+            createIconSheet(category);
         }
 
     }
@@ -317,12 +308,7 @@ public class MainActivity extends Activity implements
         mRevCategoryMap.put(iconSheet, category);
         iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(MainActivity.this);
-//
-//        if (category.equals(Categories.CAT_SEARCH)) {
-//
-//
-//            populateRecentApps(iconSheet);
-//        }
+
 
 
         final TextView categoryTab = createCategoryTab(category, iconSheet);
@@ -382,40 +368,6 @@ public class MainActivity extends Activity implements
             iconSheet.addView(item);
         }
     }
-
-
-//    private void processIconSheet(final DB db, final String category, final GridLayout iconSheet, final List<AppShortcut> catapps) {
-//        final List<String> apporder = db.getAppCategoryOrder(category);
-//
-//        GlobState.getGlobState(this).runAsync(new Runnable() {
-//            @Override
-//            public void run() {
-//     //   Log.d("category--------", category);
-//
-//                for (String actvname: apporder) {
-//                   // Log.d("apporder", pkgname);
-//                    for (AppShortcut app : catapps) {
-//                        if (app.getActivityName().equals(actvname)) {
-//                            addAppToIconSheet(iconSheet, app);
-//                        }
-//                    }
-//                }
-//
-//                boolean reorder = false;
-//                for (AppShortcut app : catapps) {
-//                    if (!apporder.contains(app.getActivityName())) {
-//                      //  Log.d("no apporder", app.getPackageName());
-//                        addAppToIconSheet(iconSheet, app);
-//                        reorder = true;
-//                    }
-//                }
-//                if (reorder) {
-//                    db.setAppCategoryOrder(category, iconSheet);
-//                }
-//
-//            }
-//        });
-//    }
 
 
     private Map<String, List<AppShortcut>> processActivities(DB db) {

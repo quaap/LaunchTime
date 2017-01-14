@@ -2,16 +2,9 @@ package com.quaap.launchtime;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Handler;
 
-import com.quaap.launchtime.components.CachedThreadPool;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.db.DB;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tom on 1/8/17.
@@ -32,7 +25,6 @@ public class GlobState extends Application {
 
     private DB mDB;
 
-    //private ExecutorService mExecutor;
 
     public static GlobState getGlobState(Context context) {
         return (GlobState)context.getApplicationContext();
@@ -41,7 +33,7 @@ public class GlobState extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //mExecutor = new CachedThreadPool();
+
         Categories.init(this);
 
         //this.deleteDatabase(DB.DATABASE_NAME);
@@ -60,42 +52,14 @@ public class GlobState extends Application {
         return mDB;
     }
 
-//    private Handler handler = new Handler();
-//
-//    public void runAsync(final Runnable r) {
-//        Runnable wraprun = new Runnable() {
-//            @Override
-//            public void run() {
-//                handler.post(r);
-//            }
-//        };
-//
-//        mExecutor.submit(wraprun);
-//    }
-//
-//    public <T> FutureTask<T> doAsync(Callable<T> c) {
-//
-//        FutureTask<T> ftask = new FutureTask<>(c);
-//        mExecutor.submit(ftask);
-//        return ftask;
-//    }
+
 
     @Override
     public void onTerminate() {
         if (mDB!=null) {
             mDB.close();
         }
-//        if (mExecutor !=null) {
-//            mExecutor.shutdown();
-//            try {
-//                mExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            if (!mExecutor.isShutdown()) {
-//                mExecutor.shutdownNow();
-//            }
-//        }
+
         super.onTerminate();
     }
 }
