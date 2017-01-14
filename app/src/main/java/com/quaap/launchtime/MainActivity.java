@@ -43,14 +43,13 @@ import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.InteractiveScrollView;
 import com.quaap.launchtime.components.Utils;
-import com.quaap.launchtime.components.Widget;
+import com.quaap.launchtime.widgets.Widget;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -487,6 +486,20 @@ public class MainActivity extends Activity implements
                     parent.removeView(appwid);
                 }
                 item.addView(appwid);
+                final View wrap = item;
+                appwid.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        return MainActivity.this.onLongClick(wrap);
+                    }
+                });
+                appwid.setOnDragListener(new View.OnDragListener() {
+                    @Override
+                    public boolean onDrag(View view, DragEvent dragEvent) {
+                        return MainActivity.this.onDrag(wrap, dragEvent);
+                    }
+                });
+
             } else {
                 Log.d("Widget2", "AppWidgetHostView was null for "  + app.getActivityName() + " " + app.getPackageName());
             }
@@ -759,9 +772,15 @@ public class MainActivity extends Activity implements
 
                 ViewGroup target;
                 if (view == mRemoveDropzone) {
-                    if (mQuickRow == mDragDropSource) {
+                    if (mQuickRow == mDragDropSource || mBeingDragged.isWidget()) {
                         mDragDropSource.removeView(view2);
                         getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                        if (mBeingDragged.isWidget()) {
+
+                            getDB().deleteApp(mBeingDragged.getActivityName());
+                            mLoadedWidgets.remove(mBeingDragged.getActivityName());
+                        }
+
                     } else if (mDragDropSource == mCategoriesLayout) {
                         //delete category tab
 

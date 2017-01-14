@@ -1,4 +1,4 @@
-package com.quaap.launchtime.components;
+package com.quaap.launchtime.widgets;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetHost;
@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.quaap.launchtime.components.AppShortcut;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ import java.util.List;
 
 public class Widget {
     private AppWidgetManager mAppWidgetManager;
-    private AppWidgetHost mAppWidgetHost;
+    private LaunchAppWidgetHost mAppWidgetHost;
     private Activity mParent;
 
     private static final int WIDGET_HOST_ID = 3455;
@@ -49,7 +51,7 @@ public class Widget {
         mParent = parent;
 
         mAppWidgetManager = AppWidgetManager.getInstance(mParent);
-        mAppWidgetHost = new AppWidgetHost(mParent.getApplicationContext(), WIDGET_HOST_ID);
+        mAppWidgetHost = new LaunchAppWidgetHost(mParent.getApplicationContext(), WIDGET_HOST_ID);
         mAppWidgetHost.startListening();
 
     }
