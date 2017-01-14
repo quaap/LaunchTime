@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -351,21 +352,50 @@ public class MainActivity extends Activity implements
     private GridLayout.LayoutParams getAppShortcutLayoutParams(AppShortcut app) {
         int w = getShortCutWidth(app);
         int h = getShortCutHeight(app);
+
+        AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
+
+        float sw = getResources().getDimension(R.dimen.shortcut_width);
+        float sh = getResources().getDimension(R.dimen.shortcut_height);
+
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        if (w > 1) {
-            lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, w);
+        int wcells = (int) Math.ceil(w / sw);
+        if (wcells > 1) {
+            int start = GridLayout.UNDEFINED;
+            if (wcells>mColumns) {
+                wcells=mColumns;
+            }
+            if (wcells>1) start = 0;
+            lp.columnSpec = GridLayout.spec(start, wcells);
+
+            Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start);
         }
-        if (h > 1) {
-            lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, h);
+        int hcells = (int) Math.ceil(h / sh);
+        if (hcells > 1) {
+            lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells);
         }
+
+        if (h>1 && w>1 && appwid!=null) {
+
+            appwid.updateAppWidgetSize(null, (int)sw, (int)sh, (int)(sw+20)*wcells, (int)(sh+20)*hcells);
+        }
+
         return lp;
     }
 
     public void changeColumnCount(GridLayout gridLayout, int columnCount) {
         if (gridLayout.getColumnCount() != columnCount) {
-            final int viewsCount = gridLayout.getChildCount();
-            for (int i = 0; i < viewsCount; i++) {
+
+            List<View> childViews = new ArrayList<>();
+
+
+            for (int i = gridLayout.getChildCount()-1; i >=0 ; i--) {
                 View view = gridLayout.getChildAt(i);
+                if (view==null) {
+                    Log.d("gridrelayout", "null child at " + i);
+                }
+                childViews.add(view);
+                gridLayout.removeView(view);
 
                 GridLayout.LayoutParams lp;
                 if (view.getTag() instanceof AppShortcut) {
@@ -378,6 +408,9 @@ public class MainActivity extends Activity implements
                 view.setLayoutParams(lp);
             }
             gridLayout.setColumnCount(columnCount);
+            for (View view: childViews) {
+                gridLayout.addView(view);
+            }
         }
     }
 
@@ -493,7 +526,15 @@ public class MainActivity extends Activity implements
             AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
             if (appwid == null) {
                 appwid = mWidgetHost.loadWidget(app);
-                mLoadedWidgets.put(app.getActivityName(), appwid);
+                if (appwid!=null) {
+                    mLoadedWidgets.put(app.getActivityName(), appwid);
+                    AppWidgetProviderInfo pinfo = appwid.getAppWidgetInfo();
+                    Log.d("widsize", "Min: " + pinfo.minWidth + "," + pinfo.minHeight);
+                    Log.d("widsize", "MinResize: " + pinfo.minResizeWidth + "," + pinfo.minResizeHeight);
+                    Log.d("widsize", "Resizemode: " + pinfo.resizeMode);
+
+                    storeShortCutDimen(app, pinfo.minWidth, pinfo.minHeight);
+                }
             }
             if (appwid != null) {
                 ViewGroup parent = (ViewGroup) appwid.getParent();
@@ -548,54 +589,49 @@ public class MainActivity extends Activity implements
         mWidgetHost.popupSelectWidget();
     }
 
-    private void addWidget(AppWidgetHostView wid) {
-        AppWidgetProviderInfo pinfo = wid.getAppWidgetInfo();
-        String actvname = pinfo.provider.getClassName();
-        String pkgname = pinfo.provider.getPackageName();
+    private void addWidget(ComponentName cn) {
+
+        String actvname = cn.getClassName();
+        String pkgname = cn.getPackageName();
 
         Log.d("Widget", actvname + " " + pkgname);
-        String label;
-        if (Build.VERSION.SDK_INT >= 21) {
-            label = pinfo.loadLabel(mPackageMan);
-        } else {
-            label = pinfo.label;
-        }
+        String label = pkgname;
+
 
         AppShortcut app = new AppShortcut(actvname, pkgname, label, mCategory, true);
 
-        mLoadedWidgets.put(app.getActivityName(), wid);
         getDB().addApp(app);
         getDB().addAppCategoryOrder(mCategory, app.getActivityName());
 
 //        int sw = (int)getResources().getDimension(R.dimen.shortcut_width);
 //        int sh = (int)getResources().getDimension(R.dimen.shortcut_height);
 
-        int wf = (int) Math.ceil(pinfo.minWidth / getResources().getDimension(R.dimen.shortcut_width));
-
-        int hf = (int) Math.ceil(pinfo.minHeight / getResources().getDimension(R.dimen.shortcut_height));
+//        int wf = (int) Math.ceil(pinfo.minWidth / getResources().getDimension(R.dimen.shortcut_width));
+//
+//        int hf = (int) Math.ceil(pinfo.minHeight / getResources().getDimension(R.dimen.shortcut_height));
 
         //wid.updateAppWidgetSize(null,sw, sh, sw*wf, sh*hf);
 
-        storeShortCutDimen(app, wf, hf);
+
     }
 
-    private void storeShortCutDimen(AppShortcut app, int widthCells, int heightCells) {
+    private void storeShortCutDimen(AppShortcut app, int width, int height) {
         SharedPreferences.Editor ePrefs = mPrefs.edit();
 
-        ePrefs.putInt(app.getActivityName() + "_width", widthCells);
+        ePrefs.putInt(app.getActivityName() + "_width", width);
 
-        ePrefs.putInt(app.getActivityName() + "_height", heightCells);
+        ePrefs.putInt(app.getActivityName() + "_height", height);
 
         ePrefs.apply();
 
     }
 
     private int getShortCutWidth(AppShortcut app) {
-        return mPrefs.getInt(app.getActivityName() + "_width", 1);
+        return mPrefs.getInt(app.getActivityName() + "_width", 0);
     }
 
     private int getShortCutHeight(AppShortcut app) {
-        return mPrefs.getInt(app.getActivityName() + "_height", 1);
+        return mPrefs.getInt(app.getActivityName() + "_height", 0);
     }
 
     private ViewGroup getSearchView() {
@@ -931,11 +967,11 @@ public class MainActivity extends Activity implements
 
             }
         } else {
-            AppWidgetHostView wid = mWidgetHost.onActivityResult(requestCode, resultCode, data);
-            if (wid == null) {
+            ComponentName cn = mWidgetHost.onActivityResult(requestCode, resultCode, data);
+            if (cn == null) {
                 super.onActivityResult(requestCode, resultCode, data);
             } else {
-                addWidget(wid);
+                addWidget(cn);
             }
         }
     }

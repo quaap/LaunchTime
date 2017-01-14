@@ -185,15 +185,26 @@ public class Widget {
     }
 
 
-    public AppWidgetHostView onActivityResult(int requestCode, int resultCode, Intent data) {
+    public ComponentName getComponentNameFromIntent(Intent data) {
+        Bundle extras = data.getExtras();
+        int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+
+
+        AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+        return appWidgetInfo.provider;
+
+    }
+
+    public ComponentName onActivityResult(int requestCode, int resultCode, Intent data) {
+
         // listen for widget manager response
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_PICK_APPWIDGET) {
-                return configureWidget(data);
-            } else if (requestCode == REQUEST_CREATE_APPWIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
-                return createWidget(data);
+        try {
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == REQUEST_PICK_APPWIDGET || requestCode == REQUEST_CREATE_APPWIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
+                    return getComponentNameFromIntent(data);
+                }
             }
-        } else if (resultCode == Activity.RESULT_CANCELED && data != null) {
+        } finally {
             int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
             if (appWidgetId != -1) {
                 mAppWidgetHost.deleteAppWidgetId(appWidgetId);
