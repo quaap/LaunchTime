@@ -33,21 +33,7 @@ public class Utils {
         }
     }
 
-    public static void changeColumnCount(GridLayout gridLayout, int columnCount, int cellWidth) {
-        if (gridLayout.getColumnCount() != columnCount) {
-            final int viewsCount = gridLayout.getChildCount();
-            for (int i = 0; i < viewsCount; i++) {
-                View view = gridLayout.getChildAt(i);
-                //new GridLayout.LayoutParams created with Spec.UNSPECIFIED
-                //which are package visible
 
-                GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-               // lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, view.getWidth()/cellWidth+1);
-                view.setLayoutParams(lp);
-            }
-            gridLayout.setColumnCount(columnCount);
-        }
-    }
 
     public static boolean isLandscape(Context context) {
         int orientation = context.getResources().getConfiguration().orientation;

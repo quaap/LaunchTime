@@ -247,7 +247,7 @@ public class MainActivity extends Activity implements
             mColumns = mColumnsPortrait;
         }
 
-        Utils.changeColumnCount(mIconSheet, mColumns, (int)getResources().getDimension(R.dimen.shortcut_width));
+        changeColumnCount(mIconSheet, mColumns);
 
     }
 
@@ -358,10 +358,45 @@ public class MainActivity extends Activity implements
             if (!app.iconLoaded()) {
                 app.loadAppIconAsync(mPackageMan);
             }
-            iconSheet.addView(item);
+            GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
+            iconSheet.addView(item, lp);
         }
     }
 
+    @NonNull
+    private GridLayout.LayoutParams getAppShortcutLayoutParams(AppShortcut app) {
+        int w = getShortCutWidth(app);
+        int h = getShortCutHeight(app);
+        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+        if (w>1) {
+            lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, w);
+        }
+        if (h>1) {
+            lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, h);
+        }
+        return lp;
+    }
+
+
+    public void changeColumnCount(GridLayout gridLayout, int columnCount) {
+        if (gridLayout.getColumnCount() != columnCount) {
+            final int viewsCount = gridLayout.getChildCount();
+            for (int i = 0; i < viewsCount; i++) {
+                View view = gridLayout.getChildAt(i);
+
+                GridLayout.LayoutParams lp;
+                if (view.getTag() instanceof  AppShortcut) {
+                    AppShortcut app = (AppShortcut) view.getTag();
+
+                    lp = getAppShortcutLayoutParams(app);
+                } else {
+                    lp = new GridLayout.LayoutParams();
+                }
+                view.setLayoutParams(lp);
+            }
+            gridLayout.setColumnCount(columnCount);
+        }
+    }
 
     private List<AppShortcut> processActivities(DB db) {
         final List<AppShortcut> shortcuts = new ArrayList<>();
@@ -554,17 +589,32 @@ public class MainActivity extends Activity implements
         mLoadedWidgets.put(app.getActivityName(), wid);
         getDB().addApp(app);
         getDB().addAppCategoryOrder(mCategory, app.getActivityName());
-//
-//        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-//
-//        float wf = pinfo.minResizeWidth / getResources().getDimension(R.dimen.shortcut_width);
-//        if (wf>1.1) {
-//            lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, (int)wf);
-//        }
-//
-//        mIconSheet.addView(getWidgetView(wid, app), lp);
+
+
+
+        int wf = (int)Math.ceil(pinfo.minWidth / getResources().getDimension(R.dimen.shortcut_width));
+
+        int hf = (int)Math.ceil(pinfo.minHeight / getResources().getDimension(R.dimen.shortcut_height));
+
+        storeShortCutDimen(app, wf, hf);
     }
 
+    private void storeShortCutDimen(AppShortcut app, int widthCells, int heightCells) {
+        SharedPreferences.Editor ePrefs = mPrefs.edit();
+
+        ePrefs.putInt(app.getActivityName() + "_width", widthCells);
+
+        ePrefs.putInt(app.getActivityName() + "_height", heightCells);
+
+        ePrefs.apply();
+
+    }
+    private int getShortCutWidth(AppShortcut app) {
+        return mPrefs.getInt(app.getActivityName() + "_width", 1);
+    }
+    private int getShortCutHeight(AppShortcut app) {
+        return mPrefs.getInt(app.getActivityName() + "_height", 1);
+    }
 
 
     private ViewGroup getSearchView() {
