@@ -1,13 +1,8 @@
 package com.quaap.launchtime;
 
 import android.app.Application;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 
 import com.quaap.launchtime.components.CachedThreadPool;
 import com.quaap.launchtime.components.Categories;
@@ -15,7 +10,6 @@ import com.quaap.launchtime.db.DB;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 

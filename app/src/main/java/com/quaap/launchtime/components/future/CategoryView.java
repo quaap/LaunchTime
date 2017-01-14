@@ -1,20 +1,8 @@
 package com.quaap.launchtime.components.future;
 
 import android.content.Context;
-import android.view.DragEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.quaap.launchtime.GlobState;
-import com.quaap.launchtime.R;
-import com.quaap.launchtime.components.AppShortcut;
-import com.quaap.launchtime.db.DB;
-
-import java.util.List;
 
 /**
  * Created by tom on 1/10/17.
