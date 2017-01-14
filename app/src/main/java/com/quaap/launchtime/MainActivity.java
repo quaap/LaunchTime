@@ -1209,6 +1209,11 @@ public class MainActivity extends Activity implements
             } else {
                 mDeleteCategoryButton.setVisibility(View.VISIBLE);
             }
+            if (mCategory.equals(Categories.CAT_SEARCH)) {
+                mEditWidgetsButton.setVisibility(View.INVISIBLE);
+            } else {
+                mEditWidgetsButton.setVisibility(View.VISIBLE);
+            }
             mIconSheetBottomFrame.setVisibility(View.VISIBLE);
             mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
         } else {
