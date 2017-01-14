@@ -1,8 +1,13 @@
 package com.quaap.launchtime;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 
 import com.quaap.launchtime.components.CachedThreadPool;
 import com.quaap.launchtime.components.Categories;
@@ -39,7 +44,6 @@ public class GlobState extends Application {
         return (GlobState)context.getApplicationContext();
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -50,11 +54,12 @@ public class GlobState extends Application {
 
         mDB = new DB(this);
         if (mDB.isFirstRun()) {
-            for (int i=0; i<Categories.DefCategoryOrder.length; i++) {
+            for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
                 String cat = Categories.DefCategoryOrder[i];
-                mDB.addCategory(cat,Categories.getCatLabel(this,cat),Categories.getCatFullLabel(this,cat),i);
+                mDB.addCategory(cat, Categories.getCatLabel(this, cat), Categories.getCatFullLabel(this, cat), i);
             }
         }
+
     }
 
     public DB getDB() {

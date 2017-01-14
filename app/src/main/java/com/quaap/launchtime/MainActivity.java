@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -176,6 +178,7 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onPause() {
+        unregisterReceiver(installReceiver);
         mPrefs.edit().putString("category", mCategory).apply();
         super.onPause();
     }
@@ -185,8 +188,38 @@ public class MainActivity extends Activity implements
         super.onResume();
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         switchCategory(mCategory);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+
+        intentFilter.addDataScheme("package");
+
+        registerReceiver(installReceiver, intentFilter);
     }
 
+    BroadcastReceiver installReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+                Uri data = intent.getData();
+                String packageName = data.getEncodedSchemeSpecificPart();
+                Log.i("InstallCatch", "The installed package is: "+ packageName);
+
+                try {
+                    PackageManager pm = MainActivity.this.getPackageManager();
+
+                    Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
+                    ResolveInfo ri = MainActivity.this.getPackageManager().resolveActivity(packageIntent, 0);
+
+                    AppShortcut app = new AppShortcut(MainActivity.this.getPackageManager(), ri);
+                    getDB().addApp(app);
+                } catch (Exception e) {
+                    Log.e("InstallCatch", "Could not get "+ packageName, e);
+                }
+
+            }
+        }
+    };
 
     private void switchCategory(String category) {
         if (category==null) return;
@@ -198,13 +231,11 @@ public class MainActivity extends Activity implements
 
         mCategoryTabs.get(category).setText(getDB().getCategoryDisplayFull(category));
 
-        mIconSheetHolder.removeAllViews();
         mIconSheet = mIconSheets.get(category);
 
         checkConfig();
 
-        mIconSheetHolder.addView(mIconSheet);
-
+        repopulateIconSheet(category);
 
         mIconSheetTopFrame.removeAllViews();
         if (category.equals(Categories.CAT_SEARCH)) {
@@ -212,6 +243,12 @@ public class MainActivity extends Activity implements
             mIconSheetTopFrame.addView(mSearchView);
             populateRecentApps(mIconSheet);
         }
+
+
+        mIconSheetHolder.removeAllViews();
+        mIconSheetHolder.addView(mIconSheet);
+
+
 
         showButtonBar(false);
     }
@@ -241,12 +278,16 @@ public class MainActivity extends Activity implements
     }
 
     public void launchApp(String activityname, String packagename) {
-        getDB().appLaunched(activityname);
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setClassName(packagename, activityname);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        showButtonBar(false);
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClassName(packagename, activityname);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            showButtonBar(false);
+            getDB().appLaunched(activityname);
+        } catch (Exception e) {
+            Log.d("Launch", "Could not launch " + activityname, e);
+        }
 
     }
 
@@ -306,10 +347,9 @@ public class MainActivity extends Activity implements
 
         for (String actvname: db.getAppLaunchedList()) {
             AppShortcut app = db.getApp(actvname);
-            if (app!=null) {
-                app.loadAppIconAsync(mPackageMan);
-                iconSheet.addView(getShortcutView(app));
-            }
+
+            addAppToIconSheet(iconSheet, app);
+
         }
     }
 
@@ -320,16 +360,32 @@ public class MainActivity extends Activity implements
         DB db = getDB();
 
         final List<String> apporder = db.getAppCategoryOrder(category);
+        List<AppShortcut> apps = db.getApps(category);
 
         for(String actvname: apporder) {
-            AppShortcut app = db.getApp(actvname);
-            if (app!=null) {
-                ViewGroup item = getShortcutView(app);
-                app.loadAppIconAsync(mPackageMan);
-                iconSheet.addView(item);
+            for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext();) {
+                AppShortcut app = it.next();
+                if (actvname.equals(app.getActivityName())) {
+                    addAppToIconSheet(iconSheet, app);
+                    it.remove();
+                }
             }
         }
 
+        for (AppShortcut app: apps) {
+            addAppToIconSheet(iconSheet, app);
+        }
+
+    }
+
+    private void addAppToIconSheet(GridLayout iconSheet, AppShortcut app) {
+        if (app!=null && Utils.isAppInstalled(this, app.getPackageName())) {
+            ViewGroup item = getShortcutView(app);
+            if (!app.iconLoaded()) {
+                app.loadAppIconAsync(mPackageMan);
+            }
+            iconSheet.addView(item);
+        }
     }
 
 
@@ -345,8 +401,7 @@ public class MainActivity extends Activity implements
                    // Log.d("apporder", pkgname);
                     for (AppShortcut app : catapps) {
                         if (app.getActivityName().equals(actvname)) {
-                            ViewGroup item = getShortcutView(app);
-                            iconSheet.addView(item);
+                            addAppToIconSheet(iconSheet, app);
                         }
                     }
                 }
@@ -355,10 +410,7 @@ public class MainActivity extends Activity implements
                 for (AppShortcut app : catapps) {
                     if (!apporder.contains(app.getActivityName())) {
                       //  Log.d("no apporder", app.getPackageName());
-
-                        ViewGroup item = getShortcutView(app);
-
-                        iconSheet.addView(item);
+                        addAppToIconSheet(iconSheet, app);
                         reorder = true;
                     }
                 }

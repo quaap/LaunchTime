@@ -69,8 +69,11 @@ public class AppShortcut implements Comparable<AppShortcut>{
 //    public AppShortcut(PackageManager pm, String packageName) throws PackageManager.NameNotFoundException {
 //        mPackageName = packageName;
 //        ApplicationInfo info = pm.getApplicationInfo(mPackageName, PackageManager.GET_META_DATA);
+//        mActivityName = pm.resolveActivity()
 //        mLabel = pm.getApplicationLabel(info).toString();
+//        mCategory = Categories.getCategoryForPackage(mPackageName);
 //        loadAppIconAsync(pm);
+//        mWidget = false;
 //    }
 
     public AppShortcut(PackageManager pm, ResolveInfo ri) {
@@ -106,6 +109,9 @@ public class AppShortcut implements Comparable<AppShortcut>{
         return mWidget;
     }
 
+    public boolean iconLoaded() {
+        return mIconDrawable!=null;
+    }
 
     public void setIconImage(ImageView iconImage) {
         mIconImage = iconImage;

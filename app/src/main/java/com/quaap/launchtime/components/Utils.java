@@ -1,6 +1,7 @@
 package com.quaap.launchtime.components;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.TypedValue;
@@ -24,9 +25,14 @@ import android.widget.GridLayout;
  */
 public class Utils {
 
-    public static float dpToPx(Context context, int px) {
-        Resources r = context.getResources();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, r.getDisplayMetrics());
+    public static boolean isAppInstalled(Context context, String packageName) {
+        try {
+            context.getPackageManager().getApplicationInfo(packageName, 0);
+            return true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     public static void changeColumnCount(GridLayout gridLayout, int columnCount, int cellWidth) {
