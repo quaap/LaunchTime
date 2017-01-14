@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetHostView;
 import android.content.Context;
 
 import android.support.v4.view.MotionEventCompat;
+import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 
 import android.view.ViewConfiguration;
@@ -54,6 +55,7 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
                 boolean upVal = System.currentTimeMillis() - mLongClickStarted > ViewConfiguration.getLongPressTimeout();
                 if( upVal && mLongClickListener!=null) {
                     mLongClickListener.onLongClick( LaunchAppWidgetHostView.this );
+                    performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                 }
                 break;
             case MotionEvent.ACTION_UP:
