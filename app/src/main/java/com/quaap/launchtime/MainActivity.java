@@ -560,16 +560,21 @@ public class MainActivity extends Activity implements
         } else {
             label = pinfo.label;
         }
+
         AppShortcut app = new AppShortcut(actvname, pkgname, label, mCategory, true);
 
         mLoadedWidgets.put(app.getActivityName(), wid);
         getDB().addApp(app);
         getDB().addAppCategoryOrder(mCategory, app.getActivityName());
 
+//        int sw = (int)getResources().getDimension(R.dimen.shortcut_width);
+//        int sh = (int)getResources().getDimension(R.dimen.shortcut_height);
 
         int wf = (int) Math.ceil(pinfo.minWidth / getResources().getDimension(R.dimen.shortcut_width));
 
         int hf = (int) Math.ceil(pinfo.minHeight / getResources().getDimension(R.dimen.shortcut_height));
+
+        //wid.updateAppWidgetSize(null,sw, sh, sw*wf, sh*hf);
 
         storeShortCutDimen(app, wf, hf);
     }
