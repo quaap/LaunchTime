@@ -36,7 +36,7 @@ public class MainHelper {
 
     //QuickBar
 
-    public static void checkDefaultApps(final Context context, Map<String, List<AppShortcut>> shortcuts, List<String> quickRowOrder, View quickRow) {
+    public static void checkDefaultApps(final Context context, List<AppShortcut> shortcuts, List<String> quickRowOrder, View quickRow) {
         if (quickRowOrder.isEmpty()) {
             Map<String,List<String>> defactivities = getDefaultActivities(context);
             boolean addeddefault = false;
@@ -47,28 +47,28 @@ public class MainHelper {
 
             AppShortcut firstapp=null;
             for (int i=0; i<max; i++) { // try the tests in order.
-                for (List<AppShortcut> catlist : shortcuts.values()) {
-                    for (AppShortcut app : catlist) {
-                        if (firstapp==null) firstapp = app;
-                        //Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
-                        //try the app for each one of the activities
-                        for (Iterator<Map.Entry<String, List<String>>> defactit = defactivities.entrySet().iterator(); defactit.hasNext(); ) {
-                            Map.Entry<String, List<String>> defactent = defactit.next();
 
-                            //if we have a test, search the app name
-                            if (defactent.getValue().size()>i) {
-                                String test = defactent.getValue().get(i);
-                                if (contains(app, test)) {
-                                    Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
-                                    quickRowOrder.add(app.getActivityName());
-                                    defactit.remove(); // remove this group
-                                    addeddefault = true;
-                                    break;  //we're using this app for something
-                                }
+                for (AppShortcut app : shortcuts) {
+                    if (firstapp==null) firstapp = app;
+                    //Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
+                    //try the app for each one of the activities
+                    for (Iterator<Map.Entry<String, List<String>>> defactit = defactivities.entrySet().iterator(); defactit.hasNext(); ) {
+                        Map.Entry<String, List<String>> defactent = defactit.next();
+
+                        //if we have a test, search the app name
+                        if (defactent.getValue().size()>i) {
+                            String test = defactent.getValue().get(i);
+                            if (contains(app, test)) {
+                                Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
+                                quickRowOrder.add(app.getActivityName());
+                                defactit.remove(); // remove this group
+                                addeddefault = true;
+                                break;  //we're using this app for something
                             }
                         }
                     }
                 }
+
             }
             if (quickRowOrder.isEmpty() && firstapp!=null) { //nothing found? add first app found.
                 quickRowOrder.add(firstapp.getActivityName());

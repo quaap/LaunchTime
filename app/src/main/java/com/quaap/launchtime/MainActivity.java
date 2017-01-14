@@ -290,7 +290,7 @@ public class MainActivity extends Activity implements
 
         final DB db = getDB();
 
-        final Map<String, List<AppShortcut>> shortcuts = processActivities(db);
+        final List<AppShortcut> shortcuts = processActivities(db);
 
         processQuickApps(db, shortcuts);
 
@@ -370,8 +370,8 @@ public class MainActivity extends Activity implements
     }
 
 
-    private Map<String, List<AppShortcut>> processActivities(DB db) {
-        final Map<String, List<AppShortcut>> shortcuts = new LinkedHashMap<>();
+    private List<AppShortcut> processActivities(DB db) {
+        final List<AppShortcut> shortcuts = new ArrayList<>();
 
         List<String> dbactvnames = db.getAppActvNames();
 
@@ -403,14 +403,7 @@ public class MainActivity extends Activity implements
                     newapps.add(app);
                 }
 
-
-                List<AppShortcut> catapps = shortcuts.get(app.getCategory());
-                if (catapps == null) {
-                    catapps = new ArrayList<>();
-                    shortcuts.put(app.getCategory(), catapps);
-                }
-                catapps.add(app);
-
+                shortcuts.add(app);
 
             } else {
                 Log.d("Launch", actvname + " " + ri.activityInfo.name);
@@ -432,22 +425,22 @@ public class MainActivity extends Activity implements
         return shortcuts;
     }
 
-    private void processQuickApps(DB db, Map<String, List<AppShortcut>> shortcuts) {
+    private void processQuickApps(DB db, List<AppShortcut> shortcuts) {
         List<AppShortcut> quickRowApps = new ArrayList<>();
         final List<String> quickRowOrder = db.getAppCategoryOrder(QUICK_ROW_CAT);
 
         MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
 
-        for (List<AppShortcut> catlist: shortcuts.values()) {
-            for (AppShortcut app: catlist) {
 
-                if (quickRowOrder.contains(app.getActivityName())) {
-                    AppShortcut qapp = new AppShortcut(app);
-                    qapp.loadAppIconAsync(mPackageMan);
-                    quickRowApps.add(qapp);
-                }
+        for (AppShortcut app: shortcuts) {
+
+            if (quickRowOrder.contains(app.getActivityName())) {
+                AppShortcut qapp = new AppShortcut(app);
+                qapp.loadAppIconAsync(mPackageMan);
+                quickRowApps.add(qapp);
             }
         }
+
 
         mQuickRow.removeAllViews();
         for (String actvname: quickRowOrder) {
@@ -458,14 +451,14 @@ public class MainActivity extends Activity implements
                 }
             }
         }
-        getDB().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+        db.setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
 
     }
 
-    private void removeFromQuickApps(String actvnames) {
+    private void removeFromQuickApps(String actvname) {
         for (int i=0; i<mQuickRow.getChildCount(); i++) {
             AppShortcut app = (AppShortcut)mQuickRow.getChildAt(i).getTag();
-            if (app!=null && actvnames.equals(app.getPackageName())) {
+            if (app!=null && actvname.equals(app.getPackageName())) {
                 mQuickRow.removeView(mQuickRow.getChildAt(i));
             }
         }
