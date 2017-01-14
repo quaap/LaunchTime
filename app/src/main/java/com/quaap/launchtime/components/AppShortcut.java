@@ -128,7 +128,7 @@ public class AppShortcut implements Comparable<AppShortcut>{
 
 
     public void loadAppIconAsync(final PackageManager pm){
-        if (iconLoaded()) return;
+        if (iconLoaded() || isWidget()) return;
         // Create an async task
         AsyncTask<Void,Void,Drawable> loadAppIconTask = new AsyncTask<Void, Void, Drawable>() {
 

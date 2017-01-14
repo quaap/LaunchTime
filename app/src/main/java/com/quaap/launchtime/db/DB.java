@@ -168,6 +168,9 @@ public class DB extends SQLiteOpenHelper {
             String label = cursor.getString(2);
             boolean widget = cursor.getShort(4)==1;
 
+            if(widget) {
+                Log.d("db", "Found widget: " + actvname + " " + pkgname);
+            }
             apps.add(new AppShortcut(actvname, pkgname, label, catID, widget));
         }
         cursor.close();
@@ -200,7 +203,7 @@ public class DB extends SQLiteOpenHelper {
             values.put(PKGNAME, pkgname);
             values.put(LABEL, label);
             values.put(CATID, catID);
-            values.put(ISWIDGET, widget);
+            values.put(ISWIDGET, widget?1:0);
 
             db.insert(APP_TABLE, null, values);
         } catch (Exception e) {
@@ -213,7 +216,7 @@ public class DB extends SQLiteOpenHelper {
 
         //Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
         Cursor cursor = db.rawQuery(
-                "select " + ACTVNAME + " _id, " + LABEL + " label " +
+                "select distinct " + ACTVNAME + " _id, " + LABEL + " label " +
                 " from " + APP_TABLE +
                 " where " + LABEL + " like ?" +
                 " order by 2 ",
@@ -457,6 +460,22 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
+    public void addAppCategoryOrder(String catID, String actvname) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+
+            ContentValues values = new ContentValues();
+            values.put(CATID, catID);
+            values.put(ACTVNAME, actvname);
+            values.put(INDEX, 1000);
+            db.insert(APP_ORDER_TABLE, null, values);
+
+        } catch (Exception e){
+            Log.e("LaunchDB", "Can't setAppCategoryOrder for catID " + catID, e);
+
+        }
+    }
 
     public List<String> getAppCategoryOrder(String catID) {
         List<String> actvnames = new ArrayList<>();

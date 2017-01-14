@@ -86,7 +86,7 @@ public class Widget {
     }
 
 
-    private AppWidgetHostView loadWidget(AppShortcut app) {
+    public AppWidgetHostView loadWidget(AppShortcut app) {
         ComponentName cn = new ComponentName(app.getPackageName(), app.getActivityName());
 
         Log.d("Widget creation", "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
@@ -97,16 +97,17 @@ public class Widget {
         }
         Log.d("Widget creation", "DB was not empty");
 
+
         final List<AppWidgetProviderInfo> infos = mAppWidgetManager.getInstalledProviders();
 
         // Get AppWidgetProviderInfo
         AppWidgetProviderInfo appWidgetInfo = null;
         // Just in case you want to see all package and class names of installed widget providers,
         // this code is useful
-        for (final AppWidgetProviderInfo info : infos) {
-            Log.d("AD3", info.provider.getPackageName() + " / "
-                    + info.provider.getClassName());
-        }
+//        for (final AppWidgetProviderInfo info : infos) {
+//            Log.d("AD3", info.provider.getPackageName() + " / "
+//                    + info.provider.getClassName());
+//        }
         // Iterate through all infos, trying to find the desired one
         for (final AppWidgetProviderInfo info : infos) {
             if (info.provider.getClassName().equals(cn.getClassName()) &&

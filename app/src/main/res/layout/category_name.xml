@@ -19,7 +19,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textCapWords|textPersonName"
         android:ems="10"
         android:id="@+id/shortname" />
 
@@ -32,7 +32,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textCapWords|textPersonName"
         android:ems="10"
         android:id="@+id/fullname" />
 </GridLayout>

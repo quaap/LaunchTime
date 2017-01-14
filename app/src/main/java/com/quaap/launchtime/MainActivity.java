@@ -157,12 +157,6 @@ public class MainActivity extends Activity implements
     }
 
 
-
-    private void setupWidget() {
-        mWidgetHost.popupSelectWidget();
-    }
-
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -405,18 +399,23 @@ public class MainActivity extends Activity implements
 
                 shortcuts.add(app);
 
-            } else {
-                Log.d("Launch", actvname + " " + ri.activityInfo.name);
             }
+            //else {
+               // Log.d("Launch", actvname + " " + ri.activityInfo.name);
+            //}
         }
 
         //remove shortcuts if they are not in the system
         for (Iterator<String> it = dbactvnames.iterator(); it.hasNext();) {
             String dbactv = it.next();
             if (!pmactvnames.contains(dbactv)) {
-                it.remove();
-                db.deleteApp(dbactv);
-                removeFromQuickApps(dbactv);
+                AppShortcut app = db.getApp(dbactv);
+                if (!Utils.isAppInstalled(this, app.getPackageName())) {  //might be a widget, check packagename
+                    Log.d("Launch", "Removing " + dbactv);
+                    it.remove();
+                    db.deleteApp(dbactv);
+                    removeFromQuickApps(dbactv);
+                }
             }
         }
 
@@ -464,42 +463,93 @@ public class MainActivity extends Activity implements
         }
     }
 
+
+    private Map<String,AppWidgetHostView> mLoadedWidgets = new HashMap<>();
+
     public ViewGroup getShortcutView(final AppShortcut app) {
         return getShortcutView(app, false);
     }
 
     public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
 
-        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon?R.layout.shortcut_small_icon:R.layout.shortcut_icon, (ViewGroup) null);
+        ViewGroup item;
+        if (app.isWidget()) {
+            item = new FrameLayout(this);
 
+            AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
+            if (appwid==null) {
+                appwid = mWidgetHost.loadWidget(app);
+                mLoadedWidgets.put(app.getActivityName(), appwid);
+            }
+            if (appwid!=null) {
+                ViewGroup parent = (ViewGroup)appwid.getParent();
+                if (parent!=null) {
+                    parent.removeView(appwid);
+                }
+                item.addView(appwid);
+            } else {
+                Log.d("Widget2", "AppWidgetHostView was null for "  + app.getActivityName() + " " + app.getPackageName());
+            }
+
+        } else {
+
+            item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon ? R.layout.shortcut_small_icon : R.layout.shortcut_icon, (ViewGroup) null);
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    launchApp(app);
+                }
+            });
+
+            ImageView iconImage = (ImageView) item.findViewById(R.id.shortcut_icon);
+            app.setIconImage(iconImage);
+
+            if (!smallIcon) {
+                TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
+                iconLabel.setText(app.getLabel());
+            }
+        }
         item.setTag(app);
         item.setClickable(true);
         item.setOnLongClickListener(this);
         item.setOnDragListener(this);
-
-        item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchApp(app);
-            }
-        });
-
-        ImageView iconImage = (ImageView) item.findViewById(R.id.shortcut_icon);
-        app.setIconImage(iconImage);
-
-        if (!smallIcon) {
-            TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
-            iconLabel.setText(app.getLabel());
-        }
         return item;
     }
 
-    private View getWidgetView(View item, final AppShortcut app) {
-        item.setTag(app);
-        item.setClickable(true);
-        item.setOnLongClickListener(this);
-        item.setOnDragListener(this);
-        return item;
+
+
+    private void setupWidget() {
+        mWidgetHost.popupSelectWidget();
+    }
+
+
+
+    private void addWidget(AppWidgetHostView wid) {
+        AppWidgetProviderInfo pinfo = wid.getAppWidgetInfo();
+        String actvname = pinfo.provider.getClassName();
+        String pkgname = pinfo.provider.getPackageName();
+
+        Log.d("Widget", actvname + " " + pkgname);
+        String label;
+        if (Build.VERSION.SDK_INT>=21) {
+            label = pinfo.loadLabel(mPackageMan);
+        } else {
+            label = pinfo.label;
+        }
+        AppShortcut app = new AppShortcut(actvname, pkgname, label, mCategory, true);
+
+        mLoadedWidgets.put(app.getActivityName(), wid);
+        getDB().addApp(app);
+        getDB().addAppCategoryOrder(mCategory, app.getActivityName());
+//
+//        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+//
+//        float wf = pinfo.minResizeWidth / getResources().getDimension(R.dimen.shortcut_width);
+//        if (wf>1.1) {
+//            lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, (int)wf);
+//        }
+//
+//        mIconSheet.addView(getWidgetView(wid, app), lp);
     }
 
 
@@ -811,6 +861,7 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.GONE);
     }
 
+
     private void launchUninstallIntent(String packageName) {
         Uri packageUri = Uri.parse("package:"+packageName);
         Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
@@ -844,29 +895,14 @@ public class MainActivity extends Activity implements
             if (wid==null) {
                 super.onActivityResult(requestCode, resultCode, data);
             } else {
-                AppWidgetProviderInfo pinfo = wid.getAppWidgetInfo();
-                String actvname = pinfo.provider.getClassName();
-                String pkgname = pinfo.provider.getPackageName();
-                String label;
-                if (Build.VERSION.SDK_INT>=21) {
-                    label = pinfo.loadLabel(mPackageMan);
-                } else {
-                    label = pinfo.label;
-                }
-                AppShortcut app = new AppShortcut(actvname, pkgname, label, mCategory, true);
-                GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-
-                float wf = pinfo.minResizeWidth / getResources().getDimension(R.dimen.shortcut_width);
-                if (wf>1.1) {
-                    lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, (int)wf);
-                }
-
-                mIconSheet.addView(getWidgetView(wid, app), lp);
+                addWidget(wid);
             }
         }
     }
 
 
+    ///////////
+    // Category manipulation
 
     interface CategoryChangerListener {
         void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName);
@@ -1051,6 +1087,8 @@ public class MainActivity extends Activity implements
     }
 
 
+    //initialize the form members
+
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
         mCategoriesLayout = (LinearLayout)findViewById(R.id.layout_categories);
@@ -1114,6 +1152,13 @@ public class MainActivity extends Activity implements
             public void onClick(View view) {
                 promptDeleteCategory(mCategory);
                 showButtonBar(false);
+            }
+        });
+
+        mEditWidgetsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setupWidget();
             }
         });
 
