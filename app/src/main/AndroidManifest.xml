@@ -28,6 +28,9 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

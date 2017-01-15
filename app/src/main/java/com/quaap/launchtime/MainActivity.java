@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -22,6 +23,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Display;
@@ -83,6 +85,10 @@ public class MainActivity extends Activity implements
     private View mRenameCategoryButton;
     private View mDeleteCategoryButton;
     private View mEditWidgetsButton;
+    private View mOpenPrefsButton;
+
+
+
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
     private FrameLayout mRemoveDropzone;
@@ -108,6 +114,8 @@ public class MainActivity extends Activity implements
     private int mColumnsPortrait = 3;
     private int mColumnMargin = 12;
     private int categoryTabWidth = 108;
+
+    private SharedPreferences mAppPreferences;
 
     private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
     public Map<AppShortcut,ViewGroup> mAppShortcutViews = new HashMap<>();
@@ -147,6 +155,9 @@ public class MainActivity extends Activity implements
             actionBar.hide();
         }
         mPackageMan = getApplicationContext().getPackageManager();
+
+        mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 
         mWidgetHelper = new Widget(this);
 
@@ -245,6 +256,27 @@ public class MainActivity extends Activity implements
     }
 
     private void checkConfig() {
+
+        int orientationPref = 0;
+        try {
+            orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "0"));
+        } catch (Exception e) {
+            Log.e("Launch", e.getMessage(), e);
+        }
+
+        switch (orientationPref) {
+            case 0:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
+                break;
+            case 1:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            case 2:
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+
+        }
+
 
         Point s = getScreenDimensions();
         float shortcutw = getResources().getDimension(R.dimen.shortcut_width);
@@ -1253,6 +1285,7 @@ public class MainActivity extends Activity implements
         }
     }
 
+
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
         mCategoriesLayout = (LinearLayout) findViewById(R.id.layout_categories);
@@ -1294,6 +1327,7 @@ public class MainActivity extends Activity implements
         mRenameCategoryButton = findViewById(R.id.btn_rename_cat);
         mDeleteCategoryButton = findViewById(R.id.btn_delete_cat);
         mEditWidgetsButton = findViewById(R.id.btn_widgets);
+        mOpenPrefsButton = findViewById(R.id.btn_prefs);
 
         mRenameCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1323,6 +1357,14 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 setupWidget();
+            }
+        });
+
+        mOpenPrefsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
             }
         });
 
