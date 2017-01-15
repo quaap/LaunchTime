@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.quaap.launchtime">
+    package="com.quaap.launchtime"
+    android:versionCode="1"
+    android:versionName="0.1">
 
     <!--
     <uses-permission android:name="android.permission.BIND_APPWIDGET"
@@ -30,6 +31,9 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".AboutActivity"
             android:parentActivityName=".MainActivity"/>
     </application>
 

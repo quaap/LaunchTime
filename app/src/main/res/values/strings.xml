@@ -2,8 +2,8 @@
     <string name="app_name">LaunchTime</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
     <string name="remove_shortcut">Remove</string>
     <string name="uninstall_app">Uninstall</string>
     <string name="app_was_uninstalled">Application was uninstalled</string>
@@ -60,4 +60,23 @@
     <string name="delete">Delete</string>
     <string name="cat_deleted">Category deleted</string>
     <string name="no_delete_cat">Couldn\'t delete category</string>
+
+
+
+    <string name="about_app">
+        <![CDATA[
+        <p>LaunchTime is opensource software. See the full license and sourcecode
+            <a href="https://github.com/quaap/LaunchTime">here</a>.</p>
+
+            <p>Report any issues, feedback, or suggestions <a href="https://github.com/quaap/LaunchTime/issues">here</a>.</p>
+
+
+            <p>This program was written by <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a></p>
+
+            ]]>
+    </string>
+    <string name="about">About</string>
+    <string name="pref_orient">Orientation</string>
+    <string name="pref_about">About</string>
+    <string name="pref_help_about">Help and about</string>
 </resources>
