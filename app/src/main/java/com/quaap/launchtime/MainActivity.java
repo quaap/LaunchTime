@@ -287,13 +287,17 @@ public class MainActivity extends Activity implements
         //Load the quickrow icons first
         for (String actvname: db.getAppCategoryOrder(QUICK_ROW_CAT)) {
             AppShortcut app = db.getApp(actvname);
-            app.loadAppIconAsync(mPackageMan);
+            if (app!=null) {
+                app.loadAppIconAsync(mPackageMan);
+            }
         }
 
         //Load the selected category icons
         for (String actvname: db.getAppCategoryOrder(mCategory)) {
             AppShortcut app = db.getApp(actvname);
-            app.loadAppIconAsync(mPackageMan);
+            if (app!=null) {
+                app.loadAppIconAsync(mPackageMan);
+            }
         }
 
 
