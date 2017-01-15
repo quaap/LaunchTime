@@ -164,15 +164,19 @@ public class MainActivity extends Activity implements
             }
         });
 
+        findViewById(R.id.iconarea_wrap).setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                return MainActivity.this.onDrag(mIconSheet, dragEvent);
+            }
+        });
+
+
         mSearchView = getSearchView();
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
 
         loadApplications();
-
-
-        // mCategoriesLayout
-
 
     }
 
