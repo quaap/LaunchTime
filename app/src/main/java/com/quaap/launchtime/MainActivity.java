@@ -1054,7 +1054,7 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.VISIBLE);
         mRemoveDropzone.setBackgroundColor(Color.RED);
 
-        if (mDragDropSource == mQuickRow) {
+        if (mDragDropSource == mQuickRow || (mBeingDragged!=null && mBeingDragged.isWidget())) {
             mRemoveAppText.setText(R.string.remove_shortcut);
         } else {
             mRemoveAppText.setText(R.string.uninstall_app);
