@@ -353,13 +353,17 @@ public class MainActivity extends Activity implements
         int w = getShortCutWidth(app);
         int h = getShortCutHeight(app);
 
-        AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
-
         float sw = getResources().getDimension(R.dimen.shortcut_width);
         float sh = getResources().getDimension(R.dimen.shortcut_height);
 
+        //int width = (int)(sw + 20) * mColumns;
+
+        float cellwidth = sw;
+        float cellheight = cellwidth + 5;  // ~square cells
+
+
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        int wcells = (int) Math.ceil(w / sw);
+        int wcells = (int) Math.ceil(w / cellwidth);
         if (wcells > 1) {
             int start = GridLayout.UNDEFINED;
             if (wcells>mColumns) {
@@ -368,19 +372,31 @@ public class MainActivity extends Activity implements
             if (wcells>1) start = 0;
             lp.columnSpec = GridLayout.spec(start, wcells);
 
-            Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start);
+            Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth*wcells);
         }
-        int hcells = (int) Math.ceil(h / sh);
+        int hcells = (int) Math.ceil(h / cellheight);
         if (hcells > 1) {
             lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells);
         }
 
-        if (h>1 && w>1 && appwid!=null) {
+        AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
 
-            appwid.updateAppWidgetSize(null, (int)sw, (int)sh, (int)(sw+20)*wcells, (int)(sh+20)*hcells);
+        if (appwid!=null) {
+
+            Bundle b = new Bundle();
+
+            appwid.updateAppWidgetSize(null, (int)sw, (int)sh, (int)(cellwidth*wcells), (int)(cellheight*hcells));
+
+            //appwid.updateAppWidgetSize(null, pxToDip(sw), pxToDip(sh), pxToDip(cellwidth*wcells), pxToDip(cellheight*hcells));
+
         }
 
         return lp;
+    }
+
+    public int pxToDip(float pixel){
+        float scale = getResources().getDisplayMetrics().density;
+        return (int)((pixel - 0.5f)/scale);
     }
 
     public void changeColumnCount(GridLayout gridLayout, int columnCount) {
