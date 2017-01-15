@@ -364,7 +364,6 @@ public class MainActivity extends Activity implements
         iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(MainActivity.this);
 
-
         final TextView categoryTab = createCategoryTab(category, iconSheet);
 
 
@@ -467,6 +466,10 @@ public class MainActivity extends Activity implements
                 //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
                 final int wDp = pxToDip(cellwidth*wcells);
                 final int hDp = pxToDip(cellheight*hcells);
+                lp.width = (int)(cellwidth*wcells);
+                lp.height = (int)(cellheight*hcells);
+
+                Log.d("widcol2", "w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
                 appwid.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1367,7 +1370,6 @@ public class MainActivity extends Activity implements
                 startActivity(settingsIntent);
             }
         });
-
     }
 
     private void toggleButtonBar() {
@@ -1440,6 +1442,7 @@ public class MainActivity extends Activity implements
         getWindowManager().getDefaultDisplay().getSize(size);
         return size;
     }
+
 
 
     enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
