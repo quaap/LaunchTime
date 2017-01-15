@@ -157,19 +157,9 @@ public class MainActivity extends Activity implements
                 return MainActivity.this.onDrag(mQuickRow, dragEvent);
             }
         });
-        mIconSheetHolder.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-                return MainActivity.this.onDrag(mIconSheet, dragEvent);
-            }
-        });
+        mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
 
-        findViewById(R.id.iconarea_wrap).setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-                return MainActivity.this.onDrag(mIconSheet, dragEvent);
-            }
-        });
+        findViewById(R.id.iconarea_wrap).setOnDragListener(iconSheetDropRedirector);
 
 
         mSearchView = getSearchView();
@@ -179,6 +169,13 @@ public class MainActivity extends Activity implements
         loadApplications();
 
     }
+
+    private View.OnDragListener iconSheetDropRedirector = new View.OnDragListener() {
+        @Override
+        public boolean onDrag(View view, DragEvent dragEvent) {
+            return MainActivity.this.onDrag(mIconSheet, dragEvent);
+        }
+    };
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
