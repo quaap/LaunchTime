@@ -17,12 +17,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -243,11 +245,17 @@ public class MainActivity extends Activity implements
     }
 
     private void checkConfig() {
-        if (isLandscape()) {
-            mColumns = mColumnsLandscape;
-        } else {
-            mColumns = mColumnsPortrait;
-        }
+
+        Point s = getScreenDimensions();
+        float shortcutw = getResources().getDimension(R.dimen.shortcut_width);
+        float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
+        mColumns = (int)((s.x - catwidth)/(shortcutw + 2));
+
+//        if (isLandscape()) {
+//            mColumns = mColumnsLandscape;
+//        } else {
+//            mColumns = mColumnsPortrait;
+//        }
 
         changeColumnCount(mIconSheet, mColumns);
 
@@ -566,7 +574,9 @@ public class MainActivity extends Activity implements
             for (AppShortcut app : quickRowApps) {
                 if (app.getActivityName().equals(actvname)) {
                     ViewGroup item = getShortcutView(app, true);
-                    mQuickRow.addView(item);
+                    GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                    lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
+                    mQuickRow.addView(item, lp);
                 }
             }
         }
@@ -1380,6 +1390,13 @@ public class MainActivity extends Activity implements
     public boolean isLandscape() {
         int orientation = getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    public Point getScreenDimensions() {
+
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        return size;
     }
 
 

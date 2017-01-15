@@ -4,28 +4,25 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
 
-    <dimen name="shortcut_width">90dp</dimen>
-    <dimen name="shortcut_height">90dp</dimen>
+    <dimen name="shortcut_width">80dp</dimen>
+    <dimen name="shortcut_height">80dp</dimen>
 
     <dimen name="icon_width">55dp</dimen>
-    <dimen name="icon_label_width">80dp</dimen>
+    <dimen name="icon_label_width">77dp</dimen>
     <dimen name="icont_label_height">32dp</dimen>
     <dimen name="shortcut_fontsize">12sp</dimen>
     <dimen name="shortcut_padding_side">5dp</dimen>
 
-
-
-
-    <dimen name="btnbar_height">75dp</dimen>
     <dimen name="btnbar_textsize">16dp</dimen>
 
 
-    <dimen name="quickbar_height">75dp</dimen>
+    <dimen name="quickbar_height">67dp</dimen>
 
     <dimen name="shortcut_sm_width">50dp</dimen>
     <dimen name="shortcut_sm_height">50dp</dimen>
     <dimen name="icon_sm_width">40dp</dimen>
     <dimen name="shortcut_sm_fontsize">12sp</dimen>
+    <dimen name="cattabbar_width">110dp</dimen>
 
 
 </resources>

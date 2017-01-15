@@ -39,10 +39,12 @@
     <string name="recent_apps">Recent Apps</string>
     <string name="short_name">Short Name</string>
     <string name="full_name">Full Name (optional)</string>
-    <string name="add_widgets">Add Widgets</string>
-    <string name="add_category">Add Category</string>
-    <string name="rename_category">Rename Category</string>
-    <string name="delete_category">Delete Category</string>
+
+    <string name="add_widgets">Add\nWidgets</string>
+    <string name="add_category">Add\nCategory</string>
+    <string name="rename_category">Rename\nCategory</string>
+    <string name="delete_category">Delete\nCategory</string>
+
     <string name="remove">Remove</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>

@@ -61,7 +61,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="110dp"
+            android:layout_width="@dimen/cattabbar_width"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:id="@+id/category_tabs_wrap">
@@ -97,110 +97,115 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btnbar_height"
-        android:id="@+id/layout_icons_bottomframe"
-        android:layout_weight="1"
-        android:visibility="gone"
-        android:gravity="center_vertical"
-        android:background="#55bababa">
-
-        <TextView
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_widgets"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/add_widgets"
-            android:textSize="@dimen/btnbar_textsize"
-            android:layout_margin="2dp"
-            android:background="@color/btn_background"
-            android:textColor="@color/textcolor"
-            android:visibility="visible" />
-
-        <TextView
-            android:layout_width="@dimen/shortcut_width"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_add_cat"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/add_category"
-            android:textSize="@dimen/btnbar_textsize"
-            android:layout_margin="2dp"
-            android:background="@color/btn_background"
-            android:textColor="@color/textcolor" />
-
-        <TextView
-            android:layout_width="@dimen/shortcut_width"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_rename_cat"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/rename_category"
-            android:textSize="@dimen/btnbar_textsize"
-            android:layout_margin="2dp"
-            android:background="@color/btn_background"
-            android:textColor="@color/textcolor" />
-
-        <TextView
-            android:layout_width="@dimen/shortcut_width"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_delete_cat"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/delete_category"
-            android:textSize="@dimen/btnbar_textsize"
-            android:layout_margin="2dp"
-            android:background="@color/btn_background"
-            android:textColor="@color/textcolor" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/quickbar_height"
-        android:layout_weight="1"
-        android:id="@+id/quickrow_wrap">
+        android:layout_weight="1">
 
-        <HorizontalScrollView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollIndicators="start|end"
-            android:background="#22aaccaa"
-            android:layout_weight="8"
-            android:id="@+id/layout_quickrow_scroll">
-
-            <GridLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/quickbar_height"
-                android:id="@+id/layout_quickrow"
-                android:useDefaultMargins="false"
-                android:alignmentMode="alignBounds">
-
-
-            </GridLayout>
-        </HorizontalScrollView>
-
-        <FrameLayout
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="#ddff3333"
-            android:id="@+id/remove_dropzone"
-            android:layout_weight="1">
+            android:id="@+id/quickrow_wrap">
 
-            <TextView
-                android:text="@string/remove"
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollIndicators="start|end"
+                android:background="#22aaccaa"
+                android:layout_weight="8"
+                android:id="@+id/layout_quickrow_scroll">
+
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/quickbar_height"
+                    android:id="@+id/layout_quickrow"
+                    android:useDefaultMargins="false"
+                    android:alignmentMode="alignBounds">
+
+
+                </GridLayout>
+            </HorizontalScrollView>
+
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/remove_dz_txt"
-                android:gravity="center"
-                android:layout_gravity="start"
-                android:rotation="-90" />
-        </FrameLayout>
+                android:background="#ddff3333"
+                android:id="@+id/remove_dropzone"
+                android:layout_weight="1">
 
-    </LinearLayout>
+                <TextView
+                    android:text="@string/remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/remove_dz_txt"
+                    android:gravity="center"
+                    android:layout_gravity="start"
+                    android:rotation="-90" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_icons_bottomframe"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:background="#ffbababa">
+
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_widgets"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/add_widgets"
+                android:textSize="@dimen/btnbar_textsize"
+                android:layout_margin="2dp"
+                android:background="@color/btn_background"
+                android:textColor="@color/textcolor"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="@dimen/shortcut_width"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_add_cat"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/add_category"
+                android:textSize="@dimen/btnbar_textsize"
+                android:layout_margin="2dp"
+                android:background="@color/btn_background"
+                android:textColor="@color/textcolor" />
+
+            <TextView
+                android:layout_width="@dimen/shortcut_width"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_rename_cat"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/rename_category"
+                android:textSize="@dimen/btnbar_textsize"
+                android:layout_margin="2dp"
+                android:background="@color/btn_background"
+                android:textColor="@color/textcolor" />
+
+            <TextView
+                android:layout_width="@dimen/shortcut_width"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_delete_cat"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/delete_category"
+                android:textSize="@dimen/btnbar_textsize"
+                android:layout_margin="2dp"
+                android:background="@color/btn_background"
+                android:textColor="@color/textcolor" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>
