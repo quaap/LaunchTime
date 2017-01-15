@@ -336,7 +336,7 @@ public class MainActivity extends Activity implements
         for (String actvname : db.getAppLaunchedList()) {
             AppShortcut app = db.getApp(actvname);
 
-            addAppToIconSheet(iconSheet, app);
+            addAppToIconSheet(iconSheet, app, false);
 
         }
     }
@@ -354,21 +354,21 @@ public class MainActivity extends Activity implements
             for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
                 AppShortcut app = it.next();
                 if (actvname.equals(app.getActivityName())) {
-                    addAppToIconSheet(iconSheet, app);
+                    addAppToIconSheet(iconSheet, app, true);
                     it.remove();
                 }
             }
         }
 
         for (AppShortcut app : apps) {
-            addAppToIconSheet(iconSheet, app);
+            addAppToIconSheet(iconSheet, app, true);
         }
 
     }
 
-    private void addAppToIconSheet(GridLayout iconSheet, AppShortcut app) {
+    private void addAppToIconSheet(GridLayout iconSheet, AppShortcut app, boolean reuse) {
         if (app != null && isAppInstalled(app.getPackageName())) {
-            ViewGroup item = getShortcutView(app);
+            ViewGroup item = getShortcutView(app, false, reuse);
             if (!app.iconLoaded()) {
                 app.loadAppIconAsync(mPackageMan);
             }
@@ -560,14 +560,18 @@ public class MainActivity extends Activity implements
     }
 
     public ViewGroup getShortcutView(final AppShortcut app) {
-        return getShortcutView(app, false);
+        return getShortcutView(app, false, true);
+    }
+    public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
+        return getShortcutView(app, smallIcon, true);
     }
 
-    public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
+    public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon, boolean reuse) {
 
 
+        if (smallIcon) reuse = false;
         ViewGroup item;
-        if (!smallIcon) {
+        if (reuse) {
             item = mAppShortcutViews.get(app);
             if (item!=null) return item;
         }
@@ -635,7 +639,7 @@ public class MainActivity extends Activity implements
         item.setOnLongClickListener(this);
         item.setOnDragListener(this);
 
-        if (!smallIcon) {
+        if (reuse) {
             mAppShortcutViews.put(app, item);
         }
         return item;

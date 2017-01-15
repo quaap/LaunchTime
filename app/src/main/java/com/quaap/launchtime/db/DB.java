@@ -236,7 +236,7 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(
                 "select distinct " + ACTVNAME + " _id, " + LABEL + " label " +
                         " from " + APP_TABLE +
-                        " where " + LABEL + " like ?" +
+                        " where " + LABEL + " like ? and " +  ISWIDGET + "=0 " +
                         " order by 2 ",
                 new String[]{filter});
 
