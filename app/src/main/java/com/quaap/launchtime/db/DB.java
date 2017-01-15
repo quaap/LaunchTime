@@ -166,7 +166,7 @@ public class DB extends SQLiteOpenHelper {
             boolean widget = cursor.getShort(4) == 1;
 
             // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-            appShortcut = new AppShortcut(actvname, pkgname, label, catID, widget);
+            appShortcut = AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget);
         }
         cursor.close();
         return appShortcut;
@@ -189,7 +189,7 @@ public class DB extends SQLiteOpenHelper {
             if (widget) {
                 Log.d("db", "Found widget: " + actvname + " " + pkgname);
             }
-            apps.add(new AppShortcut(actvname, pkgname, label, catID, widget));
+            apps.add(AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget));
         }
         cursor.close();
 

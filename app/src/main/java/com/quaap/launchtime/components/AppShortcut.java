@@ -8,7 +8,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by tom on 1/8/17.
@@ -34,8 +36,37 @@ public class AppShortcut implements Comparable<AppShortcut> {
     private volatile Drawable mIconDrawable;
     private volatile ImageView mIconImage;
 
+    private static Map<String,AppShortcut> mAppShortcuts = new HashMap<>();
 
-    public AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
+//    private static AppShortcut getFromCache(String activityName) {
+//
+//    }
+
+    public static AppShortcut createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
+        AppShortcut app = mAppShortcuts.get(activityName);
+        if (app == null) {
+            app = new AppShortcut(activityName, packageName, label, category, isWidget);
+            mAppShortcuts.put(activityName, app);
+        }
+        return app;
+    }
+
+    public static AppShortcut createAppShortcut(PackageManager pm, ResolveInfo ri) {
+        String activityName = ri.activityInfo.name;
+        AppShortcut app = mAppShortcuts.get(activityName);
+        if (app == null) {
+            app = new AppShortcut(pm, ri);
+            mAppShortcuts.put(activityName, app);
+        }
+        return app;
+    }
+
+    public static AppShortcut createAppShortcut(AppShortcut shortcut) {
+        return new AppShortcut(shortcut);
+    }
+
+
+    private AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
         mPackageName = packageName;
         mLabel = label;
@@ -44,7 +75,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
 
-    public AppShortcut(AppShortcut shortcut) {
+    private AppShortcut(AppShortcut shortcut) {
         mActivityName = shortcut.getActivityName();
         mPackageName = shortcut.getPackageName();
         mLabel = shortcut.getLabel();
@@ -64,7 +95,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 //        mWidget = false;
 //    }
 
-    public AppShortcut(PackageManager pm, ResolveInfo ri) {
+    private AppShortcut(PackageManager pm, ResolveInfo ri) {
         mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
@@ -76,6 +107,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
         loadAppIconAsync(pm);
     }
+
 
     public String getLabel() {
         return mLabel;

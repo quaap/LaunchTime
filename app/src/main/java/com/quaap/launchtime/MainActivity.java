@@ -104,8 +104,11 @@ public class MainActivity extends Activity implements
     private int mColumnsLandscape = 5;
     private int mColumnsPortrait = 3;
     private int mColumnMargin = 12;
-    private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
     private int categoryTabWidth = 108;
+
+    private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
+    public Map<AppShortcut,ViewGroup> mAppShortcutViews = new HashMap<>();
+
 
     private BroadcastReceiver installReceiver = new BroadcastReceiver() {
         @Override
@@ -122,7 +125,7 @@ public class MainActivity extends Activity implements
                     Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
                     ResolveInfo ri = MainActivity.this.getPackageManager().resolveActivity(packageIntent, 0);
 
-                    AppShortcut app = new AppShortcut(MainActivity.this.getPackageManager(), ri);
+                    AppShortcut app = AppShortcut.createAppShortcut(MainActivity.this.getPackageManager(), ri);
                     getDB().addApp(app);
                 } catch (Exception e) {
                     Log.e("InstallCatch", "Could not get " + packageName, e);
@@ -465,7 +468,7 @@ public class MainActivity extends Activity implements
                 if (dbactvnames.contains(actvname) && app != null) {
                     app.loadAppIconAsync(mPackageMan);
                 } else {
-                    app = new AppShortcut(mPackageMan, ri);
+                    app = AppShortcut.createAppShortcut(mPackageMan, ri);
                     newapps.add(app);
                 }
 
@@ -506,7 +509,7 @@ public class MainActivity extends Activity implements
         for (AppShortcut app : shortcuts) {
 
             if (quickRowOrder.contains(app.getActivityName())) {
-                AppShortcut qapp = new AppShortcut(app);
+                AppShortcut qapp = AppShortcut.createAppShortcut(app);
                 qapp.loadAppIconAsync(mPackageMan);
                 quickRowApps.add(qapp);
             }
@@ -541,7 +544,13 @@ public class MainActivity extends Activity implements
 
     public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
 
+
         ViewGroup item;
+        if (!smallIcon) {
+            item = mAppShortcutViews.get(app);
+            if (item!=null) return item;
+        }
+
         if (app.isWidget()) {
             item = new FrameLayout(this);
 
@@ -604,6 +613,10 @@ public class MainActivity extends Activity implements
         item.setClickable(true);
         item.setOnLongClickListener(this);
         item.setOnDragListener(this);
+
+        if (!smallIcon) {
+            mAppShortcutViews.put(app, item);
+        }
         return item;
     }
 
@@ -620,7 +633,7 @@ public class MainActivity extends Activity implements
         String label = pkgname;
 
 
-        AppShortcut app = new AppShortcut(actvname, pkgname, label, mCategory, true);
+        AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
 
         getDB().addApp(app);
         getDB().addAppCategoryOrder(mCategory, app.getActivityName());
@@ -903,7 +916,7 @@ public class MainActivity extends Activity implements
                         }
                     }
 
-                    view2 = getShortcutView(new AppShortcut((AppShortcut) view2.getTag()), true);
+                    view2 = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) view2.getTag()), true);
 
                 }
 
