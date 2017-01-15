@@ -47,6 +47,7 @@ import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -379,45 +380,61 @@ public class MainActivity extends Activity implements
 
     @NonNull
     private GridLayout.LayoutParams getAppShortcutLayoutParams(AppShortcut app) {
+
+        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+
         int w = getShortCutWidth(app);
         int h = getShortCutHeight(app);
 
-        float sw = getResources().getDimension(R.dimen.shortcut_width);
-        float sh = getResources().getDimension(R.dimen.shortcut_height);
+        if (w>0 || h>0) {
+            float sw = getResources().getDimension(R.dimen.shortcut_width);
+            float sh = getResources().getDimension(R.dimen.shortcut_height);
 
-        //int width = (int)(sw + 20) * mColumns;
+            //int width = (int)(sw + 20) * mColumns;
 
-        float cellwidth = sw;
-        float cellheight = cellwidth + 5;  // ~square cells
+            float cellwidth = sw;
+            float cellheight = cellwidth + 5;  // ~square cells
 
 
-        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        int wcells = (int) Math.ceil(w / cellwidth);
-        if (wcells > 1) {
-            int start = GridLayout.UNDEFINED;
-            if (wcells>mColumns) {
-                wcells=mColumns;
+            int wcells = (int) Math.ceil(w / cellwidth);
+            if (wcells > 1) {
+                int start = GridLayout.UNDEFINED;
+                if (wcells > mColumns) {
+                    wcells = mColumns;
+                }
+                if (wcells > 1) start = 0;
+                lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
+
+
+
+                Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
             }
-            if (wcells>1) start = 0;
-            lp.columnSpec = GridLayout.spec(start, wcells);
+            int hcells = (int) Math.ceil(h / cellheight);
+            if (hcells > 1) {
+                lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
+            }
 
-            Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth*wcells);
-        }
-        int hcells = (int) Math.ceil(h / cellheight);
-        if (hcells > 1) {
-            lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells);
-        }
+            final AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
 
-        AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
+            if (appwid != null) {
 
-        if (appwid!=null) {
+                Bundle b = new Bundle();
 
-            Bundle b = new Bundle();
+                //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
+                final int wDp = pxToDip(cellwidth*wcells);
+                final int hDp = pxToDip(cellheight*hcells);
+                appwid.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        appwid.updateAppWidgetSize(null, wDp, hDp, wDp, hDp);
+                        if (appwid.getParent()!=null) {
+                            appwid.getParent().requestLayout();
+                        }
+                        appwid.requestLayout();
+                    }
+                }, 1000);
 
-            appwid.updateAppWidgetSize(null, (int)sw, (int)sh, (int)(cellwidth*wcells), (int)(cellheight*hcells));
-
-            //appwid.updateAppWidgetSize(null, pxToDip(sw), pxToDip(sh), pxToDip(cellwidth*wcells), pxToDip(cellheight*hcells));
-
+            }
         }
 
         return lp;
@@ -453,6 +470,9 @@ public class MainActivity extends Activity implements
                 view.setLayoutParams(lp);
             }
             gridLayout.setColumnCount(columnCount);
+
+            Collections.reverse(childViews);
+
             for (View view: childViews) {
                 gridLayout.addView(view);
             }
