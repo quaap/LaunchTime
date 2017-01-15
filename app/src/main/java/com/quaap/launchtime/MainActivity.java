@@ -165,13 +165,14 @@ public class MainActivity extends Activity implements
         });
 
         mSearchView = getSearchView();
+        mPrefs = getSharedPreferences("default", MODE_PRIVATE);
+        mCategory = mPrefs.getString("category", Categories.CAT_TALK);
 
         loadApplications();
 
 
         // mCategoriesLayout
 
-        mPrefs = getSharedPreferences("default", MODE_PRIVATE);
 
     }
 
@@ -280,9 +281,27 @@ public class MainActivity extends Activity implements
 
         final DB db = getDB();
 
+        //Make sure the displayed icons load first
+        //Load the quickrow icons first
+        for (String actvname: db.getAppCategoryOrder(QUICK_ROW_CAT)) {
+            AppShortcut app = db.getApp(actvname);
+            app.loadAppIconAsync(mPackageMan);
+        }
+
+        //Load the selected category icons
+        for (String actvname: db.getAppCategoryOrder(mCategory)) {
+            AppShortcut app = db.getApp(actvname);
+            app.loadAppIconAsync(mPackageMan);
+        }
+
+
+        //Look for new apps
         final List<AppShortcut> shortcuts = processActivities(db);
 
+        //loads the quickrow or adds default apps if it is empty
         processQuickApps(db, shortcuts);
+
+
 
         for (final String category : db.getCategories()) {
 
@@ -453,6 +472,7 @@ public class MainActivity extends Activity implements
 
         // Get all activities that have those filters
         List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
+
 
         for (int i = 0; i < activities.size(); i++) {
 
