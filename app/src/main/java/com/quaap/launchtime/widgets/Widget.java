@@ -54,6 +54,10 @@ public class Widget {
 
     }
 
+    public void done() {
+        mAppWidgetHost.stopListening();
+    }
+
     public void popupSelectWidget() {
         // Allocate widget id and start widget selection activity
         int appWidgetId = this.mAppWidgetHost.allocateAppWidgetId();

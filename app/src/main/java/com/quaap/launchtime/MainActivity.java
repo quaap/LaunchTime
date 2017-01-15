@@ -88,7 +88,7 @@ public class MainActivity extends Activity implements
     private volatile ViewGroup mDragDropSource;
     private SharedPreferences mPrefs;
     private View mBeingUninstalled;
-    private Widget mWidgetHost;
+    private Widget mWidgetHelper;
     private ViewGroup mSearchView;
     private int textColor;
     private int textColorInvert;
@@ -142,7 +142,7 @@ public class MainActivity extends Activity implements
         }
         mPackageMan = getApplicationContext().getPackageManager();
 
-        mWidgetHost = new Widget(this);
+        mWidgetHelper = new Widget(this);
 
         setColors();
         initUI();
@@ -197,6 +197,12 @@ public class MainActivity extends Activity implements
         intentFilter.addDataScheme("package");
 
         registerReceiver(installReceiver, intentFilter);
+    }
+
+    @Override
+    public void onDestroy() {
+        mWidgetHelper.done();
+        super.onDestroy();
     }
 
     private void switchCategory(String category) {
@@ -541,7 +547,7 @@ public class MainActivity extends Activity implements
 
             AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
             if (appwid == null) {
-                appwid = mWidgetHost.loadWidget(app);
+                appwid = mWidgetHelper.loadWidget(app);
                 if (appwid!=null) {
                     mLoadedWidgets.put(app.getActivityName(), appwid);
                     AppWidgetProviderInfo pinfo = appwid.getAppWidgetInfo();
@@ -602,7 +608,7 @@ public class MainActivity extends Activity implements
     }
 
     private void setupWidget() {
-        mWidgetHost.popupSelectWidget();
+        mWidgetHelper.popupSelectWidget();
     }
 
     private void addWidget(ComponentName cn) {
@@ -983,7 +989,7 @@ public class MainActivity extends Activity implements
 
             }
         } else {
-            ComponentName cn = mWidgetHost.onActivityResult(requestCode, resultCode, data);
+            ComponentName cn = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
             if (cn == null) {
                 super.onActivityResult(requestCode, resultCode, data);
             } else {
