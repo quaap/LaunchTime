@@ -121,31 +121,6 @@ public class MainActivity extends Activity implements
     public Map<AppShortcut,ViewGroup> mAppShortcutViews = new HashMap<>();
 
 
-//    private BroadcastReceiver installReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
-//                Uri data = intent.getData();
-//                String packageName = data.getEncodedSchemeSpecificPart();
-//                Log.i("InstallCatch", "The installed package is: " + packageName);
-//
-//                try {
-//                    PackageManager pm = MainActivity.this.getPackageManager();
-//
-//                    Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
-//                    ResolveInfo ri = MainActivity.this.getPackageManager().resolveActivity(packageIntent, 0);
-//
-//                    AppShortcut app = AppShortcut.createAppShortcut(MainActivity.this.getPackageManager(), ri);
-//                    getDB().addApp(app);
-//                } catch (Exception e) {
-//                    Log.e("InstallCatch", "Could not get " + packageName, e);
-//                }
-//
-//            }
-//        }
-//    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,8 +175,11 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onPause() {
-       // unregisterReceiver(installReceiver);
-        mPrefs.edit().putString("category", mCategory).apply();
+
+        mPrefs.edit()
+                .putInt("scrollpos", mIconSheetScroller.getScrollY())
+                .putString("category", mCategory)
+                .apply();
         super.onPause();
     }
 
@@ -210,11 +188,14 @@ public class MainActivity extends Activity implements
         super.onResume();
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         switchCategory(mCategory);
+        mIconSheetScroller.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mIconSheetScroller.smoothScrollTo(0, mPrefs.getInt("scrollpos",0));
 
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-//        intentFilter.addDataScheme("package");
-       // registerReceiver(installReceiver, intentFilter);
+            }
+        },100);
+
     }
 
     @Override
@@ -252,6 +233,15 @@ public class MainActivity extends Activity implements
 
 
         showButtonBar(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mIconSheetScroller.getScrollY()>0) {
+            mIconSheetScroller.smoothScrollTo(0, 0);
+        } else if (!mCategory.equals(Categories.CAT_TALK)){
+            switchCategory(Categories.CAT_TALK);
+        }
     }
 
     private void checkConfig() {
@@ -407,6 +397,9 @@ public class MainActivity extends Activity implements
             addAppToIconSheet(iconSheet, app, true);
         }
 
+        if (apps.size()>0) {
+            getDB().setAppCategoryOrder(category, iconSheet);
+        }
     }
 
     private void addAppToIconSheet(GridLayout iconSheet, AppShortcut app, boolean reuse) {
