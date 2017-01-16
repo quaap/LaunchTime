@@ -39,6 +39,7 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +76,7 @@ public class MainActivity extends Activity implements
     private ViewGroup mIconSheetHolder;
     private Map<String, GridLayout> mIconSheets;
     private GridLayout mIconSheet;
+    private ScrollView mCategoriesScroller;
     private Map<String, TextView> mCategoryTabs;
     private Map<View, String> mRevCategoryMap;
     private volatile String mCategory;
@@ -961,7 +963,15 @@ public class MainActivity extends Activity implements
                         }
                         break;
 
-
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        int thresh = mCategoriesScroller.getHeight()/6;
+                        // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
+                        if (view.getTop() + event.getY() < mCategoriesScroller.getScrollY() + thresh) {
+                            mCategoriesScroller.smoothScrollBy(0,-5);
+                        } else if (view.getTop() + event.getY() > mCategoriesScroller.getScrollY()+mCategoriesScroller.getHeight() - thresh) {
+                            mCategoriesScroller.smoothScrollBy(0, 5);
+                        }
+                        break;
                     case DragEvent.ACTION_DRAG_ENDED:
                         mBeingDragged = null;
                         hideRemoveDropzone();
@@ -1025,7 +1035,7 @@ public class MainActivity extends Activity implements
                 break;
 
             case DragEvent.ACTION_DRAG_LOCATION:
-                int thresh = mScreenDim.y/6;
+                int thresh = mIconSheetScroller.getHeight()/6;
                // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
                 if (view.getTop() + event.getY() < mIconSheetScroller.getScrollY() + thresh) {
                     mIconSheetScroller.smoothScrollBy(0,-10);
@@ -1398,6 +1408,8 @@ public class MainActivity extends Activity implements
         mRemoveDropzone = (FrameLayout) findViewById(R.id.remove_dropzone);
         mRemoveDropzone.setOnDragListener(this);
         mRemoveAppText = (TextView) findViewById(R.id.remove_dz_txt);
+
+        mCategoriesScroller = (ScrollView)findViewById(R.id.layout_categories_scroller);
 
         hideRemoveDropzone();
 
