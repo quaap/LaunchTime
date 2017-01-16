@@ -72,6 +72,9 @@ public class AppShortcut implements Comparable<AppShortcut> {
         mLabel = label;
         mCategory = category;
         mWidget = isWidget;
+        if (mCategory==null) {
+            mCategory = Categories.getCategoryForPackage(mPackageName);
+        }
     }
 
 
@@ -95,6 +98,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 //        mWidget = false;
 //    }
 
+    public static final String LINK_SEP = ":IS_APP_LINK:";
     private AppShortcut(PackageManager pm, ResolveInfo ri) {
         mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
@@ -108,6 +112,21 @@ public class AppShortcut implements Comparable<AppShortcut> {
         loadAppIconAsync(pm);
     }
 
+    public boolean isLink() {
+        return mActivityName.contains(LINK_SEP);
+    }
+
+    public String getLinkBaseActivityName() {
+       return mActivityName.split(LINK_SEP,2)[0];
+    }
+
+    public String getLinkUri() {
+        String [] parts = mActivityName.split(LINK_SEP,2);
+        if (parts.length==2) {
+            return parts[1];
+        }
+        return null;
+    }
 
     public String getLabel() {
         return mLabel;
@@ -174,7 +193,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
                 Drawable app_icon = null;
                 try {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setClassName(mPackageName, mActivityName);
+                    intent.setClassName(mPackageName, getLinkBaseActivityName());
                     app_icon = pm.getActivityIcon(intent);
                     //app_icon = pm.getApplicationIcon(mPackageName);
 

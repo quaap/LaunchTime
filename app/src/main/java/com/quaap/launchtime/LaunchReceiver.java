@@ -56,6 +56,13 @@ public class LaunchReceiver extends BroadcastReceiver {
 
             DB db = ((GlobState)context.getApplicationContext()).getDB();
             db.deleteApp(packageName,true);
+        } else if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
+            Log.d("ShortcutCatch", "intent received");
+            if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+                Log.d("ShortcutCatch", "Shortcut ID: " + intent.getIntExtra(Intent.EXTRA_TEXT, 0));
+                Log.d("ShortcutCatch", "Shortcut name: " + intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME));
+            }
+
         }
 
     }

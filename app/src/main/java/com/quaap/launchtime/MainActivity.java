@@ -346,12 +346,21 @@ public class MainActivity extends Activity implements
     }
 
     public void launchApp(final AppShortcut app) {
-        launchApp(app.getActivityName(), app.getPackageName());
-    }
+        String activityname = app.getLinkBaseActivityName();
+        String packagename = app.getPackageName();
+        String uristr = null;
+        if (app.isLink()) {
+            uristr = app.getLinkUri();
+        }
+        Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
 
-    public void launchApp(String activityname, String packagename) {
         try {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
+            Intent intent;
+            if (uristr==null) {
+                intent = new Intent(Intent.ACTION_MAIN);
+            } else {
+                intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uristr));
+            }
             intent.setClassName(packagename, activityname);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -570,6 +579,31 @@ public class MainActivity extends Activity implements
             for (View view: childViews) {
                 gridLayout.addView(view);
             }
+        }
+    }
+
+
+    private void listAll() {
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+
+
+        // Get all activities that have those filters
+        List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
+
+
+        for (int i = 0; i < activities.size(); i++) {
+
+            AppShortcut app;
+
+            ResolveInfo resolveInfo = activities.get(i);
+            ActivityInfo activityInfo = resolveInfo.activityInfo;
+            String name = activityInfo.name;
+            String packageName = activityInfo.applicationInfo.packageName;
+            String className = activityInfo.applicationInfo.className;
+            String label = resolveInfo.loadLabel(mPackageMan).toString();
+            boolean enabled = activityInfo.enabled;
+            boolean exported = activityInfo.exported;
+
         }
     }
 
