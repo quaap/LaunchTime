@@ -1,6 +1,7 @@
 package com.quaap.launchtime.components;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import com.quaap.launchtime.R;
 
@@ -8,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -30,6 +32,7 @@ import java.util.Map;
  */
 public class Categories {
 
+    private static Resources resources;
 
     //Don't change these values here.  Change them in strings.xml
     public static final String CAT_SEARCH = "Search";
@@ -55,17 +58,26 @@ public class Categories {
             CAT_OTHER,
             CAT_HIDDEN
     };
-    private static Map<String, String> mPrefCategories;
+    private static WeakReference<Map<String, String>> mPrefCategoriesRef;
     private static Map<String, String[]> mCategorKeywords;
 
     public static void init(Context context) {
-        mPrefCategories = getPredefinedCategories(context);
-        mCategorKeywords = getCategoryKeywords(context);
+        resources = context.getResources();
+        mPrefCategoriesRef = new WeakReference<Map<String, String>>(getPredefinedCategories());
+        mCategorKeywords = getCategoryKeywords();
     }
 
     public static String getCategoryForPackage(String pkgname) {
 
-        String category = mPrefCategories.get(pkgname);
+        Map<String, String> prefCat;
+        synchronized (Categories.class) {
+            prefCat = mPrefCategoriesRef.get();
+            if (prefCat == null) {
+                prefCat = getPredefinedCategories();
+                mPrefCategoriesRef = new WeakReference<Map<String, String>>(prefCat);
+            }
+        }
+        String category = prefCat.get(pkgname);
         if (category == null) {
             OUTER:
             for (String cat : mCategorKeywords.keySet()) {
@@ -122,25 +134,26 @@ public class Categories {
         return context.getString(catmap.get(category));
     }
 
-    public static Map<String, String[]> getCategoryKeywords(Context ctx) {
+    public static Map<String, String[]> getCategoryKeywords() {
         Map<String, String[]> keywordsDict = new LinkedHashMap<>();
-
-        keywordsDict.put(CAT_TALK, new String[]{"phone", "conv", "call", "sms", "mms", "contacts", "stk", "mail", "twitter", "whatsapp", "outlook", "talk", "facebook", "social", "chat"});  // stk stands for "SIM Toolkit"
-        keywordsDict.put(CAT_GAMES, new String[]{"game", "play", "puzz", "com.ea", "com.king", "com.halfbrick"});
-        keywordsDict.put(CAT_INTERNET, new String[]{"download", "vending", "browser", "maps", "dropbox", "chrome", "drive"});
-        keywordsDict.put(CAT_MEDIA, new String[]{"radio", "voice", "audio", "speech", "pod", "music", "sound", "mp3", "record", "sfx", "mic"});
-        keywordsDict.put(CAT_GRAPHICS, new String[]{"pic", "pix", "gallery", "photo", "foto", "cam", "tube", "vid", "video", "draw", "graph", "gfx", "image", "img", "svg", "png"});
-        keywordsDict.put(CAT_ACCESSORIES, new String[]{"editor", "calc", "calendar", "organize", "clock", "time", "viewer", "file", "manager", "memo", "note"});
-        keywordsDict.put(CAT_SETTINGS, new String[]{"setting", "config", "keyboard", "launch", "sync", "backup", "prefer", "prefs"});
+        
+        keywordsDict.put(CAT_TALK, resources.getStringArray(R.array.CAT_TALK));
+        keywordsDict.put(CAT_GAMES, resources.getStringArray(R.array.CAT_GAMES));
+        keywordsDict.put(CAT_INTERNET, resources.getStringArray(R.array.CAT_INTERNET));
+        keywordsDict.put(CAT_MEDIA, resources.getStringArray(R.array.CAT_MEDIA));
+        keywordsDict.put(CAT_GRAPHICS, resources.getStringArray(R.array.CAT_GRAPHICS));
+        keywordsDict.put(CAT_ACCESSORIES, resources.getStringArray(R.array.CAT_ACCESSORIES));
+        keywordsDict.put(CAT_SETTINGS, resources.getStringArray(R.array.CAT_SETTINGS));
 
 
         return keywordsDict;
     }
 
-    public static Map<String, String> getPredefinedCategories(Context ctx) {
+    public static Map<String, String> getPredefinedCategories() {
         Map<String, String> predefCategories = new HashMap<>();
 
-        InputStream inputStream = ctx.getResources().openRawResource(R.raw.package_category);
+
+        InputStream inputStream = resources.openRawResource(R.raw.package_category);
         String line;
         String[] lineSplit;
 
@@ -148,7 +161,7 @@ public class Categories {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
             while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty()) {
+                if (!line.isEmpty() && !line.startsWith("#")) {
                     lineSplit = line.split("=");
                     predefCategories.put(lineSplit[0], lineSplit[1]);
                 }

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="CAT_TALK">
+        <item>phone</item>
+        <item>conv</item>
+        <item>call</item>
+        <item>sms</item>
+        <item>mms</item>
+        <item>contacts</item>
+        <item>stk</item>
+        <item>mail</item>
+        <item>twitter</item>
+        <item>whatsapp</item>
+        <item>outlook</item>
+        <item>talk</item>
+        <item>facebook</item>
+        <item>social</item>
+        <item>chat</item>
+    </string-array>
+    <string-array name="CAT_GAMES">
+        <item>game</item>
+        <item>play</item>
+        <item>puzz</item>
+        <item>com.ea</item>
+        <item>com.king</item>
+        <item>com.halfbrick</item>
+    </string-array>
+    <string-array name="CAT_INTERNET">
+        <item>download</item>
+        <item>vending</item>
+        <item>browser</item>
+        <item>maps</item>
+        <item>dropbox</item>
+        <item>chrome</item>
+        <item>drive</item>
+    </string-array>
+    <string-array name="CAT_MEDIA">
+        <item>radio</item>
+        <item>voice</item>
+        <item>audio</item>
+        <item>speech</item>
+        <item>pod</item>
+        <item>music</item>
+        <item>sound</item>
+        <item>mp3</item>
+        <item>record</item>
+        <item>sfx</item>
+        <item>mic</item>
+    </string-array>
+    <string-array name="CAT_GRAPHICS">
+        <item>pic</item>
+        <item>pix</item>
+        <item>gallery</item>
+        <item>photo</item>
+        <item>foto</item>
+        <item>cam</item>
+        <item>tube</item>
+        <item>vid</item>
+        <item>movie</item>
+        <item>flick</item>
+        <item>flix</item>
+        <item>video</item>
+        <item>draw</item>
+        <item>graph</item>
+        <item>gfx</item>
+        <item>image</item>
+        <item>img</item>
+        <item>svg</item>
+        <item>png</item>
+    </string-array>
+    <string-array name="CAT_ACCESSORIES">
+        <item>editor</item>
+        <item>calc</item>
+        <item>calendar</item>
+        <item>organize</item>
+        <item>clock</item>
+        <item>time</item>
+        <item>viewer</item>
+        <item>file</item>
+        <item>manager</item>
+        <item>memo</item>
+        <item>note</item>
+    </string-array>
+    <string-array name="CAT_SETTINGS">
+        <item>setting</item>
+        <item>config</item>
+        <item>keyboard</item>
+        <item>launch</item>
+        <item>sync</item>
+        <item>backup</item>
+        <item>prefer</item>
+        <item>prefs</item>
+    </string-array>
+
+</resources>
