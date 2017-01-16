@@ -219,6 +219,7 @@ public class MainActivity extends Activity implements
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
 
+            topmar.setVisibility(View.VISIBLE);
 
             topmar.setOnTouchListener(new View.OnTouchListener() {
                 @Override

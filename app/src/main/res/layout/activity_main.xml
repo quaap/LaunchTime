@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/txttop_margin"
         android:text=" "
-        android:layout_weight=".1" />
+        android:layout_weight=".1"
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="horizontal"
