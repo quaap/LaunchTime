@@ -5,13 +5,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -27,7 +25,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
-import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -381,7 +378,7 @@ public class MainActivity extends Activity implements
         for (String actvname: db.getAppCategoryOrder(QUICK_ROW_CAT)) {
             AppShortcut app = db.getApp(actvname);
             if (app!=null) {
-                app.loadAppIconAsync(mPackageMan);
+                app.loadAppIconAsync(this, mPackageMan);
             }
         }
 
@@ -389,7 +386,7 @@ public class MainActivity extends Activity implements
         for (String actvname: db.getAppCategoryOrder(mCategory)) {
             AppShortcut app = db.getApp(actvname);
             if (app!=null) {
-                app.loadAppIconAsync(mPackageMan);
+                app.loadAppIconAsync(this, mPackageMan);
             }
         }
 
@@ -470,7 +467,7 @@ public class MainActivity extends Activity implements
         if (app != null && isAppInstalled(app.getPackageName())) {
             ViewGroup item = getShortcutView(app, false, reuse);
             if (!app.iconLoaded()) {
-                app.loadAppIconAsync(mPackageMan);
+                app.loadAppIconAsync(this, mPackageMan);
             }
             GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
             iconSheet.addView(item, lp);
@@ -635,9 +632,9 @@ public class MainActivity extends Activity implements
 
                 app = db.getApp(actvname);
                 if (dbactvnames.contains(actvname) && app != null) {
-                    app.loadAppIconAsync(mPackageMan);
+                    app.loadAppIconAsync(this, mPackageMan);
                 } else {
-                    app = AppShortcut.createAppShortcut(mPackageMan, ri);
+                    app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
                     newapps.add(app);
                 }
 
@@ -679,7 +676,7 @@ public class MainActivity extends Activity implements
 
             if (quickRowOrder.contains(app.getActivityName())) {
                 AppShortcut qapp = AppShortcut.createAppShortcut(app);
-                qapp.loadAppIconAsync(mPackageMan);
+                qapp.loadAppIconAsync(this, mPackageMan);
                 quickRowApps.add(qapp);
             }
         }
@@ -701,9 +698,9 @@ public class MainActivity extends Activity implements
     }
 
     private void removeFromQuickApps(String actvname) {
-        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+        for (int i = mQuickRow.getChildCount()-1; i>=0; i--) {
             AppShortcut app = (AppShortcut) mQuickRow.getChildAt(i).getTag();
-            if (app != null && actvname.equals(app.getPackageName())) {
+            if (app != null && actvname.equals(app.getActivityName())) {
                 mQuickRow.removeView(mQuickRow.getChildAt(i));
             }
         }
@@ -1054,6 +1051,9 @@ public class MainActivity extends Activity implements
                     } else if (mDragDropSource == mCategoriesLayout) {
                         //delete category tab
 
+                    } else if (mBeingDragged.isLink()) {
+                        getDB().deleteApp(mBeingDragged.getActivityName());
+                        mDragDropSource.removeView(view2);
                     } else {
                         //uninstall app
                         mBeingUninstalled = view2;
@@ -1138,7 +1138,7 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.VISIBLE);
         mRemoveDropzone.setBackgroundColor(Color.RED);
 
-        if (mDragDropSource == mQuickRow || (mBeingDragged!=null && mBeingDragged.isWidget())) {
+        if (mDragDropSource == mQuickRow || (mBeingDragged!=null && (mBeingDragged.isWidget()||mBeingDragged.isLink())) ) {
             mRemoveAppText.setText(R.string.remove_shortcut);
         } else {
             mRemoveAppText.setText(R.string.uninstall_app);

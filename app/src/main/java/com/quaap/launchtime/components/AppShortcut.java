@@ -1,9 +1,14 @@
 package com.quaap.launchtime.components;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
@@ -51,11 +56,21 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return app;
     }
 
-    public static AppShortcut createAppShortcut(PackageManager pm, ResolveInfo ri) {
+    public static AppShortcut createAppShortcut(String activityName, Uri linkUri, String packageName, String label, String category, boolean isWidget) {
+        activityName = makeLink(activityName, linkUri);
+        AppShortcut app = mAppShortcuts.get(activityName);
+        if (app == null) {
+            app = new AppShortcut(activityName, packageName, label, category, isWidget);
+            mAppShortcuts.put(activityName, app);
+        }
+        return app;
+    }
+
+    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
         String activityName = ri.activityInfo.name;
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
-            app = new AppShortcut(pm, ri);
+            app = new AppShortcut(context, pm, ri);
             mAppShortcuts.put(activityName, app);
         }
         return app;
@@ -64,6 +79,18 @@ public class AppShortcut implements Comparable<AppShortcut> {
     public static AppShortcut createAppShortcut(AppShortcut shortcut) {
         return new AppShortcut(shortcut);
     }
+
+//    private AppShortcut(String activityName, Uri linkUri, String packageName, String label, String category, boolean isWidget) {
+//        mActivityName = makeLink(activityName, linkUri);
+//        mPackageName = packageName;
+//        mLabel = label;
+//        mCategory = category;
+//        mWidget = isWidget;
+//        if (mCategory==null) {
+//            mCategory = Categories.getCategoryForPackage(mPackageName);
+//        }
+//    }
+
 
 
     private AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
@@ -99,7 +126,8 @@ public class AppShortcut implements Comparable<AppShortcut> {
 //    }
 
     public static final String LINK_SEP = ":IS_APP_LINK:";
-    private AppShortcut(PackageManager pm, ResolveInfo ri) {
+
+    private AppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
         mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
@@ -109,7 +137,16 @@ public class AppShortcut implements Comparable<AppShortcut> {
         Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel);
 
 
-        loadAppIconAsync(pm);
+        loadAppIconAsync(context, pm);
+    }
+
+
+    private static String makeLink(String activityName, Uri uri) {
+        if (!activityName.contains(LINK_SEP)) {
+            return activityName + LINK_SEP + uri;
+        }
+        Log.e("Link", "Activity is already a link"+ activityName, new Throwable("Activity is already a link"+ activityName));
+        return activityName;
     }
 
     public boolean isLink() {
@@ -178,7 +215,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
 
-    public void loadAppIconAsync(final PackageManager pm) {
+    public void loadAppIconAsync(final Context context, final PackageManager pm) {
         if (iconLoaded() || isWidget()) return;
         // Create an async task
         AsyncTask<Void, Void, Drawable> loadAppIconTask = new AsyncTask<Void, Void, Drawable>() {
@@ -195,7 +232,23 @@ public class AppShortcut implements Comparable<AppShortcut> {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.setClassName(mPackageName, getLinkBaseActivityName());
                     app_icon = pm.getActivityIcon(intent);
-                    //app_icon = pm.getApplicationIcon(mPackageName);
+
+                    Bitmap bitmap = IconCache.loadBitmap(context, mActivityName);
+
+                    if (bitmap!=null) {
+                        Log.d("loadAppIconAsync", "Got special icon for " + mActivityName);
+                        try {
+                            Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+                            Canvas canvas = new Canvas(newbm);
+                            canvas.drawBitmap(bitmap, 0, 0, null);
+                            app_icon.setBounds(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth(), canvas.getHeight());
+                            app_icon.draw(canvas);
+                            app_icon = new BitmapDrawable(context.getResources(), newbm);
+                            //Log.d("loadAppIconAsync", " yo");
+                        } catch (Exception e) {
+                            Log.e("loadAppIconAsync", "couldn't make special icon", e);
+                        }
+                    }
 
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
@@ -222,4 +275,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
         loadAppIconTask.execute(null, null, null);
     }
 
+    public void gg() {
+
+    }
 }

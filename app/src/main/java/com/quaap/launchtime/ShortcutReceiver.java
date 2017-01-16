@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.components.IconCache;
 import com.quaap.launchtime.db.DB;
 
 /**
@@ -38,21 +39,25 @@ public class ShortcutReceiver extends BroadcastReceiver {
             Bundle extras = intent.getExtras();
             if (extras != null) {
 
-                Log.d("ShortcutCatch", "Shortcut name: " + intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME));
-                Intent intent2 = (Intent) extras.get(Intent.EXTRA_SHORTCUT_INTENT);
-                Bitmap receivedicon = (Bitmap)extras.get(Intent.EXTRA_SHORTCUT_ICON);
-                if (intent2 != null) {
-                    Uri data = intent2.getData();
-                    ComponentName cn = intent2.getComponent();
-                    String shortcutLabel = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
+                try {
+                    Log.d("ShortcutCatch", "Shortcut name: " + intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME));
+                    Intent intent2 = (Intent) extras.get(Intent.EXTRA_SHORTCUT_INTENT);
+                    Bitmap receivedicon = (Bitmap) extras.get(Intent.EXTRA_SHORTCUT_ICON);
+                    if (intent2 != null) {
+                        Uri data = intent2.getData();
+                        ComponentName cn = intent2.getComponent();
+                        String shortcutLabel = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
 
-                    Log.d("ShortcutCatch", "uri=" + data);
-                    if (cn != null) {
-                        Log.d("ShortcutCatch", "cn2package=" + cn.getPackageName() + ", cn2classname=" + cn.getClassName());
+                        Log.d("ShortcutCatch", "uri=" + data);
+                        if (cn != null) {
+                            Log.d("ShortcutCatch", "cn2package=" + cn.getPackageName() + ", cn2classname=" + cn.getClassName());
 
 
-                        addShortcut(context, shortcutLabel, data, cn);
+                            addShortcut(context, shortcutLabel, data, cn, receivedicon);
+                        }
                     }
+                } catch (Exception e) {
+                    Log.e("ShortcutCatch", "Can't make shortcutlink", e);
                 }
 
             }
@@ -64,10 +69,16 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     }
 
-    private void addShortcut(Context context, String label, Uri uri, ComponentName cn) {
-        AppShortcut appshortcut = AppShortcut.createAppShortcut(cn.getClassName() + AppShortcut.LINK_SEP + uri, cn.getPackageName(),label, null,false);
+    private void addShortcut(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
+
+        AppShortcut appshortcut = AppShortcut.createAppShortcut(cn.getClassName(), uri, cn.getPackageName(),label, null,false);
         DB db = ((GlobState)context.getApplicationContext()).getDB();
         db.addApp(appshortcut);
+
+        if (bitmap!=null) {
+            IconCache.saveBitmap(context, appshortcut.getActivityName(), bitmap);
+        }
+
 
     }
 
