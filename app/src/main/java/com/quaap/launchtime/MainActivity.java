@@ -115,6 +115,8 @@ public class MainActivity extends Activity implements
     private int mColumnMargin = 12;
     private int categoryTabWidth = 108;
 
+    private Point mScreenDim;
+
     private SharedPreferences mAppPreferences;
 
     private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
@@ -134,6 +136,7 @@ public class MainActivity extends Activity implements
 
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        mScreenDim = getScreenDimensions();
 
         mWidgetHelper = new Widget(this);
 
@@ -170,7 +173,7 @@ public class MainActivity extends Activity implements
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
+        mScreenDim = getScreenDimensions();
         checkConfig();
     }
 
@@ -319,10 +322,10 @@ public class MainActivity extends Activity implements
         }
 
 
-        Point s = getScreenDimensions();
+        mScreenDim = getScreenDimensions();
         float shortcutw = getResources().getDimension(R.dimen.shortcut_width);
         float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
-        mColumns = (int)((s.x - catwidth)/(shortcutw + 2));
+        mColumns = (int)((mScreenDim.x - catwidth)/(shortcutw + 2));
 
 //        if (isLandscape()) {
 //            mColumns = mColumnsLandscape;
@@ -427,11 +430,12 @@ public class MainActivity extends Activity implements
 
         iconSheet.removeAllViews();
 
+        int i=0;
         for (String actvname : db.getAppLaunchedList()) {
             AppShortcut app = db.getApp(actvname);
 
             addAppToIconSheet(iconSheet, app, false);
-
+            if (i++>60) break;
         }
     }
 
@@ -1018,6 +1022,16 @@ public class MainActivity extends Activity implements
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 // do nothing
+                break;
+
+            case DragEvent.ACTION_DRAG_LOCATION:
+                int thresh = mScreenDim.y/6;
+               // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
+                if (view.getTop() + event.getY() < mIconSheetScroller.getScrollY() + thresh) {
+                    mIconSheetScroller.smoothScrollBy(0,-10);
+                } else if (view.getTop() + event.getY() > mIconSheetScroller.getScrollY()+mIconSheetScroller.getHeight() - thresh) {
+                    mIconSheetScroller.smoothScrollBy(0, 10);
+                }
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (!islayout) {
