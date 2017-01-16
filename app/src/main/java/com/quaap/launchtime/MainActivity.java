@@ -25,11 +25,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -50,6 +52,7 @@ import com.quaap.launchtime.components.InteractiveScrollView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -125,6 +128,7 @@ public class MainActivity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -186,6 +190,9 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+       // setLockUI(true);
+
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         switchCategory(mCategory);
         mIconSheetScroller.postDelayed(new Runnable() {
@@ -196,6 +203,53 @@ public class MainActivity extends Activity implements
             }
         },100);
 
+    }
+
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        setLockUI(true);
+//    }
+
+    public void setLockUI(boolean lock) {
+        Log.d("Launch", "Setting lockui to " + lock);
+        View topmar= findViewById(R.id.txttop_margin);
+        if (lock) {
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+
+
+            topmar.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    switch (MotionEventCompat.getActionMasked(event)) {
+                        case MotionEvent.ACTION_DOWN:
+                            updateTouchDown(event);
+                            break;
+
+                        case MotionEvent.ACTION_MOVE:
+                            tryConsumeSwipe(event);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            // We only want to launch the activity if the touch was not consumed yet!
+                            if (!touchConsumed) {
+                                //                            Intent i = mPacMan.getLaunchIntentForPackage(app.name.toString());
+                                //                            startActivity(i);
+                            }
+                            break;
+                    }
+
+                    return touchConsumed;
+                }
+            });
+        } else {
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+            decorView.setSystemUiVisibility(uiOptions);
+            topmar.setOnTouchListener(null);
+        }
     }
 
     @Override
@@ -1362,6 +1416,7 @@ public class MainActivity extends Activity implements
                 startActivity(settingsIntent);
             }
         });
+
     }
 
     private void toggleButtonBar() {
@@ -1444,4 +1499,45 @@ public class MainActivity extends Activity implements
     }
 
 
+    private float lastX, lastY;
+    private boolean touchConsumed; // Did we consume the touch event yet? This will avoid calling it twice
+    private float touchSlop;
+
+    void updateTouchDown(MotionEvent event) {
+        lastX = event.getX();
+        lastY = event.getY();
+        touchConsumed = false;
+    }
+
+    void tryConsumeSwipe(MotionEvent event) {
+        if (!touchConsumed) {
+            // Also subtract the X: we want to trigger if we scroll down, not to the sides
+            float downSpeed = event.getY() - lastY - Math.abs(lastX - event.getX());
+            if (downSpeed > touchSlop) {
+                // The user swiped down, show the status bar and consume the event
+                expandNotificationPanel();
+                touchConsumed = true;
+            } else {
+                updateTouchDown(event);
+            }
+        }
+    }
+
+    void expandNotificationPanel() {
+        Log.d("Launch", "Expanding status");
+        try
+        {
+            //noinspection WrongConstant
+            Object service = getSystemService("statusbar");
+            Class<?> clazz = Class.forName("android.app.StatusBarManager");
+            Method expand = Build.VERSION.SDK_INT <= 16 ?
+                    clazz.getMethod("expand") :
+                    clazz.getMethod("expandNotificationsPanel");
+
+            expand.invoke(service);
+        }
+        catch (Exception localException) {
+            localException.printStackTrace();
+        }
+    }
 }
