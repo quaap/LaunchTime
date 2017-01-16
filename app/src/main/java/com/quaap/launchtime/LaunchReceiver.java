@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.db.DB;
@@ -45,6 +46,7 @@ public class LaunchReceiver extends BroadcastReceiver {
                 DB db = ((GlobState)context.getApplicationContext()).getDB();
                 db.addApp(app);
                 db.addAppCategoryOrder(app.getCategory(),app.getActivityName());
+                Toast.makeText(context,app.getLabel() + " was installed into " + db.getCategoryDisplay(app.getCategory()), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Log.e("InstallCatch", "Could not get " + packageName, e);
             }
