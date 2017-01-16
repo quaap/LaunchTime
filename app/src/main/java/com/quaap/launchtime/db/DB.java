@@ -255,15 +255,16 @@ public class DB extends SQLiteOpenHelper {
         // Log.d("LaunchDB", "update " + pkgname + " " + catID);
     }
 
-    public boolean deleteApp(String actvname) {
+    public boolean deleteApp(String actvorpkgname) {
+        return deleteApp(actvorpkgname, false);
+    }
 
-
+    public boolean deleteApp(String actvorpkgname, boolean isPackagename) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         try {
-            db.delete(APP_TABLE, ACTVNAME + "=?", new String[]{actvname});
+            db.delete(APP_TABLE, (isPackagename?PKGNAME:ACTVNAME) + "=?", new String[]{actvorpkgname});
         } catch (Exception e) {
-            Log.e("LaunchDB", "Can't delete app " + actvname, e);
+            Log.e("LaunchDB", "Can't delete app " + actvorpkgname, e);
             return false;
         }
         return true;
@@ -478,7 +479,7 @@ public class DB extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(CATID, catID);
             values.put(ACTVNAME, actvname);
-            values.put(INDEX, -1);
+            values.put(INDEX, 100);
             db.insert(APP_ORDER_TABLE, null, values);
 
         } catch (Exception e) {
