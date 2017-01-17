@@ -17,14 +17,21 @@
         <item>facebook</item>
         <item>social</item>
         <item>chat</item>
+        <item>com.narvii</item>
     </string-array>
     <string-array name="CAT_GAMES">
         <item>game</item>
         <item>play</item>
         <item>puzz</item>
+        <item>battle</item>
+        <item>com.huuuge</item>
         <item>com.ea</item>
         <item>com.king</item>
         <item>com.halfbrick</item>
+        <item>br.com.tapps</item>
+        <item>com.outfit7</item>
+        <item>com.rovio</item>
+        <item>com.bitmango</item>
     </string-array>
     <string-array name="CAT_INTERNET">
         <item>download</item>
@@ -80,6 +87,8 @@
         <item>manager</item>
         <item>memo</item>
         <item>note</item>
+        <item>reader</item>
+        <item>office</item>
     </string-array>
     <string-array name="CAT_SETTINGS">
         <item>setting</item>
