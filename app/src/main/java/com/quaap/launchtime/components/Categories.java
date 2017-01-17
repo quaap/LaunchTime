@@ -41,7 +41,7 @@ public class Categories {
     public static final String CAT_INTERNET = "Internet";
     public static final String CAT_MEDIA = "Media";
     public static final String CAT_GRAPHICS = "Graphics";
-    public static final String CAT_ACCESSORIES = "Accessories";
+    public static final String CAT_Utilities = "Utilities";
     public static final String CAT_OTHER = "Other";
     public static final String CAT_SETTINGS = "Settings";
     public static final String CAT_HIDDEN = "Hidden";
@@ -53,7 +53,7 @@ public class Categories {
             CAT_INTERNET,
             CAT_MEDIA,
             CAT_GRAPHICS,
-            CAT_ACCESSORIES,
+            CAT_Utilities,
             CAT_SETTINGS,
             CAT_OTHER,
             CAT_HIDDEN
@@ -112,7 +112,7 @@ public class Categories {
         catmap.put(CAT_INTERNET, R.string.category_Internet);
         catmap.put(CAT_MEDIA, R.string.category_Media);
         catmap.put(CAT_GRAPHICS, R.string.category_Graphics);
-        catmap.put(CAT_ACCESSORIES, R.string.category_Accessories);
+        catmap.put(CAT_Utilities, R.string.category_Accessories);
         catmap.put(CAT_OTHER, R.string.category_Other);
         catmap.put(CAT_SETTINGS, R.string.category_Settings);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden);
@@ -127,7 +127,7 @@ public class Categories {
         catmap.put(CAT_INTERNET, R.string.category_Internet_full);
         catmap.put(CAT_MEDIA, R.string.category_Media_full);
         catmap.put(CAT_GRAPHICS, R.string.category_Graphics_full);
-        catmap.put(CAT_ACCESSORIES, R.string.category_Accessories_full);
+        catmap.put(CAT_Utilities, R.string.category_Accessories_full);
         catmap.put(CAT_OTHER, R.string.category_Other_full);
         catmap.put(CAT_SETTINGS, R.string.category_Settings_full);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden_full);
@@ -142,7 +142,7 @@ public class Categories {
         keywordsDict.put(CAT_INTERNET, resources.getStringArray(R.array.CAT_INTERNET));
         keywordsDict.put(CAT_MEDIA, resources.getStringArray(R.array.CAT_MEDIA));
         keywordsDict.put(CAT_GRAPHICS, resources.getStringArray(R.array.CAT_GRAPHICS));
-        keywordsDict.put(CAT_ACCESSORIES, resources.getStringArray(R.array.CAT_ACCESSORIES));
+        keywordsDict.put(CAT_Utilities, resources.getStringArray(R.array.CAT_ACCESSORIES));
         keywordsDict.put(CAT_SETTINGS, resources.getStringArray(R.array.CAT_SETTINGS));
 
 
@@ -162,8 +162,10 @@ public class Categories {
 
             while ((line = reader.readLine()) != null) {
                 if (!line.isEmpty() && !line.startsWith("#")) {
-                    lineSplit = line.split("=");
-                    predefCategories.put(lineSplit[0], lineSplit[1]);
+                    lineSplit = line.split("=",2);
+                    if (lineSplit.length==2) {
+                        predefCategories.put(lineSplit[0], lineSplit[1]);
+                    }
                 }
             }
 
