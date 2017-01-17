@@ -981,10 +981,10 @@ public class MainActivity extends Activity implements
     public boolean onDrag(View view, DragEvent event) {
         View view2 = (View) event.getLocalState();
         boolean isShortcut = true;
-        if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut)) {
+        if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut )) {
             isShortcut = false;
         }
-        boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone || !isShortcut;
+        boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone || !isShortcut || mQuickRow == mDragDropSource;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 // do nothing

@@ -37,7 +37,7 @@
         android:id="@+id/fullname" />
 
     <CheckBox
-        android:text="Is Tiny"
+        android:text="@string/is_tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/istiny_checkbox"
