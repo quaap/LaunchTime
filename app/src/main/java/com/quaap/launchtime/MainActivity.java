@@ -244,7 +244,6 @@ public class MainActivity extends Activity implements
         mIconSheetHolder.removeAllViews();
         mIconSheetHolder.addView(mIconSheet);
 
-
         showButtonBar(false);
     }
 
@@ -1146,7 +1145,11 @@ public class MainActivity extends Activity implements
     }
     private void hideHiddenCategories() {
         for (String cat: Categories.CAT_HIDDENS) {
-            mCategoryTabs.get(cat).setVisibility(View.GONE);
+            if (!mCategory.equals(cat)) {
+                mCategoryTabs.get(cat).setVisibility(View.GONE);
+            } else {
+                mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
+            }
         }
     }
 
