@@ -42,7 +42,7 @@
 
     <string name="add_widgets">Add\nWidgets</string>
     <string name="add_category">Add\nCategory</string>
-    <string name="rename_category">Rename\nCategory</string>
+    <string name="rename_category">Edit\nCategory</string>
     <string name="delete_category">Delete\nCategory</string>
 
     <string name="remove">Remove</string>

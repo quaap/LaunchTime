@@ -42,7 +42,7 @@ public class GlobState extends Application {
         if (mDB.isFirstRun()) {
             for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
                 String cat = Categories.DefCategoryOrder[i];
-                mDB.addCategory(cat, Categories.getCatLabel(this, cat), Categories.getCatFullLabel(this, cat), i);
+                mDB.addCategory(cat, Categories.getCatLabel(this, cat), Categories.getCatFullLabel(this, cat), Categories.isTinyCategory(cat), i);
             }
         }
 

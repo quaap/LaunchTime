@@ -44,7 +44,7 @@ public class DB extends SQLiteOpenHelper {
     private static final String ISWIDGET = "iswidget";
     private static final String INDEX = "pos";
     private static final String TIME = "time";
-    private static final String TOTAL = "total";
+    private static final String ISTINY = "tiny";
 
 
     private static final String APP_TABLE = "apps";
@@ -63,8 +63,8 @@ public class DB extends SQLiteOpenHelper {
 
 
     private static final String TAB_ORDER_TABLE = "tab_order";
-    private static final String[] tabordercolumns = {CATID, LABEL, LABELFULL, INDEX};
-    private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "TEXT", "INT"};
+    private static final String[] tabordercolumns = {CATID, LABEL, LABELFULL, ISTINY, INDEX};
+    private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "TEXT", "SHORT", "INT"};
     private static final String TAB_ORDER_TABLE_CREATE = buildCreateTableStmt(TAB_ORDER_TABLE, tabordercolumns, tabordercolumntypes);
 
     private static final String[] tabordercolumnsindex = {INDEX};
@@ -275,6 +275,14 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean addCategory(String catID, String displayName, String displayNameFull, int index) {
+        return addCategory(catID, displayName, displayNameFull, false, index);
+    }
+
+    public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny) {
+        return addCategory(catID, displayName, displayNameFull, isTiny, -1);
+    }
+
+    public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, int index) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -283,6 +291,7 @@ public class DB extends SQLiteOpenHelper {
             values.put(CATID, catID);
             values.put(LABEL, displayName);
             values.put(LABELFULL, displayNameFull);
+            values.put(ISTINY, isTiny?1:0);
             values.put(INDEX, index);
 
             db.insert(TAB_ORDER_TABLE, null, values);
@@ -293,7 +302,12 @@ public class DB extends SQLiteOpenHelper {
         return true;
     }
 
+
     public boolean updateCategory(String catID, String displayName, String displayNameFull) {
+        return updateCategory(catID, displayName, displayNameFull, false);
+    }
+
+    public boolean updateCategory(String catID, String displayName, String displayNameFull, boolean isTiny) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -302,6 +316,7 @@ public class DB extends SQLiteOpenHelper {
 
             values.put(LABEL, displayName);
             values.put(LABELFULL, displayNameFull);
+            values.put(ISTINY, isTiny?1:0);
 
             db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{catID});
         } catch (Exception e) {
@@ -385,6 +400,19 @@ public class DB extends SQLiteOpenHelper {
         }
         cursor.close();
         return display;
+    }
+
+    public boolean isTinyCategory(String catID) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{ISTINY}, CATID + "=?", new String[]{catID}, null, null, null, null);
+
+        if (cursor.moveToNext()) {
+            return cursor.getShort(0)==1;
+        }
+        cursor.close();
+        return false;
     }
 
     public void setCategoryOrder(ViewGroup container) {

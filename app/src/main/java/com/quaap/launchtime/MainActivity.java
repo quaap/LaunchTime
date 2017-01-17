@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -808,7 +809,7 @@ public class MainActivity extends Activity implements
 
         if (category.equals(mCategory)) {
             catstyle = CategoryTabStyle.Selected;
-        } else if (Categories.isTinyCategory(category)) {
+        } else if (mDb.isTinyCategory(category)) {
             catstyle = CategoryTabStyle.Tiny;
         }
         return catstyle;
@@ -1207,7 +1208,7 @@ public class MainActivity extends Activity implements
     }
 
     private void promptGetCategoryName(String title, String message, final String category, String defName,
-                                       String defFullName, final CategoryChangerListener categoryChangerListener) {
+                                       String defFullName, boolean defIsTiny, final CategoryChangerListener categoryChangerListener) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
 
@@ -1216,6 +1217,7 @@ public class MainActivity extends Activity implements
         TextView messageView = (TextView) view.findViewById(R.id.message_txt);
         final EditText shortname = (EditText) view.findViewById(R.id.shortname);
         final EditText fullname = (EditText) view.findViewById(R.id.fullname);
+        final CheckBox isTiny = (CheckBox) view.findViewById(R.id.istiny_checkbox);
 
         shortname.setSelectAllOnFocus(true);
         fullname.setSelectAllOnFocus(true);
@@ -1223,13 +1225,14 @@ public class MainActivity extends Activity implements
         messageView.setText(message);
         shortname.setText(defName);
         fullname.setText(defFullName);
+        isTiny.setChecked(defIsTiny);
 
         builder.setView(view);
 
         builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                categoryChangerListener.onClick(dialog, which, category, shortname.getText().toString(), fullname.getText().toString());
+                categoryChangerListener.onClick(dialog, which, category, shortname.getText().toString(), fullname.getText().toString(), isTiny.isChecked());
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
@@ -1258,11 +1261,12 @@ public class MainActivity extends Activity implements
                 category,
                 mDb.getCategoryDisplay(category),
                 mDb.getCategoryDisplayFull(category),
+                mDb.isTinyCategory(category),
                 new CategoryChangerListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName) {
+                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny) {
                         try {
-                            renameCategory(category, newDisplayName, newDisplayFullName);
+                            renameCategory(category, newDisplayName, newDisplayFullName, isTiny);
                         } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
@@ -1271,7 +1275,7 @@ public class MainActivity extends Activity implements
                 });
     }
 
-    private void renameCategory(String category, String newDisplayName, String newDisplayFullName) {
+    private void renameCategory(String category, String newDisplayName, String newDisplayFullName, boolean isTiny) {
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
 
@@ -1283,7 +1287,7 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        if (mDb.updateCategory(category, newDisplayName, newDisplayFullName)) {
+        if (mDb.updateCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
 
             TextView categoryTab = mCategoryTabs.get(category);
             if (category.equals(mCategory)) {
@@ -1304,11 +1308,12 @@ public class MainActivity extends Activity implements
                 "",
                 "",
                 "",
+                false,
                 new CategoryChangerListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName) {
+                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny) {
                         try {
-                            addCategory(category, newDisplayName, newDisplayFullName);
+                            addCategory(category, newDisplayName, newDisplayFullName, isTiny);
                         } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
@@ -1317,7 +1322,7 @@ public class MainActivity extends Activity implements
                 });
     }
 
-    private void addCategory(String category, String newDisplayName, String newDisplayFullName) {
+    private void addCategory(String category, String newDisplayName, String newDisplayFullName,  boolean isTiny) {
         category = category.trim();
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
@@ -1337,7 +1342,7 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        if (mDb.addCategory(category, newDisplayName, newDisplayFullName)) {
+        if (mDb.addCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
             createIconSheet(category);
 
             switchCategory(category);
@@ -1555,7 +1560,7 @@ public class MainActivity extends Activity implements
     enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
 
     interface CategoryChangerListener {
-        void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName);
+        void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean istiny);
     }
 
 
