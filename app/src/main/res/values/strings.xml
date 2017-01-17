@@ -58,7 +58,7 @@
     <string name="delete_cat">Delete category?</string>
     <string name="delete_cat_prompt">Are you sure you want to delete this category?</string>
     <string name="delete">Delete</string>
-    <string name="cat_deleted">Category deleted</string>
+    <string name="cat_deleted">Category deleted. Any applications were moved to Category %s</string>
     <string name="no_delete_cat">Couldn\'t delete category</string>
 
 

@@ -34,7 +34,7 @@ public class Categories {
 
     private static Resources resources;
 
-    //Don't change these values here.  Change them in strings.xml
+    //Don't change these values here.  Change their displays in strings.xml
     public static final String CAT_SEARCH = "Search";
     public static final String CAT_TALK = "Communicate";
     public static final String CAT_GAMES = "Games";
@@ -47,6 +47,8 @@ public class Categories {
     public static final String CAT_HIDDEN = "Hidden";
     public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
     public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
+    public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH};
+
     public static final String[] DefCategoryOrder = {
             CAT_SEARCH,
             CAT_TALK,
@@ -106,7 +108,7 @@ public class Categories {
     }
 
     public static boolean isSpeacialCategory(String category) {
-        return Arrays.asList(CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH).contains(category);
+        return Arrays.asList(Categories.CAT_SPECIALS).contains(category);
     }
 
     public static String getCatLabel(Context context, String category) {
@@ -169,7 +171,9 @@ public class Categories {
                 if (!line.isEmpty() && !line.startsWith("#")) {
                     lineSplit = line.split("=",2);
                     if (lineSplit.length==2) {
-                        predefCategories.put(lineSplit[0], lineSplit[1]);
+                        if (!predefCategories.containsKey(lineSplit[0])) {
+                            predefCategories.put(lineSplit[0], lineSplit[1]);
+                        }
                     }
                 }
             }

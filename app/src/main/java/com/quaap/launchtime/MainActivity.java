@@ -475,6 +475,8 @@ public class MainActivity extends Activity implements
             if (!app.iconLoaded()) {
                 app.loadAppIconAsync(this, mPackageMan);
             }
+            ViewGroup parent = (ViewGroup)item.getParent();
+            if (parent!=null) parent.removeView(item);
             GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
             iconSheet.addView(item, lp);
         }
@@ -950,6 +952,9 @@ public class MainActivity extends Activity implements
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 view.startDrag(data, shadowBuilder, view, 0);
                 mDragDropSource = mCategoriesLayout;
+                if (!Categories.isSpeacialCategory(category)) {
+                    showRemoveDropzone();
+                }
                 return true;
             }
         });
@@ -968,13 +973,14 @@ public class MainActivity extends Activity implements
                         break;
 
                     case DragEvent.ACTION_DRAG_LOCATION:
-                        int thresh = mCategoriesScroller.getHeight()/6;
-                        // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
-                        if (view.getTop() + event.getY() < mCategoriesScroller.getScrollY() + thresh) {
-                            mCategoriesScroller.smoothScrollBy(0,-5);
-                        } else if (view.getTop() + event.getY() > mCategoriesScroller.getScrollY()+mCategoriesScroller.getHeight() - thresh) {
-                            mCategoriesScroller.smoothScrollBy(0, 5);
-                        }
+//                        int thresh = mCategoriesScroller.getHeight()/6;
+//                        // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
+//                        if (view.getTop() + event.getY() < mCategoriesScroller.getScrollY() + thresh) {
+//                            mCategoriesScroller.smoothScrollBy(0,-5);
+//                        } else if (view.getTop() + event.getY() > mCategoriesScroller.getScrollY()+mCategoriesScroller.getHeight() - thresh) {
+//                            mCategoriesScroller.smoothScrollBy(0, 5);
+//                        }
+                        scrollOnDrag(view, event, mCategoriesScroller);
                         break;
                     case DragEvent.ACTION_DRAG_ENDED:
                         mBeingDragged = null;
@@ -1030,36 +1036,20 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onDrag(View view, DragEvent event) {
         View view2 = (View) event.getLocalState();
+        boolean isShortcut = true;
         if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut)) {
-            return false;
+            isShortcut = false;
         }
-        boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone;
+        boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone || !isShortcut;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 // do nothing
                 break;
 
             case DragEvent.ACTION_DRAG_LOCATION:
-                float ty = view.getTop() + event.getY();
+                //scroll the scrollview
 
-                //check if we're in the bounds of the scroller
-                if (  view.getTop() > mIconSheetScroller.getTop()
-                    &&
-                      view.getLeft() > mIconSheetScroller.getLeft()
-                    &&
-                      view.getLeft() + view.getX() < mIconSheetScroller.getLeft() + mIconSheetScroller.getWidth()
-                    &&
-                        ty < mIconSheetScroller.getTop() + mIconSheetScroller.getHeight() + mIconSheetScroller.getScrollY()) {
-
-                    int thresh = mIconSheetScroller.getHeight() / 6;
-
-                    // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
-                    if (ty < mIconSheetScroller.getScrollY() + thresh) {
-                        mIconSheetScroller.smoothScrollBy(0, -10);
-                    } else if (ty > mIconSheetScroller.getScrollY() + mIconSheetScroller.getHeight() - thresh) {
-                        mIconSheetScroller.smoothScrollBy(0, 10);
-                    }
-                }
+                if (isShortcut) scrollOnDrag(view, event, mIconSheetScroller);
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (!nocolor ) {
@@ -1081,7 +1071,7 @@ public class MainActivity extends Activity implements
 
                 ViewGroup target;
                 if (view == mRemoveDropzone) {
-                    if (mQuickRow == mDragDropSource || mBeingDragged.isWidget()) {
+                    if (mQuickRow == mDragDropSource || mBeingDragged!=null && mBeingDragged.isWidget()) {
                         mDragDropSource.removeView(view2);
                         getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                         if (mBeingDragged.isWidget()) {
@@ -1092,6 +1082,9 @@ public class MainActivity extends Activity implements
 
                     } else if (mDragDropSource == mCategoriesLayout) {
                         //delete category tab
+                        if (!isShortcut) {
+                            promptDeleteCategory((String)view2.getTag());
+                        }
 
                     } else if (mBeingDragged.isLink()) {
                         getDB().deleteApp(mBeingDragged.getActivityName());
@@ -1162,6 +1155,28 @@ public class MainActivity extends Activity implements
         return true;
     }
 
+    private void scrollOnDrag(View view, DragEvent event, ScrollView scrollView) {
+        float ty = view.getTop() + event.getY();
+
+        //check if we're in the bounds of the scroller
+        if (  view.getTop() > scrollView.getTop()
+            &&
+              view.getLeft() > scrollView.getLeft()
+            &&
+              view.getLeft() + view.getX() < scrollView.getLeft() + scrollView.getWidth()
+            &&
+                ty < scrollView.getTop() + scrollView.getHeight() + scrollView.getScrollY()) {
+
+            int thresh = scrollView.getHeight() / 6;
+
+            if (ty < scrollView.getScrollY() + thresh) {
+                scrollView.smoothScrollBy(0, -10);
+            } else if (ty > scrollView.getScrollY() + scrollView.getHeight() - thresh) {
+                scrollView.smoothScrollBy(0, 10);
+            }
+        }
+    }
+
     @Override
     public boolean onLongClick(View view) {
         mBeingDragged = (AppShortcut) view.getTag();
@@ -1193,7 +1208,7 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.VISIBLE);
         mRemoveDropzone.setBackgroundColor(Color.RED);
 
-        if (mDragDropSource == mQuickRow || (mBeingDragged!=null && (mBeingDragged.isWidget()||mBeingDragged.isLink())) ) {
+        if (mDragDropSource == mQuickRow || mDragDropSource == mCategoriesLayout || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) ) {
             mRemoveAppText.setText(R.string.remove_shortcut);
         } else {
             mRemoveAppText.setText(R.string.uninstall_app);
@@ -1383,6 +1398,7 @@ public class MainActivity extends Activity implements
 
     private void promptDeleteCategory(final String category) {
 
+        final String message = getString(R.string.cat_deleted, getDB().getCategoryDisplay(Categories.CAT_OTHER));
         new AlertDialog.Builder(MainActivity.this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.delete_cat)
@@ -1391,7 +1407,7 @@ public class MainActivity extends Activity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteCategory(category);
-                        Toast.makeText(MainActivity.this, R.string.cat_deleted, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
 
                 })
