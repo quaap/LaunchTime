@@ -18,7 +18,7 @@
     <string name="category_Internet">Internet</string>
     <string name="category_Media">Audio</string>
     <string name="category_Graphics">Graphics</string>
-    <string name="category_Accessories">Utilities</string>
+    <string name="category_Utilities">Utilities</string>
     <string name="category_Other">Other</string>
     <string name="category_Settings">Settings</string>
     <string name="category_Hidden">Hidden</string>
@@ -29,7 +29,7 @@
     <string name="category_Internet_full">Internet</string>
     <string name="category_Media_full">Audio &amp; Music</string>
     <string name="category_Graphics_full">Graphics &amp; Video</string>
-    <string name="category_Accessories_full">Utilities &amp; Tools</string>
+    <string name="category_Utilities_full">Utilities &amp; Tools</string>
     <string name="category_Other_full">Other</string>
     <string name="category_Settings_full">Settings &amp; System</string>
     <string name="category_Hidden_full">Hidden</string>

@@ -28,7 +28,6 @@
     </string-array>
     <string-array name="CAT_INTERNET">
         <item>download</item>
-        <item>vending</item>
         <item>browser</item>
         <item>maps</item>
         <item>dropbox</item>
@@ -86,6 +85,7 @@
         <item>setting</item>
         <item>config</item>
         <item>keyboard</item>
+        <item>vending</item>
         <item>launch</item>
         <item>sync</item>
         <item>backup</item>

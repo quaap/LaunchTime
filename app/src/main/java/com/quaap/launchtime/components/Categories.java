@@ -112,7 +112,7 @@ public class Categories {
         catmap.put(CAT_INTERNET, R.string.category_Internet);
         catmap.put(CAT_MEDIA, R.string.category_Media);
         catmap.put(CAT_GRAPHICS, R.string.category_Graphics);
-        catmap.put(CAT_Utilities, R.string.category_Accessories);
+        catmap.put(CAT_Utilities, R.string.category_Utilities);
         catmap.put(CAT_OTHER, R.string.category_Other);
         catmap.put(CAT_SETTINGS, R.string.category_Settings);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden);
@@ -127,7 +127,7 @@ public class Categories {
         catmap.put(CAT_INTERNET, R.string.category_Internet_full);
         catmap.put(CAT_MEDIA, R.string.category_Media_full);
         catmap.put(CAT_GRAPHICS, R.string.category_Graphics_full);
-        catmap.put(CAT_Utilities, R.string.category_Accessories_full);
+        catmap.put(CAT_Utilities, R.string.category_Utilities_full);
         catmap.put(CAT_OTHER, R.string.category_Other_full);
         catmap.put(CAT_SETTINGS, R.string.category_Settings_full);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden_full);
