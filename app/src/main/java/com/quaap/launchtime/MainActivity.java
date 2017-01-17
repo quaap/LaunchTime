@@ -1022,7 +1022,9 @@ public class MainActivity extends Activity implements
                             mDb.deleteApp(mBeingDragged.getActivityName());
                             mLoadedWidgets.remove(mBeingDragged.getActivityName());
                         }
-
+                    } else if (mCategory.equals(Categories.CAT_SEARCH)) {
+                        mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
+                        mDragDropSource.removeView(view2);
                     } else if (mDragDropSource == mCategoriesLayout) {
                         //delete category tab
                         if (!isShortcut) {
@@ -1151,7 +1153,11 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.VISIBLE);
         mRemoveDropzone.setBackgroundColor(Color.RED);
 
-        if (mDragDropSource == mQuickRow || mDragDropSource == mCategoriesLayout || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) ) {
+        if (mDragDropSource == mQuickRow
+            || mDragDropSource == mCategoriesLayout
+            || mCategory.equals(Categories.CAT_SEARCH)
+            || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
+        ) ) {
             mRemoveAppText.setText(R.string.remove_shortcut);
         } else {
             mRemoveAppText.setText(R.string.uninstall_app);

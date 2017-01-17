@@ -513,6 +513,20 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
+    public void deleteAppLaunchedRecord(String activityname) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+//
+//        ContentValues values = new ContentValues();
+//        values.put(ACTVNAME, activityname);
+//        values.put(TIME, System.currentTimeMillis());
+//        db.insert(APP_HISTORY_TABLE, null, values);
+
+        db.delete(APP_HISTORY_TABLE, ACTVNAME+"=?", new String[] {activityname});
+
+    }
+
+
     public List<String> getAppLaunchedList() {
 
         List<String> activitynames = new ArrayList<>();
