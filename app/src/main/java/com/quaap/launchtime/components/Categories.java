@@ -46,6 +46,7 @@ public class Categories {
     public static final String CAT_SETTINGS = "Settings";
     public static final String CAT_HIDDEN = "Hidden";
     public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
+    public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
     public static final String[] DefCategoryOrder = {
             CAT_SEARCH,
             CAT_TALK,
@@ -98,6 +99,10 @@ public class Categories {
 
     public static boolean isTinyCategory(String category) {
         return Arrays.asList(Categories.CAT_TINY).contains(category);
+    }
+
+    public static boolean isHiddenCategory(String category) {
+        return Arrays.asList(Categories.CAT_HIDDENS).contains(category);
     }
 
     public static boolean isSpeacialCategory(String category) {

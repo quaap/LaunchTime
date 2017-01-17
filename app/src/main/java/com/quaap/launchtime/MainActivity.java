@@ -920,6 +920,10 @@ public class MainActivity extends Activity implements
 
         final CategoryTabStyle catstyle = getDefaultCategoryStyle(category);
 
+        if (Categories.isHiddenCategory(category)) {
+            categoryTab.setVisibility(View.GONE);
+        }
+
         if (catstyle == CategoryTabStyle.Normal) {
             lp.weight = 1;
         }
@@ -975,6 +979,7 @@ public class MainActivity extends Activity implements
                     case DragEvent.ACTION_DRAG_ENDED:
                         mBeingDragged = null;
                         hideRemoveDropzone();
+                        hideHiddenCategories();
                     case DragEvent.ACTION_DRAG_EXITED:
 //                        if (catstyle==CategoryTabStyle.Tiny) {
 //                            styleCategorySpecial(categoryTab, CategoryTabStyle.Tiny);
@@ -1028,32 +1033,45 @@ public class MainActivity extends Activity implements
         if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut)) {
             return false;
         }
-        boolean islayout = view instanceof GridLayout;
+        boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 // do nothing
                 break;
 
             case DragEvent.ACTION_DRAG_LOCATION:
-                int thresh = mIconSheetScroller.getHeight()/6;
-               // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
-                if (view.getTop() + event.getY() < mIconSheetScroller.getScrollY() + thresh) {
-                    mIconSheetScroller.smoothScrollBy(0,-10);
-                } else if (view.getTop() + event.getY() > mIconSheetScroller.getScrollY()+mIconSheetScroller.getHeight() - thresh) {
-                    mIconSheetScroller.smoothScrollBy(0, 10);
+                float ty = view.getTop() + event.getY();
+
+                //check if we're in the bounds of the scroller
+                if (  view.getTop() > mIconSheetScroller.getTop()
+                    &&
+                      view.getLeft() > mIconSheetScroller.getLeft()
+                    &&
+                      view.getLeft() + view.getX() < mIconSheetScroller.getLeft() + mIconSheetScroller.getWidth()
+                    &&
+                        ty < mIconSheetScroller.getTop() + mIconSheetScroller.getHeight() + mIconSheetScroller.getScrollY()) {
+
+                    int thresh = mIconSheetScroller.getHeight() / 6;
+
+                    // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
+                    if (ty < mIconSheetScroller.getScrollY() + thresh) {
+                        mIconSheetScroller.smoothScrollBy(0, -10);
+                    } else if (ty > mIconSheetScroller.getScrollY() + mIconSheetScroller.getHeight() - thresh) {
+                        mIconSheetScroller.smoothScrollBy(0, 10);
+                    }
                 }
                 break;
             case DragEvent.ACTION_DRAG_ENTERED:
-                if (!islayout) {
+                if (!nocolor ) {
                     view.setBackgroundColor(dragoverBackground);
                 }
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
 
-                if (!islayout) view.setBackgroundColor(backgroundDefault);
+                if (!nocolor) view.setBackgroundColor(backgroundDefault);
                 break;
             case DragEvent.ACTION_DROP:
-                if (!islayout) view.setBackgroundColor(backgroundDefault);
+                if (!nocolor) view.setBackgroundColor(backgroundDefault);
                 // Dropped, reassign View to ViewGroup
 
                 if (view2 == view) {
@@ -1133,9 +1151,10 @@ public class MainActivity extends Activity implements
                 getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
-                if (!islayout) view.setBackgroundColor(backgroundDefault);
+                if (!nocolor) view.setBackgroundColor(backgroundDefault);
                 mBeingDragged = null;
                 hideRemoveDropzone();
+                hideHiddenCategories();
                 break;
             default:
                 break;
@@ -1153,9 +1172,21 @@ public class MainActivity extends Activity implements
         view.startDrag(data, shadowBuilder, view, 0);
         //view.setVisibility(View.INVISIBLE);
 
+        showHiddenCategories();
         showRemoveDropzone();
 
         return true;
+    }
+
+    private void showHiddenCategories() {
+        for (String cat: Categories.CAT_HIDDENS) {
+            mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
+        }
+    }
+    private void hideHiddenCategories() {
+        for (String cat: Categories.CAT_HIDDENS) {
+            mCategoryTabs.get(cat).setVisibility(View.GONE);
+        }
     }
 
     private void showRemoveDropzone() {
@@ -1491,6 +1522,7 @@ public class MainActivity extends Activity implements
     private void showButtonBar(boolean visible) {
 
         if (visible) {
+            showHiddenCategories();
             if (Categories.isSpeacialCategory(mCategory)) {
                 mDeleteCategoryButton.setVisibility(View.INVISIBLE);
             } else {
@@ -1504,6 +1536,7 @@ public class MainActivity extends Activity implements
             mIconSheetBottomFrame.setVisibility(View.VISIBLE);
             mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
         } else {
+            hideHiddenCategories();
             mIconSheetBottomFrame.setVisibility(View.GONE);
             mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
