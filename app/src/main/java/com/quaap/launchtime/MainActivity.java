@@ -1163,6 +1163,7 @@ public class MainActivity extends Activity implements
     }
 
     private void launchUninstallIntent(String packageName) {
+        Log.d("Launch", "Uninstalling " + packageName);
         Uri packageUri = Uri.parse("package:" + packageName);
         Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
         uninstallIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
