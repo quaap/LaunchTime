@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.IconCache;
 import com.quaap.launchtime.db.DB;
 
@@ -70,9 +71,10 @@ public class ShortcutReceiver extends BroadcastReceiver {
     }
 
     private void addShortcut(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
-
-        AppShortcut appshortcut = AppShortcut.createAppShortcut(cn.getClassName(), uri, cn.getPackageName(),label, null,false);
         DB db = ((GlobState)context.getApplicationContext()).getDB();
+        String catID = Categories.getCategoryForPackage(context, cn.getPackageName());
+
+        AppShortcut appshortcut = AppShortcut.createAppShortcut(cn.getClassName(), uri, cn.getPackageName(),label, catID, false);
         db.addApp(appshortcut);
 
         if (bitmap!=null) {

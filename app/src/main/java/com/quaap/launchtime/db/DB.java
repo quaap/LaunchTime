@@ -215,6 +215,11 @@ public class DB extends SQLiteOpenHelper {
     private void addApp(SQLiteDatabase db, String actvname, String pkgname, String label, String catID, boolean widget) {
         try {
 
+            String dbcat = getCategoryDisplay(catID);
+            if (dbcat==null) {
+                Log.i("LaunchDB", "Use of category not in the database: " + catID, new Throwable());
+                catID = Categories.CAT_OTHER;  //the user deleted the category
+            }
 
             ContentValues values = new ContentValues();
             values.put(ACTVNAME, actvname);

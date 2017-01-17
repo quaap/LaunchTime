@@ -3,7 +3,9 @@ package com.quaap.launchtime.components;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.db.DB;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,7 +72,7 @@ public class Categories {
         mCategorKeywords = getCategoryKeywords();
     }
 
-    public static String getCategoryForPackage(String pkgname) {
+    public static String getCategoryForPackage(Context context, String pkgname) {
 
         Map<String, String> prefCat;
         synchronized (Categories.class) {
@@ -92,8 +94,13 @@ public class Categories {
                 }
             }
         }
+        DB db = ((GlobState)context.getApplicationContext()).getDB();
         if (category == null) {
             category = CAT_OTHER;
+        }
+        String dbcat = db.getCategoryDisplay(category);
+        if (dbcat==null) {
+            category = Categories.CAT_OTHER;  //the user deleted the category
         }
 
         return category;

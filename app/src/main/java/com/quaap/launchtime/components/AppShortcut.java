@@ -100,9 +100,9 @@ public class AppShortcut implements Comparable<AppShortcut> {
         mLabel = label;
         mCategory = category;
         mWidget = isWidget;
-        if (mCategory==null) {
-            mCategory = Categories.getCategoryForPackage(mPackageName);
-        }
+//        if (mCategory==null) {
+//            mCategory = Categories.getCategoryForPackage(mPackageName);
+//        }
     }
 
 
@@ -132,7 +132,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
         mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
-        mCategory = Categories.getCategoryForPackage(mPackageName);
+        mCategory = Categories.getCategoryForPackage(context, mPackageName);
         mWidget = false;
 
         Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel);
