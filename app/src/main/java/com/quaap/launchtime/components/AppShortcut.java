@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -210,7 +211,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
     @Override
-    public int compareTo(AppShortcut appShortcut) {
+    public int compareTo(@NonNull AppShortcut appShortcut) {
         return this.mLabel.toLowerCase(Locale.getDefault()).compareTo(appShortcut.mLabel.toLowerCase(Locale.getDefault()));
     }
 

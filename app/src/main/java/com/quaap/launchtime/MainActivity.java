@@ -124,6 +124,7 @@ public class MainActivity extends Activity implements
     private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
     public Map<AppShortcut,ViewGroup> mAppShortcutViews = new HashMap<>();
 
+    private DB mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +135,8 @@ public class MainActivity extends Activity implements
         if (actionBar != null) {
             actionBar.hide();
         }
+
+        mDb = GlobState.getGlobState(this).getDB();
         mPackageMan = getApplicationContext().getPackageManager();
 
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -192,8 +195,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
-
-       // setLockUI(true);
+        
 
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         switchCategory(mCategory);
@@ -207,53 +209,6 @@ public class MainActivity extends Activity implements
 
     }
 
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        setLockUI(true);
-//    }
-
-    public void setLockUI(boolean lock) {
-        Log.d("Launch", "Setting lockui to " + lock);
-        View topmar= findViewById(R.id.txttop_margin);
-        if (lock) {
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-
-            topmar.setVisibility(View.VISIBLE);
-
-            topmar.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    switch (MotionEventCompat.getActionMasked(event)) {
-                        case MotionEvent.ACTION_DOWN:
-                            updateTouchDown(event);
-                            break;
-
-                        case MotionEvent.ACTION_MOVE:
-                            tryConsumeSwipe(event);
-                            break;
-
-                        case MotionEvent.ACTION_UP:
-                            // We only want to launch the activity if the touch was not consumed yet!
-                            if (!touchConsumed) {
-                                //                            Intent i = mPacMan.getLaunchIntentForPackage(app.name.toString());
-                                //                            startActivity(i);
-                            }
-                            break;
-                    }
-
-                    return touchConsumed;
-                }
-            });
-        } else {
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-            decorView.setSystemUiVisibility(uiOptions);
-            topmar.setOnTouchListener(null);
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -266,10 +221,10 @@ public class MainActivity extends Activity implements
         mCategory = category;
         for (TextView catTab : mCategoryTabs.values()) {
             styleCategorySpecial(catTab, CategoryTabStyle.Default);
-            catTab.setText(getDB().getCategoryDisplay(mRevCategoryMap.get(catTab)));
+            catTab.setText(mDb.getCategoryDisplay(mRevCategoryMap.get(catTab)));
         }
 
-        mCategoryTabs.get(category).setText(getDB().getCategoryDisplayFull(category));
+        mCategoryTabs.get(category).setText(mDb.getCategoryDisplayFull(category));
 
         mIconSheet = mIconSheets.get(category);
 
@@ -306,45 +261,39 @@ public class MainActivity extends Activity implements
         int orientationPref = 0;
         try {
             orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "0"));
+
+            switch (orientationPref) {
+                case 0:
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    break;
+                case 1:
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+                    break;
+                case 2:
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    break;
+                case 3:
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    break;
+
+            }
+
+
+            mScreenDim = getScreenDimensions();
+            float shortcutw = getResources().getDimension(R.dimen.shortcut_width);
+            float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
+            mColumns = (int)((mScreenDim.x - catwidth)/(shortcutw + 2));
+
+
+            changeColumnCount(mIconSheet, mColumns);
+
         } catch (Exception e) {
             Log.e("Launch", e.getMessage(), e);
         }
-
-        switch (orientationPref) {
-            case 0:
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
-                break;
-            case 1:
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                break;
-            case 2:
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                break;
-
-        }
-
-
-        mScreenDim = getScreenDimensions();
-        float shortcutw = getResources().getDimension(R.dimen.shortcut_width);
-        float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
-        mColumns = (int)((mScreenDim.x - catwidth)/(shortcutw + 2));
-
-//        if (isLandscape()) {
-//            mColumns = mColumnsLandscape;
-//        } else {
-//            mColumns = mColumnsPortrait;
-//        }
-
-        changeColumnCount(mIconSheet, mColumns);
-
-    }
-
-    public DB getDB() {
-        return GlobState.getGlobState(this).getDB();
     }
 
     public void launchApp(String activityname) {
-        launchApp(getDB().getApp(activityname));
+        launchApp(mDb.getApp(activityname));
     }
 
     public void launchApp(final AppShortcut app) {
@@ -367,7 +316,7 @@ public class MainActivity extends Activity implements
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             showButtonBar(false);
-            getDB().appLaunched(activityname);
+            mDb.appLaunched(activityname);
         } catch (Exception e) {
             Log.d("Launch", "Could not launch " + activityname, e);
         }
@@ -376,20 +325,18 @@ public class MainActivity extends Activity implements
 
     private void loadApplications() {
 
-        final DB db = getDB();
-
         //Make sure the displayed icons load first
         //Load the quickrow icons first
-        for (String actvname: db.getAppCategoryOrder(QUICK_ROW_CAT)) {
-            AppShortcut app = db.getApp(actvname);
+        for (String actvname: mDb.getAppCategoryOrder(QUICK_ROW_CAT)) {
+            AppShortcut app = mDb.getApp(actvname);
             if (app!=null) {
                 app.loadAppIconAsync(this, mPackageMan);
             }
         }
 
         //Load the selected category icons
-        for (String actvname: db.getAppCategoryOrder(mCategory)) {
-            AppShortcut app = db.getApp(actvname);
+        for (String actvname: mDb.getAppCategoryOrder(mCategory)) {
+            AppShortcut app = mDb.getApp(actvname);
             if (app!=null) {
                 app.loadAppIconAsync(this, mPackageMan);
             }
@@ -397,14 +344,14 @@ public class MainActivity extends Activity implements
 
 
         //Look for new apps
-        final List<AppShortcut> shortcuts = processActivities(db);
+        final List<AppShortcut> shortcuts = processActivities();
 
         //loads the quickrow or adds default apps if it is empty
-        processQuickApps(db, shortcuts);
+        processQuickApps(shortcuts);
 
 
 
-        for (final String category : db.getCategories()) {
+        for (final String category : mDb.getCategories()) {
 
             createIconSheet(category);
         }
@@ -428,13 +375,12 @@ public class MainActivity extends Activity implements
     }
 
     private void populateRecentApps(GridLayout iconSheet) {
-        DB db = getDB();
 
         iconSheet.removeAllViews();
 
         int i=0;
-        for (String actvname : db.getAppLaunchedList()) {
-            AppShortcut app = db.getApp(actvname);
+        for (String actvname : mDb.getAppLaunchedList()) {
+            AppShortcut app = mDb.getApp(actvname);
 
             addAppToIconSheet(iconSheet, app, false);
             if (i++>60) break;
@@ -445,10 +391,9 @@ public class MainActivity extends Activity implements
         GridLayout iconSheet = mIconSheets.get(category);
 
         iconSheet.removeAllViews();
-        DB db = getDB();
 
-        final List<String> apporder = db.getAppCategoryOrder(category);
-        List<AppShortcut> apps = db.getApps(category);
+        final List<String> apporder = mDb.getAppCategoryOrder(category);
+        List<AppShortcut> apps = mDb.getApps(category);
 
         for (String actvname : apporder) {
             for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
@@ -465,7 +410,7 @@ public class MainActivity extends Activity implements
         }
 
         if (apps.size()>0) {
-            getDB().setAppCategoryOrder(category, iconSheet);
+            mDb.setAppCategoryOrder(category, iconSheet);
         }
     }
 
@@ -558,11 +503,11 @@ public class MainActivity extends Activity implements
 
             List<View> childViews = new ArrayList<>();
 
-
             for (int i = gridLayout.getChildCount()-1; i >=0 ; i--) {
                 View view = gridLayout.getChildAt(i);
                 if (view==null) {
                     Log.d("gridrelayout", "null child at " + i);
+                    continue;
                 }
                 childViews.add(view);
                 gridLayout.removeView(view);
@@ -612,10 +557,10 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private List<AppShortcut> processActivities(DB db) {
+    private List<AppShortcut> processActivities() {
         final List<AppShortcut> shortcuts = new ArrayList<>();
 
-        List<String> dbactvnames = db.getAppActvNames();
+        List<String> dbactvnames = mDb.getAppActvNames();
 
         Set<String> pmactvnames = new HashSet<>();
         List<AppShortcut> newapps = new ArrayList<>();
@@ -638,7 +583,7 @@ public class MainActivity extends Activity implements
             if (!pmactvnames.contains(actvname)) {
                 pmactvnames.add(actvname);
 
-                app = db.getApp(actvname);
+                app = mDb.getApp(actvname);
                 if (dbactvnames.contains(actvname) && app != null) {
                     app.loadAppIconAsync(this, mPackageMan);
                 } else {
@@ -649,33 +594,31 @@ public class MainActivity extends Activity implements
                 shortcuts.add(app);
 
             }
-            //else {
-            // Log.d("Launch", actvname + " " + ri.activityInfo.name);
-            //}
+
         }
 
         //remove shortcuts if they are not in the system
         for (Iterator<String> it = dbactvnames.iterator(); it.hasNext(); ) {
             String dbactv = it.next();
             if (!pmactvnames.contains(dbactv)) {
-                AppShortcut app = db.getApp(dbactv);
+                AppShortcut app = mDb.getApp(dbactv);
                 if (!isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
                     Log.d("Launch", "Removing " + dbactv);
                     it.remove();
-                    db.deleteApp(dbactv);
+                    mDb.deleteApp(dbactv);
                     removeFromQuickApps(dbactv);
                 }
             }
         }
 
-        db.addApps(newapps);
+        mDb.addApps(newapps);
 
         return shortcuts;
     }
 
-    private void processQuickApps(DB db, List<AppShortcut> shortcuts) {
+    private void processQuickApps(List<AppShortcut> shortcuts) {
         List<AppShortcut> quickRowApps = new ArrayList<>();
-        final List<String> quickRowOrder = db.getAppCategoryOrder(QUICK_ROW_CAT);
+        final List<String> quickRowOrder = mDb.getAppCategoryOrder(QUICK_ROW_CAT);
 
         MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
 
@@ -701,7 +644,7 @@ public class MainActivity extends Activity implements
                 }
             }
         }
-        db.setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+        mDb.setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
 
     }
 
@@ -815,8 +758,8 @@ public class MainActivity extends Activity implements
 
         AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
 
-        getDB().addApp(app);
-        getDB().addAppCategoryOrder(mCategory, app.getActivityName());
+        mDb.addApp(app);
+        mDb.addAppCategoryOrder(mCategory, app.getActivityName());
 
 //        int sw = (int)getResources().getDimension(R.dimen.shortcut_width);
 //        int sh = (int)getResources().getDimension(R.dimen.shortcut_height);
@@ -853,7 +796,7 @@ public class MainActivity extends Activity implements
         ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
 
         final AutoCompleteTextView searchbox = (AutoCompleteTextView) searchView.findViewById(R.id.search_box);
-        AppCursorAdapter searchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, getDB().getAppCursor("XXXXXX"), 0);
+        AppCursorAdapter searchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, mDb.getAppCursor("XXXXXX"), 0);
         searchbox.setAdapter(searchAdapter);
         searchbox.setOnItemClickListener(searchAdapter);
 
@@ -912,7 +855,7 @@ public class MainActivity extends Activity implements
 
     private TextView createCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
-        categoryTab.setText(getDB().getCategoryDisplay(category));
+        categoryTab.setText(mDb.getCategoryDisplay(category));
         categoryTab.setTag(category);
         // categoryTab.setWidth((int)Utils.dpToPx(this,categoryTabWidth));
 
@@ -1001,7 +944,7 @@ public class MainActivity extends Activity implements
                     case DragEvent.ACTION_DROP:
                         if (isAppShortcut) {
                             if (!isSearch) {
-                                getDB().updateAppCategory(mBeingDragged.getActivityName(), category);
+                                mDb.updateAppCategory(mBeingDragged.getActivityName(), category);
                                 MainActivity.this.onDrag(iconSheet, event);
                             }
                         } else {
@@ -1021,7 +964,7 @@ public class MainActivity extends Activity implements
                             } else {
                                 container1.addView(view2, index);
                             }
-                            getDB().setCategoryOrder(container1);
+                            mDb.setCategoryOrder(container1);
                         }
                         break;
                 }
@@ -1073,10 +1016,10 @@ public class MainActivity extends Activity implements
                 if (view == mRemoveDropzone) {
                     if (mQuickRow == mDragDropSource || mBeingDragged!=null && mBeingDragged.isWidget()) {
                         mDragDropSource.removeView(view2);
-                        getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                        mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                         if (mBeingDragged.isWidget()) {
 
-                            getDB().deleteApp(mBeingDragged.getActivityName());
+                            mDb.deleteApp(mBeingDragged.getActivityName());
                             mLoadedWidgets.remove(mBeingDragged.getActivityName());
                         }
 
@@ -1087,7 +1030,7 @@ public class MainActivity extends Activity implements
                         }
 
                     } else if (mBeingDragged.isLink()) {
-                        getDB().deleteApp(mBeingDragged.getActivityName());
+                        mDb.deleteApp(mBeingDragged.getActivityName());
                         mDragDropSource.removeView(view2);
                     } else {
                         //uninstall app
@@ -1140,8 +1083,8 @@ public class MainActivity extends Activity implements
                 }
 
 
-                getDB().setAppCategoryOrder(mRevCategoryMap.get(target), target);
-                getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                mDb.setAppCategoryOrder(mRevCategoryMap.get(target), target);
+                mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 if (!nocolor) view.setBackgroundColor(backgroundDefault);
@@ -1233,10 +1176,10 @@ public class MainActivity extends Activity implements
             switch (resultCode) {
                 case RESULT_OK:
                     mDragDropSource.removeView(mBeingUninstalled);
-                    getDB().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                    mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                     Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
                     String actvname = ((AppShortcut) mBeingUninstalled.getTag()).getActivityName();
-                    getDB().deleteApp(actvname);
+                    mDb.deleteApp(actvname);
                     removeFromQuickApps(actvname);
                     break;
                 case RESULT_CANCELED:
@@ -1306,8 +1249,8 @@ public class MainActivity extends Activity implements
         promptGetCategoryName(getString(R.string.rename_cat),
                 getString(R.string.rename_cat2),
                 category,
-                getDB().getCategoryDisplay(category),
-                getDB().getCategoryDisplayFull(category),
+                mDb.getCategoryDisplay(category),
+                mDb.getCategoryDisplayFull(category),
                 new CategoryChangerListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName) {
@@ -1333,7 +1276,7 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        if (getDB().updateCategory(category, newDisplayName, newDisplayFullName)) {
+        if (mDb.updateCategory(category, newDisplayName, newDisplayFullName)) {
 
             TextView categoryTab = mCategoryTabs.get(category);
             if (category.equals(mCategory)) {
@@ -1387,7 +1330,7 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        if (getDB().addCategory(category, newDisplayName, newDisplayFullName)) {
+        if (mDb.addCategory(category, newDisplayName, newDisplayFullName)) {
             createIconSheet(category);
 
             switchCategory(category);
@@ -1398,7 +1341,7 @@ public class MainActivity extends Activity implements
 
     private void promptDeleteCategory(final String category) {
 
-        final String message = getString(R.string.cat_deleted, getDB().getCategoryDisplay(Categories.CAT_OTHER));
+        final String message = getString(R.string.cat_deleted, mDb.getCategoryDisplay(Categories.CAT_OTHER));
         new AlertDialog.Builder(MainActivity.this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.delete_cat)
@@ -1419,7 +1362,7 @@ public class MainActivity extends Activity implements
     private void deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);
 
-        if (getDB().deleteCategory(category)) {
+        if (mDb.deleteCategory(category)) {
 
             View iconSheet = mIconSheets.get(category);
             mRevCategoryMap.remove(iconSheet);
@@ -1431,9 +1374,9 @@ public class MainActivity extends Activity implements
             mCategoriesLayout.removeView(categoryTab);
 
             repopulateIconSheet(Categories.CAT_OTHER);
-            String newcat = mCategoryTabs.keySet().iterator().next();
+            //String newcat = mCategoryTabs.keySet().iterator().next();
 
-            switchCategory(newcat);
+            switchCategory(Categories.CAT_OTHER);
 
         } else {
             Toast.makeText(MainActivity.this, R.string.no_delete_cat, Toast.LENGTH_SHORT).show();
@@ -1609,45 +1552,4 @@ public class MainActivity extends Activity implements
     }
 
 
-    private float lastX, lastY;
-    private boolean touchConsumed; // Did we consume the touch event yet? This will avoid calling it twice
-    private float touchSlop;
-
-    void updateTouchDown(MotionEvent event) {
-        lastX = event.getX();
-        lastY = event.getY();
-        touchConsumed = false;
-    }
-
-    void tryConsumeSwipe(MotionEvent event) {
-        if (!touchConsumed) {
-            // Also subtract the X: we want to trigger if we scroll down, not to the sides
-            float downSpeed = event.getY() - lastY - Math.abs(lastX - event.getX());
-            if (downSpeed > touchSlop) {
-                // The user swiped down, show the status bar and consume the event
-                expandNotificationPanel();
-                touchConsumed = true;
-            } else {
-                updateTouchDown(event);
-            }
-        }
-    }
-
-    void expandNotificationPanel() {
-        Log.d("Launch", "Expanding status");
-        try
-        {
-            //noinspection WrongConstant
-            Object service = getSystemService("statusbar");
-            Class<?> clazz = Class.forName("android.app.StatusBarManager");
-            Method expand = Build.VERSION.SDK_INT <= 16 ?
-                    clazz.getMethod("expand") :
-                    clazz.getMethod("expandNotificationsPanel");
-
-            expand.invoke(service);
-        }
-        catch (Exception localException) {
-            localException.printStackTrace();
-        }
-    }
 }

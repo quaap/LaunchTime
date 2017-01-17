@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
+import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.db.DB;
@@ -37,7 +38,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
     public AppCursorAdapter(MainActivity main, TextView textHolder, int layout, Cursor cursor, int flags) {
         super(main, layout, cursor, flags);
         mMain = main;
-        mDB = main.getDB();
+        mDB = GlobState.getGlobState(main).getDB();
         mTextHolder = textHolder;
 
     }
@@ -63,7 +64,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
         ViewGroup appholder = (ViewGroup) view.findViewById(R.id.icontarget);
         appholder.removeAllViews();
 
-        AppShortcut app = mMain.getDB().getApp(activityName);
+        AppShortcut app = mDB.getApp(activityName);
         if (app != null) {
             app.loadAppIconAsync(context, context.getPackageManager());
             appholder.addView(mMain.getShortcutView(app, false, false));
