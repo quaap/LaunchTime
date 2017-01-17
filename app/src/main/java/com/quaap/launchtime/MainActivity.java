@@ -27,6 +27,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -254,6 +255,20 @@ public class MainActivity extends Activity implements
         } else if (!mCategory.equals(Categories.CAT_TALK)){
             switchCategory(Categories.CAT_TALK);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_HOME) {
+            switchCategory(Categories.CAT_TALK);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        switchCategory(Categories.CAT_TALK);
+        super.onUserLeaveHint();
     }
 
     private void checkConfig() {
@@ -1137,6 +1152,8 @@ public class MainActivity extends Activity implements
 
         return true;
     }
+
+
 
     private void showHiddenCategories() {
         for (String cat: Categories.CAT_HIDDENS) {
