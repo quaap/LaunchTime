@@ -12,6 +12,13 @@
         android:summary="%s" />
 
 
+    <ListPreference
+        android:defaultValue="1"
+        android:title="Category tab size"
+        android:entries="@array/pref_size_strings"
+        android:entryValues="@array/pref_tab_size_values"
+        android:key="preference_tabsize"
+        android:summary="%s" />
     <PreferenceScreen
         android:title="@string/pref_about"
         android:summary="@string/pref_help_about">

@@ -110,13 +110,13 @@ public class MainActivity extends Activity implements
     private int dragoverBackground;
     private int backgroundDefault = Color.TRANSPARENT;
     private float categoryTabFontSize = 16;
-    private float categoryTabFontSizeHidden = 12;
     private int categoryTabPaddingHeight = 16;
     private int mColumns = 3;
-    private int mColumnsLandscape = 5;
-    private int mColumnsPortrait = 3;
-    private int mColumnMargin = 12;
-    private int categoryTabWidth = 108;
+//    private float categoryTabFontSizeHidden = 12;
+//    private int mColumnsLandscape = 5;
+//    private int mColumnsPortrait = 3;
+//    private int mColumnMargin = 12;
+//    private int categoryTabWidth = 108;
 
     private Point mScreenDim;
 
@@ -167,6 +167,8 @@ public class MainActivity extends Activity implements
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
 
+        readPrefs();
+
         loadApplications();
 
     }
@@ -198,7 +200,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
-        
+
 
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         switchCategory(mCategory);
@@ -270,11 +272,32 @@ public class MainActivity extends Activity implements
     }
 
 
-    private void checkConfig() {
+    private void readPrefs() {
 
-        int orientationPref = 0;
+
         try {
-            orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "0"));
+
+            int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
+            switch (tabsizePref) {
+                case 0:  //small
+                    categoryTabPaddingHeight = 12;
+                    categoryTabFontSize = 14;
+                    break;
+                case 1:  //medium
+                    categoryTabPaddingHeight = 16;
+                    categoryTabFontSize = 16;
+                    break;
+                case 2:  //large
+                    categoryTabPaddingHeight = 20;
+                    categoryTabFontSize = 18;
+                    break;
+                case 3: //x-large
+                    categoryTabPaddingHeight = 24;
+                    categoryTabFontSize = 18;
+                    break;
+            }
+
+            int orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "0"));
 
             switch (orientationPref) {
                 case 0:
@@ -292,14 +315,26 @@ public class MainActivity extends Activity implements
 
             }
 
+        } catch (Exception e) {
+            Log.e("Launch", e.getMessage(), e);
+        }
+    }
+
+
+    private void checkConfig() {
+        readPrefs();
+        try {
 
             mScreenDim = getScreenDimensions();
             float shortcutw = getResources().getDimension(R.dimen.shortcut_width);
             float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
             mColumns = (int)((mScreenDim.x - catwidth)/(shortcutw + 2));
 
-
             changeColumnCount(mIconSheet, mColumns);
+
+            mShowButtons.setMinimumHeight(categoryTabPaddingHeight*3);
+            //mShowButtons.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, categoryTabPaddingHeight*3));
+            //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
 
         } catch (Exception e) {
             Log.e("Launch", e.getMessage(), e);
@@ -437,15 +472,21 @@ public class MainActivity extends Activity implements
     }
 
     private void addAppToIconSheet(GridLayout iconSheet, AppShortcut app, boolean reuse) {
-        if (app != null && isAppInstalled(app.getPackageName())) {
-            ViewGroup item = getShortcutView(app, false, reuse);
-            if (!app.iconLoaded()) {
-                app.loadAppIconAsync(this, mPackageMan);
+        if (app != null) {
+            if (isAppInstalled(app.getPackageName())) {
+                ViewGroup item = getShortcutView(app, false, reuse);
+                if (!app.iconLoaded()) {
+                    app.loadAppIconAsync(this, mPackageMan);
+                }
+                ViewGroup parent = (ViewGroup) item.getParent();
+                if (parent != null) parent.removeView(item);
+                GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
+                iconSheet.addView(item, lp);
+            } else {
+                Log.d("LaunchTime", "Not showing recent " + app.getPackageName() + " " + app.getActivityName() + ": Not installed.");
             }
-            ViewGroup parent = (ViewGroup)item.getParent();
-            if (parent!=null) parent.removeView(item);
-            GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
-            iconSheet.addView(item, lp);
+        } else {
+            Log.d("LaunchTime", "Not showing recent: Null.");
         }
     }
 
@@ -849,9 +890,9 @@ public class MainActivity extends Activity implements
 
         switch (catstyle) {
             case Tiny:
-                categoryTab.setPadding(6, 0, 2, 0);
+                categoryTab.setPadding(6, categoryTabPaddingHeight/6, 2, categoryTabPaddingHeight/6);
                 categoryTab.setBackgroundColor(cattabBackground);
-                categoryTab.setTextSize(categoryTabFontSizeHidden);
+                categoryTab.setTextSize(categoryTabFontSize-3);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 break;
             case DragHover:
@@ -1244,6 +1285,9 @@ public class MainActivity extends Activity implements
                     Toast.makeText(this, R.string.could_not_uninstall, Toast.LENGTH_LONG).show();
 
             }
+        } else if (requestCode == PREF_REQUEST) {
+            checkConfig();
+            switchCategory(mCategory);
         } else {
             ComponentName cn = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
             if (cn == null) {
@@ -1523,11 +1567,13 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(settingsIntent);
+                startActivityForResult(settingsIntent,PREF_REQUEST);
             }
         });
 
     }
+
+    private static final int PREF_REQUEST=4353;
 
     private void toggleButtonBar() {
         int vis = mIconSheetBottomFrame.getVisibility();

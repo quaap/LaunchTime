@@ -25,6 +25,7 @@ import java.util.List;
 public class SettingsActivity extends PreferenceActivity {
 
 
+
     @Override
     protected boolean isValidFragment(String fragmentName) {
         if (fragmentName.equals("com.quaap.launchtime.SettingsActivity$SettingsFragment")) {
@@ -54,5 +55,12 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
+        super.onBackPressed();
     }
 }

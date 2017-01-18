@@ -13,6 +13,7 @@ import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -550,16 +551,19 @@ public class DB extends SQLiteOpenHelper {
         values.put(TIME, System.currentTimeMillis());
         db.insert(APP_HISTORY_TABLE, null, values);
 
+
+        //delete old apps
+        Calendar old = Calendar.getInstance();
+        old.add(Calendar.MONTH, -2);
+
+        db.delete(APP_HISTORY_TABLE, TIME+"<?", new String[] { old.getTimeInMillis() + ""});
+
     }
 
     public void deleteAppLaunchedRecord(String activityname) {
 
         SQLiteDatabase db = this.getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put(ACTVNAME, activityname);
-//        values.put(TIME, System.currentTimeMillis());
-//        db.insert(APP_HISTORY_TABLE, null, values);
+
 
         db.delete(APP_HISTORY_TABLE, ACTVNAME+"=?", new String[] {activityname});
 
