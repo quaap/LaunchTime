@@ -291,7 +291,7 @@ public class DB extends SQLiteOpenHelper {
         try {
 
             for (String existcat: getCategories()) {
-                if (existcat.toLowerCase().equals(catID.toLowerCase())) return false;
+                if (existcat.equalsIgnoreCase(catID)) return false;
             }
 
             SQLiteDatabase db = this.getWritableDatabase();
