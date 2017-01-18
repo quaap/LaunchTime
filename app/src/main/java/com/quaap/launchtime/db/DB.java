@@ -289,6 +289,11 @@ public class DB extends SQLiteOpenHelper {
 
     public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, int index) {
         try {
+
+            for (String existcat: getCategories()) {
+                if (existcat.toLowerCase().equals(catID.toLowerCase())) return false;
+            }
+
             SQLiteDatabase db = this.getWritableDatabase();
 
             // Log.d("DB", "adding catID " + catID);
