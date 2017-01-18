@@ -63,7 +63,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class MainActivity extends Activity implements
-        View.OnLongClickListener, View.OnDragListener {
+        View.OnLongClickListener {
 
     //TODO: everything needs a major refactor.
     // custom views or fragments?
@@ -137,22 +137,25 @@ public class MainActivity extends Activity implements
             actionBar.hide();
         }
 
+        //Setup some of our globals utils
         mDb = GlobState.getGlobState(this).getDB();
         mPackageMan = getApplicationContext().getPackageManager();
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mWidgetHelper = new Widget(this);
+
 
         mScreenDim = getScreenDimensions();
 
-        mWidgetHelper = new Widget(this);
-
+        //Load resources and init the form members
         setColors();
         initUI();
 
-        mQuickRow.setOnDragListener(this);
+
+        mQuickRow.setOnDragListener(mMainDragListener);
         mQuickRowScroller.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
-                return MainActivity.this.onDrag(mQuickRow, dragEvent);
+                return mMainDragListener.onDrag(mQuickRow, dragEvent);
             }
         });
         mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
@@ -171,7 +174,7 @@ public class MainActivity extends Activity implements
     private View.OnDragListener iconSheetDropRedirector = new View.OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
-            return MainActivity.this.onDrag(mIconSheet, dragEvent);
+            return mMainDragListener.onDrag(mIconSheet, dragEvent);
         }
     };
 
@@ -375,7 +378,7 @@ public class MainActivity extends Activity implements
         mIconSheets.put(category, iconSheet);
         mRevCategoryMap.put(iconSheet, category);
         iconSheet.setColumnCount(mColumns);
-        iconSheet.setOnDragListener(MainActivity.this);
+        iconSheet.setOnDragListener(mMainDragListener);
 
         final TextView categoryTab = createCategoryTab(category, iconSheet);
 
@@ -717,7 +720,7 @@ public class MainActivity extends Activity implements
                 appwid.setOnDragListener(new View.OnDragListener() {
                     @Override
                     public boolean onDrag(View view, DragEvent dragEvent) {
-                        return MainActivity.this.onDrag(wrap, dragEvent);
+                        return mMainDragListener.onDrag(wrap, dragEvent);
                     }
                 });
 
@@ -746,7 +749,7 @@ public class MainActivity extends Activity implements
         item.setTag(app);
         item.setClickable(true);
         item.setOnLongClickListener(this);
-        item.setOnDragListener(this);
+        item.setOnDragListener(mMainDragListener);
 
         if (reuse) {
             mAppShortcutViews.put(app, item);
@@ -956,7 +959,7 @@ public class MainActivity extends Activity implements
                         if (isAppShortcut) {
                             if (!isSearch) {
                                 mDb.updateAppCategory(mBeingDragged.getActivityName(), category);
-                                MainActivity.this.onDrag(iconSheet, event);
+                                mMainDragListener.onDrag(iconSheet, event);
                             }
                         } else {
                             ViewGroup container1 = (ViewGroup) view.getParent();
@@ -987,129 +990,149 @@ public class MainActivity extends Activity implements
         return categoryTab;
     }
 
-    @Override
-    public boolean onDrag(View view, DragEvent event) {
-        View view2 = (View) event.getLocalState();
-        boolean isShortcut = true;
-        if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut )) {
-            isShortcut = false;
-        }
-        boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone || !isShortcut || mQuickRow == mDragDropSource;
-        switch (event.getAction()) {
-            case DragEvent.ACTION_DRAG_STARTED:
-                // do nothing
-                break;
-
-            case DragEvent.ACTION_DRAG_LOCATION:
-                //scroll the scrollview
-
-                if (isShortcut) scrollOnDrag(view, event, mIconSheetScroller);
-                break;
-            case DragEvent.ACTION_DRAG_ENTERED:
-                if (!nocolor ) {
-                    view.setBackgroundColor(dragoverBackground);
-                }
-                break;
-            case DragEvent.ACTION_DRAG_EXITED:
-
-                if (!nocolor) view.setBackgroundColor(backgroundDefault);
-                break;
-            case DragEvent.ACTION_DROP:
-                if (!nocolor) view.setBackgroundColor(backgroundDefault);
-                // Dropped, reassign View to ViewGroup
-
-                if (view2 == view) {
-                    // Log.d("sort", "self drop");
+    private View.OnDragListener mMainDragListener = new View.OnDragListener() {
+        @Override
+        public boolean onDrag(View view, DragEvent event) {
+            View view2 = (View) event.getLocalState();
+            boolean isShortcut = true;
+            if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut )) {
+                isShortcut = false;
+            }
+            boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone || !isShortcut || mQuickRow == mDragDropSource;
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // do nothing
                     break;
-                }
 
-                ViewGroup target;
-                if (view == mRemoveDropzone) {
-                    if (mQuickRow == mDragDropSource || mBeingDragged!=null && mBeingDragged.isWidget()) {
-                        mDragDropSource.removeView(view2);
-                        mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
-                        if (mBeingDragged.isWidget()) {
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    //scroll the scrollview
 
-                            mDb.deleteApp(mBeingDragged.getActivityName());
-                            mLoadedWidgets.remove(mBeingDragged.getActivityName());
-                        }
-                    } else if (mCategory.equals(Categories.CAT_SEARCH)) {
-                        mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
-                        mDragDropSource.removeView(view2);
-                    } else if (mDragDropSource == mCategoriesLayout) {
-                        //delete category tab
-                        if (!isShortcut) {
-                            promptDeleteCategory((String)view2.getTag());
-                        }
-
-                    } else if (mBeingDragged.isLink()) {
-                        mDb.deleteApp(mBeingDragged.getActivityName());
-                        mDragDropSource.removeView(view2);
-                    } else {
-                        //uninstall app
-                        mBeingUninstalled = view2;
-                        launchUninstallIntent(mBeingDragged.getPackageName());
+                    if (isShortcut) scrollOnDrag(view, event, mIconSheetScroller);
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    if (!nocolor ) {
+                        view.setBackgroundColor(dragoverBackground);
                     }
-                    return true;
-                } else if (view instanceof GridLayout) {
-                    target = (GridLayout) view;
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+
+                    if (!nocolor) view.setBackgroundColor(backgroundDefault);
+                    break;
+                case DragEvent.ACTION_DROP:
+                    if (!nocolor) view.setBackgroundColor(backgroundDefault);
+                    // Dropped, reassign View to ViewGroup
+
+                    if (view2 == view) {
+                        // Log.d("sort", "self drop");
+                        break;
+                    }
+
+                    if (handleDrop(view, view2, isShortcut)) return true;
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    if (!nocolor) view.setBackgroundColor(backgroundDefault);
+                    mBeingDragged = null;
+                    hideRemoveDropzone();
+                    hideHiddenCategories();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        private boolean handleDrop(View view, View view2, boolean isShortcut) {
+            ViewGroup target;
+            if (view == mRemoveDropzone) {  // need to delete the dropped thing
+                //Stuff to be deleted
+                if (mQuickRow == mDragDropSource || mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
+                    removeDroppedItem(view2);
+                } else if (mCategory.equals(Categories.CAT_SEARCH)) {
+                    removeDroppedRecentItem(view2);
+                } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
+                    //delete category tab
+                    promptDeleteCategory((String)view2.getTag());
 
                 } else {
-                    target = (GridLayout) view.getParent();
+                    //uninstall app
+                    mBeingUninstalled = view2;
+                    launchUninstallIntent(mBeingDragged.getPackageName());
                 }
+                return true;
+            } else if (view instanceof GridLayout) {
+                target = (GridLayout) view;
+
+            } else {
+                target = (GridLayout) view.getParent();
+            }
 
 
-                if ((mDragDropSource == mQuickRow && mQuickRow == target) || (mDragDropSource != mQuickRow && mQuickRow != target)) {
-                    mDragDropSource.removeView(view2);
+            //Find the drop position
+            int index = -1;
+            for (int i = 0; i < target.getChildCount(); i++) {
+                if (target.getChildAt(i) == view) {
+                    index = i;
                 }
+            }
+
+            // Don't remove the source icon if it's on the quickrow, unless we're re-arranging
+            if ((mDragDropSource == mQuickRow && mQuickRow == target) || (mDragDropSource != mQuickRow && mQuickRow != target)) {
+                mDragDropSource.removeView(view2);
+            }
 
 
-                int index = -1;
-                for (int i = 0; i < target.getChildCount(); i++) {
-                    if (target.getChildAt(i) == view) {
-                        index = i;
-                    }
-                }
-
-                if (target == mQuickRow) {
-                    if (mQuickRow != mDragDropSource) {
-                        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
-                            AppShortcut dragging = (AppShortcut) view2.getTag();
-                            AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
-                            if (dragging.getActivityName().equals(inbar.getActivityName())) {
-                                return true;
-                            }
+            if (target == mQuickRow) {
+                if (mQuickRow != mDragDropSource) {
+                    //prevent copies of the same app on the quickrow
+                    for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+                        AppShortcut dragging = (AppShortcut) view2.getTag();
+                        AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+                        if (dragging.getActivityName().equals(inbar.getActivityName())) {
+                            return true;
                         }
                     }
-
-                    view2 = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) view2.getTag()), true);
-
                 }
+                //make a copy of the shortcut to put on the quickbar
+                view2 = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) view2.getTag()), true);
 
-                if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
+            }
 
-                    if (index == -1) {
-                        target.addView(view2);
-                    } else {
-                        target.addView(view2, index);
-                    }
+            if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
+
+                if (index == -1) {
+                    target.addView(view2);
+                } else {
+                    target.addView(view2, index);
                 }
+            }
 
-
-                mDb.setAppCategoryOrder(mRevCategoryMap.get(target), target);
-                mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
-                break;
-            case DragEvent.ACTION_DRAG_ENDED:
-                if (!nocolor) view.setBackgroundColor(backgroundDefault);
-                mBeingDragged = null;
-                hideRemoveDropzone();
-                hideHiddenCategories();
-                break;
-            default:
-                break;
+            //save the new order
+            mDb.setAppCategoryOrder(mRevCategoryMap.get(target), target);
+            mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+            return false;
         }
-        return true;
-    }
+
+        private void removeDroppedRecentItem(View view2) {
+            mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
+            mDragDropSource.removeView(view2);
+        }
+
+        private void removeDroppedItem(View view2) {
+            mDragDropSource.removeView(view2);
+            mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+
+            if (mBeingDragged.isLink()) {
+                mDb.deleteApp(mBeingDragged.getActivityName());
+            }
+
+            if (mBeingDragged.isWidget()) {
+
+                mDb.deleteApp(mBeingDragged.getActivityName());
+                mLoadedWidgets.remove(mBeingDragged.getActivityName());
+            }
+        }
+
+    };
 
     private void scrollOnDrag(View view, DragEvent event, ScrollView scrollView) {
         float ty = view.getTop() + event.getY();
@@ -1424,7 +1447,7 @@ public class MainActivity extends Activity implements
         mIconSheetBottomFrame = (ViewGroup) findViewById(R.id.layout_icons_bottomframe);
 
         mRemoveDropzone = (FrameLayout) findViewById(R.id.remove_dropzone);
-        mRemoveDropzone.setOnDragListener(this);
+        mRemoveDropzone.setOnDragListener(mMainDragListener);
         mRemoveAppText = (TextView) findViewById(R.id.remove_dz_txt);
 
         mCategoriesScroller = (ScrollView)findViewById(R.id.layout_categories_scroller);
