@@ -23,13 +23,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -372,7 +370,7 @@ public class MainActivity extends Activity implements
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             showButtonBar(false);
-            mDb.appLaunched(activityname);
+            mDb.appLaunched(app.getActivityName());
         } catch (Exception e) {
             Log.d("Launch", "Could not launch " + activityname, e);
             Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
@@ -438,6 +436,7 @@ public class MainActivity extends Activity implements
         int i=0;
         for (String actvname : mDb.getAppLaunchedList()) {
             AppShortcut app = mDb.getApp(actvname);
+            //Log.d("Recent", "Trying " + actvname + " " + app);
 
             addAppToIconSheet(iconSheet, app, false);
             if (i++>60) break;
@@ -483,7 +482,7 @@ public class MainActivity extends Activity implements
                 GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
                 iconSheet.addView(item, lp);
             } else {
-                Log.d("LaunchTime", "Not showing recent " + app.getPackageName() + " " + app.getActivityName() + ": Not installed.");
+                //Log.d("LaunchTime", "Not showing recent " + app.getPackageName() + " " + app.getActivityName() + ": Not installed.");
             }
         } else {
             Log.d("LaunchTime", "Not showing recent: Null.");
@@ -650,7 +649,7 @@ public class MainActivity extends Activity implements
                 if (dbactvnames.contains(actvname) && app != null) {
                     app.loadAppIconAsync(this, mPackageMan);
                 } else {
-                    app = AppShortcut.createActionLink(this, mPackageMan, ri);
+                    app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
                     newapps.add(app);
                 }
 
@@ -689,7 +688,7 @@ public class MainActivity extends Activity implements
         for (AppShortcut app : shortcuts) {
 
             if (quickRowOrder.contains(app.getActivityName())) {
-                AppShortcut qapp = AppShortcut.createActionLink(app);
+                AppShortcut qapp = AppShortcut.createAppShortcut(app);
                 qapp.loadAppIconAsync(this, mPackageMan);
                 quickRowApps.add(qapp);
             }
@@ -819,7 +818,7 @@ public class MainActivity extends Activity implements
         String label = pkgname;
 
 
-        AppShortcut app = AppShortcut.createActionLink(actvname, pkgname, label, mCategory, true);
+        AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
 
         mDb.addApp(app);
         mDb.addAppCategoryOrder(mCategory, app.getActivityName());
@@ -1142,7 +1141,7 @@ public class MainActivity extends Activity implements
                     }
                 }
                 //make a copy of the shortcut to put on the quickbar
-                view2 = getShortcutView(AppShortcut.createActionLink((AppShortcut) view2.getTag()), true);
+                view2 = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) view2.getTag()), true);
 
             }
 

@@ -50,7 +50,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
     private static Map<String,AppShortcut> mAppShortcuts = new HashMap<>();
 
 
-    public static AppShortcut createActionLink(String activityName, String packageName, String label, String category, boolean isWidget) {
+    public static AppShortcut createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
             app = new AppShortcut(activityName, packageName, label, category, isWidget);
@@ -61,7 +61,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
 
 
-    public static AppShortcut createActionLink(Context context, PackageManager pm, ResolveInfo ri) {
+    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
         String activityName = ri.activityInfo.name;
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
@@ -71,7 +71,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return app;
     }
 
-    public static AppShortcut createActionLink(AppShortcut shortcut) {
+    public static AppShortcut createAppShortcut(AppShortcut shortcut) {
         return new AppShortcut(shortcut);
     }
 

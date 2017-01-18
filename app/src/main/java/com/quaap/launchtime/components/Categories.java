@@ -1,7 +1,6 @@
 package com.quaap.launchtime.components;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 
 import com.quaap.launchtime.GlobState;
