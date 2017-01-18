@@ -23,13 +23,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MotionEventCompat;
+
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -52,7 +52,6 @@ import com.quaap.launchtime.components.InteractiveScrollView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -140,7 +139,6 @@ public class MainActivity extends Activity implements
 
         mDb = GlobState.getGlobState(this).getDB();
         mPackageMan = getApplicationContext().getPackageManager();
-
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         mScreenDim = getScreenDimensions();
@@ -250,6 +248,8 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
+        showButtonBar(false);
+        mQuickRowScroller.smoothScrollTo(0, 0);
         if (mIconSheetScroller.getScrollY()>0) {
             mIconSheetScroller.smoothScrollTo(0, 0);
         } else if (!mCategory.equals(Categories.CAT_TALK)){
@@ -261,15 +261,11 @@ public class MainActivity extends Activity implements
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             switchCategory(Categories.CAT_TALK);
+            mQuickRowScroller.smoothScrollTo(0, 0);
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void onUserLeaveHint() {
-        switchCategory(Categories.CAT_TALK);
-        super.onUserLeaveHint();
-    }
 
     private void checkConfig() {
 
@@ -889,7 +885,7 @@ public class MainActivity extends Activity implements
         }
         styleCategorySpecial(categoryTab, CategoryTabStyle.Default, category);
         lp.gravity = Gravity.CENTER;
-        lp.setMargins(2, 6, 2, 8);
+        lp.setMargins(2, 3, 2, 3);
         categoryTab.setLayoutParams(lp);
 
         categoryTab.setGravity(Gravity.CENTER);
