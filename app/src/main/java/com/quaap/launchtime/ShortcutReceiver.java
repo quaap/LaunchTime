@@ -45,14 +45,21 @@ public class ShortcutReceiver extends BroadcastReceiver {
                     if (intent2 != null) {
                         Uri data = intent2.getData();
                         ComponentName cn = intent2.getComponent();
+                        String intentaction = intent2.getAction();
                         String shortcutLabel = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
+//                        for (String key: intent2.getExtras().keySet()) {
+//                            Log.d("ShortcutCatch", " extra2: " + key + " = " + intent2.getExtras().get(key));
+//                        }
 
+                        Log.d("ShortcutCatch", "intent2.action=" + intent2.getAction());
                         Log.d("ShortcutCatch", "uri=" + data);
                         if (cn != null) {
                             Log.d("ShortcutCatch", "cn2package=" + cn.getPackageName() + ", cn2classname=" + cn.getClassName());
 
-
-                            addShortcut(context, shortcutLabel, data, cn, receivedicon);
+                            addLink(context, shortcutLabel, data, cn, receivedicon);
+                        } else if (intentaction!=null){
+                            Log.d("ShortcutCatch", "intentaction=" + intentaction + " uri=" + data);
+                            addLink(context, intentaction, shortcutLabel, data, receivedicon);
                         }
                     }
                 } catch (Exception e) {
@@ -68,17 +75,32 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     }
 
-    private void addShortcut(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
+    private void addLink(Context context, String action, String label, Uri uri, Bitmap bitmap) {
         DB db = ((GlobState)context.getApplicationContext()).getDB();
-        String catID = Categories.getCategoryForPackage(context, cn.getPackageName());
+        String catID = Categories.getCategoryForAction(context, action);
+        if (catID.equals(Categories.CAT_OTHER)) {
+            catID = Categories.getCategoryForUri(context, uri.toString());
+        }
 
-        AppShortcut appshortcut = AppShortcut.createAppShortcut(cn.getClassName(), uri, cn.getPackageName(),label, catID, false);
+        AppShortcut appshortcut = AppShortcut.createActionLink(action, uri,label, catID);
         db.addApp(appshortcut);
 
         if (bitmap!=null) {
             IconCache.saveBitmap(context, appshortcut.getActivityName(), bitmap);
         }
 
+    }
+
+    private void addLink(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
+        DB db = ((GlobState)context.getApplicationContext()).getDB();
+        String catID = Categories.getCategoryForPackage(context, cn.getPackageName());
+
+        AppShortcut appshortcut = AppShortcut.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
+        db.addApp(appshortcut);
+
+        if (bitmap!=null) {
+            IconCache.saveBitmap(context, appshortcut.getActivityName(), bitmap);
+        }
 
     }
 

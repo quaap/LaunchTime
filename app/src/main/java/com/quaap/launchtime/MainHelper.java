@@ -117,7 +117,7 @@ public class MainHelper {
         activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
 
         activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
-        activities.put("email", Arrays.asList("k9", "inbox", "gmail", "outlook", "mail"));
+        activities.put("email", Arrays.asList("k9", "inbox", "outlook", "mail"));
 
 
         return activities;

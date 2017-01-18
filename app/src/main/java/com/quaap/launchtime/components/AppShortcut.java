@@ -39,16 +39,18 @@ public class AppShortcut implements Comparable<AppShortcut> {
     private String mLabel;
     private String mCategory;
     private boolean mWidget;
+
     private volatile Drawable mIconDrawable;
     private volatile ImageView mIconImage;
 
+    public static final String LINK_SEP = ":IS_APP_LINK:";
+    public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
+
+
     private static Map<String,AppShortcut> mAppShortcuts = new HashMap<>();
 
-//    private static AppShortcut getFromCache(String activityName) {
-//
-//    }
 
-    public static AppShortcut createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
+    public static AppShortcut createActionLink(String activityName, String packageName, String label, String category, boolean isWidget) {
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
             app = new AppShortcut(activityName, packageName, label, category, isWidget);
@@ -57,17 +59,9 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return app;
     }
 
-    public static AppShortcut createAppShortcut(String activityName, Uri linkUri, String packageName, String label, String category, boolean isWidget) {
-        activityName = makeLink(activityName, linkUri);
-        AppShortcut app = mAppShortcuts.get(activityName);
-        if (app == null) {
-            app = new AppShortcut(activityName, packageName, label, category, isWidget);
-            mAppShortcuts.put(activityName, app);
-        }
-        return app;
-    }
 
-    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
+
+    public static AppShortcut createActionLink(Context context, PackageManager pm, ResolveInfo ri) {
         String activityName = ri.activityInfo.name;
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
@@ -77,22 +71,38 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return app;
     }
 
-    public static AppShortcut createAppShortcut(AppShortcut shortcut) {
+    public static AppShortcut createActionLink(AppShortcut shortcut) {
         return new AppShortcut(shortcut);
     }
 
-//    private AppShortcut(String activityName, Uri linkUri, String packageName, String label, String category, boolean isWidget) {
-//        mActivityName = makeLink(activityName, linkUri);
-//        mPackageName = packageName;
-//        mLabel = label;
-//        mCategory = category;
-//        mWidget = isWidget;
-//        if (mCategory==null) {
-//            mCategory = Categories.getCategoryForPackage(mPackageName);
-//        }
-//    }
 
+    public static AppShortcut createActionLink(String activityName, Uri linkUri, String packageName, String label, String category) {
+        activityName = makeLink(activityName, linkUri);
+        AppShortcut app = mAppShortcuts.get(activityName);
+        if (app == null) {
+            app = new AppShortcut(activityName, packageName, label, category, false);
+            mAppShortcuts.put(activityName, app);
+        }
+        return app;
+    }
 
+    public static AppShortcut createActionLink(String actionName, Uri linkUri, String label, String category) {
+
+        actionName = makeLink(actionName, linkUri);
+        AppShortcut app = mAppShortcuts.get(actionName);
+        if (app == null) {
+            app = new AppShortcut(actionName, ACTION_PACKAGE, label, category, false);
+            mAppShortcuts.put(actionName, app);
+        }
+        return app;
+
+//        D/ShortcutCatch: intent received
+//        D/ShortcutCatch: Shortcut name: Dino
+//        D/ShortcutCatch:  extra2: fromContact = true
+//        D/ShortcutCatch: intent2.action=android.intent.action.SENDTO
+//        D/ShortcutCatch: uri=smsto:(555)%20555-5555
+
+    }
 
     private AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
@@ -126,7 +136,6 @@ public class AppShortcut implements Comparable<AppShortcut> {
 //        mWidget = false;
 //    }
 
-    public static final String LINK_SEP = ":IS_APP_LINK:";
 
     private AppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
         mActivityName = ri.activityInfo.name;
@@ -186,6 +195,10 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return mWidget;
     }
 
+    public boolean isActionLink() {
+        return mPackageName.equals(ACTION_PACKAGE);
+    }
+
     public boolean iconLoaded() {
         return mIconDrawable != null;
     }
@@ -230,8 +243,14 @@ public class AppShortcut implements Comparable<AppShortcut> {
                 // load the icon
                 Drawable app_icon = null;
                 try {
-                    Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setClassName(mPackageName, getLinkBaseActivityName());
+                    Intent intent;
+                    if (isActionLink()) {
+                        intent = new Intent(getLinkBaseActivityName(), Uri.parse(getLinkUri()));
+
+                    } else {
+                        intent = new Intent(Intent.ACTION_MAIN);
+                        intent.setClassName(mPackageName, getLinkBaseActivityName());
+                    }
                     app_icon = pm.getActivityIcon(intent);
 
                     Bitmap bitmap = IconCache.loadBitmap(context, mActivityName);
@@ -242,7 +261,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
                             Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
                             Canvas canvas = new Canvas(newbm);
                             canvas.drawBitmap(bitmap, 0, 0, null);
-                            app_icon.setBounds(canvas.getWidth() / 2, canvas.getHeight() / 2, canvas.getWidth(), canvas.getHeight());
+                            app_icon.setBounds(canvas.getWidth() / 2, 0, canvas.getWidth(), canvas.getHeight()/2);
                             app_icon.draw(canvas);
                             app_icon = new BitmapDrawable(context.getResources(), newbm);
                             //Log.d("loadAppIconAsync", " yo");

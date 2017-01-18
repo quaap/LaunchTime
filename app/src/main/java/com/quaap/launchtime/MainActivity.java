@@ -321,18 +321,26 @@ public class MainActivity extends Activity implements
 
         try {
             Intent intent;
-            if (uristr==null) {
-                intent = new Intent(Intent.ACTION_MAIN);
+            if (app.isActionLink()) {
+                if (activityname.startsWith("android.intent.action.CALL")) {
+                    activityname = "android.intent.action.DIAL";
+                }
+                intent = new Intent(activityname, Uri.parse(uristr));
             } else {
-                intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uristr));
+                if (uristr == null) {
+                    intent = new Intent(Intent.ACTION_MAIN);
+                } else {
+                    intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uristr));
+                }
+                intent.setClassName(packagename, activityname);
             }
-            intent.setClassName(packagename, activityname);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             showButtonBar(false);
             mDb.appLaunched(activityname);
         } catch (Exception e) {
             Log.d("Launch", "Could not launch " + activityname, e);
+            Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
 
     }
@@ -601,7 +609,7 @@ public class MainActivity extends Activity implements
                 if (dbactvnames.contains(actvname) && app != null) {
                     app.loadAppIconAsync(this, mPackageMan);
                 } else {
-                    app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
+                    app = AppShortcut.createActionLink(this, mPackageMan, ri);
                     newapps.add(app);
                 }
 
@@ -640,7 +648,7 @@ public class MainActivity extends Activity implements
         for (AppShortcut app : shortcuts) {
 
             if (quickRowOrder.contains(app.getActivityName())) {
-                AppShortcut qapp = AppShortcut.createAppShortcut(app);
+                AppShortcut qapp = AppShortcut.createActionLink(app);
                 qapp.loadAppIconAsync(this, mPackageMan);
                 quickRowApps.add(qapp);
             }
@@ -770,7 +778,7 @@ public class MainActivity extends Activity implements
         String label = pkgname;
 
 
-        AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
+        AppShortcut app = AppShortcut.createActionLink(actvname, pkgname, label, mCategory, true);
 
         mDb.addApp(app);
         mDb.addAppCategoryOrder(mCategory, app.getActivityName());
@@ -1093,7 +1101,7 @@ public class MainActivity extends Activity implements
                     }
                 }
                 //make a copy of the shortcut to put on the quickbar
-                view2 = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) view2.getTag()), true);
+                view2 = getShortcutView(AppShortcut.createActionLink((AppShortcut) view2.getTag()), true);
 
             }
 
@@ -1573,6 +1581,7 @@ public class MainActivity extends Activity implements
 
 
     public boolean isAppInstalled(String packageName) {
+        if (packageName.equals(AppShortcut.ACTION_PACKAGE)) return true;
         try {
             getPackageManager().getApplicationInfo(packageName, 0);
             return true;

@@ -42,7 +42,7 @@ public class LaunchReceiver extends BroadcastReceiver {
                 Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
                 ResolveInfo ri = context.getPackageManager().resolveActivity(packageIntent, 0);
 
-                AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri);
+                AppShortcut app = AppShortcut.createActionLink(context, context.getPackageManager(), ri);
                 DB db = ((GlobState)context.getApplicationContext()).getDB();
                 db.addApp(app);
                 db.addAppCategoryOrder(app.getCategory(),app.getActivityName());

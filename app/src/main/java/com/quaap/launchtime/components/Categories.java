@@ -1,6 +1,7 @@
 package com.quaap.launchtime.components;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 
 import com.quaap.launchtime.GlobState;
@@ -72,6 +73,34 @@ public class Categories {
         mCategorKeywords = getCategoryKeywords();
     }
 
+    public static String getCategoryForAction(Context context, String action) {
+        String category = null;
+        if (action.contains("CALL") || action.contains("SEND")
+                || action.contains("DIAL") || action.contains("CONTACT")
+                || action.contains("MAIL") || action.contains("MESSAG")) {
+            category = CAT_TALK;
+        } else if (action.contains("MUSIC")) {
+            category = CAT_MEDIA;
+        } else if (action.contains("WEB")) {
+            category = CAT_INTERNET;
+        }
+
+        return checkCat(context, category);
+    }
+
+    public static String getCategoryForUri(Context context, String uri) {
+        String category = null;
+        if (uri.contains("sms") || uri.contains("call") || uri.contains("tel:") || uri.contains("contact")) {
+            category = CAT_TALK;
+        } else if (uri.contains("aud") || uri.contains("aud")) {
+            category = CAT_MEDIA;
+        } else if (uri.contains("http")) {
+            category = CAT_INTERNET;
+        }
+
+        return checkCat(context, category);
+    }
+
     public static String getCategoryForPackage(Context context, String pkgname) {
 
         Map<String, String> prefCat;
@@ -94,13 +123,19 @@ public class Categories {
                 }
             }
         }
+
+        return checkCat(context, category);
+    }
+
+    private static String checkCat(Context context, String category) {
         DB db = ((GlobState)context.getApplicationContext()).getDB();
         if (category == null) {
             category = CAT_OTHER;
-        }
-        String dbcat = db.getCategoryDisplay(category);
-        if (dbcat==null) {
-            category = Categories.CAT_OTHER;  //the user deleted the category
+        } else {
+            String dbcat = db.getCategoryDisplay(category);
+            if (dbcat == null) {
+                category = Categories.CAT_OTHER;  //the user deleted the category
+            }
         }
 
         return category;
