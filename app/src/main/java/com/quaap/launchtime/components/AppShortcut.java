@@ -242,38 +242,47 @@ public class AppShortcut implements Comparable<AppShortcut> {
             protected Drawable doInBackground(Void... voids) {
                 // load the icon
                 Drawable app_icon = null;
-                try {
-                    Intent intent;
-                    if (isActionLink()) {
-                        intent = new Intent(getLinkBaseActivityName(), Uri.parse(getLinkUri()));
 
+                Intent intent;
+                if (isActionLink()) {
+                    String uristr = getLinkUri();
+                    if (uristr==null) {
+                        intent = new Intent(getLinkBaseActivityName());
                     } else {
-                        intent = new Intent(Intent.ACTION_MAIN);
-                        intent.setClassName(mPackageName, getLinkBaseActivityName());
-                    }
-                    app_icon = pm.getActivityIcon(intent);
-
-                    Bitmap bitmap = IconCache.loadBitmap(context, mActivityName);
-
-                    if (bitmap!=null) {
-                        Log.d("loadAppIconAsync", "Got special icon for " + mActivityName);
-                        try {
-                            Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
-                            Canvas canvas = new Canvas(newbm);
-                            canvas.drawBitmap(bitmap, 0, 0, null);
-                            app_icon.setBounds(canvas.getWidth() / 2, 0, canvas.getWidth(), canvas.getHeight()/2);
-                            app_icon.draw(canvas);
-                            app_icon = new BitmapDrawable(context.getResources(), newbm);
-                            //Log.d("loadAppIconAsync", " yo");
-                        } catch (Exception e) {
-                            Log.e("loadAppIconAsync", "couldn't make special icon", e);
-                        }
+                        intent = new Intent(getLinkBaseActivityName(), Uri.parse(uristr));
                     }
 
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                    exception = e;
+                } else {
+                    intent = new Intent(Intent.ACTION_MAIN);
+                    intent.setClassName(mPackageName, getLinkBaseActivityName());
                 }
+                try {
+                    app_icon = pm.getActivityIcon(intent);
+                } catch (Exception e) {
+                    Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
+                }
+                if (app_icon == null) {
+                    app_icon = pm.getDefaultActivityIcon();
+                }
+
+                Bitmap bitmap = IconCache.loadBitmap(context, mActivityName);
+
+                if (bitmap!=null) {
+                    Log.d("loadAppIconAsync", "Got special icon for " + mActivityName);
+                    try {
+                        Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+                        Canvas canvas = new Canvas(newbm);
+                        canvas.drawBitmap(bitmap, 0, 0, null);
+                        app_icon.setBounds(canvas.getWidth() / 2, 0, canvas.getWidth(), canvas.getHeight()/2);
+                        app_icon.draw(canvas);
+                        app_icon = new BitmapDrawable(context.getResources(), newbm);
+                        //Log.d("loadAppIconAsync", " yo");
+                    } catch (Exception e) {
+                        Log.e("loadAppIconAsync", "couldn't make special icon", e);
+                    }
+                }
+
+
 
                 return app_icon;
             }
