@@ -79,7 +79,6 @@
     <string name="pref_about">About</string>
     <string name="pref_help_about">Help and about</string>
     <string name="is_tiny">Is Tiny</string>
-    <string name="feedback_url">http://10.0.0.5/appbackend/receivedata.php</string>
     <string name="send_info_expl">The following information will be sent to the developer (only) to better understand how users categorize their apps. Only your IP is logged.</string>
     <string name="send">Send</string>
     <string name="send_comment">Optional Comment:</string>
