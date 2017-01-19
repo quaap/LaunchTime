@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.quaap.launchtime.components.AppShortcut;
@@ -182,9 +183,9 @@ public class Widget {
     private void addEmptyData(Intent pickIntent) {
         // This is needed work around some weird bug.
         // This will simply add some empty data to the intent.
-        ArrayList customInfo = new ArrayList();
+        ArrayList<Parcelable> customInfo = new ArrayList<>();
         pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo);
-        ArrayList customExtras = new ArrayList();
+        ArrayList<Parcelable> customExtras = new ArrayList();
         pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_EXTRAS, customExtras);
     }
 

@@ -13,7 +13,7 @@
     <dimen name="shortcut_fontsize">12sp</dimen>
     <dimen name="shortcut_padding_side">5dp</dimen>
 
-    <dimen name="btnbar_textsize">16dp</dimen>
+    <dimen name="btnbar_textsize">16sp</dimen>
 
 
     <dimen name="quickbar_height">67dp</dimen>

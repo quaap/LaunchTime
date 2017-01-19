@@ -481,9 +481,9 @@ public class MainActivity extends Activity implements
                 if (parent != null) parent.removeView(item);
                 GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
                 iconSheet.addView(item, lp);
-            } else {
+            } //else {
                 //Log.d("LaunchTime", "Not showing recent " + app.getPackageName() + " " + app.getActivityName() + ": Not installed.");
-            }
+            //}
         } else {
             Log.d("LaunchTime", "Not showing recent: Null.");
         }
@@ -499,7 +499,7 @@ public class MainActivity extends Activity implements
 
         if (w>0 || h>0) {
             float sw = getResources().getDimension(R.dimen.shortcut_width);
-            float sh = getResources().getDimension(R.dimen.shortcut_height);
+            //float sh = getResources().getDimension(R.dimen.shortcut_height);
 
             //int width = (int)(sw + 20) * mColumns;
 
@@ -529,7 +529,7 @@ public class MainActivity extends Activity implements
 
             if (appwid != null) {
 
-                Bundle b = new Bundle();
+
 
                 //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
                 final int wDp = pxToDip(cellwidth*wcells);
@@ -594,30 +594,30 @@ public class MainActivity extends Activity implements
         }
     }
 
-
-    private void listAll() {
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-
-
-        // Get all activities that have those filters
-        List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
-
-
-        for (int i = 0; i < activities.size(); i++) {
-
-            AppShortcut app;
-
-            ResolveInfo resolveInfo = activities.get(i);
-            ActivityInfo activityInfo = resolveInfo.activityInfo;
-            String name = activityInfo.name;
-            String packageName = activityInfo.applicationInfo.packageName;
-            String className = activityInfo.applicationInfo.className;
-            String label = resolveInfo.loadLabel(mPackageMan).toString();
-            boolean enabled = activityInfo.enabled;
-            boolean exported = activityInfo.exported;
-
-        }
-    }
+//
+//    private void listAll() {
+//        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+//
+//
+//        // Get all activities that have those filters
+//        List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
+//
+//
+//        for (int i = 0; i < activities.size(); i++) {
+//
+//            AppShortcut app;
+//
+//            ResolveInfo resolveInfo = activities.get(i);
+//            ActivityInfo activityInfo = resolveInfo.activityInfo;
+//            String name = activityInfo.name;
+//            String packageName = activityInfo.applicationInfo.packageName;
+//            String className = activityInfo.applicationInfo.className;
+//            String label = resolveInfo.loadLabel(mPackageMan).toString();
+//            boolean enabled = activityInfo.enabled;
+//            boolean exported = activityInfo.exported;
+//
+//        }
+//    }
 
     private List<AppShortcut> processActivities() {
         final List<AppShortcut> shortcuts = new ArrayList<>();

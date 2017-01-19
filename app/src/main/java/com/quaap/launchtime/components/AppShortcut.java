@@ -304,7 +304,4 @@ public class AppShortcut implements Comparable<AppShortcut> {
         loadAppIconTask.execute(null, null, null);
     }
 
-    public void gg() {
-
-    }
 }
