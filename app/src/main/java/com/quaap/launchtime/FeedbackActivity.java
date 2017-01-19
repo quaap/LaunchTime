@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -35,17 +34,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class FeedbackActivity extends Activity {
 
-    private Map<String,String> manglednames = new HashMap<>();
+    private LinkedHashMap<String,String> scrubbednames = new LinkedHashMap<>();
     private Map<String,Boolean> includes = new HashMap<>();
     List<AppShortcut> apps = new ArrayList<>();
+    Map<String,AppShortcut> appMap = new HashMap<>();
     String version;
     String appname;
 
@@ -90,42 +93,66 @@ public class FeedbackActivity extends Activity {
 
 
         TextView txtappname = (TextView) findViewById(R.id.info_app_name);
-        txtappname.setText(appname + " " + version);
+        txtappname.setText(appname);
 
         TextView txtappver = (TextView) findViewById(R.id.info_app_version);
         txtappver.setText(version);
 
 
         DB db = ((GlobState)getApplicationContext()).getDB();
-        for (String activityname: db.getAppActvNames()) {
+
+        List<String> actnames = db.getAppActvNames();
+        Collections.sort(actnames);
+
+        for (String activityname: actnames) {
             AppShortcut app = db.getApp(activityname);
+            if (app==null) continue;
             apps.add(app);
+            appMap.put(activityname,app);
+
+            int count = db.getAppLaunchedCount(activityname);
+
+            String scrubbed;
             if (app.isActionLink() || app.isLink()) {
                 String uri = app.getLinkUri();
                 if (uri!=null && uri.length()>6) {
                     uri = uri.substring(0,6) + "." + uri.hashCode();
                 }
-                String mangled = app.getLinkBaseActivityName() + "/" + uri;
-                manglednames.put(activityname, mangled);
-                activityname = app.getLinkBaseActivityName() + "/" + uri;
+                scrubbed = app.getLinkBaseActivityName() + "." + count + "/" + uri;
+                //activityname = app.getLinkBaseActivityName() + "/" + uri;
             } else {
-                manglednames.put(activityname, activityname);
+                scrubbed = activityname + "." + count;
             }
-            includes.put(activityname, true);
+            
+            scrubbednames.put(activityname, scrubbed);
+            includes.put(scrubbed, true);
 
         }
 
+        for (String catid: db.getCategories()) {
+            String cat = "cat." + catid + "." + db.getCategoryDisplay(catid) + "." + db.isTinyCategory(catid);
+            scrubbednames.put(cat, cat);
+            includes.put(cat, true);
+        }
+
+        for (String actvname: db.getAppCategoryOrder(MainActivity.QUICK_ROW_CAT)) {
+            String name = "qr." + scrubbednames.get(actvname);
+            scrubbednames.put(name, name);
+            includes.put(name, true);
+        }
         ListView itemsList = (ListView)findViewById(R.id.info_data_items);
 
-        itemsList.setAdapter(new PackageAdapter(this, apps));
+        itemsList.setAdapter(new PackageAdapter(this, new ArrayList<String>(scrubbednames.keySet())));
 
     }
 
+
+
     private String sendData() {
-        StringBuffer sb = getBuildSendData();
+        StringBuffer sb = buildSendData();
         //Log.d("SendData", sb.toString());
 
-        String requestURL =  "http://10.0.0.5/appbackend/receivedata.php";
+        String requestURL =  getString(R.string.feedback_url);
         HashMap<String, String> postDataParams = new HashMap<>();
 
         postDataParams.put("app",appname);
@@ -137,12 +164,46 @@ public class FeedbackActivity extends Activity {
 
         String message;
         if (response.trim().equals("1")) {
-            message = "Data successfully sent. Thanks!";
+            message = getString(R.string.sent_success);
         } else {
-            message = "Data tranfer failed:" + response;
+            message = getString(R.string.sent_failed) + response;
         }
         return message;
     }
+
+    @NonNull
+    private StringBuffer buildSendData() {
+        StringBuffer sb = new StringBuffer(16000);
+        sb.append(appname);
+        sb.append(": ");
+        sb.append(version);
+        sb.append("\n");
+        String comment = ((EditText)findViewById(R.id.info_user_message)).getText().toString();
+        if (comment.length()>0) {
+            sb.append("comment:");
+            sb.append(Base64.encodeToString(comment.getBytes(),Base64.DEFAULT));
+            //sb.append(comment);
+            sb.append("\n");
+        }
+        sb.append("BEGIN APP DATA\n");
+        for (String actvname: scrubbednames.keySet()) {
+            String scrubbed = scrubbednames.get(actvname);
+            Boolean checked = includes.get(scrubbed);
+            if (checked==null || checked){
+                sb.append(scrubbed);
+                AppShortcut app = appMap.get(actvname);
+                if (app!=null) {
+                    sb.append(":");
+                    sb.append(app.getCategory());
+                }
+                sb.append("\n");
+            }
+        }
+        sb.append("END APP DATA\n");
+        return sb;
+    }
+
+
 
     @NonNull
     private String sendPostData(String requestURL, HashMap<String, String> postDataParams) {
@@ -185,34 +246,6 @@ public class FeedbackActivity extends Activity {
         return response;
     }
 
-    @NonNull
-    private StringBuffer getBuildSendData() {
-        StringBuffer sb = new StringBuffer(16000);
-        sb.append(appname);
-        sb.append(": ");
-        sb.append(version);
-        sb.append("\n");
-        String comment = ((EditText)findViewById(R.id.info_user_message)).getText().toString();
-        if (comment.length()>0) {
-            sb.append("comment:");
-            sb.append(Base64.encodeToString(comment.getBytes(),Base64.DEFAULT));
-            //sb.append(comment);
-            sb.append("\n");
-        }
-        sb.append("BEGIN APP DATA\n");
-        for (AppShortcut app:apps) {
-            String activityname = manglednames.get(app.getActivityName());
-            Boolean checked = includes.get(activityname);
-            if (checked==null || checked){
-                sb.append(activityname);
-                sb.append(":");
-                sb.append(app.getCategory());
-                sb.append("\n");
-            }
-        }
-        sb.append("END APP DATA\n");
-        return sb;
-    }
 
     private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
@@ -231,9 +264,9 @@ public class FeedbackActivity extends Activity {
         return result.toString();
     }
 
-    class PackageAdapter extends ArrayAdapter<AppShortcut> {
+    class PackageAdapter extends ArrayAdapter<String> {
 
-        public PackageAdapter(Context context, List<AppShortcut> objects) {
+        public PackageAdapter(Context context, List<String> objects) {
             super(context, 0, objects);
         }
 
@@ -241,10 +274,7 @@ public class FeedbackActivity extends Activity {
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             // Get the data item for this position
-            final AppShortcut app = getItem(position);
-            if (app==null) {
-                return convertView;
-            }
+            String activityname = getItem(position);
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.line_item, parent, false);
             }
@@ -252,19 +282,24 @@ public class FeedbackActivity extends Activity {
             CheckBox includeit = (CheckBox)convertView.findViewById(R.id.info_include);
             TextView pcknameview = (TextView)convertView.findViewById(R.id.item_text);
             TextView catnameview = (TextView)convertView.findViewById(R.id.item_cat);
-            catnameview.setText(app.getCategory());
+            final AppShortcut app = appMap.get(activityname);
+            if (app!=null) {
+                catnameview.setText(app.getCategory());
+            } else {
+                catnameview.setText("na");
+            }
 
-            String activityname = manglednames.get(app.getActivityName());
+            String scrubbed = scrubbednames.get(activityname);
 
-            pcknameview.setText(activityname);
+            pcknameview.setText(scrubbed);
 
 
             includeit.setOnCheckedChangeListener(null);
-            Boolean checked = includes.get(activityname);
+            Boolean checked = includes.get(scrubbed);
 
             includeit.setChecked(checked);
 
-            final String activityname2 = activityname;
+            final String activityname2 = scrubbed;
             includeit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

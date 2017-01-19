@@ -8,7 +8,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/item_text"
         android:layout_weight="1"
-        android:textColor="@color/textcolorinv" />
+        android:textColor="@color/textcolorinv"
+        android:breakStrategy="simple" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,7 +17,7 @@
         android:id="@+id/item_cat"
         android:maxLines="1"
         android:maxEms="3"
-        android:ems="3"
+        android:ems="4"
         android:background="#f5f5f5"
         android:layout_marginStart="2dp"
         android:paddingStart="1dp"

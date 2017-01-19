@@ -13,7 +13,7 @@
     android:background="@android:color/background_light">
 
     <TextView
-        android:text="This form will send the following information to the creator to better understand how users use it."
+        android:text="@string/send_info_expl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView6"
@@ -31,26 +31,29 @@
         android:id="@+id/app_version"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/info_send"
-        android:layout_below="@+id/textView6">
+        android:layout_below="@+id/textView6"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/info_app_name"
             android:textSize="18sp"
-            android:textColor="@color/textcolorinv" />
+            android:textColor="@color/textcolorinv"
+            android:layout_margin="6dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/info_app_version"
             android:textSize="18sp"
-            android:textColor="@color/textcolorinv" />
+            android:textColor="@color/textcolorinv"
+            android:layout_margin="6dp" />
 
     </LinearLayout>
 
     <Button
-        android:text="Send"
+        android:text="@string/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/info_send"
@@ -59,7 +62,7 @@
         android:layout_below="@+id/textView6" />
 
     <TextView
-        android:text="Optional Comment:"
+        android:text="@string/send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView7"
@@ -75,7 +78,7 @@
         android:layout_below="@+id/textView7" />
 
     <TextView
-        android:text="Remove any line below you don't want to include"
+        android:text="@string/remove_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView5"
