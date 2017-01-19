@@ -46,6 +46,7 @@ import android.widget.Toast;
 import com.quaap.launchtime.components.AppCursorAdapter;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.InteractiveScrollView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
@@ -128,7 +129,11 @@ public class MainActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
         setContentView(R.layout.activity_main);
+
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -153,6 +158,12 @@ public class MainActivity extends Activity implements
         mQuickRowScroller.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
+
+                String g=null;
+
+                if (false) g="g";
+
+                g.trim();
                 return mMainDragListener.onDrag(mQuickRow, dragEvent);
             }
         });

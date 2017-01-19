@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.db.DB;
 
 /**
@@ -33,6 +34,8 @@ public class GlobState extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         Categories.init(this);
 

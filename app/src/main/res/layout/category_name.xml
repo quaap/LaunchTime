@@ -21,7 +21,9 @@
         android:layout_height="wrap_content"
         android:inputType="textCapWords|textPersonName"
         android:ems="10"
-        android:id="@+id/shortname" />
+        android:id="@+id/shortname"
+        android:maxLines="1"
+        android:maxLength="12" />
 
     <TextView
         android:text="@string/full_name"
@@ -34,7 +36,9 @@
         android:layout_height="wrap_content"
         android:inputType="textCapWords|textPersonName"
         android:ems="10"
-        android:id="@+id/fullname" />
+        android:id="@+id/fullname"
+        android:maxLines="1"
+        android:maxLength="40" />
 
     <CheckBox
         android:text="@string/is_tiny"

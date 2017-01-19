@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.components.HttpUtils;
 import com.quaap.launchtime.db.DB;
 
 import java.io.BufferedReader;
@@ -157,7 +158,7 @@ public class FeedbackActivity extends Activity {
         postDataParams.put("app",appname);
         postDataParams.put("data", sb.toString());
 
-        String response = sendPostData(requestURL, postDataParams);
+        String response = HttpUtils.sendPostData(requestURL, postDataParams);
 
         Log.d("SendData", response);
 
@@ -204,64 +205,6 @@ public class FeedbackActivity extends Activity {
 
 
 
-    @NonNull
-    private String sendPostData(String requestURL, HashMap<String, String> postDataParams) {
-        URL url;
-        String response = "";
-        try {
-            url = new URL(requestURL);
-
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(postDataParams));
-
-            writer.flush();
-            writer.close();
-            os.close();
-            int responseCode=conn.getResponseCode();
-
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                String line;
-                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line=br.readLine()) != null) {
-                    response+=line + "\n";
-                }
-            }
-            else {
-                response="Code " + responseCode;
-            }
-            conn.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-            response=e.getLocalizedMessage();
-        }
-        return response;
-    }
-
-
-    private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-        }
-
-        return result.toString();
-    }
 
     class PackageAdapter extends ArrayAdapter<String> {
 
