@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.db.DB;
 
 /**
@@ -30,6 +31,8 @@ import com.quaap.launchtime.db.DB;
 public class LaunchReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
+
         String action = intent.getAction();
         if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
             Uri data = intent.getData();

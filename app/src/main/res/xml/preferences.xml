@@ -31,7 +31,7 @@
 
     <PreferenceScreen
         android:title="Send app data"
-        android:summary="Send data about which apps are intalled to the app developer">
+        android:summary="Send data about which apps are installed to the app developer">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.quaap.launchtime"

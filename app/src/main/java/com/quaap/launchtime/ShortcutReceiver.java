@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconCache;
 import com.quaap.launchtime.db.DB;
 
@@ -30,8 +31,11 @@ import com.quaap.launchtime.db.DB;
  * GNU General Public License for more details.
  */
 public class ShortcutReceiver extends BroadcastReceiver {
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
         String action = intent.getAction();
         if ("com.android.launcher.action.INSTALL_SHORTCUT".equals(action)) {
             Log.d("ShortcutCatch", "intent received");

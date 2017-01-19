@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.HttpUtils;
 import com.quaap.launchtime.db.DB;
 
@@ -55,6 +56,8 @@ public class FeedbackActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        
         setContentView(R.layout.activity_feedback);
 
         appname = getString(R.string.app_name);

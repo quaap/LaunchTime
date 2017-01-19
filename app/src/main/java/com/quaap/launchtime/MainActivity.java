@@ -158,12 +158,6 @@ public class MainActivity extends Activity implements
         mQuickRowScroller.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
-
-                String g=null;
-
-                if (false) g="g";
-
-                g.trim();
                 return mMainDragListener.onDrag(mQuickRow, dragEvent);
             }
         });
