@@ -197,8 +197,8 @@ public class DB extends SQLiteOpenHelper {
         return apps;
     }
 
-    public void addApp(AppShortcut shortcut) {
-        addApp(shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
+    public boolean addApp(AppShortcut shortcut) {
+        return addApp(shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
     }
 
     public void addApps(List<AppShortcut> shortcuts) {
@@ -208,12 +208,12 @@ public class DB extends SQLiteOpenHelper {
         }
     }
 
-    public void addApp(String actvname, String pkgname, String label, String catID, boolean widget) {
+    public boolean addApp(String actvname, String pkgname, String label, String catID, boolean widget) {
         SQLiteDatabase db = this.getWritableDatabase();
-        addApp(db, actvname, pkgname, label, catID, widget);
+       return addApp(db, actvname, pkgname, label, catID, widget);
     }
 
-    private void addApp(SQLiteDatabase db, String actvname, String pkgname, String label, String catID, boolean widget) {
+    private boolean addApp(SQLiteDatabase db, String actvname, String pkgname, String label, String catID, boolean widget) {
         try {
 
             String dbcat = getCategoryDisplay(catID);
@@ -231,9 +231,12 @@ public class DB extends SQLiteOpenHelper {
             values.put(ISWIDGET, widget ? 1 : 0);
 
             db.insert(APP_TABLE, null, values);
+
+            return true;
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't insert package " + pkgname, e);
         }
+        return false;
     }
 
     public Cursor getAppCursor(String filter) {

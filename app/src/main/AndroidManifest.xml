@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     -->
+    <uses-permission  android:name="android.permission.INTERNET" />
 
     <application
         android:name=".GlobState"
@@ -32,10 +33,10 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AboutActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
 
         <receiver
             android:name=".LaunchReceiver"
@@ -44,6 +45,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
@@ -56,6 +58,9 @@
                 <action android:name="com.android.launcher.action.INSTALL_SHORTCUT" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".FeedbackActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
     </application>
 
 </manifest>

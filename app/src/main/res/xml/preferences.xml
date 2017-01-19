@@ -19,6 +19,7 @@
         android:entryValues="@array/pref_tab_size_values"
         android:key="preference_tabsize"
         android:summary="%s" />
+
     <PreferenceScreen
         android:title="@string/pref_about"
         android:summary="@string/pref_help_about">
@@ -27,5 +28,15 @@
             android:targetPackage="com.quaap.launchtime"
             android:targetClass="com.quaap.launchtime.AboutActivity"/>
     </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="Send app data"
+        android:summary="Send app data to the app developer">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.launchtime"
+            android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
+    </PreferenceScreen>
+
 
 </PreferenceScreen>
