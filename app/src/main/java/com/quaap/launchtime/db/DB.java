@@ -642,13 +642,22 @@ public class DB extends SQLiteOpenHelper {
         return list;
     }
 
-    public boolean backup(Context context) {
+    public boolean backup(Context context, String optionalName) {
 
         close();
 
+        if (optionalName!=null) {
+            optionalName = optionalName.replaceAll("[./(){}\"*|\\\\$]", "_") + ".";
+            if (optionalName.length()>20) {
+                optionalName = optionalName.substring(0,20);
+            }
+        } else {
+            optionalName = "";
+        }
+
         File inFile = context.getDatabasePath(DATABASE_NAME);
 
-        File outFile= context.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())));
+        File outFile= context.getFileStreamPath(BK_PRE + optionalName + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())));
 
         return copyFile(inFile, outFile);
     }

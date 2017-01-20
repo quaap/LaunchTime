@@ -76,7 +76,7 @@ public class IconCache {
                 FileInputStream fis = context.openFileInput(name);
                 bitmap = BitmapFactory.decodeStream(fis);
                 fis.close();
-                Log.d("IconCache", "Got icon " + name);
+                //Log.d("IconCache", "Got icon " + name);
             }
 
         } catch (IOException e) {

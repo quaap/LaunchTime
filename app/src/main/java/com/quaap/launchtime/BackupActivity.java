@@ -2,15 +2,22 @@ package com.quaap.launchtime;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -39,23 +46,22 @@ public class BackupActivity extends Activity {
         newbk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newBackup();
-                populateBackupsList();
+                promptNew();
+
             }
         });
 
         restorebk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                restore();
+                confirmRestore();
             }
         });
 
         delbk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                delete();
-                populateBackupsList();
+                confirmDelete();
             }
         });
         populateBackupsList();
@@ -65,7 +71,7 @@ public class BackupActivity extends Activity {
         backupsLayout.removeAllViews();
         RadioGroup baks = new RadioGroup(this);
 
-        makeRadioButton(baks, "None selected", false);
+        makeRadioButton(baks, "None selected", false).setChecked(true);
 
         for(final String bk: DB.listBackups(this)) {
 
@@ -74,33 +80,69 @@ public class BackupActivity extends Activity {
         backupsLayout.addView(baks);
     }
 
-    private void makeRadioButton(RadioGroup baks, final String bk, boolean item) {
+    private RadioButton makeRadioButton(RadioGroup baks, final String bk, final boolean item) {
         RadioButton bkb = new RadioButton(this);
         bkb.setText(bk);
-        bkb.setTag(item);
+
 
         bkb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                selectedBackup = bk;
-                selected = (boolean) compoundButton.getTag();
+                if (b) {
+                    selectedBackup = bk;
+                    selected = item;
+                    Log.d("backuppage", "selected = " + selectedBackup);
+                }
             }
         });
 
         baks.addView(bkb);
+        return bkb;
     }
 
-    private void newBackup() {
+    private void promptNew() {
+
+        final EditText tag = new EditText(this);
+        tag.setHint("Optional name");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("New backup")
+                .setView(tag)
+                .setPositiveButton("Take backup", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        newBackup(tag.getText().toString());
+                    }
+                }).setNegativeButton(R.string.cancel, null);
+        builder.show();
+    }
+
+    private void newBackup(String optionalName) {
         DB db = ((GlobState)getApplicationContext()).getDB();
 
         String message;
-        if (db.backup(this)) {
+        if (db.backup(this, optionalName)) {
             message = "Backup successful!";
         } else {
             message = "Backup failed";
         }
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        populateBackupsList();
+    }
 
+    private void confirmRestore() {
+        if (selected) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Restore?")
+                    .setMessage("If you restore, all your changes since back up '" + selectedBackup + "' will be lost.")
+                    .setPositiveButton("Restore", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            restore();
+                        }
+                    }).setNegativeButton(R.string.cancel, null);
+            builder.show();
+        }
     }
 
     private void restore() {
@@ -134,6 +176,20 @@ public class BackupActivity extends Activity {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
     }
+    private void confirmDelete() {
+        if (selected) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Delete?")
+                    .setMessage("Are you sure you want to delete the back up '" + selectedBackup + "'?")
+                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            delete();
+                        }
+                    }).setNegativeButton(R.string.cancel, null);
+            builder.show();
+        }
+    }
 
     private void delete() {
         if (selected) {
@@ -145,6 +201,9 @@ public class BackupActivity extends Activity {
                 message = "Delete failed";
             }
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            populateBackupsList();
         }
     }
+
+
 }
