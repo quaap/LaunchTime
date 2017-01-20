@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -121,18 +122,25 @@ public class FsTools {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-        builder.setTitle(title + "\n" + currentDir.getPath());
+        builder.setTitle(title + "\n" +
+                currentDir.getPath().replaceFirst(Pattern.quote(Environment.getExternalStorageDirectory().getPath()) + "/?", "/"));
 
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                File selFile = new File(currentDir,items[i]);
-                if (selFile.isDirectory()) {
-                    selectExternalLocation(listener, title, selFile.getPath(), chooseDir, matchRE);
-                } else {
-                    listener.selected(selFile);
+                File selFile = null;
+                try {
+                    selFile = new File(currentDir,items[i]).getCanonicalFile();
+                    if (selFile.isDirectory()) {
+                        selectExternalLocation(listener, title, selFile.getPath(), chooseDir, matchRE);
+                    } else {
+                        listener.selected(selFile);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
             }
         });
         if (chooseDir) {
