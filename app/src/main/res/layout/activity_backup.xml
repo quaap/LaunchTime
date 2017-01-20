@@ -8,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.quaap.launchtime.BackupActivity">
+    tools:context="com.quaap.launchtime.BackupActivity"
+    android:background="#dd000000">
 
     <TextView
         android:text="Backup and Restore"
@@ -51,35 +52,46 @@
                 android:layout_weight="1" />
 
             <Button
-                android:text="Restore backup"
+                android:text="Restore selected backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_restorebak"
                 android:layout_weight="1" />
 
             <Button
-                android:text="Delete backup"
+                android:text="Delete selected backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_deletebak"
                 android:layout_weight="1" />
         </LinearLayout>
 
+        <TextView
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bak_show_ext_btns"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_weight="1"
+            android:layout_margin="4dp" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/bak_ext_btns"
+            android:visibility="gone">
 
             <Button
-                android:text="Copy backup externally"
+                android:text="Copy selected backup to filesystem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_savebak"
                 android:layout_weight="1" />
 
             <Button
-                android:text="Load backup from external"
+                android:text="Load a backup from filesystem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_loadbak"

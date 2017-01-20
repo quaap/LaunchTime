@@ -1,11 +1,15 @@
 package com.quaap.launchtime;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.FsTools;
@@ -33,6 +38,8 @@ public class BackupActivity extends Activity {
     Button delbk;
     Button savebk;
     Button loadbk;
+    TextView showExt;
+    View btnbar;
     DB db;
 
     @Override
@@ -48,6 +55,37 @@ public class BackupActivity extends Activity {
         savebk = (Button)findViewById(R.id.btn_savebak);
         loadbk = (Button)findViewById(R.id.btn_loadbak);
 
+        btnbar = findViewById(R.id.bak_ext_btns);
+
+        showExt = (TextView)findViewById(R.id.bak_show_ext_btns);
+        showExt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showHideExternalButtons();
+            }
+        });
+
+        showExternalButtons(true);
+    }
+    private void showHideExternalButtons() {
+        showExternalButtons(btnbar.getVisibility() == View.VISIBLE);
+    }
+
+    private void showExternalButtons(boolean show) {
+
+        if (show) {
+            showExt.setText("Show external backup options...");
+            btnbar.setVisibility(View.GONE);
+        } else {
+            showExt.setText("Hide external backup options...");
+            btnbar.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         newbk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,7 +126,6 @@ public class BackupActivity extends Activity {
 
         populateBackupsList();
     }
-
 
     private void populateBackupsList() {
         backupsLayout.removeAllViews();
@@ -162,12 +199,11 @@ public class BackupActivity extends Activity {
     }
 
     private void promptRestoreExtFile() {
-        if (selected) {
+        if (checkStorageAccess()) {
             new FsTools(this).selectExternalLocation(new FsTools.SelectionMadeListener() {
                 @Override
                 public void selected(File selection) {
-                    String message = restoreFromFile(selection);
-                    Toast.makeText(BackupActivity.this, message, Toast.LENGTH_SHORT).show();
+                    confirmRestoreFile(selection);
                 }
             }, "Select file to restore", false, Pattern.quote(DB.BK_PRE) + ".+");
         }
@@ -263,7 +299,7 @@ public class BackupActivity extends Activity {
     }
 
     private void promptExtDir() {
-        if (selected) {
+        if (checkStorageAccess()) {
             new FsTools(this).selectExternalLocation(new FsTools.SelectionMadeListener() {
                 @Override
                 public void selected(File selection) {
@@ -276,6 +312,35 @@ public class BackupActivity extends Activity {
                     Toast.makeText(BackupActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }, "Select location to save", true);
+        }
+    }
+
+
+    private boolean checkStorageAccess() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_EXTERNAL_STORAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 4334;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(this, "Yay! Try your operation again.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Boo", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 

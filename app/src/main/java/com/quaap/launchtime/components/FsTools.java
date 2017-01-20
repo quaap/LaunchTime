@@ -13,12 +13,16 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
 
 /**
  * Created by tom on 1/20/17.
@@ -156,17 +160,37 @@ public class FsTools {
         return copyFile(srcFile, new File(destDir,srcFile.getName()));
     }
 
-    public static File copyFile(File srcFile, File destFile){
+    public static File copyFile(File srcFile, File destFile) {
+        return copyFile(srcFile, destFile, false, false);
+    }
+
+    public static File compressFile(File srcFile, File destFile) {
+        return copyFile(srcFile, destFile, true, false);
+    }
+
+    public static File decompressFile(File srcFile, File destFile) {
+        return copyFile(srcFile, destFile, false, true);
+    }
+
+
+    public static File copyFile(File srcFile, File destFile, boolean compress, boolean decompress){
         if (destFile.exists() && !destFile.isFile()) throw new IllegalArgumentException("Destination must be a normal file");
         try {
 
-            FileInputStream fis = new FileInputStream(srcFile);
+            InputStream fis = new FileInputStream(srcFile);
 
             try {
+                if (decompress) {
+                    fis = new GZIPInputStream(fis);
+                }
 
                 OutputStream output = new FileOutputStream(destFile);
 
                 try {
+                    if (compress) {
+                        output = new GZIPOutputStream(output);
+                    }
+
                     // Transfer bytes from the inputfile to the outputfile
                     byte[] buffer = new byte[1024];
                     int length;
