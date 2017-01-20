@@ -35,7 +35,7 @@ public class GlobState extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         Categories.init(this);
 

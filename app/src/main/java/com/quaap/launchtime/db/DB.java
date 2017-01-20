@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.components.FsTools;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -662,8 +663,12 @@ public class DB extends SQLiteOpenHelper {
         return list;
     }
 
-    public boolean hasBackup(String backup) {
-        return listBackups().contains(backup);
+    public boolean hasBackup(String backupName) {
+        return listBackups().contains(backupName);
+    }
+
+    public File pullBackup(String backupName) {
+        return mContext.getFileStreamPath(BK_PRE + backupName);
     }
 
     public synchronized File backup(String optionalName) {
@@ -683,7 +688,7 @@ public class DB extends SQLiteOpenHelper {
 
         File outFile= mContext.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName);
 
-        return copyFile(inFile, outFile);
+        return FsTools.copyFile(inFile, outFile);
     }
 
     public boolean restoreFullpathBackup( String filePath) {
@@ -710,7 +715,7 @@ public class DB extends SQLiteOpenHelper {
         if (inFile.exists() && inFile.canRead()) {
             File outFile = mContext.getDatabasePath(DATABASE_NAME);
 
-            ret = copyFile(inFile, outFile)!=null;
+            ret = FsTools.copyFile(inFile, outFile)!=null;
 
             try {
                 getWritableDatabase().close();
@@ -730,36 +735,5 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
-    public static File copyFile(File inFile, File outFile){
-        try {
-
-            FileInputStream fis = new FileInputStream(inFile);
-
-            try {
-
-                OutputStream output = new FileOutputStream(outFile);
-
-                try {
-                    // Transfer bytes from the inputfile to the outputfile
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = fis.read(buffer)) > 0) {
-                        output.write(buffer, 0, length);
-                    }
-
-                    output.flush();
-                    return outFile;
-                } finally {
-                    output.close();
-                }
-            } finally {
-                fis.close();
-            }
-
-        } catch (IOException e) {
-            Log.e("DB", "Copy failed", e);
-        }
-        return null;
-    }
 
 }

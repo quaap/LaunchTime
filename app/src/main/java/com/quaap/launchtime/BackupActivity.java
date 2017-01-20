@@ -15,6 +15,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.quaap.launchtime.components.FsTools;
 import com.quaap.launchtime.db.DB;
 
 import java.io.File;
@@ -68,6 +69,13 @@ public class BackupActivity extends Activity {
         });
 
         savebk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptExtDir();
+            }
+        });
+
+        loadbk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -230,5 +238,20 @@ public class BackupActivity extends Activity {
         }
     }
 
-
+    private void promptExtDir() {
+        if (selected) {
+            new FsTools(this).selectExternalDir(new FsTools.SelectionMadeListener() {
+                @Override
+                public void selected(File selection) {
+                    String message;
+                    if (FsTools.copyFileToDir(db.pullBackup(selectedBackup), selection)!=null) {
+                        message = "Copy successful!";
+                    } else {
+                        message = "Copy failed";
+                    }
+                    Toast.makeText(BackupActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 }
