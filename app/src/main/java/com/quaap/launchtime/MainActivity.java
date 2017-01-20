@@ -90,7 +90,6 @@ public class MainActivity extends Activity implements
     private View mOpenPrefsButton;
 
 
-
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
     private FrameLayout mRemoveDropzone;
@@ -173,6 +172,10 @@ public class MainActivity extends Activity implements
         readPrefs();
 
         loadApplications();
+
+        if (mDb.isFirstRun()) {
+            mDb.backup(this, "After install");
+        }
 
     }
 

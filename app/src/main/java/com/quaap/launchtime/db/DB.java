@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -639,6 +640,7 @@ public class DB extends SQLiteOpenHelper {
                 list.add(m.group(1));
             }
         }
+        Collections.sort(list);
         return list;
     }
 
@@ -646,8 +648,8 @@ public class DB extends SQLiteOpenHelper {
 
         close();
 
-        if (optionalName!=null) {
-            optionalName = optionalName.replaceAll("[./(){}\"*|\\\\$]", "_") + ".";
+        if (optionalName!=null && optionalName.length()>0) {
+            optionalName =  "." + optionalName.replaceAll("[./(){}\"*|\\\\$]", "_");
             if (optionalName.length()>20) {
                 optionalName = optionalName.substring(0,20);
             }
@@ -657,7 +659,7 @@ public class DB extends SQLiteOpenHelper {
 
         File inFile = context.getDatabasePath(DATABASE_NAME);
 
-        File outFile= context.getFileStreamPath(BK_PRE + optionalName + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())));
+        File outFile= context.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName);
 
         return copyFile(inFile, outFile);
     }
