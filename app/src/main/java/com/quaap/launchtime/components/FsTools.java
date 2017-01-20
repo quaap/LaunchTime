@@ -43,48 +43,77 @@ public class FsTools {
         mContext = context;
     }
 
-    private String [] listDirsInDir(File extdir, final boolean onlyDirs) {
+    private String [] listDirsInDir(File extdir, final String matchRE, final boolean onlyDirs) {
 
-        FilenameFilter filter = new FilenameFilter() {
+        FilenameFilter filterdirs = new FilenameFilter() {
 
             @Override
             public boolean accept(File dir, String filename) {
                 File sel = new File(dir, filename);
-                return sel.isDirectory() || (!onlyDirs && sel.isFile());
+                return sel.isDirectory();
             }
 
         };
 
-        List<String> files = new ArrayList<String>(Arrays.asList(extdir.list(filter)));
+        List<String> dirs = new ArrayList<String>(Arrays.asList(extdir.list(filterdirs)));
 
         if (extdir.getParent()!=null && !extdir.equals(Environment.getExternalStorageDirectory())) {
-            files.add(0, "..");
+            dirs.add(0, "..");
         }
 
-        Collections.sort(files, new Comparator<String>() {
+        Collections.sort(dirs, new Comparator<String>() {
             @Override
             public int compare(String s, String t1) {
                 return s.compareToIgnoreCase(t1);
             }
         });
 
+        if (!onlyDirs) {
+            FilenameFilter filterfiles = new FilenameFilter() {
 
-        for (String x: files) {
-            Log.d("DD", x);
+                @Override
+                public boolean accept(File dir, String filename) {
+                    File sel = new File(dir, filename);
+                    return sel.isFile() && (matchRE == null || filename.matches(matchRE));
+                }
+
+            };
+
+            List<String> files = new ArrayList<String>(Arrays.asList(extdir.list(filterfiles)));
+
+            Collections.sort(files, new Comparator<String>() {
+                @Override
+                public int compare(String s, String t1) {
+                    return s.compareToIgnoreCase(t1);
+                }
+            });
+
+            dirs.addAll(files);
         }
-        return files.toArray(new String[0]);
+
+        String [] fileslist = dirs.toArray(new String[0]);
+        for (int i=0; i<fileslist.length; i++) {
+            File sel = new File(extdir, fileslist[i]);
+            if (sel.isDirectory()) fileslist[i] = fileslist[i] + "/";
+            //Log.d("DD", fileslist[i]);
+        }
+        return fileslist;
 
     }
 
     public void selectExternalLocation(final SelectionMadeListener listener, String title, boolean chooseDir) {
-        selectExternalLocation(listener, title, null, chooseDir);
+        selectExternalLocation(listener, title, null, chooseDir, null);
+    }
+
+    public void selectExternalLocation(final SelectionMadeListener listener, String title, boolean chooseDir, String matchRE) {
+        selectExternalLocation(listener, title, null, chooseDir, matchRE);
     }
 
 
-    public void selectExternalLocation(final SelectionMadeListener listener, final String title, String startdir, final boolean chooseDir) {
+    public void selectExternalLocation(final SelectionMadeListener listener, final String title, String startdir, final boolean chooseDir, final String matchRE) {
         final File currentDir = startdir==null ? Environment.getExternalStorageDirectory() :  new File(startdir);
 
-        final String [] items = listDirsInDir(currentDir, false);
+        final String [] items = listDirsInDir(currentDir, matchRE, chooseDir);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
@@ -96,7 +125,7 @@ public class FsTools {
                 dialogInterface.dismiss();
                 File selFile = new File(currentDir,items[i]);
                 if (selFile.isDirectory()) {
-                    selectExternalLocation(listener, title, selFile.getPath(), chooseDir);
+                    selectExternalLocation(listener, title, selFile.getPath(), chooseDir, matchRE);
                 } else {
                     listener.selected(selFile);
                 }

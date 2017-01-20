@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import com.quaap.launchtime.components.FsTools;
 import com.quaap.launchtime.db.DB;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 public class BackupActivity extends Activity {
 
@@ -57,7 +59,7 @@ public class BackupActivity extends Activity {
         restorebk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                confirmRestore();
+                restore();
             }
         });
 
@@ -78,7 +80,7 @@ public class BackupActivity extends Activity {
         loadbk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                promptRestoreExtFile();
             }
         });
 
@@ -159,54 +161,76 @@ public class BackupActivity extends Activity {
         populateBackupsList();
     }
 
-    private void confirmRestore() {
+    private void promptRestoreExtFile() {
         if (selected) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Restore?")
-                    .setMessage("If you restore, all your changes since back up '" + selectedBackup + "' will be lost.")
-                    .setPositiveButton("Restore", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            restore();
-                        }
-                    }).setNegativeButton(R.string.cancel, null);
-            builder.show();
+            new FsTools(this).selectExternalLocation(new FsTools.SelectionMadeListener() {
+                @Override
+                public void selected(File selection) {
+                    String message = restoreFromFile(selection);
+                    Toast.makeText(BackupActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            }, "Select file to restore", false, Pattern.quote(DB.BK_PRE) + ".+");
         }
     }
 
     private void restore() {
         if (selected) {
-            String message;
+
 
             if (db.hasBackup(selectedBackup)) {
-                File prev = db.backup("Before restore");
-                if (db.restoreBackup(selectedBackup)) {
-                    message = "Restore successful! Will now restart.";
-
-                    backupsLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
-                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getApplicationContext().startActivity(mainIntent);
-
-                        }
-                    }, 1000);
-
-                } else {
-                    message = "Restore failed. Rolling back";
-                    if (!db.restoreFullpathBackup(prev)) {
-                        message = "Restore failed. Database state unknown.";
-                    }
-
-                    populateBackupsList();
-                }
+                File backupFile = db.pullBackup(selectedBackup);
+                confirmRestoreFile(backupFile);
             } else{
-                message = "No such backup \"" + selectedBackup + "\"";
+                String  message = "No such backup \"" + selectedBackup + "\"";
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
         }
+    }
+
+    private void confirmRestoreFile (final File backupFile) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Restore?")
+                    .setMessage("If you restore, any current changes will be lost.")
+                    .setPositiveButton("Restore", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String message = restoreFromFile(backupFile);
+                            Toast.makeText(BackupActivity.this, message, Toast.LENGTH_LONG).show();
+                        }
+                    }).setNegativeButton(R.string.cancel, null);
+            builder.show();
+
+    }
+    @NonNull
+    private String restoreFromFile(File backupFile) {
+        String message;
+        File prev = db.backup("Before restore");
+        if (db.restoreFullpathBackup(backupFile)) {
+            message = "Restore successful! Will now restart.";
+
+            backupsLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
+                    mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(mainIntent);
+                    BackupActivity.this.finish();
+
+                }
+            }, 1000);
+
+        } else {
+            message = "Restore failed. Rolling back";
+            if (db.restoreFullpathBackup(prev)) {
+                message = "Restore failed. Database state unknown.";
+            }
+
+            populateBackupsList();
+        }
+        return message;
     }
 
     private void confirmDelete() {
@@ -254,4 +278,5 @@ public class BackupActivity extends Activity {
             }, "Select location to save", true);
         }
     }
+
 }

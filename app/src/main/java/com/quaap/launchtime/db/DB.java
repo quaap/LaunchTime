@@ -646,7 +646,7 @@ public class DB extends SQLiteOpenHelper {
 
 
 
-    private static final String BK_PRE = "db_bak.";
+    public static final String BK_PRE = "db_bak.";
 
 
     public List<String> listBackups() {

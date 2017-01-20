@@ -209,6 +209,9 @@ public class MainActivity extends Activity implements
 
 
         mCategory = mPrefs.getString("category", Categories.CAT_TALK);
+        if (mDb.getCategoryDisplay(mCategory)==null) {
+            mCategory = Categories.CAT_OTHER;
+        }
         switchCategory(mCategory);
         mIconSheetScroller.postDelayed(new Runnable() {
             @Override
