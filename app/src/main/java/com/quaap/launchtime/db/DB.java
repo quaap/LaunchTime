@@ -684,38 +684,38 @@ public class DB extends SQLiteOpenHelper {
             optionalName = "";
         }
 
-        File inFile = mContext.getDatabasePath(DATABASE_NAME);
+        File srcFile = mContext.getDatabasePath(DATABASE_NAME);
 
-        File outFile= mContext.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName);
+        File destFile= mContext.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName);
 
-        return FsTools.copyFile(inFile, outFile);
+        return FsTools.compressFile(srcFile, destFile);
     }
 
     public boolean restoreFullpathBackup( String filePath) {
-        File inFile = new File(filePath);
+        File srcFile = new File(filePath);
 
-        return restore(inFile);
+        return restore(srcFile);
     }
 
     public boolean restoreFullpathBackup(File file) {
-        File inFile = new File(file.getPath());
+        File srcFile = new File(file.getPath());
 
-        return restore(inFile);
+        return restore(srcFile);
     }
     public boolean restoreBackup(String backupName) {
 
-        File inFile = mContext.getFileStreamPath(BK_PRE + backupName);
+        File srcFile = mContext.getFileStreamPath(BK_PRE + backupName);
 
-        return restore(inFile);
+        return restore(srcFile);
     }
 
-    private synchronized boolean restore(File inFile) {
+    private synchronized boolean restore(File srcFile) {
         close();
         boolean ret = false;
-        if (inFile.exists() && inFile.canRead()) {
-            File outFile = mContext.getDatabasePath(DATABASE_NAME);
+        if (srcFile.exists() && srcFile.canRead()) {
+            File destFile = mContext.getDatabasePath(DATABASE_NAME);
 
-            ret = FsTools.copyFile(inFile, outFile)!=null;
+            ret = FsTools.decompressFile(srcFile, destFile)!=null;
 
             try {
                 getWritableDatabase().close();
@@ -729,9 +729,9 @@ public class DB extends SQLiteOpenHelper {
 
     public boolean deleteBackup(String backupName) {
 
-        File inFile = mContext.getFileStreamPath(BK_PRE + backupName);
+        File srcFile = mContext.getFileStreamPath(BK_PRE + backupName);
 
-        return inFile.delete();
+        return srcFile.delete();
 
     }
 
