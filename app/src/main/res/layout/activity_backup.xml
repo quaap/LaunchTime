@@ -29,7 +29,7 @@
         android:id="@+id/textView11" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView11"
@@ -37,26 +37,56 @@
         android:layout_marginTop="17dp"
         android:id="@+id/bak_btns">
 
-        <Button
-            android:text="Take new backup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_newbak"
-            android:layout_weight="1" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-        <Button
-            android:text="Restore backup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_restorebak"
-            android:layout_weight="1" />
+            <Button
+                android:text="Take new backup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_newbak"
+                android:layout_weight="1" />
 
-        <Button
-            android:text="Delete backup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_deletebak"
-            android:layout_weight="1" />
+            <Button
+                android:text="Restore backup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_restorebak"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Delete backup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_deletebak"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <Button
+                android:text="Save backup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_savebak"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Load backup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_loadbak"
+                android:layout_weight="1" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <ScrollView

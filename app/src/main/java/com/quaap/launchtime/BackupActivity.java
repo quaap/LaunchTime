@@ -1,30 +1,23 @@
 package com.quaap.launchtime;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.text.DateFormat;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.launchtime.db.DB;
+
+import java.io.File;
 
 public class BackupActivity extends Activity {
 
@@ -32,6 +25,13 @@ public class BackupActivity extends Activity {
     private boolean selected;
 
     LinearLayout backupsLayout;
+    Button newbk;
+    Button restorebk;
+    Button delbk;
+    Button savebk;
+    Button loadbk;
+    DB db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +39,11 @@ public class BackupActivity extends Activity {
 
         backupsLayout = (LinearLayout) findViewById(R.id.bakups_list);
 
-        Button newbk = (Button)findViewById(R.id.btn_newbak);
-        Button restorebk = (Button)findViewById(R.id.btn_restorebak);
-        Button delbk = (Button)findViewById(R.id.btn_deletebak);
+        newbk = (Button)findViewById(R.id.btn_newbak);
+        restorebk = (Button)findViewById(R.id.btn_restorebak);
+        delbk = (Button)findViewById(R.id.btn_deletebak);
+        savebk = (Button)findViewById(R.id.btn_savebak);
+        loadbk = (Button)findViewById(R.id.btn_loadbak);
 
         newbk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +66,19 @@ public class BackupActivity extends Activity {
                 confirmDelete();
             }
         });
+
+        savebk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        db = ((GlobState)getApplicationContext()).getDB();
+
         populateBackupsList();
     }
+
 
     private void populateBackupsList() {
         backupsLayout.removeAllViews();
@@ -73,7 +86,7 @@ public class BackupActivity extends Activity {
 
         makeRadioButton(baks, "None selected", false).setChecked(true);
 
-        for(final String bk: DB.listBackups(this)) {
+        for(final String bk: db.listBackups()) {
 
             makeRadioButton(baks, bk, true);
         }
@@ -92,12 +105,20 @@ public class BackupActivity extends Activity {
                     selectedBackup = bk;
                     selected = item;
                     Log.d("backuppage", "selected = " + selectedBackup);
+                    backupSelected(selected);
                 }
             }
         });
 
         baks.addView(bkb);
         return bkb;
+    }
+
+
+    private void backupSelected(boolean isselected) {
+        restorebk.setEnabled(isselected);
+        delbk.setEnabled(isselected);
+        savebk.setEnabled(isselected);
     }
 
     private void promptNew() {
@@ -118,10 +139,10 @@ public class BackupActivity extends Activity {
     }
 
     private void newBackup(String optionalName) {
-        DB db = ((GlobState)getApplicationContext()).getDB();
+
 
         String message;
-        if (db.backup(this, optionalName)) {
+        if (db.backup(optionalName)!=null) {
             message = "Backup successful!";
         } else {
             message = "Backup failed";
@@ -147,35 +168,39 @@ public class BackupActivity extends Activity {
 
     private void restore() {
         if (selected) {
-            DB db = ((GlobState) getApplicationContext()).getDB();
             String message;
-            if (db.restoreBackup(this, selectedBackup)) {
-                message = "Restore successful! Will now restart.";
 
-                backupsLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
-                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        getApplicationContext().startActivity(mainIntent);
+            if (db.hasBackup(selectedBackup)) {
+                File prev = db.backup("Before restore");
+                if (db.restoreBackup(selectedBackup)) {
+                    message = "Restore successful! Will now restart.";
 
+                    backupsLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
+                            mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            getApplicationContext().startActivity(mainIntent);
+
+                        }
+                    }, 1000);
+
+                } else {
+                    message = "Restore failed. Rolling back";
+                    if (!db.restoreFullpathBackup(prev)) {
+                        message = "Restore failed. Database state unknown.";
                     }
-                },1000);
 
-//                Intent mainIntent = new Intent(this, MainActivity.class);
-//                int mPendingIntentId = 34233;
-//                PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, mainIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//                AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-//                android.os.Process.killProcess(android.os.Process.myPid());
-
-            } else {
-                message = "Restore failed";
+                    populateBackupsList();
+                }
+            } else{
+                message = "No such backup \"" + selectedBackup + "\"";
             }
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
     }
+
     private void confirmDelete() {
         if (selected) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -193,9 +218,9 @@ public class BackupActivity extends Activity {
 
     private void delete() {
         if (selected) {
-            DB db = ((GlobState) getApplicationContext()).getDB();
+
             String message;
-            if (db.deleteBackup(this, selectedBackup)) {
+            if (db.deleteBackup(selectedBackup)) {
                 message = "Delete successful!";
             } else {
                 message = "Delete failed";

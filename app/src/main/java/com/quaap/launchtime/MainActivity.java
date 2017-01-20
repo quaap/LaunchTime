@@ -174,7 +174,7 @@ public class MainActivity extends Activity implements
         loadApplications();
 
         if (mDb.isFirstRun()) {
-            mDb.backup(this, "After install");
+            mDb.backup("After install");
         }
 
     }

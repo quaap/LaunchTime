@@ -86,4 +86,6 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
 
         mMain.launchApp(activityName);
     }
+
+
 }

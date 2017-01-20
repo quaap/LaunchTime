@@ -89,11 +89,13 @@ public class DB extends SQLiteOpenHelper {
 
     private static final String[] apphistorycolumnsindex = {TIME, ACTVNAME};
 
-
     private boolean firstRun;
+
+    private Context mContext;
 
     public DB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
         this.getWritableDatabase();
     }
 
@@ -628,23 +630,43 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
+
+    //synchronize these so that we can also synchronize on the backup and restore, just in case
+
+    @Override
+    public synchronized SQLiteDatabase getReadableDatabase() {
+        return super.getReadableDatabase();
+    }
+
+    @Override
+    public synchronized SQLiteDatabase getWritableDatabase() {
+        return super.getWritableDatabase();
+    }
+
+
+
     private static final String BK_PRE = "db_bak.";
 
 
-    public static List<String> listBackups(Context context) {
+    public List<String> listBackups() {
         List<String> list = new ArrayList<>();
         Pattern bakpat = Pattern.compile("^" + Pattern.quote(BK_PRE)  + "(.+)");
-        for (String file: context.fileList()) {
+        for (String file: mContext.fileList()) {
             Matcher m = bakpat.matcher(file);
             if (m.matches()) {
                 list.add(m.group(1));
             }
         }
         Collections.sort(list);
+        Collections.reverse(list);
         return list;
     }
 
-    public boolean backup(Context context, String optionalName) {
+    public boolean hasBackup(String backup) {
+        return listBackups().contains(backup);
+    }
+
+    public synchronized File backup(String optionalName) {
 
         close();
 
@@ -657,38 +679,58 @@ public class DB extends SQLiteOpenHelper {
             optionalName = "";
         }
 
-        File inFile = context.getDatabasePath(DATABASE_NAME);
+        File inFile = mContext.getDatabasePath(DATABASE_NAME);
 
-        File outFile= context.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName);
+        File outFile= mContext.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName);
 
         return copyFile(inFile, outFile);
     }
 
-    public boolean restoreBackup(Context context, String backupName) {
+    public boolean restoreFullpathBackup( String filePath) {
+        File inFile = new File(filePath);
 
+        return restore(inFile);
+    }
+
+    public boolean restoreFullpathBackup(File file) {
+        File inFile = new File(file.getPath());
+
+        return restore(inFile);
+    }
+    public boolean restoreBackup(String backupName) {
+
+        File inFile = mContext.getFileStreamPath(BK_PRE + backupName);
+
+        return restore(inFile);
+    }
+
+    private synchronized boolean restore(File inFile) {
         close();
+        boolean ret = false;
+        if (inFile.exists() && inFile.canRead()) {
+            File outFile = mContext.getDatabasePath(DATABASE_NAME);
 
-        File inFile = context.getFileStreamPath(BK_PRE + backupName);
+            ret = copyFile(inFile, outFile)!=null;
 
-        File outFile = context.getDatabasePath(DATABASE_NAME);
-
-        boolean ret = copyFile(inFile, outFile);
-
-        getWritableDatabase().close();
-
+            try {
+                getWritableDatabase().close();
+            } catch (Exception e) {
+                Log.e("LaunchDB","couldn't load db after restore", e);
+                return false;
+            }
+        }
         return ret;
     }
 
-    public boolean deleteBackup(Context context, String backupName) {
+    public boolean deleteBackup(String backupName) {
 
-
-        File inFile = context.getFileStreamPath(BK_PRE + backupName);
+        File inFile = mContext.getFileStreamPath(BK_PRE + backupName);
 
         return inFile.delete();
 
     }
 
-    public static boolean copyFile(File inFile, File outFile){
+    public static File copyFile(File inFile, File outFile){
         try {
 
             FileInputStream fis = new FileInputStream(inFile);
@@ -706,7 +748,7 @@ public class DB extends SQLiteOpenHelper {
                     }
 
                     output.flush();
-                    return true;
+                    return outFile;
                 } finally {
                     output.close();
                 }
@@ -717,7 +759,7 @@ public class DB extends SQLiteOpenHelper {
         } catch (IOException e) {
             Log.e("DB", "Copy failed", e);
         }
-        return false;
+        return null;
     }
 
 }
