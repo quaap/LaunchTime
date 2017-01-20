@@ -240,7 +240,7 @@ public class BackupActivity extends Activity {
 
     private void promptExtDir() {
         if (selected) {
-            new FsTools(this).selectExternalDir(new FsTools.SelectionMadeListener() {
+            new FsTools(this).selectExternalLocation(new FsTools.SelectionMadeListener() {
                 @Override
                 public void selected(File selection) {
                     String message;
@@ -251,7 +251,7 @@ public class BackupActivity extends Activity {
                     }
                     Toast.makeText(BackupActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
-            });
+            }, "Select location to save", true);
         }
     }
 }

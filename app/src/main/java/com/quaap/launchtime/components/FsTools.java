@@ -43,14 +43,14 @@ public class FsTools {
         mContext = context;
     }
 
-    private String [] listDirsInDir(File extdir) {
+    private String [] listDirsInDir(File extdir, final boolean onlyDirs) {
 
         FilenameFilter filter = new FilenameFilter() {
 
             @Override
             public boolean accept(File dir, String filename) {
                 File sel = new File(dir, filename);
-                return sel.isDirectory();
+                return sel.isDirectory() || (!onlyDirs && sel.isFile());
             }
 
         };
@@ -76,35 +76,46 @@ public class FsTools {
 
     }
 
-    public void selectExternalDir(final SelectionMadeListener listener) {
-        selectExternalDir(listener, null);
+    public void selectExternalLocation(final SelectionMadeListener listener, String title, boolean chooseDir) {
+        selectExternalLocation(listener, title, null, chooseDir);
     }
 
 
-    public void selectExternalDir(final SelectionMadeListener listener, String startdir) {
+    public void selectExternalLocation(final SelectionMadeListener listener, final String title, String startdir, final boolean chooseDir) {
         final File currentDir = startdir==null ? Environment.getExternalStorageDirectory() :  new File(startdir);
 
-        final String [] items = listDirsInDir(currentDir);
+        final String [] items = listDirsInDir(currentDir, false);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-        builder.setTitle("Select a location\n" + currentDir.getPath());
-        //builder.setMessage(currentDir.getPath());
+        builder.setTitle(title + "\n" + currentDir.getPath());
+
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                selectExternalDir(listener,new File(currentDir,items[i]).getPath());
+                File selFile = new File(currentDir,items[i]);
+                if (selFile.isDirectory()) {
+                    selectExternalLocation(listener, title, selFile.getPath(), chooseDir);
+                } else {
+                    listener.selected(selFile);
+                }
             }
         });
-        builder.setPositiveButton("Select current", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        if (chooseDir) {
+            builder.setPositiveButton("Select current", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-                listener.selected(currentDir);
-            }
-        }).setNegativeButton(R.string.cancel, null);
+                    listener.selected(currentDir);
+                }
+            });
+        }
+        builder.setNegativeButton(R.string.cancel, null);
+
         builder.show();
     }
+
 
     public interface SelectionMadeListener {
         void selected(File selection);
