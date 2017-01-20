@@ -62,8 +62,10 @@
         <activity
             android:name=".FeedbackActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".CrashReportActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".CrashReportActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".BackupActivity"></activity>
     </application>
 
 </manifest>

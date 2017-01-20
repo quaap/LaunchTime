@@ -20,14 +20,6 @@
         android:key="preference_tabsize"
         android:summary="%s" />
 
-    <PreferenceScreen
-        android:title="@string/pref_about"
-        android:summary="@string/pref_help_about">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.quaap.launchtime"
-            android:targetClass="com.quaap.launchtime.AboutActivity"/>
-    </PreferenceScreen>
 
     <PreferenceScreen
         android:title="Send app data"
@@ -36,6 +28,25 @@
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.quaap.launchtime"
             android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
+    </PreferenceScreen>
+
+
+    <PreferenceScreen
+        android:title="Backup and Restore"
+        android:summary="">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.launchtime"
+            android:targetClass="com.quaap.launchtime.BackupActivity"/>
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="@string/pref_about"
+        android:summary="@string/pref_help_about">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.launchtime"
+            android:targetClass="com.quaap.launchtime.AboutActivity"/>
     </PreferenceScreen>
 
 

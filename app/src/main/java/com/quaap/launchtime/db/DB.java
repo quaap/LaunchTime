@@ -6,16 +6,26 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 import android.view.ViewGroup;
 
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by tom on 1/8/17.
@@ -615,6 +625,88 @@ public class DB extends SQLiteOpenHelper {
         cursor.close();
         return count;
 
+    }
+
+    private static final String BK_PRE = "db_bak.";
+
+
+    public static List<String> listBackups(Context context) {
+        List<String> list = new ArrayList<>();
+        Pattern bakpat = Pattern.compile("^" + Pattern.quote(BK_PRE)  + "(.+)");
+        for (String file: context.fileList()) {
+            Matcher m = bakpat.matcher(file);
+            if (m.matches()) {
+                list.add(m.group(1));
+            }
+        }
+        return list;
+    }
+
+    public boolean backup(Context context) {
+
+        close();
+
+        File inFile = context.getDatabasePath(DATABASE_NAME);
+
+        File outFile= context.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())));
+
+        return copyFile(inFile, outFile);
+    }
+
+    public boolean restoreBackup(Context context, String backupName) {
+
+        close();
+
+        File inFile = context.getFileStreamPath(BK_PRE + backupName);
+
+        File outFile = context.getDatabasePath(DATABASE_NAME);
+
+        boolean ret = copyFile(inFile, outFile);
+
+        getWritableDatabase().close();
+
+        return ret;
+    }
+
+    public boolean deleteBackup(Context context, String backupName) {
+
+
+        File inFile = context.getFileStreamPath(BK_PRE + backupName);
+
+        return inFile.delete();
+
+    }
+
+    public static boolean copyFile(File inFile, File outFile){
+        try {
+
+            FileInputStream fis = new FileInputStream(inFile);
+
+            try {
+
+                OutputStream output = new FileOutputStream(outFile);
+
+                try {
+                    // Transfer bytes from the inputfile to the outputfile
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fis.read(buffer)) > 0) {
+                        output.write(buffer, 0, length);
+                    }
+
+                    output.flush();
+                    return true;
+                } finally {
+                    output.close();
+                }
+            } finally {
+                fis.close();
+            }
+
+        } catch (IOException e) {
+            Log.e("DB", "Copy failed", e);
+        }
+        return false;
     }
 
 }
