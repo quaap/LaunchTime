@@ -1,3 +1,4 @@
+com.quaap.launchtime=Settings
 a2dp.Vol=Media
 aarddict.android=Utilities
 acr.browser.barebones=Internet
@@ -803,7 +804,7 @@ com.purplefoto.pfdock=Utilities
 com.qsp.player=Games
 com.quaap.audiometer=Media
 com.quaap.computationaldemonology=Games
-com.quaap.primary=Utilities
+com.quaap.primary=Games
 com.qubling.sidekick=Utilities
 com.quran.labs.androidquran=Utilities
 com.radioreddit.android=Internet
