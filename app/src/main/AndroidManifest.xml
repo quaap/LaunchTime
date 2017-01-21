@@ -34,10 +34,11 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity"
-            android:icon="@mipmap/config">
+            android:icon="@mipmap/config"
+            android:label="LaunchTime Config">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity

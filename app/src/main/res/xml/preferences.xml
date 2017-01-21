@@ -33,11 +33,17 @@
 
     <PreferenceScreen
         android:title="Backup and Restore"
-        android:summary="">
+        android:summary="Backup or restore LaunchTime's configuration (Categories, app order, recent apps, etc)">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.quaap.launchtime"
             android:targetClass="com.quaap.launchtime.BackupActivity"/>
+    </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="System Settings"
+        android:summary="Show the system settings">
+        <intent android:action="android.settings.SETTINGS"/>
     </PreferenceScreen>
 
     <PreferenceScreen

@@ -60,14 +60,18 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
+        Intent main = new Intent(this, MainActivity.class);
+        startActivity(main);
         setResult(RESULT_OK);
         finish();
-        super.onBackPressed();
+
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_HOME) {
+            Intent main = new Intent(this, MainActivity.class);
+            startActivity(main);
             setResult(RESULT_OK);
             finish();
         }
