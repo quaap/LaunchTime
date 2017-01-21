@@ -6,7 +6,8 @@ side menu used to organize your apps into common-sense and configurable categori
 features widgets, text search for apps, a QuickBar, links/shortcuts, recent apps list, and
 portrait and landscape support.
 
-I've been using it on my LG phone as I develop, but it is still a late alpha or early beta stage.
+I've been using it on my LG phone as I develop, but it is still a late alpha or early beta stage,
+so breaking changes are possible.
 
 Features
 ----------
