@@ -11,11 +11,31 @@
         android:textSize="18sp" />
 
     <TextView
+        android:text="@string/previously_deleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cat_deleted_label"
+        android:lines="2"
+        android:maxEms="6"
+        android:layout_gravity="center_vertical" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cat_deleted_spinner"
+        android:layout_gravity="end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp" />
+
+    <TextView
         android:text="@string/short_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:labelFor="@+id/shortname"
-        android:id="@+id/textView3" />
+        android:id="@+id/textView3"
+        android:lines="2"
+        android:maxEms="6"
+        android:layout_gravity="center_vertical" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -24,14 +44,21 @@
         android:ems="10"
         android:id="@+id/shortname"
         android:maxLines="1"
-        android:maxLength="12" />
+        android:maxLength="12"
+        android:lines="1"
+        android:layout_gravity="end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp" />
 
     <TextView
         android:text="@string/full_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:labelFor="@+id/fullname"
-        android:id="@+id/textView4" />
+        android:id="@+id/textView4"
+        android:lines="2"
+        android:maxEms="6"
+        android:layout_gravity="center_vertical" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -40,7 +67,11 @@
         android:ems="10"
         android:id="@+id/fullname"
         android:maxLines="1"
-        android:maxLength="40" />
+        android:maxLength="40"
+        android:lines="1"
+        android:layout_gravity="end"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp" />
 
     <CheckBox
         android:text="@string/is_tiny"
@@ -48,6 +79,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/istiny_checkbox"
         android:textSize="18sp"
-        android:layout_gravity="center_horizontal"
-        android:layout_columnSpan="2" />
+        android:layout_columnSpan="2"
+        android:layout_gravity="center_horizontal" />
 </GridLayout>

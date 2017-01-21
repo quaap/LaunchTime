@@ -31,6 +31,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -40,6 +42,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -1318,6 +1321,33 @@ public class MainActivity extends Activity implements
         }
     }
 
+    private boolean populateDeletedCategorySpinner(Spinner catDeletedSpinner, final EditText shortname, final EditText fullname) {
+        final List<String> deldCats = new ArrayList<>();
+        deldCats.add("");
+        for (String cat: Categories.DefCategoryOrder) {
+            String displayName = mDb.getCategoryDisplay(cat);
+            if (displayName==null) {
+                deldCats.add(cat);
+            }
+        }
+        catDeletedSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,deldCats));
+        catDeletedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i>0) {
+                    shortname.setText(Categories.getCatLabel(MainActivity.this,deldCats.get(i)));
+                    fullname.setText(Categories.getCatFullLabel(MainActivity.this,deldCats.get(i)));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        return deldCats.size()>1;
+    }
+
     private void promptGetCategoryName(String title, String message, final String category, String defName,
                                        String defFullName, boolean defIsTiny, final CategoryChangerListener categoryChangerListener) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1326,9 +1356,21 @@ public class MainActivity extends Activity implements
         ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.category_name, (ViewGroup) null);
 
         TextView messageView = (TextView) view.findViewById(R.id.message_txt);
+
+        final TextView catDeletedLabel = (TextView) view.findViewById(R.id.cat_deleted_label);
+        final Spinner catDeletedSpinner = (Spinner) view.findViewById(R.id.cat_deleted_spinner);
+
         final EditText shortname = (EditText) view.findViewById(R.id.shortname);
         final EditText fullname = (EditText) view.findViewById(R.id.fullname);
         final CheckBox isTiny = (CheckBox) view.findViewById(R.id.istiny_checkbox);
+
+        int vis = View.GONE;
+        if (category.length()==0 && populateDeletedCategorySpinner(catDeletedSpinner, shortname, fullname)) {
+            vis = View.VISIBLE;
+        }
+        catDeletedLabel.setVisibility(vis);
+        catDeletedSpinner.setVisibility(vis);
+
 
         shortname.setSelectAllOnFocus(true);
         fullname.setSelectAllOnFocus(true);
@@ -1343,7 +1385,8 @@ public class MainActivity extends Activity implements
         builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                categoryChangerListener.onClick(dialog, which, category, shortname.getText().toString(), fullname.getText().toString(), isTiny.isChecked());
+                String delcat = (String)catDeletedSpinner.getSelectedItem();
+                categoryChangerListener.onClick(dialog, which, (delcat!=null && delcat.length()>0?delcat:category), shortname.getText().toString(), fullname.getText().toString(), isTiny.isChecked());
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
@@ -1452,7 +1495,7 @@ public class MainActivity extends Activity implements
         if (newDisplayName.length() < 1) {
             throw new IllegalArgumentException("Must give a name");
         }
-
+        Log.d("AddCat", category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
         if (mDb.addCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
             createIconSheet(category);
 

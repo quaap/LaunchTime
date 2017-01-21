@@ -122,4 +122,5 @@
     <string name="perm_not_granted">Boo</string>
     <string name="app">app</string>
     <string name="config">Config</string>
+    <string name="previously_deleted">Previously Deleted</string>
 </resources>
