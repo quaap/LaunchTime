@@ -54,7 +54,7 @@ public class Categories {
     public static final String CAT_HIDDEN = "Hidden";
     public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS};
     public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
-    public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH};
+    public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH};
 
     public static final String[] DefCategoryOrder = {
             CAT_SEARCH,
