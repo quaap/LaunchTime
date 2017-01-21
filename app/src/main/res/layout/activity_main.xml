@@ -131,23 +131,6 @@
                 </GridLayout>
             </HorizontalScrollView>
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="#ddff3333"
-                android:id="@+id/remove_dropzone"
-                android:layout_weight="1">
-
-                <TextView
-                    android:text="@string/remove"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/remove_dz_txt"
-                    android:gravity="center"
-                    android:layout_gravity="start"
-                    android:rotation="-90" />
-            </FrameLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -224,6 +207,24 @@
                 android:layout_marginEnd="2dp" />
 
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#ddff3333"
+            android:id="@+id/remove_dropzone"
+            android:layout_weight="1"
+            android:layout_gravity="end">
+
+            <TextView
+                android:text="@string/remove"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/remove_dz_txt"
+                android:gravity="center"
+                android:layout_gravity="start"
+                android:rotation="-90" />
+        </FrameLayout>
 
     </FrameLayout>
 
