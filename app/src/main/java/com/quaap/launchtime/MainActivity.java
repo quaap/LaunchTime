@@ -177,6 +177,11 @@ public class MainActivity extends Activity implements
         loadApplications();
 
         if (mDb.isFirstRun()) {
+            String selfAct = this.getPackageName() + "." +this.getClass().getSimpleName();
+            Log.d("Dd", selfAct);
+
+            mDb.updateAppCategory(selfAct,Categories.CAT_HIDDEN);
+
             mDb.backup("After install");
         }
 
@@ -394,23 +399,24 @@ public class MainActivity extends Activity implements
 
     private void loadApplications() {
 
-        //Make sure the displayed icons load first
-        //Load the quickrow icons first
-        for (String actvname: mDb.getAppCategoryOrder(QUICK_ROW_CAT)) {
-            AppShortcut app = mDb.getApp(actvname);
-            if (app!=null) {
-                app.loadAppIconAsync(this, mPackageMan);
+        if (!mDb.isFirstRun()) {
+            //Make sure the displayed icons load first
+            //Load the quickrow icons first
+            for (String actvname : mDb.getAppCategoryOrder(QUICK_ROW_CAT)) {
+                AppShortcut app = mDb.getApp(actvname);
+                if (app != null) {
+                    app.loadAppIconAsync(this, mPackageMan);
+                }
+            }
+
+            //Load the selected category icons
+            for (String actvname : mDb.getAppCategoryOrder(mCategory)) {
+                AppShortcut app = mDb.getApp(actvname);
+                if (app != null) {
+                    app.loadAppIconAsync(this, mPackageMan);
+                }
             }
         }
-
-        //Load the selected category icons
-        for (String actvname: mDb.getAppCategoryOrder(mCategory)) {
-            AppShortcut app = mDb.getApp(actvname);
-            if (app!=null) {
-                app.loadAppIconAsync(this, mPackageMan);
-            }
-        }
-
 
         //Look for new apps
         final List<AppShortcut> shortcuts = processActivities();

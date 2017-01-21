@@ -95,14 +95,12 @@ public class AppShortcut implements Comparable<AppShortcut> {
             mAppShortcuts.put(actionName, app);
         }
         return app;
-
-//        D/ShortcutCatch: intent received
-//        D/ShortcutCatch: Shortcut name: Dino
-//        D/ShortcutCatch:  extra2: fromContact = true
-//        D/ShortcutCatch: intent2.action=android.intent.action.SENDTO
-//        D/ShortcutCatch: uri=smsto:(555)%20555-5555
-
     }
+
+    public static AppShortcut getAppShortcut(String activityName) {
+        return mAppShortcuts.get(activityName);
+    }
+
 
     private AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
@@ -142,6 +140,9 @@ public class AppShortcut implements Comparable<AppShortcut> {
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
         mCategory = Categories.getCategoryForPackage(context, mPackageName);
+        if (mCategory.equals(Categories.CAT_OTHER)) {
+            mCategory = Categories.getCategoryForPackage(context, mActivityName);
+        }
         mWidget = false;
 
         Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel);
