@@ -59,9 +59,10 @@ public class LaunchReceiver extends BroadcastReceiver {
             Uri data = intent.getData();
             String packageName = data.getEncodedSchemeSpecificPart();
             Log.i("RemoveCatch", "The uninstalled package is: " + packageName);
-
-            DB db = ((GlobState)context.getApplicationContext()).getDB();
-            db.deleteApp(packageName,true);
+            if (!packageName.equals(context.getPackageName())) {
+                DB db = ((GlobState) context.getApplicationContext()).getDB();
+                db.deleteApp(packageName, true);
+            }
         } else if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
             Log.d("ShortcutCatch", "intent received");
             if (intent.hasExtra(Intent.EXTRA_TEXT)) {

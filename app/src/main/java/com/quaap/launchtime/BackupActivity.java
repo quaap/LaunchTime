@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -21,6 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.FsTools;
 import com.quaap.launchtime.db.DB;
 
@@ -126,6 +128,21 @@ public class BackupActivity extends Activity {
 
         populateBackupsList();
     }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_HOME) {
+            setResult(RESULT_OK);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     private void populateBackupsList() {
         backupsLayout.removeAllViews();

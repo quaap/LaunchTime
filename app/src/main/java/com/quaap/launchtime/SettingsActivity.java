@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.view.KeyEvent;
 
 import java.util.List;
 
@@ -63,4 +64,14 @@ public class SettingsActivity extends PreferenceActivity {
         finish();
         super.onBackPressed();
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_HOME) {
+            setResult(RESULT_OK);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 
@@ -52,5 +53,21 @@ public class AboutActivity extends Activity {
             txtAbout.setText(Html.fromHtml(getString(R.string.about_app)));
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_HOME) {
+            setResult(RESULT_OK);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

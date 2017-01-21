@@ -18,7 +18,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by tom on 1/9/17.
+ * Some posrtions modified from Silverfish:
+ * Copyright 2016 Stanislav Pintjuk
+ * E-mail: stanislav.pintjuk@gmail.com
+ *
+ *
+ * Additional created by tom on 1/9/17.
  * <p>
  * Copyright (C) 2017  tom
  * <p>
