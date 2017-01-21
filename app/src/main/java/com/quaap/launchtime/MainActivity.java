@@ -283,6 +283,7 @@ public class MainActivity extends Activity implements
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             switchCategory(Categories.CAT_TALK);
+            showButtonBar(false);
             mQuickRowScroller.smoothScrollTo(0, 0);
         }
         return super.onKeyDown(keyCode, event);

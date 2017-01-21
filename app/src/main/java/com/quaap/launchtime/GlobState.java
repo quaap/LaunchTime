@@ -41,17 +41,14 @@ public class GlobState extends Application {
 
         //this.deleteDatabase(DB.DATABASE_NAME);
 
-        mDB = new DB(this);
-        if (mDB.isFirstRun()) {
-            for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
-                String cat = Categories.DefCategoryOrder[i];
-                mDB.addCategory(cat, Categories.getCatLabel(this, cat), Categories.getCatFullLabel(this, cat), Categories.isTinyCategory(cat), i);
-            }
-        }
+
 
     }
 
-    public DB getDB() {
+    public synchronized DB getDB() {
+        if (mDB==null) {
+            mDB = new DB(this);
+        }
         return mDB;
     }
 

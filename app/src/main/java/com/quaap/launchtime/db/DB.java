@@ -92,7 +92,13 @@ public class DB extends SQLiteOpenHelper {
     public DB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
-        this.getWritableDatabase();
+        this.getWritableDatabase();//force onCreate();
+
+
+        for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
+            String cat = Categories.DefCategoryOrder[i];
+            addCategory(cat, Categories.getCatLabel(mContext, cat), Categories.getCatFullLabel(mContext, cat), Categories.isTinyCategory(cat), i);
+        }
     }
 
     private static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {
@@ -137,7 +143,12 @@ public class DB extends SQLiteOpenHelper {
         for (String createind : apphistorycolumnsindex) {
             sqLiteDatabase.execSQL(buildIndexStmt(APP_HISTORY_TABLE, createind));
         }
+
+
     }
+
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
