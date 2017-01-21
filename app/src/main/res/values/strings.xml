@@ -86,7 +86,7 @@
     <string name="sent_success">Data successfully sent. Thanks!</string>
     <string name="sent_failed">Data tranfer failed:</string>
     <string name="backup_and_restore">Backup and Restore</string>
-    <string name="backup_explain">If you have everything the way you like it, or are about to make some changes, take a backup! Note that these backups will be deleted if you uninstall the app.</string>
+    <string name="backup_explain">If you have everything the way you like it, or are about to make some big changes, take a backup! Please note that these backups will be deleted if you uninstall the app, so use the \"Copy selected backup to filesystem\" button to save ones you want to keep.</string>
     <string name="take_new_backup">Take new backup</string>
     <string name="restore_selected_backup">Restore selected backup</string>
     <string name="delete_selected_backup">Delete selected backup</string>
