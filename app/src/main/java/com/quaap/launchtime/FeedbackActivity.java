@@ -26,23 +26,12 @@ import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.HttpUtils;
 import com.quaap.launchtime.db.DB;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class FeedbackActivity extends Activity {
 
@@ -145,7 +134,7 @@ public class FeedbackActivity extends Activity {
         }
         ListView itemsList = (ListView)findViewById(R.id.info_data_items);
 
-        itemsList.setAdapter(new PackageAdapter(this, new ArrayList<String>(scrubbednames.keySet())));
+        itemsList.setAdapter(new PackageAdapter(this, new ArrayList<>(scrubbednames.keySet())));
 
     }
 

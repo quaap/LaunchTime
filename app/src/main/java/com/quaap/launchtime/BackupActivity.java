@@ -22,7 +22,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.FsTools;
 import com.quaap.launchtime.db.DB;
 
@@ -76,10 +75,10 @@ public class BackupActivity extends Activity {
     private void showExternalButtons(boolean show) {
 
         if (show) {
-            showExt.setText("Show external backup options...");
+            showExt.setText(R.string.show_extfs_opts);
             btnbar.setVisibility(View.GONE);
         } else {
-            showExt.setText("Hide external backup options...");
+            showExt.setText(R.string.hide_extfs_opts);
             btnbar.setVisibility(View.VISIBLE);
         }
 
@@ -148,7 +147,7 @@ public class BackupActivity extends Activity {
         backupsLayout.removeAllViews();
         RadioGroup baks = new RadioGroup(this);
 
-        makeRadioButton(baks, "None selected", false).setChecked(true);
+        makeRadioButton(baks, getString(R.string.no_backup_selected), false).setChecked(true);
 
         for(final String bk: db.listBackups()) {
 
@@ -188,12 +187,12 @@ public class BackupActivity extends Activity {
     private void promptNew() {
 
         final EditText tag = new EditText(this);
-        tag.setHint("Optional name");
+        tag.setHint(R.string.opt_name);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle("New backup")
+                .setTitle(R.string.new_backup)
                 .setView(tag)
-                .setPositiveButton("Take backup", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.take_backup, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         newBackup(tag.getText().toString());
@@ -207,9 +206,9 @@ public class BackupActivity extends Activity {
 
         String message;
         if (db.backup(optionalName)!=null) {
-            message = "Backup successful!";
+            message = getString(R.string.backup_success);
         } else {
-            message = "Backup failed";
+            message = getString(R.string.backup_failed);
         }
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         populateBackupsList();
@@ -222,7 +221,7 @@ public class BackupActivity extends Activity {
                 public void selected(File selection) {
                     confirmRestoreFile(selection);
                 }
-            }, "Select file to restore", false, Pattern.quote(DB.BK_PRE) + ".+");
+            }, getString(R.string.select_file_restore), false, Pattern.quote(DB.BK_PRE) + ".+");
         }
     }
 
@@ -234,7 +233,7 @@ public class BackupActivity extends Activity {
                 File backupFile = db.pullBackup(selectedBackup);
                 confirmRestoreFile(backupFile);
             } else{
-                String  message = "No such backup \"" + selectedBackup + "\"";
+                String  message = getString(R.string.no_backup) + selectedBackup + "\"";
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
 
@@ -244,9 +243,9 @@ public class BackupActivity extends Activity {
     private void confirmRestoreFile (final File backupFile) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Restore?")
-                    .setMessage("If you restore, any current changes will be lost.")
-                    .setPositiveButton("Restore", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.confirm_restore1)
+                    .setMessage(R.string.confirm_restore2)
+                    .setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String message = restoreFromFile(backupFile);
@@ -261,7 +260,7 @@ public class BackupActivity extends Activity {
         String message;
         File prev = db.backup("Before restore");
         if (db.restoreFullpathBackup(backupFile)) {
-            message = "Restore successful! Will now restart.";
+            message = getString(R.string.restore_successful);
 
             backupsLayout.postDelayed(new Runnable() {
                 @Override
@@ -276,9 +275,9 @@ public class BackupActivity extends Activity {
             }, 1000);
 
         } else {
-            message = "Restore failed. Rolling back";
-            if (db.restoreFullpathBackup(prev)) {
-                message = "Restore failed. Database state unknown.";
+            message = getString(R.string.restore_failed_rollback);
+            if (!db.restoreFullpathBackup(prev)) {
+                message = getString(R.string.restore_failed2);
             }
 
             populateBackupsList();
@@ -289,9 +288,9 @@ public class BackupActivity extends Activity {
     private void confirmDelete() {
         if (selected) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("Delete?")
-                    .setMessage("Are you sure you want to delete the back up '" + selectedBackup + "'?")
-                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.confirm_delete1)
+                    .setMessage(getString(R.string.confirm_delete2) + selectedBackup + "'?")
+                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             delete();
@@ -306,9 +305,9 @@ public class BackupActivity extends Activity {
 
             String message;
             if (db.deleteBackup(selectedBackup)) {
-                message = "Delete successful!";
+                message = getString(R.string.delete_success);
             } else {
-                message = "Delete failed";
+                message = getString(R.string.delete_failed);
             }
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             populateBackupsList();
@@ -322,13 +321,13 @@ public class BackupActivity extends Activity {
                 public void selected(File selection) {
                     String message;
                     if (FsTools.copyFileToDir(db.pullBackup(selectedBackup), selection)!=null) {
-                        message = "Copy successful!";
+                        message = getString(R.string.copy_sucess);
                     } else {
-                        message = "Copy failed";
+                        message = getString(R.string.copy_failed);
                     }
                     Toast.makeText(BackupActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
-            }, "Select location to save", true);
+            }, getString(R.string.select_save_location), true);
         }
     }
 
@@ -353,9 +352,9 @@ public class BackupActivity extends Activity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Toast.makeText(this, "Yay! Try your operation again.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.perm_granted, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(this, "Boo", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.perm_not_granted, Toast.LENGTH_LONG).show();
                 }
             }
         }

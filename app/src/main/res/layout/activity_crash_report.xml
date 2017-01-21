@@ -12,7 +12,7 @@
     android:background="@android:color/background_light">
 
     <TextView
-        android:text="There was a problem"
+        android:text="@string/there_was_a_problem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView10"
@@ -40,10 +40,11 @@
     </ScrollView>
 
     <TextView
-        android:text="Add a comment"
+        android:text="@string/add_a_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView9"
+        android:labelFor="@+id/err_user_comment"
         android:layout_above="@+id/err_user_comment"
         android:layout_marginTop="6dp"
         android:textColor="@color/textcolorinv" />
@@ -61,7 +62,7 @@
         android:textColor="@color/textcolorinv" />
 
     <Button
-        android:text="Send Error Report"
+        android:text="@string/send_error_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/err_report_btn"
@@ -70,7 +71,7 @@
         android:textColor="@color/textcolorinv" />
 
     <Button
-        android:text="Cancel"
+        android:text="@string/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/err_user_comment"

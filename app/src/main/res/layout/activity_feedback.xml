@@ -66,6 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView7"
+        android:labelFor="@+id/info_user_message"
         android:layout_below="@+id/info_send"
         android:textColor="@color/textcolorinv" />
 

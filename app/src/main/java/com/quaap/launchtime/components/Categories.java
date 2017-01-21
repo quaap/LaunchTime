@@ -73,7 +73,7 @@ public class Categories {
 
     public static void init(Context context) {
         resources = context.getResources();
-        mPrefCategoriesRef = new WeakReference<Map<String, String>>(getPredefinedCategories());
+        mPrefCategoriesRef = new WeakReference<>(getPredefinedCategories());
         mCategorKeywords = getCategoryKeywords();
     }
 
@@ -112,7 +112,7 @@ public class Categories {
             prefCat = mPrefCategoriesRef.get();
             if (prefCat == null) {
                 prefCat = getPredefinedCategories();
-                mPrefCategoriesRef = new WeakReference<Map<String, String>>(prefCat);
+                mPrefCategoriesRef = new WeakReference<>(prefCat);
             }
         }
         String category = prefCat.get(pkgname);

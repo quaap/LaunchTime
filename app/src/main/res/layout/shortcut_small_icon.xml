@@ -13,6 +13,7 @@
         android:layout_width="@dimen/icon_sm_width"
         android:layout_height="@dimen/icon_sm_width"
         android:id="@+id/shortcut_icon"
+        android:contentDescription="@string/app"
         android:layout_gravity="center_horizontal" />
 
     <TextView

@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/item_text"
         android:layout_weight="1"
@@ -21,6 +21,7 @@
         android:background="#f5f5f5"
         android:layout_marginStart="2dp"
         android:paddingStart="1dp"
+        android:paddingEnd="1dp"
         android:textColor="@color/textcolorinv" />
 
     <CheckBox

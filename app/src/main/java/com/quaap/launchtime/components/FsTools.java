@@ -60,7 +60,7 @@ public class FsTools {
 
         };
 
-        List<String> dirs = new ArrayList<String>(Arrays.asList(extdir.list(filterdirs)));
+        List<String> dirs = new ArrayList<>(Arrays.asList(extdir.list(filterdirs)));
 
         if (extdir.getParent()!=null && !extdir.equals(Environment.getExternalStorageDirectory())) {
             dirs.add(0, "..");
@@ -84,7 +84,7 @@ public class FsTools {
 
             };
 
-            List<String> files = new ArrayList<String>(Arrays.asList(extdir.list(filterfiles)));
+            List<String> files = new ArrayList<>(Arrays.asList(extdir.list(filterfiles)));
 
             Collections.sort(files, new Comparator<String>() {
                 @Override
@@ -129,9 +129,9 @@ public class FsTools {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                File selFile = null;
+
                 try {
-                    selFile = new File(currentDir,items[i]).getCanonicalFile();
+                    File selFile = new File(currentDir,items[i]).getCanonicalFile();
                     if (selFile.isDirectory()) {
                         selectExternalLocation(listener, title, selFile.getPath(), chooseDir, matchRE);
                     } else {
@@ -209,10 +209,10 @@ public class FsTools {
                     output.flush();
                     return destFile;
                 } finally {
-                    output.close();
+                    try {output.close();} catch (Exception e) {Log.e("Fs",e.getMessage(),e);}
                 }
             } finally {
-                fis.close();
+                try {fis.close();} catch (Exception e) {Log.e("Fs",e.getMessage(),e);}
             }
 
         } catch (IOException e) {

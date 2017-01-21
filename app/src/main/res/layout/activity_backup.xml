@@ -12,7 +12,7 @@
     android:background="#dd000000">
 
     <TextView
-        android:text="Backup and Restore"
+        android:text="@string/backup_and_restore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:text="If you have everything the way you like it, or are about to make some changes, take a backup! Note that these backups will be deleted if you uninstall the app."
+        android:text="@string/backup_explain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView8"
@@ -45,21 +45,21 @@
             android:layout_weight="1">
 
             <Button
-                android:text="Take new backup"
+                android:text="@string/take_new_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_newbak"
                 android:layout_weight="1" />
 
             <Button
-                android:text="Restore selected backup"
+                android:text="@string/restore_selected_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_restorebak"
                 android:layout_weight="1" />
 
             <Button
-                android:text="Delete selected backup"
+                android:text="@string/delete_selected_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_deletebak"
@@ -73,7 +73,8 @@
             android:id="@+id/bak_show_ext_btns"
             android:layout_gravity="top|center_horizontal"
             android:layout_weight="1"
-            android:layout_margin="4dp" />
+            android:layout_margin="4dp"
+            android:textColor="@android:color/holo_blue_bright" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -84,14 +85,14 @@
             android:visibility="gone">
 
             <Button
-                android:text="Copy selected backup to filesystem"
+                android:text="@string/copy_selected_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_savebak"
                 android:layout_weight="1" />
 
             <Button
-                android:text="Load a backup from filesystem"
+                android:text="@string/load_a_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_loadbak"

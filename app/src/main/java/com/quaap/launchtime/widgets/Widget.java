@@ -185,7 +185,7 @@ public class Widget {
         // This will simply add some empty data to the intent.
         ArrayList<Parcelable> customInfo = new ArrayList<>();
         pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo);
-        ArrayList<Parcelable> customExtras = new ArrayList();
+        ArrayList<Parcelable> customExtras = new ArrayList<>();
         pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_EXTRAS, customExtras);
     }
 

@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="7"
-        android:id="@+id/icon_and_cat_wrap">
+        android:id="@+id/icon_and_cat_wrap"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
@@ -24,7 +25,7 @@
 
             <com.quaap.launchtime.components.InteractiveScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:id="@+id/layout_icons_scroller"
                 android:layout_weight="8">
 
@@ -90,6 +91,7 @@
                 android:layout_gravity="center"
                 android:background="@color/btn_background"
                 android:src="@android:drawable/arrow_up_float"
+                android:contentDescription="@string/config"
                 android:layout_margin="2dp"
                 android:alpha=".8"
                 android:layout_height="25dp" />
@@ -107,7 +109,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/quickrow_wrap">
+            android:id="@+id/quickrow_wrap"
+            android:baselineAligned="false">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -214,6 +217,7 @@
                 android:layout_weight="1"
                 android:background="@color/btn_background"
                 android:src="@android:drawable/ic_menu_preferences"
+                android:contentDescription="@string/config"
                 android:clickable="true"
                 android:padding="4dp"
                 android:layout_marginStart="2dp"
