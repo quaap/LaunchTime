@@ -966,11 +966,25 @@ public class MainActivity extends Activity implements
             public boolean onLongClick(View view) {
                 ClipData data = ClipData.newPlainText(category, category);
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                view.startDrag(data, shadowBuilder, view, 0);
-                mDragDropSource = mCategoriesLayout;
-                if (!Categories.isSpeacialCategory(category)) {
-                    showRemoveDropzone();
+                //view.startDrag(data, shadowBuilder, view, 0);
+
+                boolean dragstarted;
+                if (Build.VERSION.SDK_INT>=24) {
+                    dragstarted = view.startDragAndDrop(data, shadowBuilder, view, 0);
+                } else {
+                    dragstarted = view.startDrag(data, shadowBuilder, view, 0);
                 }
+
+                if (dragstarted) {
+                    mDragDropSource = mCategoriesLayout;
+                    if (!Categories.isSpeacialCategory(category)) {
+                        showRemoveDropzone();
+                    }
+                }
+
+
+
+
                 return true;
             }
         });
@@ -989,13 +1003,7 @@ public class MainActivity extends Activity implements
                         break;
 
                     case DragEvent.ACTION_DRAG_LOCATION:
-//                        int thresh = mCategoriesScroller.getHeight()/6;
-//                        // System.out.println(view + " " + mIconSheet.getTop() + " " + view.getTop() + " " + event.getY());
-//                        if (view.getTop() + event.getY() < mCategoriesScroller.getScrollY() + thresh) {
-//                            mCategoriesScroller.smoothScrollBy(0,-5);
-//                        } else if (view.getTop() + event.getY() > mCategoriesScroller.getScrollY()+mCategoriesScroller.getHeight() - thresh) {
-//                            mCategoriesScroller.smoothScrollBy(0, 5);
-//                        }
+
                         scrollOnDrag(view, event, mCategoriesScroller);
                         break;
                     case DragEvent.ACTION_DRAG_ENDED:
@@ -1003,14 +1011,7 @@ public class MainActivity extends Activity implements
                         hideRemoveDropzone();
                         hideHiddenCategories();
                     case DragEvent.ACTION_DRAG_EXITED:
-//                        if (catstyle==CategoryTabStyle.Tiny) {
-//                            styleCategorySpecial(categoryTab, CategoryTabStyle.Tiny);
-//                        } else if (!isAppShortcut || !isSearch) {
-//                            styleCategorySpecial(categoryTab, CategoryTabStyle.Normal);
-//                        }
-//                        if (category.equals(mCategory)) {
-//                            styleCategorySpecial(categoryTab, CategoryTabStyle.Selected);
-//                        }
+
                         styleCategorySpecial(categoryTab, CategoryTabStyle.Default);
                         break;
 
@@ -1217,13 +1218,22 @@ public class MainActivity extends Activity implements
 
     @Override
     public boolean onLongClick(View view) {
-        mBeingDragged = (AppShortcut) view.getTag();
-        mDragDropSource = (ViewGroup) view.getParent();
-        String label = mBeingDragged.getLabel();
+        AppShortcut dragitem = (AppShortcut) view.getTag();
+        String label = dragitem.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-        view.startDrag(data, shadowBuilder, view, 0);
-        //view.setVisibility(View.INVISIBLE);
+
+        boolean dragstarted;
+        if (Build.VERSION.SDK_INT>=24) {
+            dragstarted = view.startDragAndDrop(data, shadowBuilder, view, 0);
+        } else {
+            dragstarted = view.startDrag(data, shadowBuilder, view, 0);
+        }
+
+        if (dragstarted) {
+            mBeingDragged = dragitem;
+            mDragDropSource = (ViewGroup) view.getParent();
+        }
 
         showHiddenCategories();
         showRemoveDropzone();
