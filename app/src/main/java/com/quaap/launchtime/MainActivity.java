@@ -1079,13 +1079,13 @@ public class MainActivity extends Activity implements
 
     private View.OnDragListener mMainDragListener = new View.OnDragListener() {
         @Override
-        public boolean onDrag(View view, DragEvent event) {
-            View view2 = (View) event.getLocalState();
+        public boolean onDrag(View droppedOn, DragEvent event) {
+            View dragObj = (View) event.getLocalState();
             boolean isShortcut = true;
-            if (view2.getTag() == null || !(view2.getTag() instanceof AppShortcut )) {
+            if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppShortcut )) {
                 isShortcut = false;
             }
-            boolean nocolor = view instanceof GridLayout || view == mRemoveDropzone || !isShortcut || mQuickRow == mDragDropSource;
+            boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone || !isShortcut || mQuickRow == mDragDropSource;
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
@@ -1094,30 +1094,30 @@ public class MainActivity extends Activity implements
                 case DragEvent.ACTION_DRAG_LOCATION:
                     //scroll the scrollview
 
-                    if (isShortcut) scrollOnDrag(view, event, mIconSheetScroller);
+                    if (isShortcut) scrollOnDrag(droppedOn, event, mIconSheetScroller);
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if (!nocolor ) {
-                        view.setBackgroundColor(dragoverBackground);
+                        droppedOn.setBackgroundColor(dragoverBackground);
                     }
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
 
-                    if (!nocolor) view.setBackgroundColor(backgroundDefault);
+                    if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
                     break;
                 case DragEvent.ACTION_DROP:
-                    if (!nocolor) view.setBackgroundColor(backgroundDefault);
+                    if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
                     // Dropped, reassign View to ViewGroup
 
-                    if (view2 == view) {
+                    if (dragObj == droppedOn) {
                         // Log.d("sort", "self drop");
                         break;
                     }
 
-                    if (handleDrop(view, view2, isShortcut)) return true;
+                    if (handleDrop(droppedOn, dragObj, isShortcut)) return true;
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    if (!nocolor) view.setBackgroundColor(backgroundDefault);
+                    if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
                     mBeingDragged = null;
                     hideRemoveDropzone();
                     hideHiddenCategories();
@@ -1200,8 +1200,12 @@ public class MainActivity extends Activity implements
         }
 
         private void removeDroppedRecentItem(View view2) {
-            mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
-            mDragDropSource.removeView(view2);
+            try {
+                mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
+                mDragDropSource.removeView(view2);
+            } catch (Exception e) {
+                Log.e("LaunchTime", "mBeingDragged= " + mBeingDragged + " mDragDropSource=" + mDragDropSource + " view2=" +view2, e);
+            }
         }
 
         private void removeDroppedItem(View view2) {
