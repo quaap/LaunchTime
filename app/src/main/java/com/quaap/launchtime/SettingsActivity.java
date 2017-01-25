@@ -1,12 +1,17 @@
 package com.quaap.launchtime;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes
@@ -24,7 +29,6 @@ import java.util.List;
 public class SettingsActivity extends PreferenceActivity {
 
 
-
     @Override
     protected boolean isValidFragment(String fragmentName) {
         if (fragmentName.startsWith("com.quaap.launchtime.SettingsActivity$")) {
@@ -37,6 +41,8 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.preference_headers, target);
+        //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        //settings.edit().clear().apply();
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -45,6 +51,16 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
         }
     }
 
@@ -57,24 +73,20 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-
-      //  setResult(RESULT_OK);
-//        finish();
-
-        if (getFragmentManager().getBackStackEntryCount() != 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            Intent main = new Intent(this, MainActivity.class);
-            startActivity(main);
-            setResult(RESULT_OK);
-            finish();
-            // or just go back to main activity
-           // super.onBackPressed();
-//        finish();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//
+//        Log.d("d", "onback");
+//        if (mSelected.size()>0) {
+//            mSelected.pop();
+//            super.onBackPressed();
+//        } else {
+//            Intent main = new Intent(this, MainActivity.class);
+//            startActivity(main);
+//            setResult(RESULT_OK);
+//            finish();
+//        }
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

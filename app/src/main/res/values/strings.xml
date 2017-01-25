@@ -123,4 +123,26 @@
     <string name="app">app</string>
     <string name="config">Config</string>
     <string name="previously_deleted">Previously Deleted</string>
+    <string name="pref_general">General</string>
+    <string name="pref_general_summ">General Preferences.</string>
+    <string name="pref_style">Style</string>
+    <string name="pref_style_summ">Color and style.</string>
+    <string name="pref_senddat">Send app data</string>
+    <string name="pref_senddat_summ">Send data about which apps are installed to the app developer</string>
+    <string name="pref_backup">Backup and Restore</string>
+    <string name="pref_backup_summ">Backup or restore LaunchTime\'s configuration (Categories, app order, recent apps, etc)</string>
+    <string name="pref_system">System Settings</string>
+    <string name="pref_system_summ">Show the system settings</string>
+    <string name="pref_tabsize">Category tab size</string>
+    <string name="pref_icontext">Icon text</string>
+    <string name="pref_tabtext">Tab text</string>
+    <string name="pref_tabback">Tab background</string>
+    <string name="pref_tabsel">Tab selected background</string>
+    <string name="pref_drag">Drag over</string>
+    <string name="choose_your_color">Choose your color</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
+    <string name="brightness">Brightness</string>
+    <string name="transparency">Transparency</string>
 </resources>

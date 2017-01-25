@@ -4,7 +4,7 @@
 
     <ListPreference
         android:defaultValue="1"
-        android:title="Category tab size"
+        android:title="@string/pref_tabsize"
         android:entries="@array/pref_size_strings"
         android:entryValues="@array/pref_tab_size_values"
         android:key="preference_tabsize"
@@ -12,23 +12,28 @@
 
 
     <com.quaap.launchtime.color.ColorPreference
-        android:title="Icon text"
-        android:key="textcolor" />
+        android:title="@string/pref_icontext"
+        android:key="textcolor"
+        android:defaultValue="@color/textcolor"/>
 
     <com.quaap.launchtime.color.ColorPreference
-        android:title="Tab text"
-        android:key="cattabtextcolor" />
+        android:title="@string/pref_tabtext"
+        android:key="cattabtextcolor"
+        android:defaultValue="@color/textcolor"/>
 
     <com.quaap.launchtime.color.ColorPreference
-        android:title="Tab background"
-        android:key="cattab_background" />
+        android:title="@string/pref_tabback"
+        android:key="cattab_background"
+        android:defaultValue="@color/cattab_background" />
 
     <com.quaap.launchtime.color.ColorPreference
-        android:title="Tab selected background"
-        android:key="cattabselected_background" />
+        android:title="@string/pref_tabsel"
+        android:key="cattabselected_background"
+        android:defaultValue="@color/cattabselected_background" />
 
     <com.quaap.launchtime.color.ColorPreference
-        android:title="Drag over"
-        android:key="dragover_background" />
+        android:title="@string/pref_drag"
+        android:key="dragover_background"
+        android:defaultValue="@color/dragover_background" />
 
 </PreferenceScreen>
