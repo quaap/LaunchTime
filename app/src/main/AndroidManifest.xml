@@ -74,7 +74,7 @@
             android:name=".CrashReportActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".BackupActivity" />
-        <activity android:name=".color.ColorChooser"></activity>
+
     </application>
 
 </manifest>
