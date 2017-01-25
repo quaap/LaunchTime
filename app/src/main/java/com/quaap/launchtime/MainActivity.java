@@ -42,6 +42,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -1191,7 +1192,11 @@ public class MainActivity extends Activity implements
             }
 
             if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
-
+                ViewParent parent = dragObj.getParent();
+                if (parent!=null) {
+                    Log.e("LaunchTime", "dragObj " + dragObj + " still has parent " + parent, new Throwable() );
+                    ((ViewGroup)parent).removeView(dragObj);
+                }
                 if (index == -1) {
                     target.addView(dragObj);
                 } else {
