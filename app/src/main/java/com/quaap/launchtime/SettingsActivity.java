@@ -33,14 +33,6 @@ public class SettingsActivity extends PreferenceActivity {
         return super.isValidFragment(fragmentName);
     }
 
-//    @Override
-//    public Intent getIntent() {
-//
-//        final Intent modIntent = new Intent(super.getIntent());
-//        modIntent.putExtra(EXTRA_SHOW_FRAGMENT, SettingsFragment.class.getName());
-//        modIntent.putExtra(EXTRA_NO_HEADERS, true);
-//        return modIntent;
-//    }
 
     @Override
     public void onBuildHeaders(List<Header> target) {
@@ -67,11 +59,21 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        Intent main = new Intent(this, MainActivity.class);
-        startActivity(main);
-        setResult(RESULT_OK);
-        finish();
 
+      //  setResult(RESULT_OK);
+//        finish();
+
+        if (getFragmentManager().getBackStackEntryCount() != 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            Intent main = new Intent(this, MainActivity.class);
+            startActivity(main);
+            setResult(RESULT_OK);
+            finish();
+            // or just go back to main activity
+           // super.onBackPressed();
+//        finish();
+        }
     }
 
     @Override

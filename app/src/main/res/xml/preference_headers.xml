@@ -4,7 +4,7 @@
         android:title="General"
         android:summary="General Preferences." />
     <header android:fragment="com.quaap.launchtime.SettingsActivity$ColorSettingsFragment"
-        android:title="Color"
-        android:summary="Color Preferences." />
+        android:title="Style"
+        android:summary="Color and style." />
 
 </preference-headers>

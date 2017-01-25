@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <ListPreference
+        android:defaultValue="1"
+        android:title="Category tab size"
+        android:entries="@array/pref_size_strings"
+        android:entryValues="@array/pref_tab_size_values"
+        android:key="preference_tabsize"
+        android:summary="%s" />
+
+
     <com.quaap.launchtime.color.ColorPreference
         android:title="Icon text"
         android:key="textcolor" />
-
 
     <com.quaap.launchtime.color.ColorPreference
         android:title="Tab text"
