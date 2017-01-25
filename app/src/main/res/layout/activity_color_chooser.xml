@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_color_chooser"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.quaap.launchtime.ColorChooserActivity"
+    android:background="#ddeeeeee">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingEnd="8dp">
+
+
+        <TextView
+            android:text="Choose your color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView17"
+            android:textColor="@color/textcolorinv" />
+
+        <Button
+            android:text="Select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/color_preview"
+            android:height="32dp"
+            android:gravity="center"
+            android:layout_margin="16dp"
+            android:textSize="18sp"
+            android:shadowColor="@color/textcolor"
+            android:shadowDx="1"
+            android:shadowRadius="30"
+            android:textColor="@color/textcolorinv"
+            android:shadowDy="1" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:text="Red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView13"
+                android:ems="6"
+                android:textColor="@color/textcolorinv" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/color_red_seekbar"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="255" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:text="Green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView14"
+                android:ems="6"
+                android:textColor="@color/textcolorinv" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/color_green_seekbar"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="255" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:text="Blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView15"
+                android:ems="6"
+                android:textColor="@color/textcolorinv" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/color_blue_seekbar"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="255" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:text="Brightness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView16"
+                android:ems="6"
+                android:textColor="@color/textcolorinv" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/color_bright_seekbar"
+                android:layout_weight="1"
+                android:max="255"
+                android:progress="255" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:text="Transparency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/translab"
+                android:ems="6"
+                android:textColor="@color/textcolorinv" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/color_alpha_seekbar"
+                android:layout_weight="1"
+                android:max="255" />
+
+        </LinearLayout>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView20"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/textcolorinv" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/color_presets"
+            android:columnCount="6">
+
+        </GridLayout>
+    </LinearLayout>
+</ScrollView>
