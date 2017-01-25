@@ -1086,6 +1086,12 @@ public class MainActivity extends Activity implements
                 isShortcut = false;
             }
             boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone || !isShortcut || mQuickRow == mDragDropSource;
+
+            //prevent dropping categories anywhere but category area and trash
+            if (mDragDropSource==mCategoriesLayout && !(droppedOn==mCategoriesLayout || droppedOn==mRemoveDropzone )) {
+                return false;
+            }
+
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
@@ -1128,43 +1134,43 @@ public class MainActivity extends Activity implements
             return true;
         }
 
-        private boolean handleDrop(View view, View view2, boolean isShortcut) {
+        private boolean handleDrop(View droppedOn, View dragObj, boolean isShortcut) {
             ViewGroup target;
-            if (view == mRemoveDropzone) {  // need to delete the dropped thing
+            if (droppedOn == mRemoveDropzone) {  // need to delete the dropped thing
                 //Stuff to be deleted
                 if (mQuickRow == mDragDropSource || mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
-                    removeDroppedItem(view2);
+                    removeDroppedItem(dragObj);
                 } else if (mCategory.equals(Categories.CAT_SEARCH)) {
-                    removeDroppedRecentItem(view2);
+                    removeDroppedRecentItem(dragObj);
                 } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
                     //delete category tab
-                    promptDeleteCategory((String)view2.getTag());
+                    promptDeleteCategory((String)dragObj.getTag());
 
                 } else {
                     //uninstall app
-                    mBeingUninstalled = view2;
+                    mBeingUninstalled = dragObj;
                     launchUninstallIntent(mBeingDragged.getPackageName());
                 }
                 return true;
-            } else if (view instanceof GridLayout) {
-                target = (GridLayout) view;
+            } else if (droppedOn instanceof GridLayout) {
+                target = (GridLayout) droppedOn;
 
             } else {
-                target = (GridLayout) view.getParent();
+                target = (GridLayout) droppedOn.getParent();
             }
 
 
             //Find the drop position
             int index = -1;
             for (int i = 0; i < target.getChildCount(); i++) {
-                if (target.getChildAt(i) == view) {
+                if (target.getChildAt(i) == droppedOn) {
                     index = i;
                 }
             }
 
             // Don't remove the source icon if it's on the quickrow, unless we're re-arranging
             if ((mDragDropSource == mQuickRow && mQuickRow == target) || (mDragDropSource != mQuickRow && mQuickRow != target)) {
-                mDragDropSource.removeView(view2);
+                mDragDropSource.removeView(dragObj);
             }
 
 
@@ -1172,7 +1178,7 @@ public class MainActivity extends Activity implements
                 if (mQuickRow != mDragDropSource) {
                     //prevent copies of the same app on the quickrow
                     for (int i = 0; i < mQuickRow.getChildCount(); i++) {
-                        AppShortcut dragging = (AppShortcut) view2.getTag();
+                        AppShortcut dragging = (AppShortcut) dragObj.getTag();
                         AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
                         if (dragging.getActivityName().equals(inbar.getActivityName())) {
                             return true;
@@ -1180,16 +1186,16 @@ public class MainActivity extends Activity implements
                     }
                 }
                 //make a copy of the shortcut to put on the quickbar
-                view2 = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) view2.getTag()), true);
+                dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag()), true);
 
             }
 
             if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
 
                 if (index == -1) {
-                    target.addView(view2);
+                    target.addView(dragObj);
                 } else {
-                    target.addView(view2, index);
+                    target.addView(dragObj, index);
                 }
             }
 
@@ -1199,17 +1205,17 @@ public class MainActivity extends Activity implements
             return false;
         }
 
-        private void removeDroppedRecentItem(View view2) {
+        private void removeDroppedRecentItem(View dragObj) {
             try {
                 mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
-                mDragDropSource.removeView(view2);
+                mDragDropSource.removeView(dragObj);
             } catch (Exception e) {
-                Log.e("LaunchTime", "mBeingDragged= " + mBeingDragged + " mDragDropSource=" + mDragDropSource + " view2=" +view2, e);
+                Log.e("LaunchTime", "mBeingDragged= " + mBeingDragged + " mDragDropSource=" + mDragDropSource + " dragObj=" +dragObj, e);
             }
         }
 
-        private void removeDroppedItem(View view2) {
-            mDragDropSource.removeView(view2);
+        private void removeDroppedItem(View dragObj) {
+            mDragDropSource.removeView(dragObj);
             mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
 
             if (mBeingDragged.isLink()) {
