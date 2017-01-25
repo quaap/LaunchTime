@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.quaap.launchtime.ColorChooserActivity"
+    tools:context="com.quaap.launchtime.color.ColorChooser"
     android:background="#ddeeeeee">
 
     <LinearLayout
@@ -25,8 +25,7 @@
             android:id="@+id/textView17"
             android:textColor="@color/textcolorinv" />
 
-        <Button
-            android:text="Select"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/color_preview"
@@ -61,7 +60,7 @@
                 android:id="@+id/color_red_seekbar"
                 android:layout_weight="1"
                 android:max="255"
-                android:progress="255" />
+                android:progress="0" />
         </LinearLayout>
 
         <LinearLayout
@@ -85,7 +84,7 @@
                 android:id="@+id/color_green_seekbar"
                 android:layout_weight="1"
                 android:max="255"
-                android:progress="255" />
+                android:progress="0" />
         </LinearLayout>
 
         <LinearLayout
@@ -109,7 +108,7 @@
                 android:id="@+id/color_blue_seekbar"
                 android:layout_weight="1"
                 android:max="255"
-                android:progress="255" />
+                android:progress="0" />
         </LinearLayout>
 
         <LinearLayout
@@ -160,14 +159,6 @@
                 android:max="255" />
 
         </LinearLayout>
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView20"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/textcolorinv" />
 
         <GridLayout
             android:layout_width="match_parent"

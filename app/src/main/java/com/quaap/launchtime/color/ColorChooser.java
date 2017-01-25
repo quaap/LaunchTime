@@ -1,20 +1,28 @@
-package com.quaap.launchtime;
+package com.quaap.launchtime.color;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.util.Timer;
+import com.quaap.launchtime.R;
 
-public class ColorChooserActivity extends Activity {
+public class ColorChooser extends FrameLayout {
+
 
     private SeekBar colorRed;
     private SeekBar colorGreen;
@@ -27,15 +35,31 @@ public class ColorChooserActivity extends Activity {
     private TextView colorPreview;
     private SharedPreferences prefs;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_color_chooser);
-        colorRed = (SeekBar)findViewById(R.id.color_red_seekbar);
-        colorGreen = (SeekBar)findViewById(R.id.color_green_seekbar);
-        colorBlue = (SeekBar)findViewById(R.id.color_blue_seekbar);
-        colorAlpha = (SeekBar)findViewById(R.id.color_alpha_seekbar);
-        colorBright = (SeekBar)findViewById(R.id.color_bright_seekbar);
+    private ColorSelectedListener colorSelectedListener;
+
+    public ColorChooser(Context context) {
+        super(context);
+        init();
+    }
+
+    public ColorChooser(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public ColorChooser(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+        ViewGroup frame = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.activity_color_chooser, this);
+
+        colorRed = (SeekBar) frame.findViewById(R.id.color_red_seekbar);
+        colorGreen = (SeekBar) frame.findViewById(R.id.color_green_seekbar);
+        colorBlue = (SeekBar) frame.findViewById(R.id.color_blue_seekbar);
+        colorAlpha = (SeekBar) frame.findViewById(R.id.color_alpha_seekbar);
+        colorBright = (SeekBar) frame.findViewById(R.id.color_bright_seekbar);
 
 
         colorRed.setOnSeekBarChangeListener(colorChange);
@@ -44,17 +68,17 @@ public class ColorChooserActivity extends Activity {
         colorBright.setOnSeekBarChangeListener(colorChange);
         colorAlpha.setOnSeekBarChangeListener(colorChange);
 
-        colorPreview = (TextView)findViewById(R.id.color_preview);
+        colorPreview = (TextView) frame.findViewById(R.id.color_preview);
         colorPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                done();
+             //   done();
             }
         });
 
-        colorPresets = (GridLayout)findViewById(R.id.color_presets);
+        colorPresets = (GridLayout) frame.findViewById(R.id.color_presets);
 
-        prefs = getSharedPreferences("colors", MODE_PRIVATE);
+        prefs = getContext().getSharedPreferences("colors", Context.MODE_PRIVATE);
 
         loadPresets();
 
@@ -65,10 +89,16 @@ public class ColorChooserActivity extends Activity {
         int color = getSelectedColor();
         addPreset(color);
 
-        Intent resultData = new Intent();
-        resultData.putExtra("color", color);
-        setResult(Activity.RESULT_OK, resultData);
-        finish();
+        if (colorSelectedListener!=null) {
+            colorSelectedListener.colorSelected(color);
+        }
+
+
+
+//        Intent resultData = new Intent();
+//        resultData.putExtra("color", color);
+//        setResult(Activity.RESULT_OK, resultData);
+//        finish();
     }
 
     private void doPreview() {
@@ -79,9 +109,9 @@ public class ColorChooserActivity extends Activity {
 
     }
 
-    private void setColor(int color) {
+    public void setColor(int color) {
 
-        if (Build.VERSION.SDK_INT>=24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             colorAlpha.setProgress(255 - Color.alpha(color), true);
             colorBright.setProgress(255, true);
 
@@ -110,9 +140,9 @@ public class ColorChooserActivity extends Activity {
     private void animateProgress2(final ProgressBar b, int newval) {
         int cval = b.getProgress();
 
-        int i=0;
-        while (cval!=newval && i<255) { //'i' is a safety in case there's a miss
-            cval += Math.signum(newval-cval);
+        int i = 0;
+        while (cval != newval && i < 255) { //'i' is a safety in case there's a miss
+            cval += Math.signum(newval - cval);
 
             final int prog = cval;
             b.postDelayed(new Runnable() {
@@ -125,9 +155,9 @@ public class ColorChooserActivity extends Activity {
         b.setProgress(newval);
     }
 
-    private int getSelectedColor() {
-        int alpha = 255-colorAlpha.getProgress();
-        float bright = colorBright.getProgress()/255f;
+    public int getSelectedColor() {
+        int alpha = 255 - colorAlpha.getProgress();
+        float bright = colorBright.getProgress() / 255f;
 
         int red = (int) (colorRed.getProgress() * bright);
         int green = (int) (colorGreen.getProgress() * bright);
@@ -156,29 +186,30 @@ public class ColorChooserActivity extends Activity {
     private View.OnClickListener setColorListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            setColor((int)view.getTag());
+            setColor((int) view.getTag());
 
         }
     };
 
     int numpresets = 12;
+
     private void addPreset(int color) {
         SharedPreferences.Editor edit = prefs.edit();
-       // edit.clear();
+        // edit.clear();
 
         int top = numpresets - 2;
-        for (int i=top; i>=0; i--) {
-            int oldcolor = prefs.getInt("color"+i, Integer.MIN_VALUE);
-            if (oldcolor==color) {
-                top = i-1;
+        for (int i = top; i >= 0; i--) {
+            int oldcolor = prefs.getInt("color" + i, Integer.MIN_VALUE);
+            if (oldcolor == color) {
+                top = i - 1;
                 break;
             }
         }
 
-        for (int i=top; i>=0; i--) {
-            int oldcolor = prefs.getInt("color"+i, Integer.MIN_VALUE);
-            if (color!=Integer.MIN_VALUE)  {
-                edit.putInt("color"+(i+1), oldcolor);
+        for (int i = top; i >= 0; i--) {
+            int oldcolor = prefs.getInt("color" + i, Integer.MIN_VALUE);
+            if (color != Integer.MIN_VALUE) {
+                edit.putInt("color" + (i + 1), oldcolor);
             }
 
         }
@@ -189,30 +220,30 @@ public class ColorChooserActivity extends Activity {
 
     private void loadPresets() {
 
-        int [] colors = {Color.BLACK, Color.WHITE, Color.DKGRAY,
+        int[] colors = {Color.BLACK, Color.WHITE, Color.DKGRAY,
                 Color.GRAY, Color.LTGRAY, Color.RED,
-                Color.rgb(255,127,0), Color.YELLOW, Color.GREEN,
-                Color.BLUE, Color.rgb(127,0,255), Color.rgb(255,0,255)};
+                Color.rgb(255, 127, 0), Color.YELLOW, Color.GREEN,
+                Color.BLUE, Color.rgb(127, 0, 255), Color.rgb(255, 0, 255)};
 
 
-        for (int i=0; i<numpresets; i++) {
-            int color = prefs.getInt("color"+i, Integer.MIN_VALUE);
-            if (color!=Integer.MIN_VALUE)  {
+        for (int i = 0; i < numpresets; i++) {
+            int color = prefs.getInt("color" + i, Integer.MIN_VALUE);
+            if (color != Integer.MIN_VALUE) {
                 makeColorPresetButton(color);
             }
 
         }
 
-        for (int color: colors) {
+        for (int color : colors) {
             makeColorPresetButton(color);
         }
 
     }
 
     private void makeColorPresetButton(int color) {
-        TextView c = new TextView(this);
-        c.setText("    ");
-        c.setTextSize(36);
+        TextView c = new TextView(getContext());
+        c.setText("   ");
+        c.setTextSize(28);
         c.setBackgroundColor(color);
         c.setTag(color);
         c.setClickable(true);
@@ -221,4 +252,9 @@ public class ColorChooserActivity extends Activity {
         lp.setMargins(16, 16, 16, 16);
         colorPresets.addView(c, lp);
     }
+
+    interface ColorSelectedListener {
+        void colorSelected(int color);
+    }
 }
+

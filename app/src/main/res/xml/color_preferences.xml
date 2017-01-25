@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.quaap.launchtime.color.ColorPreference
+        android:title="Icon text"
+        android:key="textcolor" />
+
+
+    <com.quaap.launchtime.color.ColorPreference
+        android:title="Tab text"
+        android:key="cattabtextcolor" />
+
+    <com.quaap.launchtime.color.ColorPreference
+        android:title="Tab background"
+        android:key="cattab_background" />
+
+    <com.quaap.launchtime.color.ColorPreference
+        android:title="Tab selected background"
+        android:key="cattabselected_background" />
+
+    <com.quaap.launchtime.color.ColorPreference
+        android:title="Drag over"
+        android:key="dragover_background" />
+
+</PreferenceScreen>

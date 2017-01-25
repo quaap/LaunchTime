@@ -27,20 +27,20 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected boolean isValidFragment(String fragmentName) {
-        if (fragmentName.equals("com.quaap.launchtime.SettingsActivity$SettingsFragment")) {
+        if (fragmentName.startsWith("com.quaap.launchtime.SettingsActivity$")) {
             return true;
         }
         return super.isValidFragment(fragmentName);
     }
 
-    @Override
-    public Intent getIntent() {
-
-        final Intent modIntent = new Intent(super.getIntent());
-        modIntent.putExtra(EXTRA_SHOW_FRAGMENT, SettingsFragment.class.getName());
-        modIntent.putExtra(EXTRA_NO_HEADERS, true);
-        return modIntent;
-    }
+//    @Override
+//    public Intent getIntent() {
+//
+//        final Intent modIntent = new Intent(super.getIntent());
+//        modIntent.putExtra(EXTRA_SHOW_FRAGMENT, SettingsFragment.class.getName());
+//        modIntent.putExtra(EXTRA_NO_HEADERS, true);
+//        return modIntent;
+//    }
 
     @Override
     public void onBuildHeaders(List<Header> target) {
@@ -53,6 +53,15 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+        }
+    }
+
+    public static class ColorSettingsFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.color_preferences);
         }
     }
 

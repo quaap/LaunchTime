@@ -2,5 +2,9 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
     <header android:fragment="com.quaap.launchtime.SettingsActivity$SettingsFragment"
         android:title="General"
-        android:summary="Preferences." />
+        android:summary="General Preferences." />
+    <header android:fragment="com.quaap.launchtime.SettingsActivity$ColorSettingsFragment"
+        android:title="Color"
+        android:summary="Color Preferences." />
+
 </preference-headers>

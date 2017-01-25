@@ -56,4 +56,12 @@
     </PreferenceScreen>
 
 
+    <PreferenceScreen
+        android:title="Colortest"
+        android:summary="Color test ing">
+        <intent android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.launchtime"
+            android:targetClass="com.quaap.launchtime.ColorChooserActivity"/>
+    </PreferenceScreen>
+
 </PreferenceScreen>

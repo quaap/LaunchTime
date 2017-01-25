@@ -115,13 +115,15 @@ public class MainActivity extends Activity implements
     private View mBeingUninstalled;
     private Widget mWidgetHelper;
     private ViewGroup mSearchView;
-    private int textColor;
-    private int textColorInvert;
+
+    private int cattabTextColor;
+    private int cattabTextColorInvert;
     private int cattabBackground;
     private int cattabSelectedBackground;
-    private int cattabDragHoverBackground;
     private int dragoverBackground;
+    private int textColor;
     private int backgroundDefault = Color.TRANSPARENT;
+
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 16;
     private int mColumns = 3;
@@ -353,6 +355,7 @@ public class MainActivity extends Activity implements
 
     private void checkConfig() {
         readPrefs();
+        setColors();
         try {
 
             mScreenDim = getScreenDimensions();
@@ -362,6 +365,7 @@ public class MainActivity extends Activity implements
 
             changeColumnCount(mIconSheet, mColumns);
 
+            mShowButtons.setBackgroundColor(cattabBackground);
             mShowButtons.setMinimumHeight(categoryTabPaddingHeight*3);
             //mShowButtons.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, categoryTabPaddingHeight*3));
             //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
@@ -824,6 +828,7 @@ public class MainActivity extends Activity implements
 
             if (!smallIcon) {
                 TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
+                iconLabel.setTextColor(textColor);
                 iconLabel.setText(app.getLabel());
             }
         }
@@ -929,7 +934,7 @@ public class MainActivity extends Activity implements
                 break;
             case DragHover:
                 categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
-                categoryTab.setBackgroundColor(cattabDragHoverBackground);
+                categoryTab.setBackgroundColor(dragoverBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 break;
@@ -937,7 +942,7 @@ public class MainActivity extends Activity implements
                 categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
                 categoryTab.setBackgroundColor(cattabSelectedBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
-                categoryTab.setShadowLayer(8, 4, 4, textColorInvert);
+                categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
                 break;
             case Normal:
             default:
@@ -954,7 +959,7 @@ public class MainActivity extends Activity implements
         categoryTab.setTag(category);
         // categoryTab.setWidth((int)Utils.dpToPx(this,categoryTabWidth));
 
-        categoryTab.setTextColor(textColor);
+        categoryTab.setTextColor(cattabTextColor);
         categoryTab.setTypeface(null, Typeface.BOLD);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -1689,13 +1694,17 @@ public class MainActivity extends Activity implements
     }
 
     private void setColors() {
-        cattabBackground = getResColor(R.color.cattab_background);
-        cattabSelectedBackground = getResColor(R.color.cattabselected_background);
-        cattabDragHoverBackground = getResColor(R.color.cattabdraghover_background);
-        dragoverBackground = getResColor(R.color.dragover_background);
 
-        textColor = getResColor(R.color.textcolor);
-        textColorInvert = getResColor(R.color.textcolorinv);
+
+        cattabBackground = mAppPreferences.getInt("cattab_background", getResColor(R.color.cattab_background));
+        cattabSelectedBackground = mAppPreferences.getInt("cattabselected_background", getResColor(R.color.cattabselected_background));
+
+        dragoverBackground = mAppPreferences.getInt("dragover_background", getResColor(R.color.dragover_background));
+
+        cattabTextColor =  mAppPreferences.getInt("cattabtextcolor", getResColor(R.color.textcolor));
+        cattabTextColorInvert = mAppPreferences.getInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
+
+        textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
 
     }
 

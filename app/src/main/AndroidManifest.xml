@@ -38,6 +38,7 @@
             android:label="LaunchTime Config">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -72,7 +73,8 @@
         <activity
             android:name=".CrashReportActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".BackupActivity"></activity>
+        <activity android:name=".BackupActivity" />
+        <activity android:name=".color.ColorChooser"></activity>
     </application>
 
 </manifest>
