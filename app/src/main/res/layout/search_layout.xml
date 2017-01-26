@@ -24,7 +24,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/search_box"
             android:layout_width="250dp"
-            android:completionThreshold="1" />
+            android:completionThreshold="1"
+            android:maxLines="1"
+            android:imeOptions="actionSearch" />
 
     </LinearLayout>
 

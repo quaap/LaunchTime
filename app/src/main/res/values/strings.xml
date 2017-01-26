@@ -145,4 +145,6 @@
     <string name="blue">Blue</string>
     <string name="brightness">Brightness</string>
     <string name="transparency">Transparency</string>
+    <string name="pref_color_style">Color and Style</string>
+    <string name="pref_app_system">App and System</string>
 </resources>

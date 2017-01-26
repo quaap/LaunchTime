@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="applicationPreference">
 
-    <PreferenceCategory android:title="General">
+    <PreferenceCategory android:title="@string/pref_general">
 
         <ListPreference
             android:defaultValue="0"
@@ -21,7 +21,7 @@
         </PreferenceScreen>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="System">
+    <PreferenceCategory android:title="@string/pref_app_system">
         <PreferenceScreen
             android:title="@string/pref_senddat"
             android:summary="@string/pref_senddat_summ">
@@ -50,7 +50,7 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="Color and Style">
+    <PreferenceCategory android:title="@string/pref_color_style">
 
         <ListPreference
             android:defaultValue="1"
