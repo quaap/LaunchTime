@@ -1,12 +1,14 @@
 package com.quaap.launchtime;
 
+import android.app.Fragment;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
-import android.preference.Preference;
+
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -28,6 +30,15 @@ import java.util.Stack;
 
 public class SettingsActivity extends PreferenceActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Display the fragment as the main content.
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new SettingsFragment())
+                .commit();
+    }
 
     @Override
     protected boolean isValidFragment(String fragmentName) {
@@ -38,12 +49,7 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
 
-    @Override
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.preference_headers, target);
-        //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        //settings.edit().clear().apply();
-    }
+
 
     public static class SettingsFragment extends PreferenceFragment {
 
@@ -51,42 +57,21 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+
         }
 
-        @Override
-        public void onPause() {
-            super.onPause();
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-        }
     }
 
-    public static class ColorSettingsFragment extends PreferenceFragment {
 
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.color_preferences);
-        }
+    @Override
+    public void onBackPressed() {
+
+        Intent main = new Intent(this, MainActivity.class);
+        startActivity(main);
+        setResult(RESULT_OK);
+        finish();
+
     }
-
-//    @Override
-//    public void onBackPressed() {
-//
-//        Log.d("d", "onback");
-//        if (mSelected.size()>0) {
-//            mSelected.pop();
-//            super.onBackPressed();
-//        } else {
-//            Intent main = new Intent(this, MainActivity.class);
-//            startActivity(main);
-//            setResult(RESULT_OK);
-//            finish();
-//        }
-//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

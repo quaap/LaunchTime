@@ -1348,6 +1348,7 @@ public class MainActivity extends Activity implements
 
             }
         } else if (requestCode == PREF_REQUEST) {
+            mAppShortcutViews.clear();
             checkConfig();
             switchCategory(mCategory);
         } else {

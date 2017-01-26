@@ -2,50 +2,85 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="applicationPreference">
 
+    <PreferenceCategory android:title="General">
 
-    <ListPreference
-        android:defaultValue="0"
-        android:title="@string/pref_orient"
-        android:entries="@array/pref_orientation_strings"
-        android:entryValues="@array/pref_orientation_values"
-        android:key="preference_orientation"
-        android:summary="%s" />
+        <ListPreference
+            android:defaultValue="0"
+            android:title="@string/pref_orient"
+            android:entries="@array/pref_orientation_strings"
+            android:entryValues="@array/pref_orientation_values"
+            android:key="preference_orientation"
+            android:summary="%s" />
+        <PreferenceScreen
+            android:title="@string/pref_about"
+            android:summary="@string/pref_help_about">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.quaap.launchtime"
+                android:targetClass="com.quaap.launchtime.AboutActivity"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="System">
+        <PreferenceScreen
+            android:title="@string/pref_senddat"
+            android:summary="@string/pref_senddat_summ">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.quaap.launchtime"
+                android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
+        </PreferenceScreen>
 
 
+        <PreferenceScreen
+            android:title="@string/pref_backup"
+            android:summary="@string/pref_backup_summ">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.quaap.launchtime"
+                android:targetClass="com.quaap.launchtime.BackupActivity"/>
+        </PreferenceScreen>
 
-    <PreferenceScreen
-        android:title="@string/pref_senddat"
-        android:summary="@string/pref_senddat_summ">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.quaap.launchtime"
-            android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
-    </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/pref_system"
+            android:summary="@string/pref_system_summ">
+            <intent android:action="android.settings.SETTINGS"/>
+        </PreferenceScreen>
+
+    </PreferenceCategory>
 
 
-    <PreferenceScreen
-        android:title="@string/pref_backup"
-        android:summary="@string/pref_backup_summ">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.quaap.launchtime"
-            android:targetClass="com.quaap.launchtime.BackupActivity"/>
-    </PreferenceScreen>
+    <PreferenceCategory android:title="Color and Style">
 
-    <PreferenceScreen
-        android:title="@string/pref_system"
-        android:summary="@string/pref_system_summ">
-        <intent android:action="android.settings.SETTINGS"/>
-    </PreferenceScreen>
+        <ListPreference
+            android:defaultValue="1"
+            android:title="@string/pref_tabsize"
+            android:entries="@array/pref_size_strings"
+            android:entryValues="@array/pref_tab_size_values"
+            android:key="preference_tabsize"
+            android:summary="%s" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_icontext"
+            android:key="textcolor"
+            android:defaultValue="@color/textcolor"/>
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabtext"
+            android:key="cattabtextcolor"
+            android:defaultValue="@color/textcolor"/>
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabback"
+            android:key="cattab_background"
+            android:defaultValue="@color/cattab_background" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabsel"
+            android:key="cattabselected_background"
+            android:defaultValue="@color/cattabselected_background" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_drag"
+            android:key="dragover_background"
+            android:defaultValue="@color/dragover_background" />
+    </PreferenceCategory>
 
-    <PreferenceScreen
-        android:title="@string/pref_about"
-        android:summary="@string/pref_help_about">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.quaap.launchtime"
-            android:targetClass="com.quaap.launchtime.AboutActivity"/>
-    </PreferenceScreen>
 
 
 </PreferenceScreen>

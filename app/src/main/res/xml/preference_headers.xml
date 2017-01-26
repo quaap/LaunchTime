@@ -3,8 +3,5 @@
     <header android:fragment="com.quaap.launchtime.SettingsActivity$SettingsFragment"
         android:title="@string/pref_general"
         android:summary="@string/pref_general_summ" />
-    <header android:fragment="com.quaap.launchtime.SettingsActivity$ColorSettingsFragment"
-        android:title="@string/pref_style"
-        android:summary="@string/pref_style_summ" />
 
 </preference-headers>
