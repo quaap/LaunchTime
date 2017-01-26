@@ -211,6 +211,21 @@ public class DB extends SQLiteOpenHelper {
         return appShortcut;
     }
 
+    public int getAppCount(String catID) {
+        int count = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(APP_TABLE,  new String[]{"count(*)"}, CATID + "=?", new String[]{catID}, null, null, null);
+        try {
+            if (cursor.moveToNext()) {
+                count = cursor.getInt(0);
+            }
+        } finally {
+            cursor.close();
+        }
+        return count;
+    }
+
     public List<AppShortcut> getApps(String catID) {
 
         List<AppShortcut> apps = new ArrayList<>();

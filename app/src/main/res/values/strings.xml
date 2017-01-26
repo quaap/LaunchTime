@@ -147,4 +147,5 @@
     <string name="transparency">Transparency</string>
     <string name="pref_color_style">Color and Style</string>
     <string name="pref_app_system">App and System</string>
+    <string name="pref_hide_empty_cat">Hide empty categories</string>
 </resources>
