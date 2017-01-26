@@ -213,7 +213,6 @@
             android:layout_height="match_parent"
             android:background="#ddff3333"
             android:id="@+id/remove_dropzone"
-            android:layout_weight="1"
             android:layout_gravity="end">
 
             <TextView

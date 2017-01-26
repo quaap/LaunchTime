@@ -34,7 +34,7 @@ public class IconCache {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] shabytes = md.digest(inbytes);
 
-            StringBuffer hexString = new StringBuffer();
+            StringBuilder hexString = new StringBuilder();
             for (int i=0;i<shabytes.length;i++) {
                 String hex=Integer.toHexString(0xff & shabytes[i]);
                 if(hex.length()==1) hexString.append('0');

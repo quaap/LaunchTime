@@ -1,7 +1,5 @@
 package com.quaap.launchtime;
 
-import android.app.Fragment;
-
 import android.content.Intent;
 
 import android.os.Bundle;
@@ -9,11 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
-import android.util.Log;
 import android.view.KeyEvent;
-
-import java.util.List;
-import java.util.Stack;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes

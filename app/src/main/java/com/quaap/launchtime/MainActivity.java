@@ -1387,7 +1387,7 @@ public class MainActivity extends Activity implements
                 deldCats.add(cat);
             }
         }
-        catDeletedSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,deldCats));
+        catDeletedSpinner.setAdapter(new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,deldCats));
         catDeletedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
