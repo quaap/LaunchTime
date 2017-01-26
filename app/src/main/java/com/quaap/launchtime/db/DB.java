@@ -4,11 +4,10 @@ package com.quaap.launchtime.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteCursor;
-import android.database.sqlite.SQLiteCursorDriver;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQuery;
+
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -90,14 +89,14 @@ public class DB extends SQLiteOpenHelper {
 
     private Context mContext;
 
-    private static TrackingCursor.TrackingCursorFactory mCursorFactory = new TrackingCursor.TrackingCursorFactory();
+
 
     public static DB openDB(Context context) {
          return new DB(context);
     }
 
     private DB(Context context ) {
-        super(context, DATABASE_NAME, mCursorFactory, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
         this.getWritableDatabase();//force onCreate();
 
@@ -166,12 +165,6 @@ public class DB extends SQLiteOpenHelper {
         return firstRun;
     }
 
-    @Override
-    public synchronized void close() {
-        mCursorFactory.closeAll();
-
-        super.close();
-    }
 
     public List<String> getAppActvNames() {
         List<String> actvnames = new ArrayList<>();
@@ -305,7 +298,6 @@ public class DB extends SQLiteOpenHelper {
                         " order by 2 ",
                 new String[]{filter});
 
-        Log.d("LaunchDB", "open cursors: " + mCursorFactory.getOpenCursors().size());
         return cursor;
     }
 
@@ -491,7 +483,7 @@ public class DB extends SQLiteOpenHelper {
                 tiny = cursor.getShort(0) == 1;
             }
         } catch (Exception e) {
-            Log.e("LaunchDB", "tiny error. Cursors: " + mCursorFactory.getOpenCursors().size(), e);
+            Log.e("LaunchDB", "tiny error.", e);
         } finally {
             cursor.close();
         }
