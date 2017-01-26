@@ -4,8 +4,11 @@ package com.quaap.launchtime.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
+import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQuery;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -86,11 +90,17 @@ public class DB extends SQLiteOpenHelper {
 
     private Context mContext;
 
-    public DB(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    private TrackingCursor.TrackingCursorFactory mCursorFactory = new TrackingCursor.TrackingCursorFactory();
+
+    public static DB openDB(Context context) {
+         return new DB(context, new TrackingCursor.TrackingCursorFactory());
+    }
+
+    private DB(Context context, TrackingCursor.TrackingCursorFactory cursorFactory ) {
+        super(context, DATABASE_NAME, cursorFactory, DATABASE_VERSION);
         mContext = context;
         this.getWritableDatabase();//force onCreate();
-
+        mCursorFactory = cursorFactory;
 
         for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
             String cat = Categories.DefCategoryOrder[i];
@@ -162,11 +172,13 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_TABLE, new String[]{ACTVNAME}, null, null, null, null, LABEL);
-
-        while (cursor.moveToNext()) {
-            actvnames.add(cursor.getString(0));
+        try {
+            while (cursor.moveToNext()) {
+                actvnames.add(cursor.getString(0));
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return actvnames;
     }
 
@@ -176,17 +188,19 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_TABLE, appcolumns, ACTVNAME + "=?", new String[]{actvname}, null, null, null);
+        try {
+            if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
+                String pkgname = cursor.getString(1);
+                String label = cursor.getString(2);
+                String catID = cursor.getString(3);
+                boolean widget = cursor.getShort(4) == 1;
 
-        if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
-            String pkgname = cursor.getString(1);
-            String label = cursor.getString(2);
-            String catID = cursor.getString(3);
-            boolean widget = cursor.getShort(4) == 1;
-
-            // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-            appShortcut = AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget);
+                // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
+                appShortcut = AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget);
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return appShortcut;
     }
 
@@ -197,19 +211,21 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=?", new String[]{catID}, null, null, LABEL);
+        try {
+            while (cursor.moveToNext()) {
+                String actvname = cursor.getString(0);
+                String pkgname = cursor.getString(1);
+                String label = cursor.getString(2);
+                boolean widget = cursor.getShort(4) == 1;
 
-        while (cursor.moveToNext()) {
-            String actvname = cursor.getString(0);
-            String pkgname = cursor.getString(1);
-            String label = cursor.getString(2);
-            boolean widget = cursor.getShort(4) == 1;
-
-            if (widget) {
-                Log.d("db", "Found widget: " + actvname + " " + pkgname);
+                if (widget) {
+                    Log.d("db", "Found widget: " + actvname + " " + pkgname);
+                }
+                apps.add(AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget));
             }
-            apps.add(AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget));
+        } finally {
+            cursor.close();
         }
-        cursor.close();
 
         return apps;
     }
@@ -267,6 +283,7 @@ public class DB extends SQLiteOpenHelper {
                         " order by 2 ",
                 new String[]{filter});
 
+        Log.d("LaunchDB", "open cursors: " + mCursorFactory.getOpenCursors().size());
         return cursor;
     }
 
@@ -397,12 +414,15 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(true, TAB_ORDER_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
+        try {
+            //Log.d("DB", "getting catagories");
+            while (cursor.moveToNext()) {
 
-        //Log.d("DB", "getting catagories");
-        while (cursor.moveToNext()) {
-
-            categories.add(cursor.getString(0));
-            //          Log.d("DB", "got catID " + cursor.getString(0));
+                categories.add(cursor.getString(0));
+                //          Log.d("DB", "got catID " + cursor.getString(0));
+            }
+        } finally {
+            cursor.close();
         }
         cursor.close();
         return categories;
@@ -413,11 +433,13 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABEL}, CATID + "=?", new String[]{catID}, null, null, null, null);
-
-        if (cursor.moveToNext()) {
-            display = cursor.getString(0);
+        try {
+            if (cursor.moveToNext()) {
+                display = cursor.getString(0);
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return display;
     }
 
@@ -426,11 +448,13 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABELFULL}, CATID + "=?", new String[]{catID}, null, null, null, null);
-
-        if (cursor.moveToNext()) {
-            display = cursor.getString(0);
+        try {
+            if (cursor.moveToNext()) {
+                display = cursor.getString(0);
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return display;
     }
 
@@ -439,12 +463,17 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{ISTINY}, CATID + "=?", new String[]{catID}, null, null, null, null);
-
-        if (cursor.moveToNext()) {
-            return cursor.getShort(0)==1;
+        boolean tiny = false;
+        try {
+            if (cursor.moveToNext()) {
+                tiny = cursor.getShort(0) == 1;
+            }
+        } catch (Exception e) {
+            Log.e("LaunchDB", "tiny error. Cursors: " + mCursorFactory.getOpenCursors().size(), e);
+        } finally {
+            cursor.close();
         }
-        cursor.close();
-        return false;
+        return tiny;
     }
 
     public void setCategoryOrder(ViewGroup container) {
@@ -553,11 +582,13 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_ORDER_TABLE, new String[]{ACTVNAME}, CATID + "=?", new String[]{catID}, null, null, INDEX);
-
-        while (cursor.moveToNext()) {
-            actvnames.add(cursor.getString(0));
+        try {
+            while (cursor.moveToNext()) {
+                actvnames.add(cursor.getString(0));
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return actvnames;
 
     }
@@ -602,11 +633,13 @@ public class DB extends SQLiteOpenHelper {
                 new String[]{ACTVNAME},
                 null, null, null, null, TIME + " desc", null);
 
-
-        while (cursor.moveToNext()) {
-            activitynames.add(cursor.getString(0));
+        try {
+            while (cursor.moveToNext()) {
+                activitynames.add(cursor.getString(0));
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return activitynames;
 
     }
@@ -626,10 +659,13 @@ public class DB extends SQLiteOpenHelper {
                 null, null, null, null);
 
         int count = 0;
-        if (cursor.moveToNext()) {
-            count = cursor.getInt(0);
+        try {
+            if (cursor.moveToNext()) {
+                count = cursor.getInt(0);
+            }
+        } finally {
+            cursor.close();
         }
-        cursor.close();
         return count;
 
     }
@@ -675,7 +711,7 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public synchronized File backup(String optionalName) {
-
+        mCursorFactory.closeAll();
         close();
 
         if (optionalName!=null && optionalName.length()>0) {
@@ -713,6 +749,7 @@ public class DB extends SQLiteOpenHelper {
     }
 
     private synchronized boolean restore(File srcFile) {
+        mCursorFactory.closeAll();
         close();
         boolean ret = false;
         if (srcFile.exists() && srcFile.canRead()) {

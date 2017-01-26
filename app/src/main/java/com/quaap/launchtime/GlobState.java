@@ -46,7 +46,7 @@ public class GlobState extends Application {
 
     public synchronized DB getDB() {
         if (mDB==null) {
-            mDB = new DB(this);
+            mDB = DB.openDB(this);
         }
         return mDB;
     }
