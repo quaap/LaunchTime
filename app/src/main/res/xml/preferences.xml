@@ -25,12 +25,16 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:title="@string/pref_hide_empty_cat"
-            android:key="pref_hide_empty_cat" />
+            android:key="pref_hide_empty_cat"
+            android:summaryOn="@string/prefs_empty_cats_hid"
+            android:summaryOff="@string/prefs_empty_cats_show" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/prefs_new_apps_cat"
-            android:key="prefs_autocat" />
+            android:key="prefs_autocat"
+            android:summaryOn="@string/prefs_cat_apps"
+            android:summaryOff="@string/prefs_cat_no" />
 
         <PreferenceScreen
             android:title="@string/pref_senddat"

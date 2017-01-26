@@ -149,4 +149,8 @@
     <string name="pref_app_system">App and System</string>
     <string name="pref_hide_empty_cat">Hide empty categories</string>
     <string name="prefs_new_apps_cat">Auto-categorize new apps</string>
+    <string name="prefs_empty_cats_hid">Empty categories will be hidden</string>
+    <string name="prefs_empty_cats_show">Empty categories will be shown</string>
+    <string name="prefs_cat_apps">Apps will be categorized</string>
+    <string name="prefs_cat_no">Apps will be placed in \"Other\"</string>
 </resources>
