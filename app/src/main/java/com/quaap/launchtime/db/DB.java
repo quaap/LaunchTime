@@ -3,6 +3,7 @@ package com.quaap.launchtime.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -108,6 +109,12 @@ public class DB extends SQLiteOpenHelper {
             }
         } else {
             Log.d("db", "opening database");
+            SharedPreferences p = context.getSharedPreferences(DB.class.toString(), Context.MODE_PRIVATE);
+            if (!p.getBoolean("removedoldconfig", false)) {
+                Log.d("db", "remove old com.quaap.launchtime.SettingsActivity");
+                this.deleteApp("com.quaap.launchtime.SettingsActivity");
+                p.edit().putBoolean("removedoldconfig", true).apply();
+            }
         }
     }
 
