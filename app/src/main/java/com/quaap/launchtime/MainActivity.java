@@ -43,6 +43,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -308,6 +309,7 @@ public class MainActivity extends Activity implements
             switchCategory(Categories.CAT_TALK);
             showButtonBar(false);
             mQuickRowScroller.smoothScrollTo(0, 0);
+            finishActivity(PREF_REQUEST);
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -909,6 +911,17 @@ public class MainActivity extends Activity implements
         mSearchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, mDb.getAppCursor("XXXXXX"), 0);
         searchbox.setAdapter(mSearchAdapter);
         searchbox.setOnItemClickListener(mSearchAdapter);
+        searchbox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchbox.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         return searchView;
     }
