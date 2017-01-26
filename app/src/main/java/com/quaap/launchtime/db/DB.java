@@ -100,10 +100,14 @@ public class DB extends SQLiteOpenHelper {
         mContext = context;
         this.getWritableDatabase();//force onCreate();
 
-
-        for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
-            String cat = Categories.DefCategoryOrder[i];
-            addCategory(cat, Categories.getCatLabel(mContext, cat), Categories.getCatFullLabel(mContext, cat), Categories.isTinyCategory(cat), i);
+        if (isFirstRun()) {
+            Log.d("db", "first run: creating categories");
+            for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
+                String cat = Categories.DefCategoryOrder[i];
+                addCategory(cat, Categories.getCatLabel(mContext, cat), Categories.getCatFullLabel(mContext, cat), Categories.isTinyCategory(cat), i);
+            }
+        } else {
+            Log.d("db", "opening database");
         }
     }
 
@@ -130,6 +134,7 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         firstRun = true;
+        Log.d("db", "create database");
         sqLiteDatabase.execSQL(APP_TABLE_CREATE);
         for (String createind : appcolumnsindex) {
             sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE, createind));
@@ -158,7 +163,7 @@ public class DB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        Log.d("db", "upgrade database");
     }
 
     public boolean isFirstRun() {
