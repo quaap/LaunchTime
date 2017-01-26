@@ -223,6 +223,10 @@ public class MainActivity extends Activity implements
                 .putInt("scrollpos", mIconSheetScroller.getScrollY())
                 .putString("category", mCategory)
                 .apply();
+
+        if (mSearchAdapter!=null){
+            mSearchAdapter.close();
+        }
         super.onPause();
     }
 
@@ -893,13 +897,14 @@ public class MainActivity extends Activity implements
         return mPrefs.getInt(app.getActivityName() + "_height", 0);
     }
 
+    AppCursorAdapter mSearchAdapter;
     private ViewGroup getSearchView() {
         ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
 
         final AutoCompleteTextView searchbox = (AutoCompleteTextView) searchView.findViewById(R.id.search_box);
-        AppCursorAdapter searchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, mDb.getAppCursor("XXXXXX"), 0);
-        searchbox.setAdapter(searchAdapter);
-        searchbox.setOnItemClickListener(searchAdapter);
+        mSearchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, mDb.getAppCursor("XXXXXX"), 0);
+        searchbox.setAdapter(mSearchAdapter);
+        searchbox.setOnItemClickListener(mSearchAdapter);
 
         return searchView;
     }

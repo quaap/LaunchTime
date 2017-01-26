@@ -2,6 +2,7 @@ package com.quaap.launchtime.components;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -72,6 +73,13 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
         labelView.setText(label);
     }
 
+    public void close() {
+        try {
+            changeCursor(null);
+        } catch(Exception e)  {
+            Log.d("Appcursor", "Exception on 'close()'", e);
+        }
+    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
