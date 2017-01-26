@@ -56,13 +56,15 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return app;
     }
 
-
-
     public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
+        return createAppShortcut(context, pm, ri, true);
+    }
+
+    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri, boolean autocat) {
         String activityName = ri.activityInfo.name;
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
-            app = new AppShortcut(context, pm, ri);
+            app = new AppShortcut(context, pm, ri, autocat);
             mAppShortcuts.put(activityName, app);
         }
         return app;
@@ -131,14 +133,20 @@ public class AppShortcut implements Comparable<AppShortcut> {
 //        mWidget = false;
 //    }
 
-
     private AppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
+
+    }
+    private AppShortcut(Context context, PackageManager pm, ResolveInfo ri, boolean autocat) {
         mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
-        mCategory = Categories.getCategoryForPackage(context, mPackageName);
-        if (mCategory.equals(Categories.CAT_OTHER)) {
-            mCategory = Categories.getCategoryForPackage(context, mActivityName);
+        if (autocat) {
+            mCategory = Categories.getCategoryForPackage(context, mPackageName);
+            if (mCategory.equals(Categories.CAT_OTHER)) {
+                mCategory = Categories.getCategoryForPackage(context, mActivityName);
+            }
+        } else {
+            mCategory = Categories.CAT_OTHER;
         }
         mWidget = false;
 

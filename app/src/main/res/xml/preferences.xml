@@ -23,6 +23,12 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_app_system">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/prefs_new_apps_cat"
+            android:key="prefs_autocat" />
+
         <PreferenceScreen
             android:title="@string/pref_senddat"
             android:summary="@string/pref_senddat_summ">

@@ -3,9 +3,11 @@ package com.quaap.launchtime;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -42,8 +44,12 @@ public class LaunchReceiver extends BroadcastReceiver {
                 Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
                 ResolveInfo ri = context.getPackageManager().resolveActivity(packageIntent, 0);
 
-                AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+                AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri, prefs.getBoolean("prefs_autocat", true));
+
                 DB db = ((GlobState)context.getApplicationContext()).getDB();
+
                 if (db.addApp(app)) {
                     db.addAppCategoryOrder(app.getCategory(), app.getActivityName());
                     Toast.makeText(context, app.getLabel() + " was installed into " + db.getCategoryDisplay(app.getCategory()), Toast.LENGTH_LONG).show();
