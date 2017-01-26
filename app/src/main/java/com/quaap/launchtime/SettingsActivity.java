@@ -2,6 +2,7 @@ package com.quaap.launchtime;
 
 import android.content.Intent;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.preference.PreferenceActivity;
@@ -28,6 +29,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getListView().setBackgroundColor(Color.DKGRAY);
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())

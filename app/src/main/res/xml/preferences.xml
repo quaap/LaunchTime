@@ -2,7 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="applicationPreference">
 
-    <PreferenceCategory android:title="@string/pref_general">
+    <PreferenceScreen
+        android:title="@string/pref_about"
+        android:summary="@string/pref_help_about">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.launchtime"
+            android:targetClass="com.quaap.launchtime.AboutActivity"/>
+    </PreferenceScreen>
+
+
+    <PreferenceCategory android:title="@string/pref_app_system">
 
         <ListPreference
             android:defaultValue="0"
@@ -12,17 +22,6 @@
             android:key="preference_orientation"
             android:summary="%s" />
 
-        <PreferenceScreen
-            android:title="@string/pref_about"
-            android:summary="@string/pref_help_about">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:targetPackage="com.quaap.launchtime"
-                android:targetClass="com.quaap.launchtime.AboutActivity"/>
-        </PreferenceScreen>
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/pref_app_system">
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -91,7 +90,6 @@
             android:key="dragover_background"
             android:defaultValue="@color/dragover_background" />
     </PreferenceCategory>
-
 
 
 </PreferenceScreen>
