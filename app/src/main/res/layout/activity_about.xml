@@ -27,5 +27,6 @@
         android:layout_marginTop="20dp"
         android:id="@+id/txtAbout"
         android:layout_below="@+id/txtappname"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp" />
 </RelativeLayout>

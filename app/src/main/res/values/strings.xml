@@ -134,11 +134,11 @@
     <string name="pref_system">System Settings</string>
     <string name="pref_system_summ">Show the system settings</string>
     <string name="pref_tabsize">Category tab size</string>
-    <string name="pref_icontext">Icon text</string>
-    <string name="pref_tabtext">Tab text</string>
-    <string name="pref_tabback">Tab background</string>
-    <string name="pref_tabsel">Tab selected background</string>
-    <string name="pref_drag">Drag over</string>
+    <string name="pref_icontext">Icon text color</string>
+    <string name="pref_tabtext">Tab text color</string>
+    <string name="pref_tabback">Tab background color</string>
+    <string name="pref_tabsel">Tab selected color</string>
+    <string name="pref_drag">Drag over color</string>
     <string name="choose_your_color">Choose your color</string>
     <string name="red">Red</string>
     <string name="green">Green</string>

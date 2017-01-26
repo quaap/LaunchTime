@@ -22,6 +22,10 @@
             android:key="preference_orientation"
             android:summary="%s" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="@string/pref_hide_empty_cat"
+            android:key="pref_hide_empty_cat" />
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -58,10 +62,6 @@
 
     <PreferenceCategory android:title="@string/pref_color_style">
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="@string/pref_hide_empty_cat"
-            android:key="pref_hide_empty_cat" />
         <ListPreference
             android:defaultValue="1"
             android:title="@string/pref_tabsize"
