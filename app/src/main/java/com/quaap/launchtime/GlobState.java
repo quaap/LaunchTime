@@ -23,7 +23,7 @@ import com.quaap.launchtime.db.DB;
 
 public class GlobState extends Application {
 
-    private DB mDB;
+    private static DB mDB;
 
 
     public static GlobState getGlobState(Context context) {

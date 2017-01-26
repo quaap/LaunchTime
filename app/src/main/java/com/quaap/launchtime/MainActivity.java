@@ -257,7 +257,7 @@ public class MainActivity extends Activity implements
         super.onDestroy();
     }
 
-    private void switchCategory(String category) {
+    private synchronized void switchCategory(String category) {
         if (category == null) return;
         mCategory = category;
         for (TextView catTab : mCategoryTabs.values()) {
@@ -278,6 +278,10 @@ public class MainActivity extends Activity implements
 
             mIconSheetTopFrame.addView(mSearchView);
             populateRecentApps(mIconSheet);
+        } else {
+            if (mSearchAdapter!=null){
+                mSearchAdapter.close();
+            }
         }
 
 

@@ -90,17 +90,17 @@ public class DB extends SQLiteOpenHelper {
 
     private Context mContext;
 
-    private TrackingCursor.TrackingCursorFactory mCursorFactory = new TrackingCursor.TrackingCursorFactory();
+    private static TrackingCursor.TrackingCursorFactory mCursorFactory = new TrackingCursor.TrackingCursorFactory();
 
     public static DB openDB(Context context) {
-         return new DB(context, new TrackingCursor.TrackingCursorFactory());
+         return new DB(context);
     }
 
-    private DB(Context context, TrackingCursor.TrackingCursorFactory cursorFactory ) {
-        super(context, DATABASE_NAME, cursorFactory, DATABASE_VERSION);
+    private DB(Context context ) {
+        super(context, DATABASE_NAME, mCursorFactory, DATABASE_VERSION);
         mContext = context;
         this.getWritableDatabase();//force onCreate();
-        mCursorFactory = cursorFactory;
+
 
         for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
             String cat = Categories.DefCategoryOrder[i];
@@ -164,6 +164,13 @@ public class DB extends SQLiteOpenHelper {
 
     public boolean isFirstRun() {
         return firstRun;
+    }
+
+    @Override
+    public synchronized void close() {
+        mCursorFactory.closeAll();
+
+        super.close();
     }
 
     public List<String> getAppActvNames() {
@@ -711,7 +718,7 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public synchronized File backup(String optionalName) {
-        mCursorFactory.closeAll();
+
         close();
 
         if (optionalName!=null && optionalName.length()>0) {
@@ -749,7 +756,7 @@ public class DB extends SQLiteOpenHelper {
     }
 
     private synchronized boolean restore(File srcFile) {
-        mCursorFactory.closeAll();
+
         close();
         boolean ret = false;
         if (srcFile.exists() && srcFile.canRead()) {
