@@ -917,6 +917,7 @@ public class MainActivity extends Activity implements
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchbox.getWindowToken(), 0);
+                    searchbox.showDropDown();
                     return true;
                 }
                 return false;
