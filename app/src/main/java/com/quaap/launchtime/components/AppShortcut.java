@@ -264,7 +264,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
                 }
                 try {
                     app_icon = pm.getActivityIcon(intent);
-                } catch (Exception e) {
+                } catch (Exception | OutOfMemoryError e) {
                     Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
                 }
                 if (app_icon == null) {
@@ -283,7 +283,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
                         app_icon.draw(canvas);
                         app_icon = new BitmapDrawable(context.getResources(), newbm);
                         //Log.d("loadAppIconAsync", " yo");
-                    } catch (Exception e) {
+                    } catch (Exception | OutOfMemoryError e) {
                         Log.e("loadAppIconAsync", "couldn't make special icon", e);
                     }
                 }
