@@ -5,6 +5,10 @@ import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by tom on 1/14/17.
  * <p>
@@ -21,6 +25,9 @@ import android.content.Context;
  * GNU General Public License for more details.
  */
 public class LaunchAppWidgetHost extends AppWidgetHost {
+
+    private List<Integer> mAppIds = new ArrayList<>();
+
     public LaunchAppWidgetHost(Context context, int hostId) {
         super(context, hostId);
     }
@@ -34,5 +41,22 @@ public class LaunchAppWidgetHost extends AppWidgetHost {
     public void stopListening() {
         super.stopListening();
         clearViews();
+    }
+
+    @Override
+    public int allocateAppWidgetId() {
+        int appid = super.allocateAppWidgetId();
+        mAppIds.add(appid);
+        return appid;
+    }
+
+    @Override
+    public void deleteAppWidgetId(int appWidgetId) {
+        mAppIds.remove(appWidgetId);
+        super.deleteAppWidgetId(appWidgetId);
+    }
+
+    public List<Integer> getAppWidgetIds() {
+        return Collections.unmodifiableList(mAppIds);
     }
 }

@@ -534,14 +534,18 @@ public class MainActivity extends Activity implements
             for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
                 AppShortcut app = it.next();
                 if (actvname.equals(app.getActivityName())) {
-                    addAppToIconSheet(iconSheet, app, true);
+                    if (!addAppToIconSheet(iconSheet, app, true)) {
+                        mDb.deleteApp(app.getActivityName());
+                    }
                     it.remove();
                 }
             }
         }
 
         for (AppShortcut app : apps) {
-            addAppToIconSheet(iconSheet, app, true);
+            if (!addAppToIconSheet(iconSheet, app, true)) {
+                mDb.deleteApp(app.getActivityName());
+            }
         }
 
         if (apps.size()>0) {
@@ -549,23 +553,27 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private void addAppToIconSheet(GridLayout iconSheet, AppShortcut app, boolean reuse) {
+    private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, boolean reuse) {
         if (app != null) {
             if (isAppInstalled(app.getPackageName())) {
                 ViewGroup item = getShortcutView(app, false, reuse);
-                if (!app.iconLoaded()) {
-                    app.loadAppIconAsync(this, mPackageMan);
+                if (item!=null) {
+                    if (!app.iconLoaded()) {
+                        app.loadAppIconAsync(this, mPackageMan);
+                    }
+                    ViewGroup parent = (ViewGroup) item.getParent();
+                    if (parent != null) parent.removeView(item);
+                    GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
+                    iconSheet.addView(item, lp);
+                    return true;
                 }
-                ViewGroup parent = (ViewGroup) item.getParent();
-                if (parent != null) parent.removeView(item);
-                GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
-                iconSheet.addView(item, lp);
             } //else {
                 //Log.d("LaunchTime", "Not showing recent " + app.getPackageName() + " " + app.getActivityName() + ": Not installed.");
             //}
         } else {
             Log.d("LaunchTime", "Not showing recent: Null.");
         }
+        return false;
     }
 
     @NonNull
@@ -779,9 +787,11 @@ public class MainActivity extends Activity implements
             for (AppShortcut app : quickRowApps) {
                 if (app.getActivityName().equals(actvname)) {
                     ViewGroup item = getShortcutView(app, true);
-                    GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-                    lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
-                    mQuickRow.addView(item, lp);
+                    if (item!=null) {
+                        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                        lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
+                        mQuickRow.addView(item, lp);
+                    }
                 }
             }
         }
@@ -798,9 +808,7 @@ public class MainActivity extends Activity implements
         }
     }
 
-    public ViewGroup getShortcutView(final AppShortcut app) {
-        return getShortcutView(app, false, true);
-    }
+
     public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
         return getShortcutView(app, smallIcon, true);
     }
@@ -809,14 +817,11 @@ public class MainActivity extends Activity implements
 
 
         if (smallIcon) reuse = false;
-        ViewGroup item;
-        if (reuse) {
-            item = mAppShortcutViews.get(app);
-            if (item!=null) return item;
-        }
+        ViewGroup item = mAppShortcutViews.get(app);
 
         if (app.isWidget()) {
-            item = new FrameLayout(this);
+            if (item==null) item = new FrameLayout(this);
+            item.removeAllViews();
 
             AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
             if (appwid == null) {
@@ -829,6 +834,8 @@ public class MainActivity extends Activity implements
                     Log.d("widsize", "Resizemode: " + pinfo.resizeMode);
 
                     storeShortCutDimen(app, pinfo.minWidth, pinfo.minHeight);
+                } else {
+                    return null;
                 }
             }
             if (appwid != null) {
@@ -856,6 +863,10 @@ public class MainActivity extends Activity implements
             }
 
         } else {
+            if (reuse) {
+                if (item!=null) return item;
+            }
+
 
             item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon ? R.layout.shortcut_small_icon : R.layout.shortcut_icon, (ViewGroup) null);
             item.setOnClickListener(new View.OnClickListener() {
@@ -889,12 +900,16 @@ public class MainActivity extends Activity implements
         mWidgetHelper.popupSelectWidget();
     }
 
-    private void addWidget(ComponentName cn) {
+    private void addWidget(AppWidgetHostView appwid) {
 
+        ComponentName cn = appwid.getAppWidgetInfo().provider;
         String actvname = cn.getClassName();
         String pkgname = cn.getPackageName();
 
         Log.d("Widget", actvname + " " + pkgname);
+
+        mLoadedWidgets.put(actvname, appwid);
+
         String label = pkgname;
 
 
@@ -902,6 +917,7 @@ public class MainActivity extends Activity implements
 
         mDb.addApp(app);
         mDb.addAppCategoryOrder(mCategory, app.getActivityName());
+
 
 //        int sw = (int)getResources().getDimension(R.dimen.shortcut_width);
 //        int sh = (int)getResources().getDimension(R.dimen.shortcut_height);
@@ -1414,11 +1430,18 @@ public class MainActivity extends Activity implements
 //            checkConfig();
 //            switchCategory(mCategory);
         } else {
-            ComponentName cn = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
-            if (cn == null) {
-                super.onActivityResult(requestCode, resultCode, data);
+            AppWidgetHostView appwid = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
+            if (appwid == null) {
+                Log.d("LaunchWidget2", "appwid is null. getting component name");
+                ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
+                if (cn!=null) {
+                    Log.d("LaunchWidget2", "classname is " + cn.getClassName());
+                    mDb.deleteApp(cn.getClassName());
+                } else {
+                    super.onActivityResult(requestCode, resultCode, data);
+                }
             } else {
-                addWidget(cn);
+                addWidget(appwid);
             }
         }
     }

@@ -85,34 +85,24 @@ public class Widget {
         hostView.setAppWidget(widget_id, appWidgetInfo);
 
         return hostView;
-        // And place the widget in widget area and save.
-        // placeWidget(hostView);
-        //sqlHelper.updateWidget(appWidgetInfo.provider.getPackageName(), appWidgetInfo.provider.getClassName());
     }
 
 
     public AppWidgetHostView loadWidget(AppShortcut app) {
         ComponentName cn = new ComponentName(app.getPackageName(), app.getActivityName());
 
-        Log.d("Widget creation", "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
+        Log.d("LaunchWidgeth", "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
         // Check that there actually is a widget in the database
         if (cn.getPackageName().isEmpty() && cn.getClassName().isEmpty()) {
-            Log.d("Widget creation", "DB was empty");
+            Log.d("LaunchWidgeth", "DB was empty");
             return null;
         }
-        Log.d("Widget creation", "DB was not empty");
-
 
         final List<AppWidgetProviderInfo> infos = mAppWidgetManager.getInstalledProviders();
 
         // Get AppWidgetProviderInfo
         AppWidgetProviderInfo appWidgetInfo = null;
-        // Just in case you want to see all package and class names of installed widget providers,
-        // this code is useful
-//        for (final AppWidgetProviderInfo info : infos) {
-//            Log.d("AD3", info.provider.getPackageName() + " / "
-//                    + info.provider.getClassName());
-//        }
+
         // Iterate through all infos, trying to find the desired one
         for (final AppWidgetProviderInfo info : infos) {
             if (info.provider.getClassName().equals(cn.getClassName()) &&
@@ -123,7 +113,7 @@ public class Widget {
             }
         }
         if (appWidgetInfo == null) {
-            Log.d("Widget creation", "app info was null");
+            Log.d("LaunchWidgeth", "app info was null");
             return null; // Stop here
         }
 
@@ -132,26 +122,23 @@ public class Widget {
 
         boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
 
+
         // Ask the user to allow this app to have access to their widgets
         if (!allowed_to_bind) {
-            Log.d("Widget creation", "asking for permission");
-            Intent i = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
-            Bundle args = new Bundle();
-            args.putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            args.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
-            if (Build.VERSION.SDK_INT >= 21) {
-                args.putParcelable(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, null);
-            }
-            i.putExtras(args);
-            mParent.startActivityForResult(i, REQUEST_BIND_APPWIDGET);
+            Log.d("LaunchWidgeth", "asking for permission");
+            Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
+            // This is the options bundle discussed above
+            addEmptyData(intent);
+            mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
             return null;
-        } else {
-
-            Log.d("Widget creation", "Allowed to bind");
-            Log.d("Widget creation", "creating widget");
-            //Intent i = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
-            //createWidgetFromId(appWidgetId);
         }
+
+        Log.d("LaunchWidgeth", "Allowed to bind");
+        Log.d("LaunchWidgeth", "creating widget");
+
+
         // Create the host view
         AppWidgetHostView hostView = mAppWidgetHost.createView(mParent, appWidgetId, appWidgetInfo);
 
@@ -191,46 +178,55 @@ public class Widget {
 
 
     public ComponentName getComponentNameFromIntent(Intent data) {
-        Bundle extras = data.getExtras();
-        int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+        if (data!=null) {
+            Bundle extras = data.getExtras();
+            if (extras!=null) {
+                int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
 
+                if (appWidgetId != -1) {
 
-        AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
-        return appWidgetInfo.provider;
+                    AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+                    if (appWidgetInfo != null) {
+                        return appWidgetInfo.provider;
+                    }
+                }
+            }
+        }
+        return null;
+
 
     }
 
-    public ComponentName onActivityResult(int requestCode, int resultCode, Intent data) {
+    public List<Integer> getAppWidgetIds() {
+        return mAppWidgetHost.getAppWidgetIds();
+    }
 
+    public AppWidgetHostView onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d("LaunchWidgeth", "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
         // listen for widget manager response
-        try {
-            if (resultCode == Activity.RESULT_OK) {
-                if (requestCode == REQUEST_PICK_APPWIDGET || requestCode == REQUEST_CREATE_APPWIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
-                    return getComponentNameFromIntent(data);
-                }
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_PICK_APPWIDGET) {
+                Log.d("LaunchWidgeth", "configureWidget");
+                return configureWidget(data);
+            } else if (requestCode == REQUEST_CREATE_APPWIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
+                Log.d("LaunchWidgeth", "createWidget");
+                return createWidget(data);
+            } else {
+                Log.d("LaunchWidgeth", "unknown RESULT_OK");
             }
-        } finally {
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.d("LaunchWidgeth", "RESULT_CANCELED");
             if (data!=null) {
                 int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
                 if (appWidgetId != -1) {
                     mAppWidgetHost.deleteAppWidgetId(appWidgetId);
                 }
             }
+
         }
         return null;
     }
 
-    public static class AppShortcutWidgetHostView {
-
-        private AppShortcut mApp;
-        private AppWidgetHostView mAppWidgetHostView;
-
-        public AppShortcutWidgetHostView(AppWidgetHostView appWidgetHostView, AppShortcut app) {
-            mApp = app;
-            mAppWidgetHostView = appWidgetHostView;
-        }
-
-
-    }
 
 }

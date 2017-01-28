@@ -65,7 +65,12 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
         AppShortcut app = mDB.getApp(activityName);
         if (app != null) {
             app.loadAppIconAsync(context, context.getPackageManager());
-            appholder.addView(mMain.getShortcutView(app, false, false));
+            View v = mMain.getShortcutView(app, false, false);
+            if (v!=null) {
+                appholder.addView(v);
+            } else {
+                appholder.addView(new TextView(context));
+            }
         }
 
         String label = cursor.getString(1);
