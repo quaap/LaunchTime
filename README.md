@@ -4,7 +4,7 @@ LaunchTime
 LaunchTime is an alternative home/homescreen/launcher for Android devices. Its main feature is a
 side menu used to organize your apps into common-sense and configurable categories. It also
 features support for widgets, text search for apps, a QuickBar, links/shortcuts, recent apps list, 
-app hiding, and portrait and landscape support.
+app hiding, color selcetion, and portrait and landscape support.
 
 I've been using it on my LG phone as I develop, but it is still a late alpha or early beta stage,
 so breaking changes are possible.
@@ -78,6 +78,7 @@ Known issues
 * Auto-screen-scrolling while dragging is a bit choppy.
 * Widgets cannot be manually resized.
 * No labels on widgets.
+* Widget needing configuration don't always work.
 * Labels on apps don't always reflect changes when the app upgrades and changes the label.
 * The uninstall/remove dropzone is small/partially covers the QuickBar dropzone.
 * Not tested on large devices (my development computer is a small laptop which cannot
