@@ -534,18 +534,14 @@ public class MainActivity extends Activity implements
             for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
                 AppShortcut app = it.next();
                 if (actvname.equals(app.getActivityName())) {
-                    if (!addAppToIconSheet(iconSheet, app, true)) {
-                        mDb.deleteApp(app.getActivityName());
-                    }
+                    addAppToIconSheet(iconSheet, app, true);
                     it.remove();
                 }
             }
         }
 
         for (AppShortcut app : apps) {
-            if (!addAppToIconSheet(iconSheet, app, true)) {
-                mDb.deleteApp(app.getActivityName());
-            }
+            addAppToIconSheet(iconSheet, app, true);
         }
 
         if (apps.size()>0) {
@@ -835,6 +831,7 @@ public class MainActivity extends Activity implements
 
                     storeShortCutDimen(app, pinfo.minWidth, pinfo.minHeight);
                 } else {
+                    mDb.deleteApp(app.getActivityName());
                     return null;
                 }
             }
