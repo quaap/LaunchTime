@@ -66,6 +66,12 @@
 
     <PreferenceCategory android:title="@string/pref_color_style">
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Categories on left"
+            android:key="left_hand_categories"
+            android:summaryOn="The categories will be on the left"
+            android:summaryOff="The categories will be on the right" />
         <ListPreference
             android:defaultValue="1"
             android:title="@string/pref_tabsize"

@@ -79,7 +79,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class MainActivity extends Activity implements
-        View.OnLongClickListener {
+        View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     //TODO: everything needs a major refactor.
     // custom views or fragments?
@@ -129,11 +129,8 @@ public class MainActivity extends Activity implements
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 16;
     private int mColumns = 3;
-//    private float categoryTabFontSizeHidden = 12;
-//    private int mColumnsLandscape = 5;
-//    private int mColumnsPortrait = 3;
-//    private int mColumnMargin = 12;
-//    private int categoryTabWidth = 108;
+
+    private boolean leftHandCategories;
 
     private Point mScreenDim;
 
@@ -162,6 +159,7 @@ public class MainActivity extends Activity implements
         mDb = GlobState.getGlobState(this).getDB();
         mPackageMan = getApplicationContext().getPackageManager();
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mAppPreferences.registerOnSharedPreferenceChangeListener(this);
         mWidgetHelper = new Widget(this);
 
 
@@ -251,9 +249,23 @@ public class MainActivity extends Activity implements
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d("debug", "A preference has been changed: " +  key);
+
+        if (key!=null) {
+            if (key.equals("textcolor")) {
+                mAppShortcutViews.clear();
+            }
+            checkConfig();
+            switchCategory(mCategory);
+        }
+    }
+
 
     @Override
     public void onDestroy() {
+        mAppPreferences.unregisterOnSharedPreferenceChangeListener(this);
         mWidgetHelper.done();
         super.onDestroy();
     }
@@ -320,6 +332,8 @@ public class MainActivity extends Activity implements
 
         try {
 
+            leftHandCategories = mAppPreferences.getBoolean("left_hand_categories", false);
+
             int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
             switch (tabsizePref) {
                 case 0:  //small
@@ -380,6 +394,23 @@ public class MainActivity extends Activity implements
             mShowButtons.setMinimumHeight(categoryTabPaddingHeight*3);
             //mShowButtons.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, categoryTabPaddingHeight*3));
             //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
+
+
+            ViewGroup wrap = (ViewGroup)findViewById(R.id.icon_and_cat_wrap);
+            //View icons = findViewById(R.id.iconarea_wrap);
+            View cats = findViewById(R.id.category_tabs_wrap);
+            boolean isleft = wrap.getChildAt(0) == cats;
+            if (leftHandCategories) {
+                if (!isleft) {
+                    wrap.removeView(cats);
+                    wrap.addView(cats, 0);
+                }
+            } else {
+                if (isleft) {
+                    wrap.removeView(cats);
+                    wrap.addView(cats);
+                }
+            }
 
         } catch (Exception e) {
             Log.e("Launch", e.getMessage(), e);
@@ -1379,9 +1410,9 @@ public class MainActivity extends Activity implements
 
             }
         } else if (requestCode == PREF_REQUEST) {
-            mAppShortcutViews.clear();
-            checkConfig();
-            switchCategory(mCategory);
+//            mAppShortcutViews.clear();
+//            checkConfig();
+//            switchCategory(mCategory);
         } else {
             ComponentName cn = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
             if (cn == null) {
