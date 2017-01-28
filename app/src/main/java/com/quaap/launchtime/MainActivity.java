@@ -332,7 +332,7 @@ public class MainActivity extends Activity implements
 
         try {
 
-            leftHandCategories = mAppPreferences.getBoolean("left_hand_categories", false);
+            leftHandCategories = mAppPreferences.getString("pref_categories_loc", "right").equals("left");
 
             int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
             switch (tabsizePref) {
