@@ -163,9 +163,9 @@
 
     <string-array name="sort_strings">
         <item>Name</item>
+        <item>Recently Used</item>
         <item>Install Date (newest first)</item>
         <item>Install Date (oldest first)</item>
-        <item>Recently Used</item>
         <item>Package</item>
     </string-array>
 </resources>

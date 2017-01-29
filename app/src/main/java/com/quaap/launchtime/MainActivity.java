@@ -1726,9 +1726,9 @@ public class MainActivity extends Activity implements
 
     private static final int APPSORT_NONE = -1;
     private static final int APPSORT_LABEL = 0;
-    private static final int APPSORT_INSTALL_REV = 1;
-    private static final int APPSORT_INSTALL = 2;
-    private static final int APPSORT_USAGE = 3;
+    private static final int APPSORT_USAGE = 1;
+    private static final int APPSORT_INSTALL_REV = 2;
+    private static final int APPSORT_INSTALL = 3;
     private static final int APPSORT_PACKAGE = 4;
 
     private void promptSortCategory(String category) {
