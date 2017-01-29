@@ -25,10 +25,10 @@
             android:id="@+id/search_box"
             android:layout_width="250dp"
             android:maxLines="1"
-            android:imeOptions="actionSearch"
             android:lines="1"
-            android:inputType="text"
-            android:hint="@string/search_hint" />
+            android:inputType="text|textNoSuggestions"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionDone" />
 
     </LinearLayout>
 
