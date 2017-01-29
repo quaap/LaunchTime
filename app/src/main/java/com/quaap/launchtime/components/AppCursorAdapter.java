@@ -85,29 +85,37 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             }
         });
 
-        mTextHolder.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshCursor();
-            }
-        },10);
+
+//        mTextHolder.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                refreshCursor();
+//            }
+//        },10);
 
     }
 
     public void refreshCursor() {
         String text = mTextHolder.getText().toString().trim();
         if (text.length()==0) {
-            text = "xxXXXXX";
+            text = "XXXXXXXXXXXX";
+        } else {
+
+            text = text.replace(".", "_");
+            text = "%" + text + "%";
         }
 
-        text = text.replace(".", "_");
+       // Log.d("refreshCursor", text);
 
-        changeCursor(mDB.getAppCursor("%" + text + "%"));
-
-        //Log.d("gghh", mTextHolder.getText().toString());
+        getFilter().filter(text);
 
     }
 
+    @Override
+    public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
+       // Log.d("BackThread", constraint.toString());
+        return mDB.getAppCursor(constraint.toString());
+    }
 
     // The bindView method is used to bind all data to a given view
     // such as setting the text on a TextView.

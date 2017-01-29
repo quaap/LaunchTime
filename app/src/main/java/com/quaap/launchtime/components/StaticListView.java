@@ -2,6 +2,8 @@ package com.quaap.launchtime.components;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Adapter;
@@ -56,6 +58,8 @@ public class StaticListView extends LinearLayout {
         }
     }
 
+    private Handler handler = new Handler();
+
     private class Observer extends DataSetObserver {
         private StaticListView staticListView;
 
@@ -69,22 +73,45 @@ public class StaticListView extends LinearLayout {
             for (int i = 0; i < staticListView.getChildCount(); i++)
                 oldViews.add(staticListView.getChildAt(i));
 
-            Iterator<View> iter = oldViews.iterator();
+            final Iterator<View> iter = oldViews.iterator();
             staticListView.removeAllViews();
-            for (int i = 0; i < staticListView.mAdapter.getCount(); i++) {
-                View convertView = iter.hasNext() ? iter.next() : null;
-                final View itemView = staticListView.mAdapter.getView(i, convertView, staticListView);
-                staticListView.addView(itemView);
 
-                final int pos = i;
-                itemView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onItemClick(staticListView.mAdapter.getItem(pos), itemView, pos, staticListView.mAdapter.getItemId(pos));
+            AsyncTask<Void,Void,Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    for (int i = 0; i < staticListView.mAdapter.getCount(); i++) {
+
+                        final int pos = i;
+
+                        View convertView = iter.hasNext() ? iter.next() : null;
+                        final View itemView = staticListView.mAdapter.getView(pos, convertView, staticListView);
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                staticListView.addView(itemView);
+                                itemView.setOnClickListener(new OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        onItemClick(staticListView.mAdapter.getItem(pos), itemView, pos, staticListView.mAdapter.getItemId(pos));
+                                    }
+                                });
+
+                            }
+                        });
+
                     }
-                });
-            }
-            super.onChanged();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    Observer.super.onChanged();
+                    super.onPostExecute(aVoid);
+                }
+            };
+            task.execute();
+
         }
 
         @Override
