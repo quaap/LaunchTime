@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 
@@ -137,19 +138,25 @@ public class Widget {
         return hostView;
     }
 
-    public boolean checkBindPermission(int appWidgetId, ComponentName cn) {
+    public boolean checkBindPermission(final int appWidgetId, final ComponentName cn) {
         boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
 
 
         // Ask the user to allow this app to have access to their widgets
         if (!allowed_to_bind) {
-            Log.d("LaunchWidgeth", "asking for permission");
-            Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
-            // This is the options bundle discussed above
-            addEmptyData(intent);
-            mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("LaunchWidgeth", "asking for permission");
+                    Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
+
+                    addEmptyData(intent);
+                    mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
+
+                }
+            },500);
             return true;
         }
         return false;
