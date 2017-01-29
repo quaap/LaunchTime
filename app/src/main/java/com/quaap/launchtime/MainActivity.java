@@ -299,6 +299,9 @@ public class MainActivity extends Activity implements
 
             mIconSheetTopFrame.addView(mSearchView);
             populateRecentApps(mIconSheet);
+            if (mSearchAdapter!=null){
+                mSearchAdapter.refreshCursor();
+            }
         } else {
             if (mSearchAdapter!=null){
                 mSearchAdapter.close();

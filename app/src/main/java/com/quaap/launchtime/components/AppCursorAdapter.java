@@ -48,6 +48,21 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
         mDB = GlobState.getGlobState(main).getDB();
         mTextHolder = textHolder;
 
+        mTextHolder.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId==EditorInfo.IME_ACTION_SEARCH) {
+                    mTextHolder.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshCursor();
+                        }
+                    },10);
+                }
+                return false;
+            }
+        });
+
         mTextHolder.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
