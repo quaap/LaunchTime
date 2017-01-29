@@ -223,7 +223,7 @@ public class MainActivity extends Activity implements
     protected void onPause() {
 
         mPrefs.edit()
-                .putInt("scrollpos", mIconSheetScroller.getScrollY())
+                .putInt("scrollpos" + mCategory, mIconSheetScroller.getScrollY())
                 .putString("category", mCategory)
                 .apply();
 
@@ -246,7 +246,7 @@ public class MainActivity extends Activity implements
         mIconSheetScroller.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mIconSheetScroller.smoothScrollTo(0, mPrefs.getInt("scrollpos",0));
+                mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory,0));
 
             }
         },100);
