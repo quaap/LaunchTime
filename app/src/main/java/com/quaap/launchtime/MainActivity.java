@@ -557,6 +557,10 @@ public class MainActivity extends Activity implements
     }
 
     private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, boolean reuse) {
+        return addAppToIconSheet(iconSheet, app, -1, reuse);
+    }
+
+    private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, int pos, boolean reuse) {
         if (app != null) {
             if (isAppInstalled(app.getPackageName())) {
                 ViewGroup item = getShortcutView(app, false, reuse);
@@ -566,8 +570,8 @@ public class MainActivity extends Activity implements
                     }
                     ViewGroup parent = (ViewGroup) item.getParent();
                     if (parent != null) parent.removeView(item);
-                    GridLayout.LayoutParams lp = getAppShortcutLayoutParams(app);
-                    iconSheet.addView(item, lp);
+                    GridLayout.LayoutParams lp = getAppShortcutLayoutParams(iconSheet, app);
+                    iconSheet.addView(item, pos, lp);
                     return true;
                 }
             } //else {
@@ -580,7 +584,7 @@ public class MainActivity extends Activity implements
     }
 
     @NonNull
-    private GridLayout.LayoutParams getAppShortcutLayoutParams(AppShortcut app) {
+    private GridLayout.LayoutParams getAppShortcutLayoutParams(GridLayout grid, AppShortcut app) {
 
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
 
@@ -600,8 +604,8 @@ public class MainActivity extends Activity implements
             int wcells = (int) Math.ceil(w / cellwidth);
             if (wcells > 1) {
                 int start = GridLayout.UNDEFINED;
-                if (wcells > mColumns) {
-                    wcells = mColumns;
+                if (wcells > grid.getColumnCount()) {
+                    wcells = grid.getColumnCount();
                 }
                 if (wcells > 1) start = 0;
                 lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
@@ -657,28 +661,29 @@ public class MainActivity extends Activity implements
 
             for (int i = gridLayout.getChildCount()-1; i >=0 ; i--) {
                 View view = gridLayout.getChildAt(i);
-                if (view==null) {
+                if (view == null) {
                     Log.d("gridrelayout", "null child at " + i);
                     continue;
                 }
                 childViews.add(view);
                 gridLayout.removeView(view);
+            }
 
+
+            gridLayout.setColumnCount(columnCount);
+            Collections.reverse(childViews);
+
+            for (View view: childViews) {
                 GridLayout.LayoutParams lp;
                 if (view.getTag() instanceof AppShortcut) {
                     AppShortcut app = (AppShortcut) view.getTag();
 
-                    lp = getAppShortcutLayoutParams(app);
+                    lp = getAppShortcutLayoutParams(gridLayout, app);
                 } else {
                     lp = new GridLayout.LayoutParams();
                 }
                 view.setLayoutParams(lp);
-            }
-            gridLayout.setColumnCount(columnCount);
 
-            Collections.reverse(childViews);
-
-            for (View view: childViews) {
                 gridLayout.addView(view);
             }
         }
@@ -1093,7 +1098,7 @@ public class MainActivity extends Activity implements
                         if (catstyle == CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
                             styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
                         }
-                        Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
+                       // Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
 
                         break;
 
@@ -1174,7 +1179,7 @@ public class MainActivity extends Activity implements
                     if (!nocolor ) {
                         droppedOn.setBackgroundColor(dragoverBackground);
                     }
-                    Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
+                    //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
 
@@ -1276,10 +1281,16 @@ public class MainActivity extends Activity implements
                     Log.e("LaunchTime", "dragObj " + dragObj + " still has parent " + parent, new Throwable() );
                     ((ViewGroup)parent).removeView(dragObj);
                 }
+
+                ViewGroup.LayoutParams lp = null;
+                if (target instanceof GridLayout && dragObj.getTag() instanceof AppShortcut) {
+                    lp = getAppShortcutLayoutParams((GridLayout)target, (AppShortcut)dragObj.getTag());
+                }
+
                 if (index == -1) {
-                    target.addView(dragObj);
+                    target.addView(dragObj, lp);
                 } else {
-                    target.addView(dragObj, index);
+                    target.addView(dragObj, index,  lp);
                 }
             }
 
