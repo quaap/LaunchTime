@@ -154,5 +154,5 @@
     <string name="prefs_cat_apps">Apps will be categorized</string>
     <string name="prefs_cat_no">Apps will be placed in \"Other\"</string>
     <string name="pref_cat_loc">Categories will be on the %s</string>
-    <string name="search_hint">Search. .is a wildcard</string>
+    <string name="search_hint">Search. \".\" is a wildcard</string>
 </resources>
