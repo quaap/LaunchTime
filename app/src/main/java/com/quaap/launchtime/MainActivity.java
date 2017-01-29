@@ -562,21 +562,26 @@ public class MainActivity extends Activity implements
 
     private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, int pos, boolean reuse) {
         if (app != null) {
-            if (isAppInstalled(app.getPackageName())) {
-                ViewGroup item = getShortcutView(app, false, reuse);
-                if (item!=null) {
-                    if (!app.iconLoaded()) {
-                        app.loadAppIconAsync(this, mPackageMan);
+            try {
+                if (isAppInstalled(app.getPackageName())) {
+                    ViewGroup item = getShortcutView(app, false, reuse);
+                    if (item != null) {
+                        if (!app.iconLoaded()) {
+                            app.loadAppIconAsync(this, mPackageMan);
+                        }
+                        ViewGroup parent = (ViewGroup) item.getParent();
+                        if (parent != null) parent.removeView(item);
+                        GridLayout.LayoutParams lp = getAppShortcutLayoutParams(iconSheet, app);
+                        iconSheet.addView(item, pos, lp);
+                        return true;
                     }
-                    ViewGroup parent = (ViewGroup) item.getParent();
-                    if (parent != null) parent.removeView(item);
-                    GridLayout.LayoutParams lp = getAppShortcutLayoutParams(iconSheet, app);
-                    iconSheet.addView(item, pos, lp);
-                    return true;
-                }
-            } //else {
+                } //else {
                 //Log.d("LaunchTime", "Not showing recent " + app.getPackageName() + " " + app.getActivityName() + ": Not installed.");
-            //}
+                //}
+            } catch (Exception e) {
+                Log.e("LaunchTime", "exception adding icon to sheet", e);
+                Toast.makeText(this,"Couldn't place icon: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         } else {
             Log.d("LaunchTime", "Not showing recent: Null.");
         }
@@ -1276,21 +1281,26 @@ public class MainActivity extends Activity implements
 
 
             if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
-                ViewParent parent = dragObj.getParent();
-                if (parent!=null) {
-                    Log.e("LaunchTime", "dragObj " + dragObj + " still has parent " + parent, new Throwable() );
-                    ((ViewGroup)parent).removeView(dragObj);
-                }
+                try {
+                    ViewParent parent = dragObj.getParent();
+                    if (parent!=null) {
+                        Log.e("LaunchTime", "dragObj " + dragObj + " still has parent " + parent, new Throwable() );
+                        ((ViewGroup)parent).removeView(dragObj);
+                    }
 
-                ViewGroup.LayoutParams lp = null;
-                if (target instanceof GridLayout && dragObj.getTag() instanceof AppShortcut) {
-                    lp = getAppShortcutLayoutParams((GridLayout)target, (AppShortcut)dragObj.getTag());
-                }
+                    ViewGroup.LayoutParams lp = null;
+                    if (target instanceof GridLayout && dragObj.getTag() instanceof AppShortcut) {
+                        lp = getAppShortcutLayoutParams((GridLayout)target, (AppShortcut)dragObj.getTag());
+                    }
 
-                if (index == -1) {
-                    target.addView(dragObj, lp);
-                } else {
-                    target.addView(dragObj, index,  lp);
+                    if (index == -1) {
+                        target.addView(dragObj, lp);
+                    } else {
+                        target.addView(dragObj, index, lp);
+                    }
+                } catch (Exception e) {
+                    Log.e("LaunchTime", "exception adding icon to sheet", e);
+                    Toast.makeText(MainActivity.this,"Couldn't place icon: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 
