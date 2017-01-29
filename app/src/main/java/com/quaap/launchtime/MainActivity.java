@@ -1333,7 +1333,10 @@ public class MainActivity extends Activity implements
             if (mBeingDragged.isWidget()) {
 
                 mDb.deleteApp(mBeingDragged.getActivityName());
-                mLoadedWidgets.remove(mBeingDragged.getActivityName());
+                AppWidgetHostView wid = mLoadedWidgets.remove(mBeingDragged.getActivityName());
+                if (wid!=null) {
+                    mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
+                }
             }
         }
 

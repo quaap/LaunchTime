@@ -80,6 +80,8 @@ public class Widget {
     private AppWidgetHostView createWidgetFromId(int widget_id) {
         AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(widget_id);
 
+       // if (checkBindPermission(widget_id, appWidgetInfo.provider)) return null;
+
         // Create the host view
         AppWidgetHostView hostView = mAppWidgetHost.createView(mParent, widget_id, appWidgetInfo);
         hostView.setAppWidget(widget_id, appWidgetInfo);
@@ -120,20 +122,7 @@ public class Widget {
         // Allocate the hosted widget id
         int appWidgetId = mAppWidgetHost.allocateAppWidgetId();
 
-        boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
-
-
-        // Ask the user to allow this app to have access to their widgets
-        if (!allowed_to_bind) {
-            Log.d("LaunchWidgeth", "asking for permission");
-            Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
-            // This is the options bundle discussed above
-            addEmptyData(intent);
-            mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
-            return null;
-        }
+        if (checkBindPermission(appWidgetId, cn)) return null;
 
         Log.d("LaunchWidgeth", "Allowed to bind");
         Log.d("LaunchWidgeth", "creating widget");
@@ -146,6 +135,24 @@ public class Widget {
         hostView.setAppWidget(appWidgetId, appWidgetInfo);
 
         return hostView;
+    }
+
+    public boolean checkBindPermission(int appWidgetId, ComponentName cn) {
+        boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
+
+
+        // Ask the user to allow this app to have access to their widgets
+        if (!allowed_to_bind) {
+            Log.d("LaunchWidgeth", "asking for permission");
+            Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
+            // This is the options bundle discussed above
+            addEmptyData(intent);
+            mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
+            return true;
+        }
+        return false;
     }
 
     private AppWidgetHostView configureWidget(Intent data) {
@@ -193,7 +200,11 @@ public class Widget {
             }
         }
         return null;
+    }
 
+    public void widgetRemoved(int appWidgetId) {
+
+        mAppWidgetHost.deleteAppWidgetId(appWidgetId);
 
     }
 
