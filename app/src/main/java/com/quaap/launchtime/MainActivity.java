@@ -1218,15 +1218,16 @@ public class MainActivity extends Activity implements
 
         private boolean handleDrop(View droppedOn, View dragObj, boolean isShortcut) {
             ViewGroup target;
+            Object droppedOnTag = droppedOn.getTag();
             if (droppedOn == mRemoveDropzone) {  // need to delete the dropped thing
                 //Stuff to be deleted
-                if (mQuickRow == mDragDropSource || mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
+                if (mQuickRow == mDragDropSource || mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
                     removeDroppedItem(dragObj);
                 } else if (mCategory.equals(Categories.CAT_SEARCH)) {
                     removeDroppedRecentItem(dragObj);
                 } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
                     //delete category tab
-                    promptDeleteCategory((String)dragObj.getTag());
+                    promptDeleteCategory((String) dragObj.getTag());
 
                 } else {
                     //uninstall app
@@ -1234,12 +1235,19 @@ public class MainActivity extends Activity implements
                     launchUninstallIntent(mBeingDragged.getPackageName());
                 }
                 return true;
+
             } else if (droppedOn instanceof GridLayout) {
                 target = (GridLayout) droppedOn;
             } else if (droppedOn instanceof FrameLayout) {
                 target = (FrameLayout) droppedOn;
             } else {
                 target = (GridLayout) droppedOn.getParent();
+            }
+
+            if (droppedOnTag!=null && droppedOnTag instanceof AppShortcut) {
+                if (((AppShortcut)droppedOnTag).isWidget()) {
+                    target = (GridLayout) droppedOn.getParent();
+                }
             }
 
 
