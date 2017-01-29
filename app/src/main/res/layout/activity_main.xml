@@ -144,29 +144,17 @@
             android:clickable="true">
 
             <TextView
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_widgets"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/add_widgets"
-                android:textSize="@dimen/btnbar_textsize"
-                android:layout_margin="2dp"
-                android:background="@color/btn_background"
-                android:textColor="@color/textcolor"
-                android:visibility="visible" />
-
-            <TextView
                 android:layout_width="@dimen/shortcut_width"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_add_cat"
+                android:id="@+id/btn_sort_cat"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/add_category"
+                android:text="@string/sort_category"
                 android:textSize="@dimen/btnbar_textsize"
                 android:layout_margin="2dp"
                 android:background="@color/btn_background"
                 android:textColor="@color/textcolor" />
+
 
             <TextView
                 android:layout_width="@dimen/shortcut_width"
@@ -183,14 +171,27 @@
             <TextView
                 android:layout_width="@dimen/shortcut_width"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_delete_cat"
+                android:id="@+id/btn_add_cat"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/delete_category"
+                android:text="@string/add_category"
                 android:textSize="@dimen/btnbar_textsize"
                 android:layout_margin="2dp"
                 android:background="@color/btn_background"
                 android:textColor="@color/textcolor" />
+
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_widgets"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/add_widgets"
+                android:textSize="@dimen/btnbar_textsize"
+                android:layout_margin="2dp"
+                android:background="@color/btn_background"
+                android:textColor="@color/textcolor"
+                android:visibility="visible" />
 
             <ImageView
                 android:layout_width="wrap_content"

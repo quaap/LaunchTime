@@ -33,6 +33,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -73,8 +74,11 @@ import com.quaap.launchtime.components.StaticListView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -82,6 +86,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 public class MainActivity extends Activity implements
         View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -105,9 +110,11 @@ public class MainActivity extends Activity implements
     private GridLayout mQuickRow;
     private HorizontalScrollView mQuickRowScroller;
     private ImageView mShowButtons;
+
+
+    private View mSortCategoryButton;
     private View mAddCategoryButton;
     private View mRenameCategoryButton;
-    private View mDeleteCategoryButton;
     private View mEditWidgetsButton;
     private View mOpenPrefsButton;
 
@@ -1717,6 +1724,69 @@ public class MainActivity extends Activity implements
     }
 
 
+    private static final int APPSORT_NONE = -1;
+    private static final int APPSORT_LABEL = 0;
+    private static final int APPSORT_INSTALL_REV = 1;
+    private static final int APPSORT_INSTALL = 2;
+    private static final int APPSORT_PACKAGE = 3;
+
+    private void promptSortCategory(String category) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.sort_prompt_title);
+
+        builder.setItems(R.array.sort_strings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                sortCategory(mCategory, i);
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, null);
+
+        builder.show();
+    }
+
+    private void sortCategory(String category, final int sortby) {
+
+        if (sortby != APPSORT_NONE) {
+            List<AppShortcut> apps = mDb.getApps(category);
+            Collections.sort(apps, new Comparator<AppShortcut>() {
+                @Override
+                public int compare(AppShortcut appfirst, AppShortcut appsecond) {
+                    switch (sortby) {
+                        case APPSORT_LABEL:
+                            return appfirst.getLabel().compareToIgnoreCase(appsecond.getLabel());
+                        case APPSORT_INSTALL_REV:
+                            return getInstallTime(appsecond.getPackageName()).compareTo(getInstallTime(appfirst.getPackageName()));
+                        case APPSORT_INSTALL:
+                            return getInstallTime(appfirst.getPackageName()).compareTo(getInstallTime(appsecond.getPackageName()));
+                        case APPSORT_PACKAGE:
+                            return appfirst.getPackageName().compareToIgnoreCase(appsecond.getPackageName());
+
+                    }
+                    return 0;
+                }
+            });
+
+            mDb.setAppCategoryOrder(category, apps);
+            repopulateIconSheet(category);
+        }
+
+    }
+
+    private Long getInstallTime(String packagename) {
+        try {
+            return getPackageManager()
+                    .getPackageInfo(packagename, 0)
+                    .firstInstallTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            return -1l;
+        }
+    }
+
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
         mCategoriesLayout = (LinearLayout) findViewById(R.id.layout_categories);
@@ -1756,11 +1826,21 @@ public class MainActivity extends Activity implements
             }
         });
 
+        mSortCategoryButton = findViewById(R.id.btn_sort_cat);
         mAddCategoryButton = findViewById(R.id.btn_add_cat);
         mRenameCategoryButton = findViewById(R.id.btn_rename_cat);
-        mDeleteCategoryButton = findViewById(R.id.btn_delete_cat);
+
         mEditWidgetsButton = findViewById(R.id.btn_widgets);
         mOpenPrefsButton = findViewById(R.id.btn_prefs);
+
+
+        mSortCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSortCategory(mCategory);
+                showButtonBar(false);
+            }
+        });
 
         mRenameCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1778,13 +1858,6 @@ public class MainActivity extends Activity implements
             }
         });
 
-        mDeleteCategoryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                promptDeleteCategory(mCategory);
-                showButtonBar(false);
-            }
-        });
 
         mEditWidgetsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1817,14 +1890,11 @@ public class MainActivity extends Activity implements
 
         if (visible) {
             showHiddenCategories();
-            if (Categories.isSpeacialCategory(mCategory)) {
-                mDeleteCategoryButton.setVisibility(View.INVISIBLE);
-            } else {
-                mDeleteCategoryButton.setVisibility(View.VISIBLE);
-            }
             if (mCategory.equals(Categories.CAT_SEARCH)) {
+                mSortCategoryButton.setVisibility(View.INVISIBLE);
                 mEditWidgetsButton.setVisibility(View.INVISIBLE);
             } else {
+                mSortCategoryButton.setVisibility(View.VISIBLE);
                 mEditWidgetsButton.setVisibility(View.VISIBLE);
             }
             mIconSheetBottomFrame.setVisibility(View.VISIBLE);
