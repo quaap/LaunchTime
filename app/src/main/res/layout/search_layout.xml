@@ -20,17 +20,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
+        <EditText
             android:layout_height="wrap_content"
             android:id="@+id/search_box"
             android:layout_width="250dp"
-            android:completionThreshold="1"
             android:maxLines="1"
             android:imeOptions="actionSearch"
-            android:inputType="textAutoComplete"
-            android:lines="1" />
+            android:lines="1"
+            android:inputType="text" />
 
     </LinearLayout>
+
+    <com.quaap.launchtime.components.StaticListView
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/search_dropdownarea" />
 
     <TextView
         android:text="@string/recent_apps"

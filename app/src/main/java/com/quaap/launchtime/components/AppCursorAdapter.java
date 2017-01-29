@@ -2,10 +2,16 @@ package com.quaap.launchtime.components;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
@@ -26,31 +32,56 @@ import com.quaap.launchtime.db.DB;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
-public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterView.OnItemClickListener {
+public class AppCursorAdapter extends ResourceCursorAdapter implements StaticListView.OnItemClickListener {
     private MainActivity mMain;
 
-    private TextView mTextHolder;
+    private EditText mTextHolder;
 
     private DB mDB;
 
-    public AppCursorAdapter(MainActivity main, TextView textHolder, int layout, Cursor cursor, int flags) {
-        super(main, layout, cursor, flags);
+    public AppCursorAdapter(final MainActivity main, EditText textHolder, int layout, int flags) {
+        super(main, layout, null, flags);
         mMain = main;
         mDB = GlobState.getGlobState(main).getDB();
         mTextHolder = textHolder;
 
+        mTextHolder.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                refreshCursor();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mTextHolder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshCursor();
+            }
+        },10);
+
     }
 
-    @Override
-    public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-        if (getFilterQueryProvider() != null) {
-            return getFilterQueryProvider().runQuery(constraint);
+    public void refreshCursor() {
+        String text = mTextHolder.getText().toString().trim();
+        if (text.length()==0) {
+            text = "xxXXXXX";
         }
+        changeCursor(mDB.getAppCursor("%" + text + "%"));
 
-        Cursor cursor = mDB.getAppCursor("%" + (constraint == null ? "XXXXXX" : constraint.toString()) + "%");
+        Log.d("gghh", mTextHolder.getText().toString());
 
-        return cursor;
     }
+
 
     // The bindView method is used to bind all data to a given view
     // such as setting the text on a TextView.
@@ -87,14 +118,15 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+    public void onItemClick(Object item, View itemView, int position, long id) {
+        Cursor cursor = (Cursor) item;
         String activityName = cursor.getString(0);
         String label = cursor.getString(1);
 
-        mTextHolder.setText(label);
+       // mTextHolder.setText(label);
 
         mMain.launchApp(activityName);
+
     }
 
 

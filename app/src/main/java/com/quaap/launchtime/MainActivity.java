@@ -35,6 +35,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -55,6 +57,7 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -65,6 +68,7 @@ import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.InteractiveScrollView;
+import com.quaap.launchtime.components.StaticListView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
@@ -247,6 +251,9 @@ public class MainActivity extends Activity implements
             }
         },100);
 
+        if (mSearchAdapter!=null) {
+            mSearchAdapter.refreshCursor();
+        }
     }
 
     @Override
@@ -951,23 +958,14 @@ public class MainActivity extends Activity implements
     private ViewGroup getSearchView() {
         ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
 
-        final AutoCompleteTextView searchbox = (AutoCompleteTextView) searchView.findViewById(R.id.search_box);
-        mSearchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, mDb.getAppCursor("XXXXXX"), 0);
-        searchbox.setAdapter(mSearchAdapter);
-        searchbox.setOnItemClickListener(mSearchAdapter);
-        searchbox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(searchbox.getWindowToken(), 0);
-                    searchbox.showDropDown();
-                    return true;
-                }
-                return false;
-            }
-        });
+        final EditText searchbox = (EditText) searchView.findViewById(R.id.search_box);
+        mSearchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, 0);
+        final StaticListView list = (StaticListView) searchView.findViewById(R.id.search_dropdownarea);
 
+        list.setAdapter(mSearchAdapter);
+        list.setOnItemClickListener(mSearchAdapter);
+
+        mSearchAdapter.refreshCursor();
         return searchView;
     }
 
@@ -1086,20 +1084,22 @@ public class MainActivity extends Activity implements
 
         categoryTab.setOnDragListener(new View.OnDragListener() {
             @Override
-            public boolean onDrag(View view, final DragEvent event) {
-                View view2 = (View) event.getLocalState();
-                boolean isAppShortcut = view2.getTag() instanceof AppShortcut;
+            public boolean onDrag(View overView, final DragEvent event) {
+                View dragObj = (View) event.getLocalState();
+                boolean isAppShortcut = dragObj.getTag() instanceof AppShortcut;
                 boolean isSearch = category.equals(Categories.CAT_SEARCH);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
                         if (catstyle == CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
                             styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
                         }
+                        Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
+
                         break;
 
                     case DragEvent.ACTION_DRAG_LOCATION:
 
-                        scrollOnDrag(view, event, mCategoriesScroller);
+                        scrollOnDrag(overView, event, mCategoriesScroller);
                         break;
                     case DragEvent.ACTION_DRAG_ENDED:
                         mBeingDragged = null;
@@ -1117,21 +1117,21 @@ public class MainActivity extends Activity implements
                                 mMainDragListener.onDrag(iconSheet, event);
                             }
                         } else {
-                            ViewGroup container1 = (ViewGroup) view.getParent();
-                            ViewGroup container2 = (ViewGroup) view2.getParent();
+                            ViewGroup container1 = (ViewGroup) overView.getParent();
+                            ViewGroup container2 = (ViewGroup) dragObj.getParent();
 
 
                             int index = -1;
                             for (int i = 0; i < container1.getChildCount(); i++) {
-                                if (container1.getChildAt(i) == view) {
+                                if (container1.getChildAt(i) == overView) {
                                     index = i;
                                 }
                             }
-                            container2.removeView(view2);
+                            container2.removeView(dragObj);
                             if (index == -1) {
-                                container1.addView(view2);
+                                container1.addView(dragObj);
                             } else {
-                                container1.addView(view2, index);
+                                container1.addView(dragObj, index);
                             }
                             mDb.setCategoryOrder(container1);
                         }
@@ -1174,6 +1174,7 @@ public class MainActivity extends Activity implements
                     if (!nocolor ) {
                         droppedOn.setBackgroundColor(dragoverBackground);
                     }
+                    Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
 
@@ -1222,7 +1223,8 @@ public class MainActivity extends Activity implements
                 return true;
             } else if (droppedOn instanceof GridLayout) {
                 target = (GridLayout) droppedOn;
-
+            } else if (droppedOn instanceof FrameLayout) {
+                target = (FrameLayout) droppedOn;
             } else {
                 target = (GridLayout) droppedOn.getParent();
             }
@@ -1236,27 +1238,37 @@ public class MainActivity extends Activity implements
                 }
             }
 
-            // Don't remove the source icon if it's on the quickrow, unless we're re-arranging
-            if ((mDragDropSource == mQuickRow && mQuickRow == target) || (mDragDropSource != mQuickRow && mQuickRow != target)) {
-                mDragDropSource.removeView(dragObj);
+
+            //remove icon from source?
+            boolean remove = false;
+            if (mDragDropSource == mQuickRow && mQuickRow == target) remove = true;
+
+            if (!mCategory.equals(Categories.CAT_SEARCH)) {
+                if (mQuickRow != mDragDropSource && mQuickRow != target) remove = true;
             }
 
-
-            if (target == mQuickRow) {
-                if (mQuickRow != mDragDropSource) {
-                    //prevent copies of the same app on the quickrow
-                    for (int i = 0; i < mQuickRow.getChildCount(); i++) {
-                        AppShortcut dragging = (AppShortcut) dragObj.getTag();
-                        AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
-                        if (dragging.getActivityName().equals(inbar.getActivityName())) {
-                            return true;
+            if (remove) {
+                mDragDropSource.removeView(dragObj);
+            } else {
+                if (target == mQuickRow) {
+                    if (mQuickRow != mDragDropSource) {
+                        //prevent copies of the same app on the quickrow
+                        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+                            AppShortcut dragging = (AppShortcut) dragObj.getTag();
+                            AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+                            if (dragging.getActivityName().equals(inbar.getActivityName())) {
+                                return true;
+                            }
                         }
                     }
-                }
-                //make a copy of the shortcut to put on the quickbar
-                dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag()), true);
+                    //make a copy of the shortcut to put on the quickbar
+                    dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag()), true);
 
+                } else {
+                    dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag()), false, false);
+                }
             }
+
 
             if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
                 ViewParent parent = dragObj.getParent();
@@ -1342,12 +1354,14 @@ public class MainActivity extends Activity implements
         if (dragstarted) {
             mBeingDragged = dragitem;
             mDragDropSource = (ViewGroup) view.getParent();
+            Log.d("LaunchTime", "Drag started: " + dragitem.getActivityName());
+            showHiddenCategories();
+            showRemoveDropzone();
+            return true;
         }
 
-        showHiddenCategories();
-        showRemoveDropzone();
 
-        return true;
+        return false;
     }
 
 
