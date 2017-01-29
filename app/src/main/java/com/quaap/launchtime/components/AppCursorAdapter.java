@@ -5,15 +5,9 @@ import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FilterQueryProvider;
-import android.widget.ProgressBar;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
@@ -155,7 +149,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     public void onItemClick(Object item, View itemView, int position, long id) {
         Cursor cursor = (Cursor) item;
         String activityName = cursor.getString(0);
-        String label = cursor.getString(1);
+        //String label = cursor.getString(1);
 
        // mTextHolder.setText(label);
 

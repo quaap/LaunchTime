@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">LaunchTime</string>
 
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-
 
     <string name="remove_shortcut">Remove</string>
     <string name="uninstall_app">Uninstall</string>
@@ -42,7 +40,6 @@
     <string name="add_widgets">Add\nWidgets</string>
     <string name="add_category">Add\nCategory</string>
     <string name="rename_category">Edit\nCategory</string>
-    <string name="delete_category">Delete\nCategory</string>
 
     <string name="remove">Remove</string>
     <string name="done">Done</string>
@@ -74,7 +71,6 @@
 
             ]]>
     </string>
-    <string name="about">About</string>
     <string name="pref_orient">Orientation</string>
     <string name="pref_about">About</string>
     <string name="pref_help_about">Help and about</string>
@@ -123,10 +119,6 @@
     <string name="app">app</string>
     <string name="config">Config</string>
     <string name="previously_deleted">Previously Deleted</string>
-    <string name="pref_general">General</string>
-    <string name="pref_general_summ">General Preferences.</string>
-    <string name="pref_style">Style</string>
-    <string name="pref_style_summ">Color and style.</string>
     <string name="pref_senddat">Send app data</string>
     <string name="pref_senddat_summ">Send data about which apps are installed to the app developer</string>
     <string name="pref_backup">Backup and Restore</string>

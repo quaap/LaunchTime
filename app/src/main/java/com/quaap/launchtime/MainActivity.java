@@ -33,11 +33,8 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -46,11 +43,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -58,8 +53,6 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -74,8 +67,6 @@ import com.quaap.launchtime.components.StaticListView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -86,7 +77,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
 public class MainActivity extends Activity implements
         View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -1791,7 +1781,7 @@ public class MainActivity extends Activity implements
                     .getPackageInfo(packagename, 0)
                     .firstInstallTime;
         } catch (PackageManager.NameNotFoundException e) {
-            return -1l;
+            return -1L;
         }
     }
 

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
-    <header android:fragment="com.quaap.launchtime.SettingsActivity$SettingsFragment"
-        android:title="@string/pref_general"
-        android:summary="@string/pref_general_summ" />
-
-</preference-headers>
