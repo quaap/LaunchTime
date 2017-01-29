@@ -58,6 +58,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -968,12 +969,14 @@ public class MainActivity extends Activity implements
     private ViewGroup getSearchView() {
         ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
 
-        final EditText searchbox = (EditText) searchView.findViewById(R.id.search_box);
+        EditText searchbox = (EditText) searchView.findViewById(R.id.search_box);
+
         mSearchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, 0);
-        final StaticListView list = (StaticListView) searchView.findViewById(R.id.search_dropdownarea);
+        StaticListView list = (StaticListView) searchView.findViewById(R.id.search_dropdownarea);
 
         list.setAdapter(mSearchAdapter);
         list.setOnItemClickListener(mSearchAdapter);
+
 
         mSearchAdapter.refreshCursor();
         return searchView;

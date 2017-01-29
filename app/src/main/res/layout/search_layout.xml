@@ -27,7 +27,8 @@
             android:maxLines="1"
             android:imeOptions="actionSearch"
             android:lines="1"
-            android:inputType="text" />
+            android:inputType="text"
+            android:hint="@string/search_hint" />
 
     </LinearLayout>
 
@@ -35,7 +36,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/search_dropdownarea" />
+        android:id="@+id/search_dropdownarea"
+        android:background="#22eeeeee" />
 
     <TextView
         android:text="@string/recent_apps"

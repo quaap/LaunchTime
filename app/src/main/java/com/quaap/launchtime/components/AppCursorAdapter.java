@@ -12,6 +12,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
+import android.widget.ProgressBar;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
     private EditText mTextHolder;
 
+
     private DB mDB;
 
     public AppCursorAdapter(final MainActivity main, EditText textHolder, int layout, int flags) {
@@ -53,7 +56,12 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                refreshCursor();
+                mTextHolder.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshCursor();
+                    }
+                },10);
             }
 
             @Override
@@ -76,9 +84,12 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
         if (text.length()==0) {
             text = "xxXXXXX";
         }
+
+        text = text.replace(".", "_");
+
         changeCursor(mDB.getAppCursor("%" + text + "%"));
 
-        Log.d("gghh", mTextHolder.getText().toString());
+        //Log.d("gghh", mTextHolder.getText().toString());
 
     }
 
