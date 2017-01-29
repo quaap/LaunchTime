@@ -216,6 +216,22 @@ public class DB extends SQLiteOpenHelper {
         return appShortcut;
     }
 
+    public String getAppCategory(String actvname) {
+
+        String catID = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, ACTVNAME + "=?", new String[]{actvname}, null, null, null);
+        try {
+            if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
+                catID = cursor.getString(0);
+            }
+        } finally {
+            cursor.close();
+        }
+        return catID;
+    }
+
     public int getAppCount(String catID) {
         int count = 0;
         SQLiteDatabase db = this.getReadableDatabase();

@@ -832,55 +832,53 @@ public class MainActivity extends Activity implements
 
         if (smallIcon) reuse = false;
         ViewGroup item = mAppShortcutViews.get(app);
+        if (reuse) {
+            if (item!=null) return item;
+        }
 
         if (app.isWidget()) {
-            if (item==null) item = new FrameLayout(this);
-            item.removeAllViews();
+            item = new FrameLayout(this);
 
             AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
             if (appwid == null) {
                 appwid = mWidgetHelper.loadWidget(app);
-                if (appwid!=null) {
-                    mLoadedWidgets.put(app.getActivityName(), appwid);
-                    AppWidgetProviderInfo pinfo = appwid.getAppWidgetInfo();
-                    Log.d("widsize", "Min: " + pinfo.minWidth + "," + pinfo.minHeight);
-                    Log.d("widsize", "MinResize: " + pinfo.minResizeWidth + "," + pinfo.minResizeHeight);
-                    Log.d("widsize", "Resizemode: " + pinfo.resizeMode);
-
-                    storeShortCutDimen(app, pinfo.minWidth, pinfo.minHeight);
-                } else {
+                if (appwid==null) {
+                    Log.d("Widget2", "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
                     mDb.deleteApp(app.getActivityName());
                     return null;
                 }
             }
-            if (appwid != null) {
-                ViewGroup parent = (ViewGroup) appwid.getParent();
-                if (parent != null) {
-                    parent.removeView(appwid);
-                }
-                item.addView(appwid);
-                final View wrap = item;
-                appwid.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        return MainActivity.this.onLongClick(wrap);
-                    }
-                });
-                appwid.setOnDragListener(new View.OnDragListener() {
-                    @Override
-                    public boolean onDrag(View view, DragEvent dragEvent) {
-                        return mMainDragListener.onDrag(wrap, dragEvent);
-                    }
-                });
 
-            } else {
-                Log.d("Widget2", "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
+            mLoadedWidgets.put(app.getActivityName(), appwid);
+            AppWidgetProviderInfo pinfo = appwid.getAppWidgetInfo();
+            Log.d("widsize", "Min: " + pinfo.minWidth + "," + pinfo.minHeight);
+            Log.d("widsize", "MinResize: " + pinfo.minResizeWidth + "," + pinfo.minResizeHeight);
+            Log.d("widsize", "Resizemode: " + pinfo.resizeMode);
+
+            storeShortCutDimen(app, pinfo.minWidth, pinfo.minHeight);
+
+            ViewGroup parent = (ViewGroup) appwid.getParent();
+            if (parent != null) {
+                parent.removeView(appwid);
             }
+            item.addView(appwid);
+            final View wrap = item;
+            appwid.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return MainActivity.this.onLongClick(wrap);
+                }
+            });
+            appwid.setOnDragListener(new View.OnDragListener() {
+                @Override
+                public boolean onDrag(View view, DragEvent dragEvent) {
+                    return mMainDragListener.onDrag(wrap, dragEvent);
+                }
+            });
+
+
 
         } else {
-            if (reuse) {
-                if (item!=null) return item;
-            }
 
 
             item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon ? R.layout.shortcut_small_icon : R.layout.shortcut_icon, (ViewGroup) null);
@@ -921,27 +919,22 @@ public class MainActivity extends Activity implements
         String actvname = cn.getClassName();
         String pkgname = cn.getPackageName();
 
-        Log.d("Widget", actvname + " " + pkgname);
+        String catId = mDb.getAppCategory(actvname);
+        if (catId == null) {
 
-        mLoadedWidgets.put(actvname, appwid);
+            Log.d("Widget", actvname + " " + pkgname);
 
-        String label = pkgname;
+            mLoadedWidgets.put(actvname, appwid);
 
+            String label = pkgname;
 
-        AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
+            AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
 
-        mDb.addApp(app);
-        mDb.addAppCategoryOrder(mCategory, app.getActivityName());
-
-
-//        int sw = (int)getResources().getDimension(R.dimen.shortcut_width);
-//        int sh = (int)getResources().getDimension(R.dimen.shortcut_height);
-
-//        int wf = (int) Math.ceil(pinfo.minWidth / getResources().getDimension(R.dimen.shortcut_width));
-//
-//        int hf = (int) Math.ceil(pinfo.minHeight / getResources().getDimension(R.dimen.shortcut_height));
-
-        //wid.updateAppWidgetSize(null,sw, sh, sw*wf, sh*hf);
+            mDb.addApp(app);
+            mDb.addAppCategoryOrder(mCategory, app.getActivityName());
+        } else {
+            Toast.makeText(this, getString(R.string.widget_alreay,mDb.getCategoryDisplay(catId)), Toast.LENGTH_LONG).show();
+        }
 
 
     }
@@ -1478,7 +1471,7 @@ public class MainActivity extends Activity implements
         } else {
             AppWidgetHostView appwid = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
             if (appwid == null) {
-                Log.d("LaunchWidget2", "appwid is null. getting component name");
+                Log.d("LaunchWidget2", "appwid is null.");
                 ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
                 if (cn!=null) {
                     Log.d("LaunchWidget2", "classname is " + cn.getClassName());
