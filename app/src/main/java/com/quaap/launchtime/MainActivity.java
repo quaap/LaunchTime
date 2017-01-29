@@ -1728,7 +1728,8 @@ public class MainActivity extends Activity implements
     private static final int APPSORT_LABEL = 0;
     private static final int APPSORT_INSTALL_REV = 1;
     private static final int APPSORT_INSTALL = 2;
-    private static final int APPSORT_PACKAGE = 3;
+    private static final int APPSORT_USAGE = 3;
+    private static final int APPSORT_PACKAGE = 4;
 
     private void promptSortCategory(String category) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1751,6 +1752,7 @@ public class MainActivity extends Activity implements
 
     private void sortCategory(String category, final int sortby) {
 
+        final List<String> recents = mDb.getAppLaunchedList();
         if (sortby != APPSORT_NONE) {
             List<AppShortcut> apps = mDb.getApps(category);
             Collections.sort(apps, new Comparator<AppShortcut>() {
@@ -1763,6 +1765,12 @@ public class MainActivity extends Activity implements
                             return getInstallTime(appsecond.getPackageName()).compareTo(getInstallTime(appfirst.getPackageName()));
                         case APPSORT_INSTALL:
                             return getInstallTime(appfirst.getPackageName()).compareTo(getInstallTime(appsecond.getPackageName()));
+                        case APPSORT_USAGE:
+                            int p1 = recents.indexOf(appfirst.getActivityName());
+                            int p2 = recents.indexOf(appsecond.getActivityName());
+                            if (p1==-1) p1 = Integer.MAX_VALUE;
+                            if (p2==-1) p2 = Integer.MAX_VALUE;
+                            return ((Integer)p1).compareTo(p2);
                         case APPSORT_PACKAGE:
                             return appfirst.getPackageName().compareToIgnoreCase(appsecond.getPackageName());
 
