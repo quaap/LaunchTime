@@ -154,6 +154,9 @@
 
     <string name="sort_category">Sort Category</string>
     <string name="sort_prompt_title">Sort category by</string>
+    <string name="pref_todd_lock">Toddler Lock</string>
+    <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage</string>
+    <string name="kid_escape_text">Press \'%s\' to exit</string>
 
 
     <string-array name="sort_strings">

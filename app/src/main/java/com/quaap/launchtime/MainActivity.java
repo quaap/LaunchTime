@@ -1967,9 +1967,9 @@ public class MainActivity extends Activity implements
     private boolean checkChildLock() {
         View kid_escape_area = findViewById(R.id.kid_escape_area);
         View decorView = getWindow().getDecorView();
+       // View catswrap = findViewById(R.id.category_tabs_wrap);
 
         if (mChildLock ) {
-
 
             // Hide the status bar.
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -1977,7 +1977,7 @@ public class MainActivity extends Activity implements
 
 
             if (!mChildLockSetup) {
-
+                mQuickRowScroller.setVisibility(View.GONE);
 
                 mIconSheetBottomFrame.setVisibility(View.GONE);
                 mShowButtons.setVisibility(View.GONE);
@@ -2013,7 +2013,7 @@ public class MainActivity extends Activity implements
                 } while (kidcode.equals(shuffled));
                 kidcode = shuffled;
 
-                kid_code_txt.setText("Press '" + kidcode + "' to exit");
+                kid_code_txt.setText(getString(R.string.kid_escape_text, kidcode) );
                 mChildLockSetup = true;
 
 
@@ -2022,6 +2022,8 @@ public class MainActivity extends Activity implements
         } else {
 
             mChildLockSetup = false;
+            mQuickRowScroller.setVisibility(View.VISIBLE);
+
             mShowButtons.setVisibility(View.VISIBLE);
             kid_escape_area.setVisibility(View.GONE);
             int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;

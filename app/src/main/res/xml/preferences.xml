@@ -4,9 +4,10 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
-        android:title="Toddler Lock"
+        android:title="@string/pref_todd_lock"
         android:key="prefs_toddler_lock"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:summary="@string/pref_todd_lock_summ" />
     <PreferenceScreen
         android:title="@string/pref_about"
         android:summary="@string/pref_help_about">
