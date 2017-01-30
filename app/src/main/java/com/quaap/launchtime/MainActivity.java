@@ -46,6 +46,7 @@ import android.view.ViewParent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -68,6 +69,7 @@ import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -140,6 +142,9 @@ public class MainActivity extends Activity implements
 
     private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
     public Map<AppShortcut,ViewGroup> mAppShortcutViews = new HashMap<>();
+
+    private boolean mChildLock;
+    private boolean mChildLockSetup;
 
     private DB mDb;
 
@@ -219,7 +224,7 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onPause() {
-
+        checkChildLock();
         mPrefs.edit()
                 .putInt("scrollpos" + mCategory, mIconSheetScroller.getScrollY())
                 .putString("category", mCategory)
@@ -252,6 +257,8 @@ public class MainActivity extends Activity implements
         if (mSearchAdapter!=null) {
             mSearchAdapter.refreshCursor();
         }
+
+        checkChildLock();
     }
 
     @Override
@@ -264,9 +271,20 @@ public class MainActivity extends Activity implements
             }
             checkConfig();
             switchCategory(mCategory);
+
+            if (key.equals("prefs_toddler_lock")) {
+                mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
+                if (mChildLock) mChildLockSetup = false;
+                checkChildLock();
+            }
         }
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        checkChildLock();
+    }
 
     @Override
     public void onDestroy() {
@@ -276,6 +294,7 @@ public class MainActivity extends Activity implements
     }
 
     private synchronized void switchCategory(String category) {
+
         if (category == null) return;
         mCategory = category;
         for (TextView catTab : mCategoryTabs.values()) {
@@ -314,6 +333,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onBackPressed() {
+        if (mChildLock) return;
         showButtonBar(false);
         mQuickRowScroller.smoothScrollTo(0, 0);
         if (mIconSheetScroller.getScrollY()>0) {
@@ -325,6 +345,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             switchCategory(Categories.CAT_TALK);
             showButtonBar(false);
@@ -341,6 +362,7 @@ public class MainActivity extends Activity implements
         try {
 
             leftHandCategories = mAppPreferences.getString("pref_categories_loc", "right").equals("left");
+            mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
 
             int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
             switch (tabsizePref) {
@@ -866,12 +888,14 @@ public class MainActivity extends Activity implements
             appwid.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    if (mChildLock) return false;
                     return MainActivity.this.onLongClick(wrap);
                 }
             });
             appwid.setOnDragListener(new View.OnDragListener() {
                 @Override
                 public boolean onDrag(View view, DragEvent dragEvent) {
+                    if (mChildLock) return false;
                     return mMainDragListener.onDrag(wrap, dragEvent);
                 }
             });
@@ -914,6 +938,7 @@ public class MainActivity extends Activity implements
     }
 
     private void addWidget(AppWidgetHostView appwid) {
+        if (mChildLock) return;
 
         ComponentName cn = appwid.getAppWidgetInfo().provider;
         String actvname = cn.getClassName();
@@ -1056,6 +1081,7 @@ public class MainActivity extends Activity implements
         categoryTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mChildLock) return;
                 switchCategory(category);
 
             }
@@ -1063,6 +1089,7 @@ public class MainActivity extends Activity implements
         categoryTab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                if (mChildLock) return true;
                 ClipData data = ClipData.newPlainText(category, category);
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 //view.startDrag(data, shadowBuilder, view, 0);
@@ -1091,6 +1118,7 @@ public class MainActivity extends Activity implements
         categoryTab.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View overView, final DragEvent event) {
+                if (mChildLock) return true;
                 View dragObj = (View) event.getLocalState();
                 boolean isAppShortcut = dragObj.getTag() instanceof AppShortcut;
                 boolean isSearch = category.equals(Categories.CAT_SEARCH);
@@ -1154,6 +1182,8 @@ public class MainActivity extends Activity implements
     private View.OnDragListener mMainDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View droppedOn, DragEvent event) {
+            if (mChildLock) return false;
+
             View dragObj = (View) event.getLocalState();
             boolean isShortcut = true;
             if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppShortcut )) {
@@ -1210,6 +1240,8 @@ public class MainActivity extends Activity implements
         }
 
         private boolean handleDrop(View droppedOn, View dragObj, boolean isShortcut) {
+            if (mChildLock) return false;
+
             ViewGroup target;
             Object droppedOnTag = droppedOn.getTag();
             if (droppedOn == mRemoveDropzone) {  // need to delete the dropped thing
@@ -1315,6 +1347,8 @@ public class MainActivity extends Activity implements
         }
 
         private void removeDroppedRecentItem(View dragObj) {
+            if (mChildLock) return;
+
             try {
                 mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
                 mDragDropSource.removeView(dragObj);
@@ -1324,6 +1358,8 @@ public class MainActivity extends Activity implements
         }
 
         private void removeDroppedItem(View dragObj) {
+            if (mChildLock) return;
+
             mDragDropSource.removeView(dragObj);
             mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
 
@@ -1367,6 +1403,8 @@ public class MainActivity extends Activity implements
 
     @Override
     public boolean onLongClick(View view) {
+        if (mChildLock) return false;
+
         AppShortcut dragitem = (AppShortcut) view.getTag();
         String label = dragitem.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
@@ -1418,6 +1456,8 @@ public class MainActivity extends Activity implements
     }
 
     private void showRemoveDropzone() {
+        if (mChildLock) return;
+
         mRemoveDropzone.setVisibility(View.VISIBLE);
         mRemoveDropzone.setBackgroundColor(Color.RED);
 
@@ -1437,6 +1477,8 @@ public class MainActivity extends Activity implements
     }
 
     private void launchUninstallIntent(String packageName) {
+        if (mChildLock) return;
+
         Log.d("Launch", "Uninstalling " + packageName);
         Uri packageUri = Uri.parse("package:" + packageName);
         Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
@@ -1881,10 +1923,28 @@ public class MainActivity extends Activity implements
         showButtonBar(vis != View.VISIBLE);
     }
 
+    private String kidaccumecode = "";
+    private String kidcode = "";
+
+    private View.OnClickListener kidescape = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            kidaccumecode += view.getTag();
+            if (kidaccumecode.endsWith(kidcode)) {
+                mChildLock = false;
+                mAppPreferences.edit().putBoolean("prefs_toddler_lock", false).apply();
+                kidaccumecode = "";
+                checkChildLock();
+            } else if (kidaccumecode.length()>kidcode.length()) {
+                kidaccumecode = kidaccumecode.substring(kidaccumecode.length()-1-kidcode.length());
+            }
+        }
+    };
 
     //initialize the form members
 
     private void showButtonBar(boolean visible) {
+        if (checkChildLock()) return;
 
         if (visible) {
             showHiddenCategories();
@@ -1903,6 +1963,73 @@ public class MainActivity extends Activity implements
             mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
     }
+
+    private boolean checkChildLock() {
+        View kid_escape_area = findViewById(R.id.kid_escape_area);
+        View decorView = getWindow().getDecorView();
+
+        if (mChildLock ) {
+
+
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+
+
+            if (!mChildLockSetup) {
+
+
+                mIconSheetBottomFrame.setVisibility(View.GONE);
+                mShowButtons.setVisibility(View.GONE);
+                kid_escape_area.setVisibility(View.VISIBLE);
+
+                TextView kid_code_txt = (TextView) findViewById(R.id.kid_code_txt);
+
+                TextView[] b = new TextView[4];
+                b[0] = (TextView) findViewById(R.id.btn_kid1);
+                b[1] = (TextView) findViewById(R.id.btn_kid2);
+                b[2] = (TextView) findViewById(R.id.btn_kid3);
+                b[3] = (TextView) findViewById(R.id.btn_kid4);
+
+                List<String> letters = Arrays.asList(getString(R.string.letters).split("(?!^)"));
+                Collections.shuffle(letters);
+                kidcode = "";
+                for (int i = 0; i < b.length; i++) {
+
+                    b[i].setOnClickListener(kidescape);
+                    String c = letters.get(i);
+                    b[i].setTag(c);
+                    b[i].setText(c);
+                    kidcode += c;
+                }
+                List<String> kidcodearr = Arrays.asList(kidcode.split("(?!^)"));
+                String shuffled;
+                do {
+                    Collections.shuffle(kidcodearr);
+                    shuffled = "";
+                    for (String letter : kidcodearr) {
+                        shuffled += letter;
+                    }
+                } while (kidcode.equals(shuffled));
+                kidcode = shuffled;
+
+                kid_code_txt.setText("Press '" + kidcode + "' to exit");
+                mChildLockSetup = true;
+
+
+            }
+            return true;
+        } else {
+
+            mChildLockSetup = false;
+            mShowButtons.setVisibility(View.VISIBLE);
+            kid_escape_area.setVisibility(View.GONE);
+            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+        return false;
+    }
+
 
     private void setColors() {
 

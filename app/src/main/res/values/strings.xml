@@ -149,6 +149,9 @@
     <string name="search_hint">Search. \".\" is a wildcard</string>
     <string name="widget_alreay">This widget is already in category \"%s\"</string>
 
+
+    <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
+
     <string name="sort_category">Sort Category</string>
     <string name="sort_prompt_title">Sort category by</string>
 

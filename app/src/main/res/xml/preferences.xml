@@ -2,6 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="applicationPreference">
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:title="Toddler Lock"
+        android:key="prefs_toddler_lock"
+        android:textSize="30sp" />
     <PreferenceScreen
         android:title="@string/pref_about"
         android:summary="@string/pref_help_about">
