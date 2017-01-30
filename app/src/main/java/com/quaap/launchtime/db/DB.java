@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 public class DB extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
@@ -51,17 +51,18 @@ public class DB extends SQLiteOpenHelper {
     private static final String LABELFULL = "labelfull";
     private static final String CATID = "catID";
     private static final String ISWIDGET = "iswidget";
+    private static final String ISUNINSTALLED = "isuninstalled";
     private static final String INDEX = "pos";
     private static final String TIME = "time";
     private static final String ISTINY = "tiny";
 
 
     private static final String APP_TABLE = "apps";
-    private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID, ISWIDGET};
-    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT", "TEXT", "TEXT", "SHORT"};
+    private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID, ISWIDGET, ISUNINSTALLED};
+    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT", "TEXT", "TEXT", "SHORT", "SHORT"};
     private static final String APP_TABLE_CREATE = buildCreateTableStmt(APP_TABLE, appcolumns, appcolumntypes);
 
-    private static final String[] appcolumnsindex = {PKGNAME, CATID};
+    private static final String[] appcolumnsindex = {PKGNAME, CATID, ISUNINSTALLED};
 
     private static final String APP_ORDER_TABLE = "apps_order";
     private static final String[] appordercolumns = {CATID, ACTVNAME, INDEX};
@@ -171,6 +172,15 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         Log.d("db", "upgrade database");
+
+        if (i==1 && i1==2) {
+            sqLiteDatabase.execSQL("alter table " + APP_TABLE + " add column " + ISUNINSTALLED + " SHORT");
+            sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE,  ISUNINSTALLED));
+
+            ContentValues values = new ContentValues();
+            values.put(ISUNINSTALLED, 0);
+            sqLiteDatabase.update(APP_TABLE, values, null, null);
+        }
     }
 
     public boolean isFirstRun() {
@@ -183,7 +193,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, new String[]{ACTVNAME}, null, null, null, null, LABEL);
+        Cursor cursor = db.query(APP_TABLE, new String[]{ACTVNAME}, ISUNINSTALLED+"=0", null, null, null, LABEL);
         try {
             while (cursor.moveToNext()) {
                 actvnames.add(cursor.getString(0));
@@ -232,11 +242,28 @@ public class DB extends SQLiteOpenHelper {
         return catID;
     }
 
+    public boolean isAppInstalled(String actvname) {
+
+        boolean installed = false;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(APP_TABLE, new String[]{ISUNINSTALLED}, ACTVNAME + "=?", new String[]{actvname}, null, null, null);
+        try {
+            if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
+                installed = cursor.getShort(0) != 1;
+            }
+        } finally {
+            cursor.close();
+        }
+        return installed;
+    }
+
+
     public int getAppCount(String catID) {
         int count = 0;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE,  new String[]{"count(*)"}, CATID + "=?", new String[]{catID}, null, null, null);
+        Cursor cursor = db.query(APP_TABLE,  new String[]{"count(*)"}, CATID + "=? and ("+ISUNINSTALLED+"=0)", new String[]{catID}, null, null, null);
         try {
             if (cursor.moveToNext()) {
                 count = cursor.getInt(0);
@@ -253,7 +280,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=?", new String[]{catID}, null, null, LABEL);
+        Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=? and ("+ISUNINSTALLED+"=0)", new String[]{catID}, null, null, LABEL);
         try {
             while (cursor.moveToNext()) {
                 String actvname = cursor.getString(0);
@@ -300,13 +327,16 @@ public class DB extends SQLiteOpenHelper {
 
             //Log.d("LaunchDB", "actvname " + actvname + " pkgname "  +pkgname + " added to db");
             ContentValues values = new ContentValues();
-            values.put(ACTVNAME, actvname);
             values.put(PKGNAME, pkgname);
             values.put(LABEL, label);
             values.put(CATID, catID);
             values.put(ISWIDGET, widget ? 1 : 0);
+            values.put(ISUNINSTALLED, 0);
 
-            db.insert(APP_TABLE, null, values);
+            if (db.update(APP_TABLE, values, ACTVNAME+"=?", new String[]{actvname})==0) {
+                values.put(ACTVNAME, actvname);
+                db.insert(APP_TABLE, null, values);
+            }
 
             return true;
         } catch (Exception e) {
@@ -322,7 +352,7 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(
                 "select distinct " + ACTVNAME + " _id, " + LABEL + " label " +
                         " from " + APP_TABLE +
-                        " where " + LABEL + " like ? and " +  ISWIDGET + "=0 " +
+                        " where " + LABEL + " like ? and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED + " is null or " + ISUNINSTALLED+"=0)" +
                         " order by 2 ",
                 new String[]{filter});
 
@@ -348,7 +378,12 @@ public class DB extends SQLiteOpenHelper {
     public boolean deleteApp(String actvorpkgname, boolean isPackagename) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
-            db.delete(APP_TABLE, (isPackagename?PKGNAME:ACTVNAME) + "=?", new String[]{actvorpkgname});
+            ContentValues values = new ContentValues();
+            values.put(ISUNINSTALLED, 1);
+
+            db.update(APP_TABLE, values, (isPackagename?PKGNAME:ACTVNAME) + "=?", new String[]{actvorpkgname});
+
+            //db.delete(APP_TABLE, (isPackagename?PKGNAME:ACTVNAME) + "=?", new String[]{actvorpkgname});
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't delete app " + actvorpkgname, e);
             return false;

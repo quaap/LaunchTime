@@ -495,17 +495,21 @@ public class MainActivity extends Activity implements
             //Make sure the displayed icons load first
             //Load the quickrow icons first
             for (String actvname : mDb.getAppCategoryOrder(QUICK_ROW_CAT)) {
-                AppShortcut app = mDb.getApp(actvname);
-                if (app != null) {
-                    app.loadAppIconAsync(this, mPackageMan);
+                if (mDb.isAppInstalled(actvname)) {
+                    AppShortcut app = mDb.getApp(actvname);
+                    if (app != null) {
+                        app.loadAppIconAsync(this, mPackageMan);
+                    }
                 }
             }
 
             //Load the selected category icons
             for (String actvname : mDb.getAppCategoryOrder(mCategory)) {
-                AppShortcut app = mDb.getApp(actvname);
-                if (app != null) {
-                    app.loadAppIconAsync(this, mPackageMan);
+                if (mDb.isAppInstalled(actvname)) {
+                    AppShortcut app = mDb.getApp(actvname);
+                    if (app != null) {
+                        app.loadAppIconAsync(this, mPackageMan);
+                    }
                 }
             }
         }
@@ -547,11 +551,13 @@ public class MainActivity extends Activity implements
 
         int i=0;
         for (String actvname : mDb.getAppLaunchedList()) {
-            AppShortcut app = mDb.getApp(actvname);
-            //Log.d("Recent", "Trying " + actvname + " " + app);
+            if (mDb.isAppInstalled(actvname)) {
+                AppShortcut app = mDb.getApp(actvname);
+                //Log.d("Recent", "Trying " + actvname + " " + app);
 
-            addAppToIconSheet(iconSheet, app, false);
-            if (i++>60) break;
+                addAppToIconSheet(iconSheet, app, false);
+                if (i++ > 60) break;
+            }
         }
     }
 
@@ -772,14 +778,18 @@ public class MainActivity extends Activity implements
                 pmactvnames.add(actvname);
 
                 app = mDb.getApp(actvname);
+
                 if (dbactvnames.contains(actvname) && app != null) {
                     app.loadAppIconAsync(this, mPackageMan);
+                    //Log.d("app", "app was in db " + actvname);
                 } else {
+                    //Log.d("app", "app was not in db " + actvname);
                     app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
                     newapps.add(app);
                 }
 
                 shortcuts.add(app);
+
 
             }
 
@@ -961,6 +971,7 @@ public class MainActivity extends Activity implements
 
             String label = pkgname;
 
+            AppShortcut.removeAppShortcut(actvname);
             AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
 
             mDb.addApp(app);
@@ -1507,6 +1518,7 @@ public class MainActivity extends Activity implements
                     String actvname = ((AppShortcut) mBeingUninstalled.getTag()).getActivityName();
                     mDb.deleteApp(actvname);
                     removeFromQuickApps(actvname);
+                    AppShortcut.removeAppShortcut(actvname);
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
