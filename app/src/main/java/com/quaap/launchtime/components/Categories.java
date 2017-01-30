@@ -102,6 +102,7 @@ public class Categories {
         return checkCat(context, category);
     }
 
+
     public static String getCategoryForPackage(Context context, String pkgname) {
 
         Map<String, String> prefCat;
@@ -114,12 +115,21 @@ public class Categories {
         }
         String category = prefCat.get(pkgname);
         if (category == null) {
-            OUTER:
-            for (String cat : mCategorKeywords.keySet()) {
-                for (String pkg : mCategorKeywords.get(cat)) {
-                    if (pkgname.contains(pkg)) {
-                        category = cat;
-                        break OUTER;
+
+            for (String pk: prefCat.keySet()) {
+                if (pkgname.startsWith(pk)) {
+                    category = pk;
+                }
+            }
+
+            if (category == null) {
+                OUTER:
+                for (String cat : mCategorKeywords.keySet()) {
+                    for (String pkg : mCategorKeywords.get(cat)) {
+                        if (pkgname.contains(pkg)) {
+                            category = cat;
+                            break OUTER;
+                        }
                     }
                 }
             }
