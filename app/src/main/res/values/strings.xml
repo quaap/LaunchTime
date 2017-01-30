@@ -157,6 +157,9 @@
     <string name="pref_todd_lock">Toddler Lock</string>
     <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage</string>
     <string name="kid_escape_text">Press \'%s\' to exit</string>
+    <string name="reset_db">Reset the database?</string>
+    <string name="reset_db_explain">The database will be recreated and all apps will be re-categorized according to your \"auto-categorize apps\" setting.</string>
+    <string name="reset">Reset</string>
 
 
     <string-array name="sort_strings">

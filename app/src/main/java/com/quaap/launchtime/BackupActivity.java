@@ -52,6 +52,7 @@ public class BackupActivity extends Activity {
     Button delbk;
     Button savebk;
     Button loadbk;
+    Button resetdb;
     TextView showExt;
     View btnbar;
     DB db;
@@ -68,6 +69,7 @@ public class BackupActivity extends Activity {
         delbk = (Button)findViewById(R.id.btn_deletebak);
         savebk = (Button)findViewById(R.id.btn_savebak);
         loadbk = (Button)findViewById(R.id.btn_loadbak);
+        resetdb = (Button)findViewById(R.id.btn_resetdb);
 
         btnbar = findViewById(R.id.bak_ext_btns);
 
@@ -80,6 +82,8 @@ public class BackupActivity extends Activity {
         });
 
         showExternalButtons(true);
+
+        //this.deleteDatabase(DB.DATABASE_NAME);
     }
     private void showHideExternalButtons() {
         showExternalButtons(btnbar.getVisibility() == View.VISIBLE);
@@ -133,6 +137,13 @@ public class BackupActivity extends Activity {
             @Override
             public void onClick(View view) {
                 promptRestoreExtFile();
+            }
+        });
+
+        resetdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptResetDb();
             }
         });
 
@@ -196,6 +207,45 @@ public class BackupActivity extends Activity {
         delbk.setEnabled(isselected);
         savebk.setEnabled(isselected);
     }
+
+
+    private void promptResetDb() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.reset_db)
+                .setMessage(R.string.reset_db_explain)
+                .setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        db.backup("Before reset");
+                        db.deleteDatabase();
+
+                        String message = getString(R.string.restore_successful);
+
+                        restartApp();
+                        Toast.makeText(BackupActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
+                }).setNegativeButton(R.string.cancel, null);
+        builder.show();
+    }
+
+    public void restartApp() {
+        backupsLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+
+                Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(mainIntent);
+                BackupActivity.this.finish();
+
+            }
+        }, 1000);
+    }
+
 
     private void promptNew() {
 
@@ -275,17 +325,7 @@ public class BackupActivity extends Activity {
         if (db.restoreFullpathBackup(backupFile)) {
             message = getString(R.string.restore_successful);
 
-            backupsLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
-                    mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(mainIntent);
-                    BackupActivity.this.finish();
-
-                }
-            }, 1000);
+            restartApp();
 
         } else {
             message = getString(R.string.restore_failed_rollback);

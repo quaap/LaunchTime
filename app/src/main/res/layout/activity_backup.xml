@@ -37,33 +37,41 @@
         android:layout_marginTop="17dp"
         android:id="@+id/bak_btns">
 
-        <LinearLayout
+        <GridLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:columnCount="2">
 
             <Button
                 android:text="@string/take_new_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_newbak"
-                android:layout_weight="1" />
+                android:layout_gravity="fill_horizontal" />
 
             <Button
                 android:text="@string/restore_selected_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_restorebak"
-                android:layout_weight="1" />
+                android:layout_gravity="fill_horizontal" />
 
             <Button
                 android:text="@string/delete_selected_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_deletebak"
-                android:layout_weight="1" />
-        </LinearLayout>
+                android:layout_gravity="fill_horizontal" />
+
+            <Button
+                android:text="Reset database"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_resetdb"
+                android:layout_gravity="fill_horizontal" />
+        </GridLayout>
 
         <TextView
             android:text=""

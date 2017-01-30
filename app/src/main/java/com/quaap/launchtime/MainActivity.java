@@ -315,21 +315,24 @@ public class MainActivity extends Activity implements
 
         if (category == null) return;
         mCategory = category;
+        if (mDb.getCategoryDisplay(mCategory)==null) {
+            mCategory = Categories.CAT_TALK;
+        }
         for (TextView catTab : mCategoryTabs.values()) {
             styleCategorySpecial(catTab, CategoryTabStyle.Default);
             catTab.setText(mDb.getCategoryDisplay(mRevCategoryMap.get(catTab)));
         }
 
-        mCategoryTabs.get(category).setText(mDb.getCategoryDisplayFull(category));
+        mCategoryTabs.get(mCategory).setText(mDb.getCategoryDisplayFull(mCategory));
 
-        mIconSheet = mIconSheets.get(category);
+        mIconSheet = mIconSheets.get(mCategory);
 
         checkConfig();
 
-        repopulateIconSheet(category);
+        repopulateIconSheet(mCategory);
 
         mIconSheetTopFrame.removeAllViews();
-        if (category.equals(Categories.CAT_SEARCH)) {
+        if (mCategory.equals(Categories.CAT_SEARCH)) {
 
             mIconSheetTopFrame.addView(mSearchView);
             populateRecentApps(mIconSheet);
