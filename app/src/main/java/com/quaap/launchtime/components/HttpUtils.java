@@ -1,6 +1,7 @@
 package com.quaap.launchtime.components;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +36,8 @@ public class HttpUtils {
         URL url;
         String response = "";
         try {
+            System.setProperty("http.keepAlive", "false");
+
             url = new URL(requestURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -59,10 +62,17 @@ public class HttpUtils {
                 while ((line=br.readLine()) != null) {
                     response+=line + "\n";
                 }
+                br.close();
             }
             else {
                 response="Code " + responseCode;
             }
+            try {
+                conn.getErrorStream().close();
+            } catch (Exception e) {
+                Log.d("LaunchTime", "Http getErrorStream: " +  e.getMessage());
+            }
+
             conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
