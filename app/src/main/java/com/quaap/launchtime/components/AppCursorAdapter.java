@@ -2,6 +2,7 @@ package com.quaap.launchtime.components;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -115,8 +116,18 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     // such as setting the text on a TextView.
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-
-        String activityName = cursor.getString(0);
+        String activityName;
+        String label;
+        try {
+            activityName = cursor.getString(0);
+            label = cursor.getString(1);
+        } catch (CursorIndexOutOfBoundsException e) {
+            Log.e("LaunchTime", "Bad cursor");
+            return;
+        } catch (Exception e) {
+            Log.e("LaunchTime", "Bad cursor", e);
+            return;
+        }
 
         ViewGroup appholder = (ViewGroup) view.findViewById(R.id.icontarget);
         appholder.removeAllViews();
@@ -132,7 +143,6 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             }
         }
 
-        String label = cursor.getString(1);
         TextView labelView = (TextView) view.findViewById(R.id.label);
         labelView.setText(label);
     }
