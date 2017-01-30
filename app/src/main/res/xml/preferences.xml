@@ -42,6 +42,14 @@
             android:summaryOn="@string/prefs_cat_apps"
             android:summaryOff="@string/prefs_cat_no" />
 
+        <ListPreference
+            android:defaultValue="31536000"
+            android:title="Return home"
+            android:entries="@array/pref_return_home_strings"
+            android:entryValues="@array/pref_return_home_values"
+            android:key="pref_return_home"
+            android:summary="If away, go to the top-most category %s." />
+
         <PreferenceScreen
             android:title="@string/pref_senddat"
             android:summary="@string/pref_senddat_summ">

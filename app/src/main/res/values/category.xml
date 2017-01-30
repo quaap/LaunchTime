@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- don't need to translate these -->
+
     <string-array name="CAT_TALK">
         <item>phone</item>
         <item>conv</item>

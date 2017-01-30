@@ -231,6 +231,7 @@ public class MainActivity extends Activity implements
         mPrefs.edit()
                 .putInt("scrollpos" + mCategory, mIconSheetScroller.getScrollY())
                 .putString("category", mCategory)
+                .putLong("pausetime", System.currentTimeMillis())
                 .apply();
 
         if (mSearchAdapter!=null){
@@ -244,18 +245,32 @@ public class MainActivity extends Activity implements
         super.onResume();
 
 
-        mCategory = mPrefs.getString("category", Categories.CAT_TALK);
+        long pausetime = mPrefs.getLong("pausetime", 0);
+        int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
+
+        boolean skiphome = false;
+        if (System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
+            mCategory = mDb.getCategories().get(0);
+            skiphome = true;
+        } else {
+            mCategory = mPrefs.getString("category", Categories.CAT_TALK);
+        }
+
+
         if (mDb.getCategoryDisplay(mCategory)==null) {
             mCategory = Categories.CAT_OTHER;
         }
         switchCategory(mCategory);
-        mIconSheetScroller.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory,0));
 
-            }
-        },100);
+        if (!skiphome) {
+            mIconSheetScroller.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
+
+                }
+            }, 100);
+        }
 
         if (mSearchAdapter!=null) {
             mSearchAdapter.refreshCursor();
