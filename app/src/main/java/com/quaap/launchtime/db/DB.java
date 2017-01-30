@@ -91,15 +91,17 @@ public class DB extends SQLiteOpenHelper {
 
     private Context mContext;
 
+    private DBClosedListener mDBClosedListener;
 
 
-    public static DB openDB(Context context) {
-         return new DB(context);
+    public static DB openDB(Context context, DBClosedListener dBClosedListener) {
+         return new DB(context, dBClosedListener);
     }
 
-    private DB(Context context ) {
+    private DB(Context context, DBClosedListener dBClosedListener ) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
+        mDBClosedListener = dBClosedListener;
         this.getWritableDatabase();//force onCreate();
 
         if (isFirstRun()) {
@@ -844,12 +846,39 @@ public class DB extends SQLiteOpenHelper {
         return ret;
     }
 
+
     public boolean deleteBackup(String backupName) {
 
         File srcFile = mContext.getFileStreamPath(BK_PRE + backupName);
 
         return srcFile.delete();
 
+    }
+
+    public synchronized void deleteDatabase() {
+        close();
+        Thread.yield();
+        mContext.deleteDatabase(DB.DATABASE_NAME);
+        Thread.yield();
+        File destFile = mContext.getDatabasePath(DATABASE_NAME);
+        if (destFile!=null && destFile.exists()) {
+            if (destFile.delete()) {
+                Log.d("LaunchTime", "db was there");
+            }
+        }
+
+    }
+
+    @Override
+    public synchronized void close() {
+        if (mDBClosedListener!=null) {
+            mDBClosedListener.onDBClosed();
+        }
+        super.close();
+    }
+
+    public interface DBClosedListener {
+        void onDBClosed();
     }
 
 

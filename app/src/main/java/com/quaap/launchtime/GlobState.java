@@ -21,7 +21,7 @@ import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.db.DB;
 
 
-public class GlobState extends Application {
+public class GlobState extends Application implements  DB.DBClosedListener {
 
     private static DB mDB;
 
@@ -46,11 +46,10 @@ public class GlobState extends Application {
 
     public synchronized DB getDB() {
         if (mDB==null) {
-            mDB = DB.openDB(this);
+            mDB = DB.openDB(this, this);
         }
         return mDB;
     }
-
 
     @Override
     public void onTerminate() {
@@ -59,5 +58,10 @@ public class GlobState extends Application {
         }
 
         super.onTerminate();
+    }
+
+    @Override
+    public void onDBClosed() {
+        mDB = null;
     }
 }
