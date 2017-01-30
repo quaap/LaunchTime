@@ -43,6 +43,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -129,6 +135,7 @@ public class MainActivity extends Activity implements
     private int dragoverBackground;
     private int textColor;
     private int backgroundDefault = Color.TRANSPARENT;
+    private Animation itemClickedAnim;
 
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 16;
@@ -849,6 +856,8 @@ public class MainActivity extends Activity implements
         return getShortcutView(app, smallIcon, true);
     }
 
+
+
     public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon, boolean reuse) {
 
 
@@ -906,9 +915,11 @@ public class MainActivity extends Activity implements
 
 
             item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon ? R.layout.shortcut_small_icon : R.layout.shortcut_icon, (ViewGroup) null);
+
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    view.startAnimation(itemClickedAnim);
                     launchApp(app);
                 }
             });
@@ -921,6 +932,7 @@ public class MainActivity extends Activity implements
                 iconLabel.setTextColor(textColor);
                 iconLabel.setText(app.getLabel());
             }
+
         }
         item.setTag(app);
         item.setClickable(true);
@@ -1082,6 +1094,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 if (mChildLock) return;
+               // view.startAnimation(itemClickedAnim);
                 switchCategory(category);
 
             }
@@ -1903,6 +1916,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 setupWidget();
+                showButtonBar(false);
             }
         });
 
@@ -1911,6 +1925,7 @@ public class MainActivity extends Activity implements
             public void onClick(View view) {
                 Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivityForResult(settingsIntent,PREF_REQUEST);
+                showButtonBar(false);
             }
         });
 
@@ -1929,6 +1944,7 @@ public class MainActivity extends Activity implements
     private View.OnClickListener kidescape = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            view.startAnimation(itemClickedAnim);
             kidaccumecode += view.getTag();
             if (kidaccumecode.endsWith(kidcode)) {
                 mChildLock = false;
@@ -2046,6 +2062,9 @@ public class MainActivity extends Activity implements
 
         textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
 
+        itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
+        itemClickedAnim.setDuration(200);
+        itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
     }
 
     private int getResColor(int res) {
