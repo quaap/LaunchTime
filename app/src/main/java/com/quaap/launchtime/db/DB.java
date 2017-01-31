@@ -119,6 +119,11 @@ public class DB extends SQLiteOpenHelper {
                 p.edit().putBoolean("removedoldconfig", true).apply();
             }
         }
+
+//        ContentValues values = new ContentValues();
+//        values.put(ISUNINSTALLED, 0);
+//        this.getWritableDatabase().update(APP_TABLE, values, null, null);
+
     }
 
     private static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {

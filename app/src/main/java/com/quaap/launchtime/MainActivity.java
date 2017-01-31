@@ -357,10 +357,13 @@ public class MainActivity extends Activity implements
         if (mChildLock) return;
         showButtonBar(false);
         mQuickRowScroller.smoothScrollTo(0, 0);
-        if (mIconSheetScroller.getScrollY()>0) {
+        if (mCategory.equals(Categories.CAT_SEARCH) && mSearchbox!=null && mSearchbox.getText().length()!=0) {
+            mSearchbox.setText("");
+        } else if (mIconSheetScroller.getScrollY()>0) {
             mIconSheetScroller.smoothScrollTo(0, 0);
         } else if (!mCategory.equals(Categories.CAT_TALK)){
             switchCategory(Categories.CAT_TALK);
+            mCategoriesScroller.smoothScrollTo(0, 0);
         }
     }
 
@@ -901,7 +904,7 @@ public class MainActivity extends Activity implements
                 appwid = mWidgetHelper.loadWidget(app);
                 if (appwid==null) {
                     Log.d("Widget2", "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
-                    mDb.deleteApp(app.getActivityName());
+                   // mDb.deleteApp(app.getActivityName());
                     return null;
                 }
             }
@@ -983,7 +986,7 @@ public class MainActivity extends Activity implements
         String pkgname = cn.getPackageName();
 
         String catId = mDb.getAppCategory(actvname);
-        if (catId == null) {
+        if (catId == null || catId.equals(mCategory)) {
 
             Log.d("Widget", actvname + " " + pkgname);
 
@@ -1023,12 +1026,13 @@ public class MainActivity extends Activity implements
     }
 
     AppCursorAdapter mSearchAdapter;
+    EditText mSearchbox;
     private ViewGroup getSearchView() {
         ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
 
-        final EditText searchbox = (EditText) searchView.findViewById(R.id.search_box);
+        mSearchbox = (EditText) searchView.findViewById(R.id.search_box);
 
-        mSearchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, 0);
+        mSearchAdapter = new AppCursorAdapter(this, mSearchbox, R.layout.search_item, 0);
         StaticListView list = (StaticListView) searchView.findViewById(R.id.search_dropdownarea);
 
         list.setAdapter(mSearchAdapter);
@@ -1037,7 +1041,7 @@ public class MainActivity extends Activity implements
         searchView.findViewById(R.id.btn_clear_searchbox).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchbox.setText("");
+                mSearchbox.setText("");
             }
         });
 
