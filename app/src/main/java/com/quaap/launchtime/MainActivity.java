@@ -207,6 +207,14 @@ public class MainActivity extends Activity implements
             mDb.updateAppCategory(selfAct,Categories.CAT_HIDDEN);
 
             mDb.backup("After install");
+
+            mQuickRow.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent help = new Intent(MainActivity.this, AboutActivity.class);
+                    startActivity(help);
+                }
+            },4000);
         }
 
     }
