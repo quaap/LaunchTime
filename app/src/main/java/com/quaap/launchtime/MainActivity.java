@@ -249,7 +249,7 @@ public class MainActivity extends Activity implements
         int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
 
         boolean skiphome = false;
-        if (System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
+        if (pausetime>0 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
             mCategory = mDb.getCategories().get(0);
             skiphome = true;
         } else {
