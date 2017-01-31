@@ -383,18 +383,18 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean deleteApp(String actvorpkgname, boolean isPackagename) {
-        if (!isPackagename) {
-            AppShortcut app = getApp(actvorpkgname);
-            if (app!=null) {
-                if (app.isWidget() || app.isLink() || app.isActionLink()) {
-                    SQLiteDatabase db = this.getWritableDatabase();
-                    db.delete(APP_TABLE, ACTVNAME + "=?", new String[]{actvorpkgname});
+        try {
+            if (!isPackagename) {
+                AppShortcut app = getApp(actvorpkgname);
+                if (app!=null) {
+                    if (app.isWidget() || app.isLink() || app.isActionLink()) {
+                        SQLiteDatabase db = this.getWritableDatabase();
+                        db.delete(APP_TABLE, ACTVNAME + "=?", new String[]{actvorpkgname});
+                    }
                 }
             }
-        }
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
+            SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(ISUNINSTALLED, 1);
 
