@@ -335,7 +335,7 @@ public class MainActivity extends Activity implements
         if (mCategory.equals(Categories.CAT_SEARCH)) {
 
             mIconSheetTopFrame.addView(mSearchView);
-            populateRecentApps(mIconSheet);
+            populateRecentApps();
             if (mSearchAdapter!=null){
                 mSearchAdapter.refreshCursor();
             }
@@ -563,7 +563,9 @@ public class MainActivity extends Activity implements
         return iconSheet;
     }
 
-    private void populateRecentApps(GridLayout iconSheet) {
+    private void populateRecentApps() {
+
+        GridLayout iconSheet = mIconSheets.get(Categories.CAT_SEARCH);
 
         iconSheet.removeAllViews();
 
@@ -1032,6 +1034,23 @@ public class MainActivity extends Activity implements
         list.setAdapter(mSearchAdapter);
         list.setOnItemClickListener(mSearchAdapter);
 
+        searchView.findViewById(R.id.btn_clear_recents).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Clear recent items?")
+                        .setPositiveButton("Clear", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mDb.deleteAppLaunchedRecords();
+                                populateRecentApps();
+                            }
+                        }).setNegativeButton(R.string.cancel, null);
+                builder.show();
+
+            }
+        });
 
         mSearchAdapter.refreshCursor();
         return searchView;

@@ -699,6 +699,14 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
+    public void deleteAppLaunchedRecords() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+
+        db.delete(APP_HISTORY_TABLE, null, null);
+
+    }
 
     public List<String> getAppLaunchedList() {
 
