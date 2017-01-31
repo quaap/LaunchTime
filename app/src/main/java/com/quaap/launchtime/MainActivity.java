@@ -1026,13 +1026,21 @@ public class MainActivity extends Activity implements
     private ViewGroup getSearchView() {
         ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
 
-        EditText searchbox = (EditText) searchView.findViewById(R.id.search_box);
+        final EditText searchbox = (EditText) searchView.findViewById(R.id.search_box);
 
         mSearchAdapter = new AppCursorAdapter(this, searchbox, R.layout.search_item, 0);
         StaticListView list = (StaticListView) searchView.findViewById(R.id.search_dropdownarea);
 
         list.setAdapter(mSearchAdapter);
         list.setOnItemClickListener(mSearchAdapter);
+
+        searchView.findViewById(R.id.btn_clear_searchbox).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchbox.setText("");
+            }
+        });
+
 
         searchView.findViewById(R.id.btn_clear_recents).setOnClickListener(new View.OnClickListener() {
             @Override

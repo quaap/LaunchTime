@@ -12,7 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:labelFor="@+id/search_box"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/textcolor"
+        android:shadowColor="@color/textcolorinv"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="8" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -22,12 +27,28 @@
         <EditText
             android:layout_height="wrap_content"
             android:id="@+id/search_box"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:maxLines="1"
             android:lines="1"
             android:inputType="text|textNoSuggestions"
             android:hint="@string/search_hint"
-            android:imeOptions="actionDone" />
+            android:imeOptions="actionDone"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_clear_searchbox"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:layout_width="40dp"
+            android:text="⌫"
+            android:textSize="30sp"
+            android:gravity="top|center_horizontal"
+            android:textColor="@color/textcolor"
+            android:shadowColor="@color/textcolorinv"
+            android:shadowRadius="8"
+            android:shadowDx="2"
+            android:shadowDy="2" />
 
     </LinearLayout>
 
@@ -49,18 +70,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="16dp"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textColor="@color/textcolor"
+            android:shadowColor="@color/textcolorinv"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="8" />
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_delete"
-            android:src="@android:drawable/ic_delete"
             android:id="@+id/btn_clear_recents"
-            android:layout_weight="1"
-            android:contentDescription="Clear Recent Items"
             android:clickable="true"
-            android:layout_gravity="bottom|end" />
+            android:layout_gravity="bottom|end"
+            android:text="⌧"
+            android:textSize="30sp"
+            android:textColor="@color/textcolor"
+            android:shadowColor="@color/textcolorinv"
+            android:shadowRadius="8"
+            android:shadowDx="2"
+            android:shadowDy="2" />
 
     </LinearLayout>
 
