@@ -149,7 +149,7 @@ public class MainActivity extends Activity implements
     private boolean mChildLock;
     private boolean mChildLockSetup;
 
-    private DB mDb;
+    //private DB db();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +166,7 @@ public class MainActivity extends Activity implements
         }
 
         //Setup some of our globals utils
-        mDb = GlobState.getGlobState(this).getDB();
+        //db() = GlobState.getGlobState(this).getDB();
         mPackageMan = getApplicationContext().getPackageManager();
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mAppPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -200,13 +200,13 @@ public class MainActivity extends Activity implements
 
         loadApplications();
 
-        if (mDb.isFirstRun()) {
+        if (db().isFirstRun()) {
             String selfAct = this.getPackageName() + "." +this.getClass().getSimpleName();
             Log.d("Dd", selfAct);
 
-            mDb.updateAppCategory(selfAct,Categories.CAT_HIDDEN);
+            db().updateAppCategory(selfAct,Categories.CAT_HIDDEN);
 
-            mDb.backup("After install");
+            db().backup("After install");
 
             mQuickRow.postDelayed(new Runnable() {
                 @Override
@@ -214,9 +214,13 @@ public class MainActivity extends Activity implements
                     Intent help = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(help);
                 }
-            },4000);
+            },5000);
         }
 
+    }
+    
+    private DB db() {
+        return GlobState.getGlobState(this).getDB();
     }
 
     private View.OnDragListener iconSheetDropRedirector = new View.OnDragListener() {
@@ -258,14 +262,14 @@ public class MainActivity extends Activity implements
 
         boolean skiphome = false;
         if (pausetime>0 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
-            mCategory = mDb.getCategories().get(0);
+            mCategory = db().getCategories().get(0);
             skiphome = true;
         } else {
             mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         }
 
 
-        if (mDb.getCategoryDisplay(mCategory)==null) {
+        if (db().getCategoryDisplay(mCategory)==null) {
             mCategory = Categories.CAT_OTHER;
         }
         switchCategory(mCategory);
@@ -323,15 +327,15 @@ public class MainActivity extends Activity implements
 
         if (category == null) return;
         mCategory = category;
-        if (mDb.getCategoryDisplay(mCategory)==null) {
+        if (db().getCategoryDisplay(mCategory)==null) {
             mCategory = Categories.CAT_TALK;
         }
         for (TextView catTab : mCategoryTabs.values()) {
             styleCategorySpecial(catTab, CategoryTabStyle.Default);
-            catTab.setText(mDb.getCategoryDisplay(mRevCategoryMap.get(catTab)));
+            catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
         }
 
-        mCategoryTabs.get(mCategory).setText(mDb.getCategoryDisplayFull(mCategory));
+        mCategoryTabs.get(mCategory).setText(db().getCategoryDisplayFull(mCategory));
 
         mIconSheet = mIconSheets.get(mCategory);
 
@@ -480,7 +484,7 @@ public class MainActivity extends Activity implements
     }
 
     public void launchApp(String activityname) {
-        launchApp(mDb.getApp(activityname));
+        launchApp(db().getApp(activityname));
     }
 
     public void launchApp(final AppShortcut app) {
@@ -510,7 +514,7 @@ public class MainActivity extends Activity implements
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             showButtonBar(false);
-            mDb.appLaunched(app.getActivityName());
+            db().appLaunched(app.getActivityName());
         } catch (Exception e) {
             Log.d("Launch", "Could not launch " + activityname, e);
             Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
@@ -520,12 +524,12 @@ public class MainActivity extends Activity implements
 
     private void loadApplications() {
 
-        if (!mDb.isFirstRun()) {
+        if (!db().isFirstRun()) {
             //Make sure the displayed icons load first
             //Load the quickrow icons first
-            for (String actvname : mDb.getAppCategoryOrder(QUICK_ROW_CAT)) {
-                if (mDb.isAppInstalled(actvname)) {
-                    AppShortcut app = mDb.getApp(actvname);
+            for (String actvname : db().getAppCategoryOrder(QUICK_ROW_CAT)) {
+                if (db().isAppInstalled(actvname)) {
+                    AppShortcut app = db().getApp(actvname);
                     if (app != null) {
                         app.loadAppIconAsync(this, mPackageMan);
                     }
@@ -533,9 +537,9 @@ public class MainActivity extends Activity implements
             }
 
             //Load the selected category icons
-            for (String actvname : mDb.getAppCategoryOrder(mCategory)) {
-                if (mDb.isAppInstalled(actvname)) {
-                    AppShortcut app = mDb.getApp(actvname);
+            for (String actvname : db().getAppCategoryOrder(mCategory)) {
+                if (db().isAppInstalled(actvname)) {
+                    AppShortcut app = db().getApp(actvname);
                     if (app != null) {
                         app.loadAppIconAsync(this, mPackageMan);
                     }
@@ -551,7 +555,7 @@ public class MainActivity extends Activity implements
 
 
 
-        for (final String category : mDb.getCategories()) {
+        for (final String category : db().getCategories()) {
 
             createIconSheet(category);
         }
@@ -581,9 +585,9 @@ public class MainActivity extends Activity implements
         iconSheet.removeAllViews();
 
         int i=0;
-        for (String actvname : mDb.getAppLaunchedList()) {
-            if (mDb.isAppInstalled(actvname)) {
-                AppShortcut app = mDb.getApp(actvname);
+        for (String actvname : db().getAppLaunchedList()) {
+            if (db().isAppInstalled(actvname)) {
+                AppShortcut app = db().getApp(actvname);
                 //Log.d("Recent", "Trying " + actvname + " " + app);
 
                 addAppToIconSheet(iconSheet, app, false);
@@ -597,8 +601,8 @@ public class MainActivity extends Activity implements
 
         iconSheet.removeAllViews();
 
-        final List<String> apporder = mDb.getAppCategoryOrder(category);
-        List<AppShortcut> apps = mDb.getApps(category);
+        final List<String> apporder = db().getAppCategoryOrder(category);
+        List<AppShortcut> apps = db().getApps(category);
 
         for (String actvname : apporder) {
             for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
@@ -615,7 +619,7 @@ public class MainActivity extends Activity implements
         }
 
         if (apps.size()>0) {
-            mDb.setAppCategoryOrder(category, iconSheet);
+            db().setAppCategoryOrder(category, iconSheet);
         }
     }
 
@@ -785,7 +789,7 @@ public class MainActivity extends Activity implements
     private List<AppShortcut> processActivities() {
         final List<AppShortcut> shortcuts = new ArrayList<>();
 
-        List<String> dbactvnames = mDb.getAppActvNames();
+        List<String> dbactvnames = db().getAppActvNames();
 
         Set<String> pmactvnames = new HashSet<>();
         List<AppShortcut> newapps = new ArrayList<>();
@@ -808,7 +812,7 @@ public class MainActivity extends Activity implements
             if (!pmactvnames.contains(actvname)) {
                 pmactvnames.add(actvname);
 
-                app = mDb.getApp(actvname);
+                app = db().getApp(actvname);
 
                 if (dbactvnames.contains(actvname) && app != null) {
                     app.loadAppIconAsync(this, mPackageMan);
@@ -830,24 +834,24 @@ public class MainActivity extends Activity implements
         for (Iterator<String> it = dbactvnames.iterator(); it.hasNext(); ) {
             String dbactv = it.next();
             if (!pmactvnames.contains(dbactv)) {
-                AppShortcut app = mDb.getApp(dbactv);
+                AppShortcut app = db().getApp(dbactv);
                 if (!isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
                     Log.d("Launch", "Removing " + dbactv);
                     it.remove();
-                    mDb.deleteApp(dbactv);
+                    db().deleteApp(dbactv);
                     removeFromQuickApps(dbactv);
                 }
             }
         }
 
-        mDb.addApps(newapps);
+        db().addApps(newapps);
 
         return shortcuts;
     }
 
     private void processQuickApps(List<AppShortcut> shortcuts) {
         List<AppShortcut> quickRowApps = new ArrayList<>();
-        final List<String> quickRowOrder = mDb.getAppCategoryOrder(QUICK_ROW_CAT);
+        final List<String> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
 
         MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
 
@@ -875,7 +879,7 @@ public class MainActivity extends Activity implements
                 }
             }
         }
-        mDb.setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
+        db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
 
     }
 
@@ -912,7 +916,7 @@ public class MainActivity extends Activity implements
                 appwid = mWidgetHelper.loadWidget(app);
                 if (appwid==null) {
                     Log.d("Widget2", "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
-                   // mDb.deleteApp(app.getActivityName());
+                   // db().deleteApp(app.getActivityName());
                     return null;
                 }
             }
@@ -993,7 +997,7 @@ public class MainActivity extends Activity implements
         String actvname = cn.getClassName();
         String pkgname = cn.getPackageName();
 
-        String catId = mDb.getAppCategory(actvname);
+        String catId = db().getAppCategory(actvname);
         if (catId == null || catId.equals(mCategory)) {
 
             Log.d("Widget", actvname + " " + pkgname);
@@ -1005,10 +1009,10 @@ public class MainActivity extends Activity implements
             AppShortcut.removeAppShortcut(actvname);
             AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
 
-            mDb.addApp(app);
-            mDb.addAppCategoryOrder(mCategory, app.getActivityName());
+            db().addApp(app);
+            db().addAppCategoryOrder(mCategory, app.getActivityName());
         } else {
-            Toast.makeText(this, getString(R.string.widget_alreay,mDb.getCategoryDisplay(catId)), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.widget_alreay,db().getCategoryDisplay(catId)), Toast.LENGTH_LONG).show();
         }
 
 
@@ -1063,7 +1067,7 @@ public class MainActivity extends Activity implements
                         .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                mDb.deleteAppLaunchedRecords();
+                                db().deleteAppLaunchedRecords();
                                 populateRecentApps();
                             }
                         }).setNegativeButton(R.string.cancel, null);
@@ -1081,7 +1085,7 @@ public class MainActivity extends Activity implements
 
         if (category.equals(mCategory)) {
             catstyle = CategoryTabStyle.Selected;
-        } else if (mDb.isTinyCategory(category)) {
+        } else if (db().isTinyCategory(category)) {
             catstyle = CategoryTabStyle.Tiny;
         }
         return catstyle;
@@ -1128,7 +1132,7 @@ public class MainActivity extends Activity implements
 
     private TextView createCategoryTab(final String category, final GridLayout iconSheet) {
         final TextView categoryTab = new TextView(this);
-        categoryTab.setText(mDb.getCategoryDisplay(category));
+        categoryTab.setText(db().getCategoryDisplay(category));
         categoryTab.setTag(category);
         // categoryTab.setWidth((int)Utils.dpToPx(this,categoryTabWidth));
 
@@ -1224,7 +1228,7 @@ public class MainActivity extends Activity implements
                     case DragEvent.ACTION_DROP:
                         if (isAppShortcut) {
                             if (!isSearch) {
-                                mDb.updateAppCategory(mBeingDragged.getActivityName(), category);
+                                db().updateAppCategory(mBeingDragged.getActivityName(), category);
                                 mMainDragListener.onDrag(iconSheet, event);
                             }
                         } else {
@@ -1244,7 +1248,7 @@ public class MainActivity extends Activity implements
                             } else {
                                 container1.addView(dragObj, index);
                             }
-                            mDb.setCategoryOrder(container1);
+                            db().setCategoryOrder(container1);
                         }
                         break;
                 }
@@ -1420,8 +1424,8 @@ public class MainActivity extends Activity implements
             }
 
             //save the new order
-            mDb.setAppCategoryOrder(mRevCategoryMap.get(target), target);
-            mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+            db().setAppCategoryOrder(mRevCategoryMap.get(target), target);
+            db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
             return false;
         }
 
@@ -1429,7 +1433,7 @@ public class MainActivity extends Activity implements
             if (mChildLock) return;
 
             try {
-                mDb.deleteAppLaunchedRecord(mBeingDragged.getActivityName());
+                db().deleteAppLaunchedRecord(mBeingDragged.getActivityName());
                 mDragDropSource.removeView(dragObj);
             } catch (Exception e) {
                 Log.e("LaunchTime", "mBeingDragged= " + mBeingDragged + " mDragDropSource=" + mDragDropSource + " dragObj=" +dragObj, e);
@@ -1440,15 +1444,15 @@ public class MainActivity extends Activity implements
             if (mChildLock) return;
 
             mDragDropSource.removeView(dragObj);
-            mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+            db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
 
             if (mBeingDragged.isLink()) {
-                mDb.deleteApp(mBeingDragged.getActivityName());
+                db().deleteApp(mBeingDragged.getActivityName());
             }
 
             if (mBeingDragged.isWidget()) {
 
-                mDb.deleteApp(mBeingDragged.getActivityName());
+                db().deleteApp(mBeingDragged.getActivityName());
                 AppWidgetHostView wid = mLoadedWidgets.remove(mBeingDragged.getActivityName());
                 if (wid!=null) {
                     mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
@@ -1516,15 +1520,15 @@ public class MainActivity extends Activity implements
 
 
     private void showHiddenCategories() {
-        for (String cat: mDb.getCategories()) {
+        for (String cat: db().getCategories()) {
             mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
         }
     }
     private void hideHiddenCategories() {
 
         if (mAppPreferences.getBoolean("pref_hide_empty_cat", false)) {
-            for (String cat : mDb.getCategories()) {
-                if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && mDb.getAppCount(cat) == 0) {
+            for (String cat : db().getCategories()) {
+                if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0) {
                     mCategoryTabs.get(cat).setVisibility(View.GONE);
                 }
             }
@@ -1579,10 +1583,10 @@ public class MainActivity extends Activity implements
             switch (resultCode) {
                 case RESULT_OK:
                     mDragDropSource.removeView(mBeingUninstalled);
-                    mDb.setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                    db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                     Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
                     String actvname = ((AppShortcut) mBeingUninstalled.getTag()).getActivityName();
-                    mDb.deleteApp(actvname);
+                    db().deleteApp(actvname);
                     removeFromQuickApps(actvname);
                     AppShortcut.removeAppShortcut(actvname);
                     break;
@@ -1604,7 +1608,7 @@ public class MainActivity extends Activity implements
                 ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
                 if (cn!=null) {
                     Log.d("LaunchWidget2", "classname is " + cn.getClassName());
-                    mDb.deleteApp(cn.getClassName());
+                    db().deleteApp(cn.getClassName());
                 } else {
                     super.onActivityResult(requestCode, resultCode, data);
                 }
@@ -1618,7 +1622,7 @@ public class MainActivity extends Activity implements
         final List<String> deldCats = new ArrayList<>();
         deldCats.add("");
         for (String cat: Categories.DefCategoryOrder) {
-            String displayName = mDb.getCategoryDisplay(cat);
+            String displayName = db().getCategoryDisplay(cat);
             if (displayName==null) {
                 deldCats.add(cat);
             }
@@ -1706,9 +1710,9 @@ public class MainActivity extends Activity implements
         promptGetCategoryName(getString(R.string.rename_cat),
                 getString(R.string.rename_cat2),
                 category,
-                mDb.getCategoryDisplay(category),
-                mDb.getCategoryDisplayFull(category),
-                mDb.isTinyCategory(category),
+                db().getCategoryDisplay(category),
+                db().getCategoryDisplayFull(category),
+                db().isTinyCategory(category),
                 new CategoryChangerListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny) {
@@ -1734,7 +1738,7 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        if (mDb.updateCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
+        if (db().updateCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
 
             TextView categoryTab = mCategoryTabs.get(category);
             if (category.equals(mCategory)) {
@@ -1789,7 +1793,7 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
         Log.d("AddCat", category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
-        if (mDb.addCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
+        if (db().addCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
             createIconSheet(category);
 
             switchCategory(category);
@@ -1800,7 +1804,7 @@ public class MainActivity extends Activity implements
 
     private void promptDeleteCategory(final String category) {
 
-        final String message = getString(R.string.cat_deleted, mDb.getCategoryDisplay(Categories.CAT_OTHER));
+        final String message = getString(R.string.cat_deleted, db().getCategoryDisplay(Categories.CAT_OTHER));
         new AlertDialog.Builder(MainActivity.this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.delete_cat)
@@ -1821,7 +1825,7 @@ public class MainActivity extends Activity implements
     private void deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);
 
-        if (mDb.deleteCategory(category)) {
+        if (db().deleteCategory(category)) {
 
             View iconSheet = mIconSheets.get(category);
             mRevCategoryMap.remove(iconSheet);
@@ -1871,9 +1875,9 @@ public class MainActivity extends Activity implements
 
     private void sortCategory(String category, final int sortby) {
 
-        final List<String> recents = mDb.getAppLaunchedList();
+        final List<String> recents = db().getAppLaunchedList();
         if (sortby != APPSORT_NONE) {
-            List<AppShortcut> apps = mDb.getApps(category);
+            List<AppShortcut> apps = db().getApps(category);
             Collections.sort(apps, new Comparator<AppShortcut>() {
                 @Override
                 public int compare(AppShortcut appfirst, AppShortcut appsecond) {
@@ -1902,7 +1906,7 @@ public class MainActivity extends Activity implements
                 }
             });
 
-            mDb.setAppCategoryOrder(category, apps);
+            db().setAppCategoryOrder(category, apps);
             repopulateIconSheet(category);
         }
 

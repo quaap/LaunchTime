@@ -139,7 +139,7 @@ public class Categories {
     }
 
     private static String checkCat(Context context, String category) {
-        DB db = ((GlobState)context.getApplicationContext()).getDB();
+        DB db = GlobState.getGlobState(context).getDB();
         if (category == null) {
             category = CAT_OTHER;
         } else {

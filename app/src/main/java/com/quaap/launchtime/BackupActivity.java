@@ -55,7 +55,7 @@ public class BackupActivity extends Activity {
     Button resetdb;
     TextView showExt;
     View btnbar;
-    DB db;
+    //DB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +147,6 @@ public class BackupActivity extends Activity {
             }
         });
 
-        db = ((GlobState)getApplicationContext()).getDB();
 
         populateBackupsList();
     }
@@ -166,6 +165,9 @@ public class BackupActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
+    private DB db() {
+        return GlobState.getGlobState(this).getDB();
+    }
 
     private void populateBackupsList() {
         backupsLayout.removeAllViews();
@@ -173,7 +175,7 @@ public class BackupActivity extends Activity {
 
         makeRadioButton(baks, getString(R.string.no_backup_selected), false).setChecked(true);
 
-        for(final String bk: db.listBackups()) {
+        for(final String bk: db().listBackups()) {
 
             makeRadioButton(baks, bk, true);
         }
@@ -218,8 +220,8 @@ public class BackupActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        db.backup("Before reset");
-                        db.deleteDatabase();
+                        db().backup("Before reset");
+                        db().deleteDatabase();
 
                         String message = getString(R.string.restore_successful);
 
@@ -268,7 +270,7 @@ public class BackupActivity extends Activity {
 
 
         String message;
-        if (db.backup(optionalName)!=null) {
+        if (db().backup(optionalName)!=null) {
             message = getString(R.string.backup_success);
         } else {
             message = getString(R.string.backup_failed);
@@ -292,8 +294,8 @@ public class BackupActivity extends Activity {
         if (selected) {
 
 
-            if (db.hasBackup(selectedBackup)) {
-                File backupFile = db.pullBackup(selectedBackup);
+            if (db().hasBackup(selectedBackup)) {
+                File backupFile = db().pullBackup(selectedBackup);
                 confirmRestoreFile(backupFile);
             } else{
                 String  message = getString(R.string.no_backup) + selectedBackup + "\"";
@@ -321,15 +323,15 @@ public class BackupActivity extends Activity {
     @NonNull
     private String restoreFromFile(File backupFile) {
         String message;
-        File prev = db.backup("Before restore");
-        if (db.restoreFullpathBackup(backupFile)) {
+        File prev = db().backup("Before restore");
+        if (db().restoreFullpathBackup(backupFile)) {
             message = getString(R.string.restore_successful);
 
             restartApp();
 
         } else {
             message = getString(R.string.restore_failed_rollback);
-            if (!db.restoreFullpathBackup(prev)) {
+            if (!db().restoreFullpathBackup(prev)) {
                 message = getString(R.string.restore_failed2);
             }
 
@@ -357,7 +359,7 @@ public class BackupActivity extends Activity {
         if (selected) {
 
             String message;
-            if (db.deleteBackup(selectedBackup)) {
+            if (db().deleteBackup(selectedBackup)) {
                 message = getString(R.string.delete_success);
             } else {
                 message = getString(R.string.delete_failed);
@@ -373,7 +375,7 @@ public class BackupActivity extends Activity {
                 @Override
                 public void selected(File selection) {
                     String message;
-                    if (FsTools.copyFileToDir(db.pullBackup(selectedBackup), selection)!=null) {
+                    if (FsTools.copyFileToDir(db().pullBackup(selectedBackup), selection)!=null) {
                         message = getString(R.string.copy_sucess);
                     } else {
                         message = getString(R.string.copy_failed);

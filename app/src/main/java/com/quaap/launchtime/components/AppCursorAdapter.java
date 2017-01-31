@@ -36,12 +36,12 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     private EditText mTextHolder;
 
 
-    private DB mDB;
+    //private DB mDB;
 
     public AppCursorAdapter(final MainActivity main, EditText textHolder, int layout, int flags) {
         super(main, layout, null, flags);
         mMain = main;
-        mDB = GlobState.getGlobState(main).getDB();
+
         mTextHolder = textHolder;
 
 //        mTextHolder.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -91,6 +91,10 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
     }
 
+    private DB db() {
+        return GlobState.getGlobState(mMain).getDB();
+    }
+
     public void refreshCursor() {
         String text = mTextHolder.getText().toString().trim();
         if (text.length()==0) {
@@ -110,7 +114,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     @Override
     public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
        // Log.d("BackThread", constraint.toString());
-        return mDB.getAppCursor(constraint.toString());
+        return db().getAppCursor(constraint.toString());
     }
 
     static class ViewHolder {
@@ -151,7 +155,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             @Override
             protected AppShortcut doInBackground(Void... voids) {
 
-                return mDB.getApp(activityName);
+                return db().getApp(activityName);
             }
 
             @Override

@@ -102,7 +102,7 @@ public class FeedbackActivity extends Activity {
         txtappver.setText(version);
 
 
-        DB db = ((GlobState)getApplicationContext()).getDB();
+        DB db = GlobState.getGlobState(this).getDB();
 
         List<String> actnames = db.getAppActvNames();
         Collections.sort(actnames);
