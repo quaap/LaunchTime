@@ -3,6 +3,7 @@ package com.quaap.launchtime.components;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -112,12 +113,18 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
         return mDB.getAppCursor(constraint.toString());
     }
 
+    static class ViewHolder {
+        ViewGroup appholder;
+        TextView labelView;
+    }
+
     // The bindView method is used to bind all data to a given view
     // such as setting the text on a TextView.
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        String activityName;
-        String label;
+    public void bindView(View view, final Context context, Cursor cursor) {
+
+        final String activityName;
+        final String label;
         try {
             activityName = cursor.getString(0);
             label = cursor.getString(1);
@@ -129,22 +136,45 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             return;
         }
 
-        ViewGroup appholder = (ViewGroup) view.findViewById(R.id.icontarget);
-        appholder.removeAllViews();
+        ViewHolder holder = (ViewHolder)view.getTag();
+        if (holder==null) {
+            holder = new ViewHolder();
 
-        AppShortcut app = mDB.getApp(activityName);
-        if (app != null) {
-            app.loadAppIconAsync(context, context.getPackageManager());
-            View v = mMain.getShortcutView(app, false, false);
-            if (v!=null) {
-                appholder.addView(v);
-            } else {
-                appholder.addView(new TextView(context));
-            }
+            holder.appholder = (ViewGroup) view.findViewById(R.id.icontarget);
+            holder.labelView = (TextView) view.findViewById(R.id.label);
+            view.setTag(holder);
         }
 
-        TextView labelView = (TextView) view.findViewById(R.id.label);
-        labelView.setText(label);
+        final ViewHolder viewholder = holder;
+        new AsyncTask<Void,Void,AppShortcut>() {
+
+            @Override
+            protected AppShortcut doInBackground(Void... voids) {
+
+                return mDB.getApp(activityName);
+            }
+
+            @Override
+            protected void onPostExecute(AppShortcut app) {
+                super.onPostExecute(app);
+                if (app != null) {
+                    app.loadAppIconAsync(context, context.getPackageManager());
+                    View v = mMain.getShortcutView(app, false, false);
+
+                    viewholder.appholder.removeAllViews();
+                    if (v!=null) {
+                        viewholder.appholder.addView(v);
+                    } else {
+                        viewholder.appholder.addView(new TextView(context));
+                    }
+                }
+
+                viewholder.labelView.setText(label);
+            }
+        }.execute();
+
+
+
     }
 
     public void close() {

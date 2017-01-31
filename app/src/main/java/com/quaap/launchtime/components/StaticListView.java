@@ -59,14 +59,13 @@ public class StaticListView extends LinearLayout {
         }
     }
 
-    private Handler handler = new Handler();
+    void hideAll() {
+        for (int i = 0; i < getChildCount(); i++)
+            getChildAt(i).setVisibility(GONE);
+    }
 
     private class Observer extends DataSetObserver {
         private StaticListView staticListView;
-
-        private AsyncTask<Void,Void,Void> mTask;
-        private volatile boolean mStopTask;
-        private volatile boolean mTaskDone;
 
         public Observer(StaticListView staticListView) {
             this.staticListView = staticListView;
@@ -74,84 +73,34 @@ public class StaticListView extends LinearLayout {
 
         @Override
         public void onChanged() {
+            staticListView.hideAll();
 
-            mStopTask = true;
+            int kids = staticListView.getChildCount();
 
-            if (mTask!=null) {
-                if (!mTaskDone && mTask.getStatus() != AsyncTask.Status.FINISHED){
-                    try {
-                        mTask.cancel(true);
-                        Thread.sleep(200);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            for (int i = 0; i < staticListView.mAdapter.getCount(); i++) {
+
+                final int pos = i;
+
+                View convertView = pos<kids ? staticListView.getChildAt(pos)  : null;
+                final View itemView = staticListView.mAdapter.getView(pos, convertView, staticListView);
+
+                if (convertView==null) {
+                    staticListView.addView(itemView);
                 }
+                itemView.setVisibility(VISIBLE);
+                itemView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onItemClick(staticListView.mAdapter.getItem(pos), itemView, pos, staticListView.mAdapter.getItemId(pos));
+                    }
+                });
             }
-
-            List<View> oldViews = new ArrayList<>(staticListView.getChildCount());
-            for (int i = 0; i < staticListView.getChildCount(); i++)
-                oldViews.add(staticListView.getChildAt(i));
-
-            final Iterator<View> iter = oldViews.iterator();
-            staticListView.removeAllViews();
-
-
-
-            mTask = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    mTaskDone = false;
-                    mStopTask = false;
-                    for (int i = 0; i < staticListView.mAdapter.getCount(); i++) {
-                        if (mStopTask) {
-                            mTaskDone = true;
-                            Log.d("LaunchTime", "Stopping cursor task early1");
-                            return null;
-                        }
-
-                        final int pos = i;
-
-                        View convertView = iter.hasNext() ? iter.next() : null;
-                        final View itemView = staticListView.mAdapter.getView(pos, convertView, staticListView);
-
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mStopTask) {
-                                    mTaskDone = true;
-                                    Log.d("LaunchTime", "Stopping cursor task early2");
-                                    return;
-                                }
-                                staticListView.addView(itemView);
-                                itemView.setOnClickListener(new OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        onItemClick(staticListView.mAdapter.getItem(pos), itemView, pos, staticListView.mAdapter.getItemId(pos));
-                                    }
-                                });
-
-                            }
-                        });
-
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    Observer.super.onChanged();
-                    super.onPostExecute(aVoid);
-                    mTaskDone = true;
-
-                }
-            };
-            mTask.execute();
 
         }
 
         @Override
         public void onInvalidated() {
-            staticListView.removeAllViews();
+            staticListView.hideAll();
             super.onInvalidated();
         }
     }
