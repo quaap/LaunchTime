@@ -237,7 +237,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/kid_code_txt"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textSize="16sp" />
 
             <TextView
                 android:text=""
@@ -247,10 +248,11 @@
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:clickable="true"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textColor="@color/textcolorinv"
                 android:layout_margin="8dp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:padding="6dp" />
 
             <TextView
                 android:text=""
@@ -260,10 +262,11 @@
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:clickable="true"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textColor="@color/textcolorinv"
                 android:layout_margin="8dp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:padding="6dp" />
 
             <TextView
                 android:text=""
@@ -273,10 +276,11 @@
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:clickable="true"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textColor="@color/textcolorinv"
                 android:layout_margin="8dp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:padding="6dp" />
 
             <TextView
                 android:text=""
@@ -286,10 +290,11 @@
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:clickable="true"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textColor="@color/textcolorinv"
                 android:layout_margin="8dp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:padding="6dp" />
         </LinearLayout>
 
     </FrameLayout>

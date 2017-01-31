@@ -146,6 +146,11 @@
     <string name="prefs_cat_apps">Apps will be categorized</string>
     <string name="prefs_cat_no">Apps will be placed in \"Other\"</string>
     <string name="pref_cat_loc">Categories will be on the %s</string>
+    <string name="pref_todd_lock">Toddler Mode</string>
+    <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage by locking into the current category and preventing dragging/moving/deleting. Exit by entering the code on the screen.</string>
+    <string name="pref_returnhome_summ">If away, go to the top-most category: %s.</string>
+    <string name="pref_returnhome">Return home timeout</string>
+
     <string name="search_hint">Search. \".\" is a wildcard</string>
     <string name="widget_alreay">This widget is already in category \"%s\"</string>
 
@@ -154,16 +159,13 @@
 
     <string name="sort_category">Sort Category</string>
     <string name="sort_prompt_title">Sort category by</string>
-    <string name="pref_todd_lock">Toddler Lock</string>
-    <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage</string>
     <string name="kid_escape_text">Press \'%s\' to exit</string>
     <string name="reset_db">Reset the database?</string>
     <string name="reset_db_explain">The database will be recreated and all apps will be re-categorized according to your \"auto-categorize apps\" setting.</string>
     <string name="reset">Reset</string>
     <string name="clear_recent">Clear recent items?</string>
     <string name="clear">Clear</string>
-    <string name="pref_returnhome_summ">If away, go to the top-most category: %s.</string>
-    <string name="pref_returnhome">Return home timeout</string>
+    <string name="reset_database">Reset database</string>
 
 
     <string-array name="sort_strings">
