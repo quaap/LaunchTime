@@ -1330,8 +1330,10 @@ public class MainActivity extends Activity implements
                 target = (GridLayout) droppedOn;
             } else if (droppedOn instanceof FrameLayout) {
                 target = (FrameLayout) droppedOn;
-            } else {
+            } else if (droppedOn.getParent() instanceof GridLayout){
                 target = (GridLayout) droppedOn.getParent();
+            } else {
+                return true;
             }
 
             if (droppedOnTag!=null && droppedOnTag instanceof AppShortcut) {
@@ -1485,9 +1487,13 @@ public class MainActivity extends Activity implements
         if (dragstarted) {
             mBeingDragged = dragitem;
             mDragDropSource = (ViewGroup) view.getParent();
-            Log.d("LaunchTime", "Drag started: " + dragitem.getActivityName());
+            Log.d("LaunchTime", "Drag started: " + dragitem.getActivityName() +  ", source = " + mDragDropSource);
             showHiddenCategories();
-            showRemoveDropzone();
+
+           // Log.d("LaunchTime", "source = " + mDragDropSource);
+            if (mDragDropSource.getId()!=R.id.icontarget) {
+                showRemoveDropzone();
+            }
             return true;
         }
 
