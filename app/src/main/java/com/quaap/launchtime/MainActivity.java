@@ -1881,7 +1881,11 @@ public class MainActivity extends Activity implements
                             int p2 = recents.indexOf(appsecond.getActivityName());
                             if (p1==-1) p1 = Integer.MAX_VALUE;
                             if (p2==-1) p2 = Integer.MAX_VALUE;
-                            return ((Integer)p1).compareTo(p2);
+                            int comp = ((Integer)p1).compareTo(p2);
+                            if (comp==0) {
+                                return appfirst.getLabel().compareToIgnoreCase(appsecond.getLabel());
+                            }
+                            return comp;
                         case APPSORT_PACKAGE:
                             return appfirst.getPackageName().compareToIgnoreCase(appsecond.getPackageName());
 
