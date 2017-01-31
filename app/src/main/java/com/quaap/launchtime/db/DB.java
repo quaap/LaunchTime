@@ -383,6 +383,16 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean deleteApp(String actvorpkgname, boolean isPackagename) {
+        if (!isPackagename) {
+            AppShortcut app = getApp(actvorpkgname);
+            if (app!=null) {
+                if (app.isWidget() || app.isLink() || app.isActionLink()) {
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    db.delete(APP_TABLE, ACTVNAME + "=?", new String[]{actvorpkgname});
+                }
+            }
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues values = new ContentValues();
