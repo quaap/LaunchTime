@@ -211,7 +211,9 @@
             android:layout_height="match_parent"
             android:background="#ddff3333"
             android:id="@+id/remove_dropzone"
-            android:layout_gravity="end">
+            android:layout_gravity="end"
+            android:fadingEdge="horizontal|vertical"
+            android:fadingEdgeLength="8dp">
 
             <TextView
                 android:text="@string/remove"
@@ -228,7 +230,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/kid_escape_area"
-            android:background="@android:color/background_dark">
+            android:background="@android:color/background_dark"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

@@ -44,11 +44,11 @@
 
         <ListPreference
             android:defaultValue="31536000"
-            android:title="Return home"
+            android:title="@string/pref_returnhome"
             android:entries="@array/pref_return_home_strings"
             android:entryValues="@array/pref_return_home_values"
             android:key="pref_return_home"
-            android:summary="If away, go to the top-most category %s." />
+            android:summary="@string/pref_returnhome_summ" />
 
         <PreferenceScreen
             android:title="@string/pref_senddat"

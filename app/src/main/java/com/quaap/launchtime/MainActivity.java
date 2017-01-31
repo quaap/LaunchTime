@@ -1524,16 +1524,19 @@ public class MainActivity extends Activity implements
         if (mChildLock) return;
 
         mRemoveDropzone.setVisibility(View.VISIBLE);
-        mRemoveDropzone.setBackgroundColor(Color.RED);
 
         if (mDragDropSource == mQuickRow
             || mDragDropSource == mCategoriesLayout
             || mCategory.equals(Categories.CAT_SEARCH)
             || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
         ) ) {
+            mRemoveDropzone.setBackgroundColor(Color.YELLOW);
             mRemoveAppText.setText(R.string.remove_shortcut);
+            mRemoveAppText.setTextColor(Color.BLACK);
         } else {
+            mRemoveDropzone.setBackgroundColor(Color.RED);
             mRemoveAppText.setText(R.string.uninstall_app);
+            mRemoveAppText.setTextColor(Color.WHITE);
         }
     }
 
