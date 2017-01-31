@@ -1039,8 +1039,8 @@ public class MainActivity extends Activity implements
             public void onClick(View view) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Clear recent items?")
-                        .setPositiveButton("Clear", new DialogInterface.OnClickListener() {
+                        .setTitle(R.string.clear_recent)
+                        .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 mDb.deleteAppLaunchedRecords();
