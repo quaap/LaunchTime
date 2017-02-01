@@ -62,14 +62,18 @@
     <string name="pref_about">Help</string>
     <string name="pref_help_about">Help and about</string>
     <string name="is_tiny">Is Tiny</string>
-    <string name="send_info_expl">The following information will be sent to the developer (only) to better understand how users categorize their apps. Only your IP is logged.</string>
+    <string name="send_info_expl">The following information will be sent to the developer (only) to
+        better understand how users categorize their apps. Only your IP is logged.</string>
     <string name="send">Send</string>
     <string name="send_comment">Optional Comment:</string>
     <string name="remove_data">Uncheck any item you don\'t want to send</string>
     <string name="sent_success">Data successfully sent. Thanks!</string>
     <string name="sent_failed">Data tranfer failed:</string>
     <string name="backup_and_restore">Backup and Restore</string>
-    <string name="backup_explain">If you have everything the way you like it, or are about to make some big changes, take a backup! Please note that these backups will be deleted if you uninstall the app, so use the \"Copy selected backup to filesystem\" button to save ones you want to keep.</string>
+    <string name="backup_explain">If you have everything the way you like it, or are about to make
+        some big changes, take a backup! Please note that these backups will be deleted if you
+        uninstall the app, so use the \"Copy selected backup to filesystem\" button to save ones
+        you want to keep.</string>
     <string name="take_new_backup">Take new backup</string>
     <string name="restore_selected_backup">Restore selected backup</string>
     <string name="delete_selected_backup">Delete selected backup</string>
@@ -107,9 +111,11 @@
     <string name="config">Config</string>
     <string name="previously_deleted">Previously Deleted</string>
     <string name="pref_senddat">Send app data</string>
-    <string name="pref_senddat_summ">Send data about which apps are installed to the app developer</string>
+    <string name="pref_senddat_summ">Send data about which apps are installed to the app
+        developer</string>
     <string name="pref_backup">Backup and Restore</string>
-    <string name="pref_backup_summ">Backup or restore LaunchTime\'s configuration (Categories, app order, recent apps, etc)</string>
+    <string name="pref_backup_summ">Backup or restore LaunchTime\'s configuration (Categories,
+        app order, recent apps, etc)</string>
     <string name="pref_system">System Settings</string>
     <string name="pref_system_summ">Show the system settings</string>
     <string name="pref_tabsize">Category tab size</string>
@@ -134,7 +140,9 @@
     <string name="prefs_cat_no">Apps will be placed in \"Other\"</string>
     <string name="pref_cat_loc">Categories will be on the %s</string>
     <string name="pref_todd_lock">Toddler Mode</string>
-    <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage by locking into the current category and preventing dragging/moving/deleting. Exit by entering the code on the screen.</string>
+    <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage by locking into the
+        current category and preventing dragging/moving/deleting. Exit by entering the code on
+        the screen.</string>
     <string name="pref_returnhome_summ">If away, go to the top-most category: %s.</string>
     <string name="pref_returnhome">Return home timeout</string>
 
@@ -148,7 +156,8 @@
     <string name="sort_prompt_title">Sort category by</string>
     <string name="kid_escape_text">Press \'%s\' to exit</string>
     <string name="reset_db">Reset the database?</string>
-    <string name="reset_db_explain">The database will be recreated and all apps will be re-categorized according to your \"auto-categorize apps\" setting.</string>
+    <string name="reset_db_explain">The database will be recreated and all apps will be
+        re-categorized according to your \"auto-categorize apps\" setting.</string>
     <string name="reset">Reset</string>
     <string name="clear_recent">Clear recent items?</string>
     <string name="clear">Clear</string>
@@ -174,88 +183,129 @@
 
           <h1>Help and About</h1>
 
-           <p>To see this page again, click the small up arrow near the bottom of the screen, then the wrench icon, then \"Help and About\".</p>
+           <p>To see this page again, click the small up arrow near the bottom of the screen, then
+           the wrench icon, then \"Help and About\".</p>
 
            <p>Welcome to LaunchTime!</p>
 
            <p>LaunchTime is opensource software. See the full license and sourcecode
             <a href=\"https://github.com/quaap/LaunchTime\">here</a>.</p>
 
-            <p>Report any issues, feedback, or suggestions <a href=\"https://github.com/quaap/LaunchTime/issues\">here</a>.</p>
+            <p>Report any issues, feedback, or suggestions
+            <a href=\"https://github.com/quaap/LaunchTime/issues\">here</a>.</p>
 
-            <p>This program was written by <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a></p>
+            <p>This program was written by
+            <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a></p>
 
           <h1>Help</h1>
 
             <p>Main parts of LaunchTime:</p>
 
-             <p>* QuickBar: The bar across the bottom which holds commonly used apps. It scrolls left and right if needed.</p>
-             <p>* Category tab: The side menu listing the categories. It scrolls up and down if needed.</p>
-             <p>* Category / Icon area: The main portion of the screen with the Apps. It scrolls up and down if needed.</p>
+             <p>* QuickBar: The bar across the bottom which holds commonly used apps. It scrolls
+             left and right if needed.</p>
+             <p>* Category tab: The side menu listing the categories. It scrolls up and down if
+             needed.</p>
+             <p>* Category / Icon area: The main portion of the screen with the Apps. It scrolls up
+             and down if needed.</p>
              <p>* Searchbox: Search for Apps by name.  Found in the \"Search/Recent\" category.</p>
-             <p>* Recent Apps: A list of Apps you\'ve used recently.  Found in the \"Search/Recent\" category.</p>
-             <p>* Action bar: Has buttons to sort, rename, and add categories, as well as add Widgets and access the Settings menu. Click the small up arrow above the QuickBar to display.</p>
+             <p>* Recent Apps: A list of Apps you\'ve used recently.  Found in the \"Search/Recent\"
+             category.</p>
+             <p>* Action bar: Has buttons to sort, rename, and add categories, as well as add
+             Widgets and access the Settings menu. Click the small up arrow above the QuickBar to
+             display.</p>
 
 
 
             <h2>Moving</h2>
 
-            <p>Apps, Widgets, and Categories can be moved and re-arranged by long clicking and dragging them to the desired destination.</p>
+            <p>Apps, Widgets, and Categories can be moved and re-arranged by long clicking and
+            dragging them to the desired destination.</p>
 
-            <p>To move an App or a Widget into a different category, drag it and drop it onto the category tab. The App will be removed from the source and placed into the new category.</p>
+            <p>To move an App or a Widget into a different category, drag it and drop it onto the
+            category tab. The App will be removed from the source and placed into the new
+            category.</p>
 
-            <p>To place an App or a Widget into the QuickBar, drag it and drop it onto the QuickBar. The App will remain in the original category, but will also be accessible in the QuickBar.</p>
+            <p>To place an App or a Widget into the QuickBar, drag it and drop it onto the QuickBar.
+            The App will remain in the original category, but will also be accessible in the
+            QuickBar.</p>
 
 
             <h2>Removing and Uninstalling<h2>
 
             <h3>Uninstalling</h3>
 
-            <p>To uninstall an App, go to the App\'s category and begin to drag the icon. The \"Uninstall\" zone will appear in the bottom right corner. Drop the App onto the \"Uninstall\" zone and you will be prompted to uninstall the App.</p>
+            <p>To uninstall an App, go to the App\'s category and begin to drag the icon. The
+            \"Uninstall\" zone will appear in the bottom right corner. Drop the App onto the
+            \"Uninstall\" zone and you will be prompted to uninstall the App.</p>
 
             <h3>Removing</h3>
 
-            <p>If you begin dragging a Category tab, a QuickBar icon, a Widget, a Shortcut (link), or an icon from the Recent Apps area, a \"Remove\" zone appears instead.  If the item is dropped in the Remove zone, the item will be removed without a prompt, but the App will not be uninstalled.</p>
+            <p>If you begin dragging a Category tab, a QuickBar icon, a Widget, a Shortcut (link),
+            or an icon from the Recent Apps area, a \"Remove\" zone appears instead.  If the item
+            is dropped in the Remove zone, the item will be removed without a prompt, but the App
+            will not be uninstalled.</p>
 
 
             <h3>Hiding Apps</h3>
 
-            <p>To hide an app, begin dragging it, and the \"Hidden\" category tab will appear on the side menu.  You may need to drag the App over the menu and hover near the bottom if it is scrolled off the screen. Drop the app on the \"Hidden\" category tab.</p>
+            <p>To hide an app, begin dragging it, and the \"Hidden\" category tab will appear on
+            the side menu.  You may need to drag the App over the menu and hover near the bottom if
+             it is scrolled off the screen. Drop the app on the \"Hidden\" category tab.</p>
 
-            <p>To access the \"Hidden\" category later, clicking the up arrow near the bottom will display the tab, allowing you to click on it.</p>
+            <p>To access the \"Hidden\" category later, clicking the up arrow near the bottom will
+            display the tab, allowing you to click on it.</p>
 
 
             <h2>Searching</h2>
 
-            <p>Go to the \"Search/Recent\" category tab.  Begin typing in the Searchbox.  Matching Apps will be displayed below the Searchbox. You can use a period (\".\") as a wildcard character.  If only a period is entered, all installed apps will be displayed.</p>
+            <p>Go to the \"Search/Recent\" category tab.  Begin typing in the Searchbox.  Matching
+            Apps will be displayed below the Searchbox. You can use a period (\".\") as a wildcard
+            character.  If only a period is entered, all installed apps will be displayed.</p>
 
             <p>You can drag apps from the search results and place them into categories.</p>
 
 
             <h2>Settings</h2>
 
-            <p>Clicking the small up arrow at the bottom right (or bottom left if you\'ve configured a left-side menu) will expand an actions menu over the QuickBar.  This menu allows you to Sort the current category, Rename the current category, Add a new category, Add a Widget to the current category, and show the Settings page.</p>
+            <p>Clicking the small up arrow at the bottom right (or bottom left if you\'ve configured
+            a left-side menu) will expand an actions menu over the QuickBar.  This menu allows you
+            to Sort the current category, Rename the current category, Add a new category, Add a
+            Widget to the current category, and show the Settings page.</p>
 
-            <p>Clicking the up arrow also shows any hidden category tabs to allow clicking on them.</p>
+            <p>Clicking the up arrow also shows any hidden category tabs to allow clicking on
+            them.</p>
 
 
             <h2>Widgets/AppWidgets</h2>
 
-            <p>To add a widget to the current category, Click the small up arrow near the bottom of the screen, then click \"Add Widget\".  A system menu will appear with the available widgets.  Select one.  You may be prompted to \"Allow LaunchTime to access the Widget\'s data.  You must \"accept\" to add the widget.  Clicking the \"Always allow\" checkbox is recommended, or you will be prompted every time LaunchTime (re)starts, for each widget you have added.</p>
+            <p>To add a widget to the current category, Click the small up arrow near the bottom of
+            the screen, then click \"Add Widget\".  A system menu will appear with the available
+            widgets.  Select one.  You may be prompted to \"Allow LaunchTime to access the
+            Widget\'s data.  You must \"accept\" to add the widget.  Clicking the \"Always allow\"
+            checkbox is recommended, or you will be prompted every time LaunchTime (re)starts, for
+            each widget you have added.</p>
 
 
             <h2>Toddler Mode</h2>
 
-            <p>To enter \"Toddler Mode\", select the desired category, then go to the settings page and click \"Toddler Mode\". Then click back. Once Toddler Mode is entered, the QuickBar is hidden, the category tabs are disabled, and apps cannot be moved, removed, or uninstalled. To exit Toddler Mode, type the code given at the bottom of the screen.</p>
+            <p>To enter \"Toddler Mode\", select the desired category, then go to the settings page
+            and click \"Toddler Mode\". Then click back. Once Toddler Mode is entered, the QuickBar
+            is hidden, the category tabs are disabled, and apps cannot be moved, removed, or
+            uninstalled. To exit Toddler Mode, type the code given at the bottom of the screen.</p>
 
-            <p>This allows you to create a special category with toddler-safe apps which your toddler is prevented from exiting.</p>
+            <p>This allows you to create a special category with toddler-safe apps which your
+            toddler is prevented from exiting.</p>
 
-            <p><b>Note that Toddler Mode is <i>not fool-proof</i>.  For example: the status dropdown menu will still be available, any hardware buttons will still function, and the long-press of the \"home\" (circle) key may still bring up Google, etc.</b> If possible, I will make it \"safer\" in the future.</p>
+            <p><b>Note that Toddler Mode is <i>not fool-proof</i>.  For example: the status
+            dropdown menu will still be available, any hardware buttons will still function, and
+            the long-press of the \"home\" (circle) key may still bring up Google, etc.</b> If
+            possible, I will make it \"safer\" in the future.</p>
 
 
             <h2>Backups</h2>
 
-            <p>Backups are kept internal to the app and will be deleted if you uninstall. To save a backup, use the \"external backup\" buttons to copy it to the filesystem.</p>
+            <p>Backups are kept internal to the app and will be deleted if you uninstall. To save
+            a backup, use the \"external backup\" buttons to copy it to the filesystem.</p>
 
             ]]>
     </string>
