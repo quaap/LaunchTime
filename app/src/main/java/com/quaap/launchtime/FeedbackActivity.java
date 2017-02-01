@@ -13,6 +13,7 @@ package com.quaap.launchtime;
  */
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +92,16 @@ public class FeedbackActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_HOME) {
+            Intent home = new Intent(this, MainActivity.class);
+            startActivity(home);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void loadData() throws PackageManager.NameNotFoundException {
