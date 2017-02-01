@@ -100,7 +100,7 @@ public class CrashReportActivity extends Activity {
                 settings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 settings.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 startActivity(settings);
-                endItAll();
+                finish();
             }
         });
     }

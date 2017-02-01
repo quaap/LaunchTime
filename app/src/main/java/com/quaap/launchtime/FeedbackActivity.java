@@ -95,6 +95,11 @@ public class FeedbackActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             Intent home = new Intent(this, MainActivity.class);
@@ -103,6 +108,7 @@ public class FeedbackActivity extends Activity {
         } else if (keyCode==KeyEvent.KEYCODE_MENU) {
             Intent sett = new Intent(this, SettingsActivity.class);
             startActivity(sett);
+            finish();
         }
         return super.onKeyDown(keyCode, event);
     }

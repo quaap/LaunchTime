@@ -166,6 +166,7 @@ public class BackupActivity extends Activity {
         } else if (keyCode==KeyEvent.KEYCODE_MENU) {
             Intent sett = new Intent(this, SettingsActivity.class);
             startActivity(sett);
+            finish();
         }
         return super.onKeyDown(keyCode, event);
     }
