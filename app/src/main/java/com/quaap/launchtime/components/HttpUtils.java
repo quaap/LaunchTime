@@ -5,6 +5,8 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -36,44 +38,71 @@ public class HttpUtils {
         URL url;
         String response = "";
         try {
+
             System.setProperty("http.keepAlive", "false");
 
             url = new URL(requestURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(postDataParams));
-
-            writer.flush();
-            writer.close();
-            os.close();
-            int responseCode=conn.getResponseCode();
-
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                String line;
-                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line=br.readLine()) != null) {
-                    response+=line + "\n";
-                }
-                br.close();
-            }
-            else {
-                response="Code " + responseCode;
-            }
             try {
-                conn.getErrorStream().close();
-            } catch (Exception e) {
-                Log.d("LaunchTime", "Http getErrorStream: " +  e.getMessage());
-            }
+                conn.setRequestProperty("Connection", "close");
+                conn.setReadTimeout(15000);
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
 
-            conn.disconnect();
+                OutputStream os = conn.getOutputStream();
+                InputStream in = null;
+                try {
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(getPostDataString(postDataParams));
+
+                    writer.flush();
+                    writer.close();
+                    int responseCode = conn.getResponseCode();
+
+                    in = conn.getInputStream();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        String line;
+                        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                        while ((line = br.readLine()) != null) {
+                            response += line + "\n";
+                        }
+                        br.close();
+
+                    } else {
+                        response = "Code " + responseCode;
+                    }
+
+                } finally {
+                    try {
+                        InputStream er = conn.getErrorStream();
+                        if (er != null) {
+                            while(er.read()!=-1) {
+                                int i=0;
+                            }
+                            er.close();
+                        }
+                    } catch (IOException e) {
+                        Log.d("LaunchTime", "Http getErrorStream: " + e.getMessage());
+                    }
+                    if (in != null) try {
+                        in.close();
+                    } catch (IOException e) {
+                        Log.d("LaunchTime", "in" + e.getMessage());
+                    }
+                    if (os != null) try {
+                        os.close();
+                    } catch (IOException e) {
+                        Log.d("LaunchTime", "os" + e.getMessage());
+                    }
+                }
+
+            } finally {
+                conn.disconnect();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             response=e.getLocalizedMessage();
