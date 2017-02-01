@@ -219,6 +219,7 @@ public class MainActivity extends Activity implements
                 @Override
                 public void run() {
                     Intent help = new Intent(MainActivity.this, AboutActivity.class);
+                    help.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(help);
                 }
             },5000);
@@ -433,10 +434,8 @@ public class MainActivity extends Activity implements
             switchCategory(Categories.CAT_TALK);
             showButtonBar(false);
             mQuickRowScroller.smoothScrollTo(0, 0);
-            finishActivity(PREF_REQUEST);
         } else if (keyCode==KeyEvent.KEYCODE_MENU) {
-            Intent home = new Intent(this, SettingsActivity.class);
-            startActivity(home);
+            openSettings();
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -1668,10 +1667,6 @@ public class MainActivity extends Activity implements
                     Toast.makeText(this, R.string.could_not_uninstall, Toast.LENGTH_LONG).show();
 
             }
-        } else if (requestCode == PREF_REQUEST) {
-//            mAppShortcutViews.clear();
-//            checkConfig();
-//            switchCategory(mCategory);
         } else {
             AppWidgetHostView appwid = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
             if (appwid == null) {
@@ -2078,15 +2073,18 @@ public class MainActivity extends Activity implements
         mOpenPrefsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivityForResult(settingsIntent,PREF_REQUEST);
+                openSettings();
                 showButtonBar(false);
             }
         });
 
     }
 
-    private static final int PREF_REQUEST=4353;
+    public void openSettings() {
+        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(settingsIntent);
+    }
 
     private void toggleButtonBar() {
         int vis = mIconSheetBottomFrame.getVisibility();

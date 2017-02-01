@@ -101,8 +101,8 @@ public class FeedbackActivity extends Activity {
             startActivity(home);
             finish();
         } else if (keyCode==KeyEvent.KEYCODE_MENU) {
-            Intent home = new Intent(this, SettingsActivity.class);
-            startActivity(home);
+            Intent sett = new Intent(this, SettingsActivity.class);
+            startActivity(sett);
         }
         return super.onKeyDown(keyCode, event);
     }
