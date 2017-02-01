@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
-import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.db.DB;
 

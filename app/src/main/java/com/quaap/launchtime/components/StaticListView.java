@@ -2,17 +2,10 @@ package com.quaap.launchtime.components;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.LinearLayout;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Modified from http://stackoverflow.com/a/27000087

@@ -134,16 +134,16 @@ public class AppShortcut implements Comparable<AppShortcut> {
         mLabel = ri.loadLabel(pm).toString();
         if (category!=null) {
             mCategory = category;
-            Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  cat " + category);
+            //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  cat " + category);
         } else if (autocat) {
             mCategory = Categories.getCategoryForPackage(context, mPackageName);
             if (mCategory.equals(Categories.CAT_OTHER)) {
                 mCategory = Categories.getCategoryForPackage(context, mActivityName);
             }
-            Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  auto " + category);
+            //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  auto " + category);
         } else {
             mCategory = Categories.CAT_OTHER;
-            Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  plain " + category);
+            //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  plain " + category);
         }
         mWidget = false;
 
