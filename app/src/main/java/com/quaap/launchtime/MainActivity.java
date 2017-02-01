@@ -159,14 +159,16 @@ public class MainActivity extends Activity implements
 
         setContentView(R.layout.activity_main);
 
-
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
 
+        // test this here in case db is reopened by something later.
+        boolean isFirstRun = GlobState.getGlobState(this).getDB().isFirstRun();
+
         //Setup some of our globals utils
-        //db() = GlobState.getGlobState(this).getDB();
+
         mPackageMan = getApplicationContext().getPackageManager();
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mAppPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -198,16 +200,21 @@ public class MainActivity extends Activity implements
 
         readPrefs();
 
+        // get all the apps installed and process them
         loadApplications();
 
-        if (db().isFirstRun()) {
+        // First run is special
+        if (isFirstRun) {
             String selfAct = this.getPackageName() + "." +this.getClass().getSimpleName();
-            Log.d("Dd", selfAct);
+            Log.d(this.getClass().getSimpleName(), "My name is " + selfAct);
 
+            //Move self icon to hidden
             db().updateAppCategory(selfAct,Categories.CAT_HIDDEN);
 
+            //Take a backup no that things are pre-sorted.
             db().backup("After install");
 
+            //Show the help screen on very first run.
             mQuickRow.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -218,7 +225,9 @@ public class MainActivity extends Activity implements
         }
 
     }
-    
+
+    //All db access is routed through here.
+    // We don't store the connection, because the connection might end up closed.
     private DB db() {
         return GlobState.getGlobState(this).getDB();
     }
@@ -230,6 +239,7 @@ public class MainActivity extends Activity implements
         }
     };
 
+    //screen rotation, etc.
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -240,12 +250,15 @@ public class MainActivity extends Activity implements
     @Override
     protected void onPause() {
         checkChildLock();
+
+        //save a few items
         mPrefs.edit()
                 .putInt("scrollpos" + mCategory, mIconSheetScroller.getScrollY())
                 .putString("category", mCategory)
                 .putLong("pausetime", System.currentTimeMillis())
                 .apply();
 
+        //close our search cursor, if needed
         if (mSearchAdapter!=null){
             mSearchAdapter.close();
         }
@@ -256,10 +269,11 @@ public class MainActivity extends Activity implements
     protected void onResume() {
         super.onResume();
 
-
+        //Check how long we've been gone
         long pausetime = mPrefs.getLong("pausetime", 0);
         int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
 
+        //We go "home" if it's been longer than the timeout
         boolean skiphome = false;
         if (pausetime>0 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
             mCategory = db().getCategories().get(0);
@@ -268,13 +282,14 @@ public class MainActivity extends Activity implements
             mCategory = mPrefs.getString("category", Categories.CAT_TALK);
         }
 
-
+        // If the category has been deleted, pick a known-good category
         if (db().getCategoryDisplay(mCategory)==null) {
-            mCategory = Categories.CAT_OTHER;
+            mCategory = Categories.CAT_TALK;
         }
         switchCategory(mCategory);
 
         if (!skiphome) {
+            //move the page to the right scroll position
             mIconSheetScroller.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -284,10 +299,12 @@ public class MainActivity extends Activity implements
             }, 100);
         }
 
-        if (mSearchAdapter!=null) {
+        //rerun our query if needed
+        if (mCategory.equals(Categories.CAT_SEARCH) && mSearchAdapter!=null) {
             mSearchAdapter.refreshCursor();
         }
 
+        //lock things up if it was in toddler mode
         checkChildLock();
     }
 
@@ -296,6 +313,7 @@ public class MainActivity extends Activity implements
         Log.d("debug", "A preference has been changed: " +  key);
 
         if (key!=null) {
+            //Delete our icon cache so the labels can be regenerated.
             if (key.equals("textcolor")) {
                 mAppShortcutViews.clear();
             }
@@ -323,57 +341,82 @@ public class MainActivity extends Activity implements
         super.onDestroy();
     }
 
+
+
     private synchronized void switchCategory(String category) {
 
         if (category == null) return;
         mCategory = category;
+
+        //make sure selected category is in the database.
         if (db().getCategoryDisplay(mCategory)==null) {
             mCategory = Categories.CAT_TALK;
         }
+
+        //switch all category tabs to their default style and text
         for (TextView catTab : mCategoryTabs.values()) {
             styleCategorySpecial(catTab, CategoryTabStyle.Default);
             catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
         }
 
+        //change the selected tab to the full label name
         mCategoryTabs.get(mCategory).setText(db().getCategoryDisplayFull(mCategory));
 
         mIconSheet = mIconSheets.get(mCategory);
 
+        //Check the screen rotation and changes column count, if needed
         checkConfig();
 
+        //refresh icons on page
         repopulateIconSheet(mCategory);
 
+        //the top frame holds the search zone, but only on the search page.
         mIconSheetTopFrame.removeAllViews();
         if (mCategory.equals(Categories.CAT_SEARCH)) {
 
             mIconSheetTopFrame.addView(mSearchView);
+
+            //Show recent apps
             populateRecentApps();
+
+            //load our cursor
             if (mSearchAdapter!=null){
                 mSearchAdapter.refreshCursor();
             }
         } else {
+
+            // not the search page: close the cursor
             if (mSearchAdapter!=null){
                 mSearchAdapter.close();
             }
         }
 
-
+        //Actually switch the icon sheet.
         mIconSheetHolder.removeAllViews();
         mIconSheetHolder.addView(mIconSheet);
 
         showButtonBar(false);
     }
 
+
     @Override
     public void onBackPressed() {
+        //back does nothign if in toddler mode
         if (mChildLock) return;
+
+        //Always hide the action buttons and scroll quickbar left
         showButtonBar(false);
         mQuickRowScroller.smoothScrollTo(0, 0);
+
+
         if (mCategory.equals(Categories.CAT_SEARCH) && mSearchbox!=null && mSearchbox.getText().length()!=0) {
+            //If search is open, clear the searchbox
             mSearchbox.setText("");
         } else if (mIconSheetScroller.getScrollY()>0) {
+            //Otherwise, scroll to top
             mIconSheetScroller.smoothScrollTo(0, 0);
         } else if (!mCategory.equals(Categories.CAT_TALK)){
+            //Otherwise, switch to known-good category
             switchCategory(Categories.CAT_TALK);
             mCategoriesScroller.smoothScrollTo(0, 0);
         }
@@ -382,6 +425,8 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
+        //Try to get home button press
+        //Seems to work sometimes, but not always?
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             switchCategory(Categories.CAT_TALK);
             showButtonBar(false);
@@ -394,7 +439,7 @@ public class MainActivity extends Activity implements
 
     private void readPrefs() {
 
-
+        //Checks application preferences and adjust accordingly
         try {
 
             leftHandCategories = mAppPreferences.getString("pref_categories_loc", "right").equals("left");
@@ -444,6 +489,9 @@ public class MainActivity extends Activity implements
     }
 
 
+    //This is run on switchcategory and screen rotation, etc.
+    // Checks global preferences and
+    //  if we need to change the column count, etc
     private void checkConfig() {
         readPrefs();
         setColors();
@@ -465,8 +513,8 @@ public class MainActivity extends Activity implements
             //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
 
 
+            //Switch the menu left/right
             ViewGroup wrap = (ViewGroup)findViewById(R.id.icon_and_cat_wrap);
-            //View icons = findViewById(R.id.iconarea_wrap);
             View cats = findViewById(R.id.category_tabs_wrap);
             boolean isleft = wrap.getChildAt(0) == cats;
             if (leftHandCategories) {
@@ -486,6 +534,8 @@ public class MainActivity extends Activity implements
         }
     }
 
+
+    //Run/open the thing that was clicked
     public void launchApp(String activityname) {
         launchApp(db().getApp(activityname));
     }
@@ -501,12 +551,17 @@ public class MainActivity extends Activity implements
 
         try {
             Intent intent;
+            // is Link is a shortcut?
             if (app.isActionLink()) {
+                //Change "CALL" to "DIAL" so we can avoid needing the
+                // android.permission.CALL_PHONE permission
                 if (activityname.startsWith("android.intent.action.CALL")) {
                     activityname = "android.intent.action.DIAL";
                 }
+                //build an activity-specific intent with the uri
                 intent = new Intent(activityname, Uri.parse(uristr));
             } else {
+                //regualt activity, start with MAIN
                 if (uristr == null) {
                     intent = new Intent(Intent.ACTION_MAIN);
                 } else {
@@ -514,17 +569,24 @@ public class MainActivity extends Activity implements
                 }
                 intent.setClassName(packagename, activityname);
             }
+
+            //needed to place in the open apps list
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            // actually start it
             startActivity(intent);
-            showButtonBar(false);
+            //log the launch
             db().appLaunched(app.getActivityName());
         } catch (Exception e) {
             Log.d("Launch", "Could not launch " + activityname, e);
             Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
+        showButtonBar(false);
 
     }
 
+
+    // runs at create time to read all apps and add them to our db, if not there already
     private void loadApplications() {
 
         if (!db().isFirstRun()) {
@@ -557,6 +619,7 @@ public class MainActivity extends Activity implements
         processQuickApps(shortcuts);
 
 
+        //create the grids for each existing category.
 
         for (final String category : db().getCategories()) {
 
