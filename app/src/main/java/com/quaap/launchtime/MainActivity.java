@@ -434,6 +434,9 @@ public class MainActivity extends Activity implements
             showButtonBar(false);
             mQuickRowScroller.smoothScrollTo(0, 0);
             finishActivity(PREF_REQUEST);
+        } else if (keyCode==KeyEvent.KEYCODE_MENU) {
+            Intent home = new Intent(this, SettingsActivity.class);
+            startActivity(home);
         }
         return super.onKeyDown(keyCode, event);
     }

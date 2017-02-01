@@ -160,7 +160,12 @@ public class BackupActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             setResult(RESULT_OK);
+            Intent home = new Intent(this, MainActivity.class);
+            startActivity(home);
             finish();
+        } else if (keyCode==KeyEvent.KEYCODE_MENU) {
+            Intent home = new Intent(this, SettingsActivity.class);
+            startActivity(home);
         }
         return super.onKeyDown(keyCode, event);
     }

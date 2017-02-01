@@ -71,7 +71,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_HOME) {
+        if(keyCode==KeyEvent.KEYCODE_HOME || keyCode==KeyEvent.KEYCODE_MENU) {
             Intent main = new Intent(this, MainActivity.class);
             startActivity(main);
             setResult(RESULT_OK);

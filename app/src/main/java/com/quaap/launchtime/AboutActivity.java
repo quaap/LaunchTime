@@ -66,6 +66,9 @@ public class AboutActivity extends Activity {
             Intent home = new Intent(this, MainActivity.class);
             startActivity(home);
             finish();
+        } else if (keyCode==KeyEvent.KEYCODE_MENU) {
+            Intent home = new Intent(this, SettingsActivity.class);
+            startActivity(home);
         }
         return super.onKeyDown(keyCode, event);
     }
