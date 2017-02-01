@@ -221,8 +221,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/remove_dz_txt"
                 android:gravity="center"
-                android:layout_gravity="start"
-                android:rotation="-90" />
+                android:layout_gravity="top|start" />
         </FrameLayout>
 
         <LinearLayout
