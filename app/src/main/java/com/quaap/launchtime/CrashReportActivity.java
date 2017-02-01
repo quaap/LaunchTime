@@ -97,6 +97,7 @@ public class CrashReportActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent settings = new Intent(CrashReportActivity.this, SettingsActivity.class);
+                settings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(settings);
             }
         });
