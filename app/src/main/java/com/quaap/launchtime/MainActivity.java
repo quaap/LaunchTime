@@ -1355,7 +1355,10 @@ public class MainActivity extends Activity implements
                 case DragEvent.ACTION_DRAG_LOCATION:
                     //scroll the scrollview
 
-                    if (isShortcut) scrollOnDrag(droppedOn, event, mIconSheetScroller);
+                    if (isShortcut) {
+                        scrollOnDrag(droppedOn, event, mIconSheetScroller);
+                        hscrollOnDrag(droppedOn, event, mQuickRowScroller);
+                    }
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if (!nocolor ) {
@@ -1532,17 +1535,26 @@ public class MainActivity extends Activity implements
 
     };
 
+    private boolean isAncestor(ViewGroup potentialParent, View potentialChild) {
+
+        if (potentialParent==potentialChild) return true; //self;
+
+        ViewParent parent = potentialChild.getParent();
+
+         do {
+
+            if (parent == potentialParent) {
+                return true;
+            }
+        } while ((parent = parent.getParent()) != null);
+        return false;
+
+    }
+
     private void scrollOnDrag(View view, DragEvent event, ScrollView scrollView) {
         float ty = view.getTop() + event.getY();
 
-        //check if we're in the bounds of the scroller
-        if (  view.getTop() > scrollView.getTop()
-            &&
-              view.getLeft() > scrollView.getLeft()
-            &&
-              view.getLeft() + view.getX() < scrollView.getLeft() + scrollView.getWidth()
-            &&
-                ty < scrollView.getTop() + scrollView.getHeight() + scrollView.getScrollY()) {
+        if (isAncestor(scrollView, view)) {
 
             int thresh = scrollView.getHeight() / 6;
 
@@ -1550,6 +1562,21 @@ public class MainActivity extends Activity implements
                 scrollView.smoothScrollBy(0, -10);
             } else if (ty > scrollView.getScrollY() + scrollView.getHeight() - thresh) {
                 scrollView.smoothScrollBy(0, 10);
+            }
+        }
+    }
+
+    private void hscrollOnDrag(View view, DragEvent event, HorizontalScrollView scrollView) {
+        float tx = view.getLeft() + event.getX();
+
+        if (isAncestor(scrollView, view)) {
+
+            int thresh = scrollView.getWidth() / 6;
+
+            if (tx < scrollView.getScrollX() + thresh) {
+                scrollView.smoothScrollBy(-10, 0);
+            } else if (tx > scrollView.getScrollX() + scrollView.getWidth() - thresh) {
+                scrollView.smoothScrollBy(10,0);
             }
         }
     }
@@ -1615,6 +1642,7 @@ public class MainActivity extends Activity implements
     private void showRemoveDropzone() {
         if (mChildLock) return;
 
+        showButtonBar(false);
         mRemoveDropzone.setVisibility(View.VISIBLE);
 
         if (mDragDropSource == mQuickRow
