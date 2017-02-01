@@ -1,4 +1,7 @@
 <resources>
+
+    <!-- Note: there are some translatable strings in prefs.xml as well -->
+
     <string name="app_name">LaunchTime</string>
 
 
@@ -32,11 +35,10 @@
     <string name="category_Hidden_full">Hidden</string>
 
 
-    <string name="search_apps">Search for Apps</string>
+    <string name="search_apps">Search your Apps</string>
     <string name="recent_apps">Recent Apps</string>
-    <string name="short_name">Short Name</string>
-    <string name="full_name">Full Name (optional)</string>
 
+    <string name="sort_category">Sort\nCategory</string>
     <string name="add_widgets">Add\nWidgets</string>
     <string name="add_category">Add\nCategory</string>
     <string name="rename_category">Edit\nCategory</string>
@@ -57,11 +59,15 @@
     <string name="cat_deleted">Category deleted. Any applications were moved to Category %s</string>
     <string name="no_delete_cat">Couldn\'t delete category</string>
 
+    <string name="short_name">Short Name</string>
+    <string name="full_name">Full Name (optional)</string>
+    <string name="is_tiny">Is Tiny</string>
+
 
     <string name="pref_orient">Orientation</string>
     <string name="pref_about">Help</string>
     <string name="pref_help_about">Help and about</string>
-    <string name="is_tiny">Is Tiny</string>
+
     <string name="send_info_expl">The following information will be sent to the developer (only) to
         better understand how users categorize their apps. Only your IP is logged.</string>
     <string name="send">Send</string>
@@ -82,6 +88,8 @@
     <string name="there_was_a_problem">There was a problem</string>
     <string name="add_a_comment">Add a comment</string>
     <string name="send_error_report">Send Error Report</string>
+    <string name="go_to_settings">Go To Settings</string>
+
     <string name="show_extfs_opts">Show external backup options…</string>
     <string name="hide_extfs_opts">Hide external backup options…</string>
     <string name="no_backup_selected">None selected</string>
@@ -152,7 +160,6 @@
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
-    <string name="sort_category">Sort Category</string>
     <string name="sort_prompt_title">Sort category by</string>
     <string name="kid_escape_text">Press \'%s\' to exit</string>
     <string name="reset_db">Reset the database?</string>
