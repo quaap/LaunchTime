@@ -128,6 +128,24 @@
                 </GridLayout>
             </HorizontalScrollView>
 
+            <FrameLayout
+                android:layout_height="match_parent"
+                android:background="#ddff3333"
+                android:id="@+id/remove_dropzone"
+                android:layout_gravity="end"
+                android:fadingEdge="horizontal|vertical"
+                android:fadingEdgeLength="8dp"
+                android:layout_width="60dp">
+
+                <TextView
+                    android:text="@string/remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/remove_dz_txt"
+                    android:gravity="center"
+                    android:layout_gravity="top|center_horizontal" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -205,24 +223,6 @@
                 android:layout_marginEnd="2dp" />
 
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#ddff3333"
-            android:id="@+id/remove_dropzone"
-            android:layout_gravity="end"
-            android:fadingEdge="horizontal|vertical"
-            android:fadingEdgeLength="8dp">
-
-            <TextView
-                android:text="@string/remove"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/remove_dz_txt"
-                android:gravity="center"
-                android:layout_gravity="top|start" />
-        </FrameLayout>
 
         <LinearLayout
             android:orientation="horizontal"
