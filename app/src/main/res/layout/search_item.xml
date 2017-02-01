@@ -3,7 +3,8 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical|start"
-    android:layout_gravity="center_vertical|start">
+    android:layout_gravity="center_vertical|start"
+    android:paddingBottom="4dp">
 
 
     <FrameLayout
@@ -14,11 +15,24 @@
 
     </FrameLayout>
 
-    <TextView
-        android:text=""
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/label"
-        android:textSize="22sp"
-        android:layout_gravity="center_vertical|start" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/label"
+            android:textSize="22sp"
+            android:layout_gravity="center_vertical|start"
+            android:maxLines="2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/catagory" />
+    </LinearLayout>
+
 </LinearLayout>

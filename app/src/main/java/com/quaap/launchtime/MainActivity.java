@@ -452,9 +452,12 @@ public class MainActivity extends Activity implements
             mScreenDim = getScreenDimensions();
             float shortcutw = getResources().getDimension(R.dimen.shortcut_width);
             float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
+
             mColumns = (int)((mScreenDim.x - catwidth)/(shortcutw + 2));
 
-            changeColumnCount(mIconSheet, mColumns);
+            if (mIconSheet.getColumnCount() != mColumns) {
+                changeColumnCount(mIconSheet, mColumns);
+            }
 
             mShowButtons.setBackgroundColor(cattabBackground);
             mShowButtons.setMinimumHeight(categoryTabPaddingHeight*3);

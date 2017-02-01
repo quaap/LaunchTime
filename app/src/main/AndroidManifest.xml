@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.quaap.launchtime"
     android:versionCode="3"
-    android:versionName="0.3beta1">
+    android:versionName="0.3beta2">
 
 
     <uses-permission android:name="android.permission.BIND_APPWIDGET"

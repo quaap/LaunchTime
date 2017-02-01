@@ -149,7 +149,7 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         firstRun = true;
-        Log.d("db", "create database");
+        Log.i("db", "create database");
         sqLiteDatabase.execSQL(APP_TABLE_CREATE);
         for (String createind : appcolumnsindex) {
             sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE, createind));
@@ -178,7 +178,7 @@ public class DB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        Log.d("db", "upgrade database");
+        Log.i("db", "upgrade database");
 
         if (i==1 && i1==2) {
             sqLiteDatabase.execSQL("alter table " + APP_TABLE + " add column " + ISUNINSTALLED + " SHORT");
@@ -357,9 +357,10 @@ public class DB extends SQLiteOpenHelper {
 
         //Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
         Cursor cursor = db.rawQuery(
-                "select distinct " + ACTVNAME + " _id, " + LABEL + " label " +
-                        " from " + APP_TABLE +
-                        " where " + LABEL + " like ? and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED + " is null or " + ISUNINSTALLED+"=0)" +
+                "select distinct " + ACTVNAME + " _id, app." + LABEL + " label, tab." + LABEL + " category " +
+                        " from " + APP_TABLE + " as app " +
+                        " inner join " + TAB_ORDER_TABLE + " as tab on app." + CATID + "=tab." + CATID +
+                        " where app." + LABEL + " like ? and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
                         " order by 2 ",
                 new String[]{filter});
 

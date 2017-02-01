@@ -120,6 +120,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     static class ViewHolder {
         ViewGroup appholder;
         TextView labelView;
+        TextView catagoryView;
     }
 
     // The bindView method is used to bind all data to a given view
@@ -129,9 +130,11 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
         final String activityName;
         final String label;
+        final String category;
         try {
             activityName = cursor.getString(0);
             label = cursor.getString(1);
+            category = cursor.getString(2);
         } catch (CursorIndexOutOfBoundsException e) {
             Log.e("LaunchTime", "Bad cursor");
             return;
@@ -146,6 +149,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
             holder.appholder = (ViewGroup) view.findViewById(R.id.icontarget);
             holder.labelView = (TextView) view.findViewById(R.id.label);
+            holder.catagoryView = (TextView) view.findViewById(R.id.catagory);
             view.setTag(holder);
         }
 
@@ -174,6 +178,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
                 }
 
                 viewholder.labelView.setText(label);
+                viewholder.catagoryView.setText(category);
             }
         }.execute();
 
