@@ -1623,11 +1623,11 @@ public class MainActivity extends Activity implements
             || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
         ) ) {
             mRemoveDropzone.setBackgroundColor(Color.YELLOW);
-            mRemoveAppText.setText(R.string.remove_shortcut);
+            mRemoveAppText.setText(getString(R.string.remove_shortcut) + "\n\u267B");
             mRemoveAppText.setTextColor(Color.BLACK);
         } else {
             mRemoveDropzone.setBackgroundColor(Color.RED);
-            mRemoveAppText.setText(R.string.uninstall_app);
+            mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
             mRemoveAppText.setTextColor(Color.WHITE);
         }
     }
