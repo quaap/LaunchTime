@@ -2,11 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="applicationPreference">
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:title="@string/pref_todd_lock"
-        android:key="prefs_toddler_lock"
-        android:summary="@string/pref_todd_lock_summ"  />
+
     <PreferenceScreen
         android:title="@string/pref_about"
         android:summary="@string/pref_help_about">
@@ -17,8 +13,14 @@
     </PreferenceScreen>
 
 
-    <PreferenceCategory android:title="@string/pref_app_system">
+    <PreferenceCategory android:title="Mode">
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="@string/pref_todd_lock"
+            android:key="prefs_toddler_lock"
+            android:summary="@string/pref_todd_lock_summ"
+            android:paddingBottom="6dp" />
         <ListPreference
             android:defaultValue="0"
             android:title="@string/pref_orient"
@@ -26,6 +28,8 @@
             android:entryValues="@array/pref_orientation_values"
             android:key="preference_orientation"
             android:summary="%s" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_app_system">
 
         <CheckBoxPreference
             android:defaultValue="false"
