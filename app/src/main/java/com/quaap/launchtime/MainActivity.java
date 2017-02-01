@@ -360,7 +360,9 @@ public class MainActivity extends Activity implements
         }
 
         //change the selected tab to the full label name
-        mCategoryTabs.get(mCategory).setText(db().getCategoryDisplayFull(mCategory));
+        TextView catTab = mCategoryTabs.get(mCategory);
+        catTab.setText(db().getCategoryDisplayFull(mCategory));
+        catTab.setVisibility(View.VISIBLE);
 
         mIconSheet = mIconSheets.get(mCategory);
 
@@ -1905,8 +1907,10 @@ public class MainActivity extends Activity implements
             repopulateIconSheet(Categories.CAT_OTHER);
             //String newcat = mCategoryTabs.keySet().iterator().next();
 
-            switchCategory(Categories.CAT_OTHER);
-
+            if (category.equals(mCategory)) {
+                switchCategory(Categories.CAT_OTHER);
+            }
+            mCategoryTabs.get(Categories.CAT_OTHER).setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(MainActivity.this, R.string.no_delete_cat, Toast.LENGTH_SHORT).show();
         }
