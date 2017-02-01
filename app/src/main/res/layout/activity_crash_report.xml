@@ -72,8 +72,17 @@
         android:text="@string/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/err_user_comment"
-        android:layout_alignParentStart="true"
         android:id="@+id/err_cancel_btn"
-        android:textColor="@color/textcolorinv" />
+        android:textColor="@color/textcolorinv"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/err_report_btn" />
+
+    <Button
+        android:text="@string/go_to_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/btn_settings" />
+
 </RelativeLayout>
