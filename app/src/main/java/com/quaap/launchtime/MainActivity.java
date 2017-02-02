@@ -196,7 +196,7 @@ public class MainActivity extends Activity implements
 
         mSearchView = getSearchView();
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
-        mCategory = mPrefs.getString("category", Categories.CAT_TALK);
+        mCategory = mPrefs.getString("category", getTopCategory());
 
         readPrefs();
 
@@ -277,10 +277,10 @@ public class MainActivity extends Activity implements
         //We go "home" if it's been longer than the timeout
         boolean skiphome = false;
         if (pausetime>0 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
-            mCategory = db().getCategories().get(0);
+            mCategory = getTopCategory();
             skiphome = true;
         } else {
-            mCategory = mPrefs.getString("category", Categories.CAT_TALK);
+            mCategory = mPrefs.getString("category", getTopCategory());
         }
 
         // If the category has been deleted, pick a known-good category
@@ -307,6 +307,15 @@ public class MainActivity extends Activity implements
 
         //lock things up if it was in toddler mode
         checkChildLock();
+    }
+
+    private String getTopCategory() {
+        String category = db().getCategories().get(0);
+        // If the category has been deleted, pick a known-good category
+        if (db().getCategoryDisplay(category)==null) {
+            category = Categories.CAT_TALK;
+        }
+        return category;
     }
 
     @Override
@@ -351,7 +360,7 @@ public class MainActivity extends Activity implements
 
         //make sure selected category is in the database.
         if (db().getCategoryDisplay(mCategory)==null) {
-            mCategory = Categories.CAT_TALK;
+            mCategory = getTopCategory();
         }
 
         //switch all category tabs to their default style and text
@@ -411,6 +420,7 @@ public class MainActivity extends Activity implements
         showButtonBar(false);
         mQuickRowScroller.smoothScrollTo(0, 0);
 
+        String topCat = getTopCategory();
 
         if (mCategory.equals(Categories.CAT_SEARCH) && mSearchbox!=null && mSearchbox.getText().length()!=0) {
             //If search is open, clear the searchbox
@@ -418,9 +428,9 @@ public class MainActivity extends Activity implements
         } else if (mIconSheetScroller.getScrollY()>0) {
             //Otherwise, scroll to top
             mIconSheetScroller.smoothScrollTo(0, 0);
-        } else if (!mCategory.equals(Categories.CAT_TALK)){
+        } else if (!mCategory.equals(topCat)){
             //Otherwise, switch to known-good category
-            switchCategory(Categories.CAT_TALK);
+            switchCategory(topCat);
             mCategoriesScroller.smoothScrollTo(0, 0);
         }
     }
@@ -431,7 +441,7 @@ public class MainActivity extends Activity implements
         //Try to get home button press
         //Seems to work sometimes, but not always?
         if(keyCode==KeyEvent.KEYCODE_HOME) {
-            switchCategory(Categories.CAT_TALK);
+            switchCategory(getTopCategory());
             showButtonBar(false);
             mQuickRowScroller.smoothScrollTo(0, 0);
         } else if (keyCode==KeyEvent.KEYCODE_MENU) {

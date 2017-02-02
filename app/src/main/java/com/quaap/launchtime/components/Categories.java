@@ -54,8 +54,8 @@ public class Categories {
     public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH};
 
     public static final String[] DefCategoryOrder = {
-            CAT_SEARCH,
             CAT_TALK,
+            CAT_SEARCH,
             CAT_GAMES,
             CAT_INTERNET,
             CAT_MEDIA,
