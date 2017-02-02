@@ -1661,11 +1661,15 @@ public class MainActivity extends Activity implements
             || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
         ) ) {
             mRemoveDropzone.setBackgroundColor(Color.YELLOW);
-            mRemoveAppText.setText(getString(R.string.remove_shortcut) + "\n\u267B");
+            //mRemoveAppText.setText(getString(R.string.remove_shortcut) + "\n\u267B");
+            mRemoveAppText.setText(R.string.remove_shortcut);
+            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.recycle);
             mRemoveAppText.setTextColor(Color.BLACK);
         } else {
             mRemoveDropzone.setBackgroundColor(Color.RED);
-            mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
+           // mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
+            mRemoveAppText.setText(R.string.uninstall_app);
+            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.trash);
             mRemoveAppText.setTextColor(Color.WHITE);
         }
     }
