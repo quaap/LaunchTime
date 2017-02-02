@@ -26,6 +26,7 @@
         <item>play</item>
         <item>puzz</item>
         <item>battle</item>
+        <item>studios</item>
         <item>com.huuuge</item>
         <item>com.ea</item>
         <item>com.king</item>
@@ -34,6 +35,8 @@
         <item>com.outfit7</item>
         <item>com.rovio</item>
         <item>com.bitmango</item>
+        <item>com.miniclip</item>
+
     </string-array>
     <string-array name="CAT_INTERNET">
         <item>download</item>
