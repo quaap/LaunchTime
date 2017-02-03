@@ -9,7 +9,7 @@ app hiding, color selcetion, and portrait and landscape support.
 I've been using it on my LG phone as I develop, but it is still a late alpha or early beta stage,
 so breaking changes are possible.
 
-Version 0.2 is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime), but it has some bugs.  If you'd like to test 0.3 before it is released, go [here](https://github.com/quaap/LaunchTime/releases/tag/b0.3beta2).
+Version 0.2 is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime).
 
 Features
 ----------
