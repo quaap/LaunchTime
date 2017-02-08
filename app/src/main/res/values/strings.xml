@@ -48,6 +48,7 @@
     <string name="cancel">Cancel</string>
     <string name="rename_cat">Rename Category</string>
     <string name="rename_cat2">Rename this category</string>
+    <string name="rename_cat3">Rename this special category (will retain its previous functionality)</string>
     <string name="need_name">You must give a name</string>
     <string name="no_rename">Couldn\'t rename category</string>
     <string name="add_cat">Add Category</string>

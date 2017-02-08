@@ -1821,7 +1821,7 @@ public class MainActivity extends Activity implements
     private void promptRenameCategory(final String category) {
 
         promptGetCategoryName(getString(R.string.rename_cat),
-                getString(R.string.rename_cat2),
+                getString(Categories.isSpeacialCategory(category)?R.string.rename_cat3:R.string.rename_cat2),
                 category,
                 db().getCategoryDisplay(category),
                 db().getCategoryDisplayFull(category),
