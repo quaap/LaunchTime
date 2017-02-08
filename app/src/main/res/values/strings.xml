@@ -147,6 +147,9 @@
     <string name="prefs_cat_apps">Apps will be categorized</string>
     <string name="prefs_cat_no">Apps will be placed in \"Other\"</string>
     <string name="pref_cat_loc">Categories will be on the %s</string>
+    <string name="pref_cat_sort">Category sorting</string>
+    <string name="pref_cat_sort_on">Categories will remember selected sort order</string>
+    <string name="pref_cat_sort_off">Categories will not be sorted</string>
     <string name="pref_todd_lock">Toddler Mode</string>
     <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage by locking into the
         current category and preventing dragging/moving/deleting. Exit by entering the code on
@@ -190,9 +193,6 @@
 
           <h1>Help and About</h1>
 
-           <p>To see this page again, click the small up arrow near the bottom of the screen, then
-           the wrench icon, then \"Help and About\".</p>
-
            <p>Welcome to LaunchTime!</p>
 
            <p>LaunchTime is opensource software. See the full license and sourcecode
@@ -203,6 +203,10 @@
 
             <p>This program was written by
             <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a></p>
+
+           <p>To see this page again, click the small up arrow near the bottom of the screen, then
+           the wrench icon, then \"Help and About\".</p>
+
 
           <h1>Help</h1>
 
