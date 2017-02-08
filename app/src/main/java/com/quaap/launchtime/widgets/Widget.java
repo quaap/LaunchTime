@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppShortcut;
 
@@ -49,9 +50,25 @@ public class Widget {
     public Widget(Activity parent) {
         mParent = parent;
 
-        mAppWidgetManager = AppWidgetManager.getInstance(mParent);
-        mAppWidgetHost = new LaunchAppWidgetHost(mParent.getApplicationContext(), WIDGET_HOST_ID);
-        mAppWidgetHost.startListening();
+        for (int i=0; i<2; i++) {
+            try {
+                mAppWidgetManager = AppWidgetManager.getInstance(mParent);
+                mAppWidgetHost = new LaunchAppWidgetHost(mParent.getApplicationContext(), WIDGET_HOST_ID);
+                mAppWidgetHost.startListening();
+                break;
+            } catch (RuntimeException | Error e) {
+                Log.e("LaunchWidget", "Couldn't start appwidgethost", e);
+                if (i==1) {
+                    Toast.makeText(parent, "System error: widgets not available", Toast.LENGTH_LONG).show();
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e1) {
+                    Log.e("Wodget", e1.getMessage());
+                }
+            }
+        }
 
     }
 
