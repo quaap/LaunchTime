@@ -271,20 +271,21 @@ public class MainActivity extends Activity implements
         super.onResume();
 
         //Check how long we've been gone
-        long pausetime = mPrefs.getLong("pausetime", 0);
+        long pausetime = mPrefs.getLong("pausetime", -1);
         int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
 
         //We go "home" if it's been longer than the timeout
         boolean skiphome = false;
-        if (pausetime>0 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
+        if (pausetime>-1 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
             mCategory = getTopCategory();
             skiphome = true;
+            mQuickRowScroller.smoothScrollTo(0, 0);
         } else {
             mCategory = mPrefs.getString("category", getTopCategory());
         }
 
         // If the category has been deleted, pick a known-good category
-        if (db().getCategoryDisplay(mCategory)==null) {
+        if (mCategory==null || db().getCategoryDisplay(mCategory)==null) {
             mCategory = Categories.CAT_TALK;
         }
         switchCategory(mCategory);
@@ -312,7 +313,7 @@ public class MainActivity extends Activity implements
     private String getTopCategory() {
         String category = db().getCategories().get(0);
         // If the category has been deleted, pick a known-good category
-        if (db().getCategoryDisplay(category)==null) {
+        if (category==null || db().getCategoryDisplay(category)==null) {
             category = Categories.CAT_TALK;
         }
         return category;
@@ -354,60 +355,63 @@ public class MainActivity extends Activity implements
 
 
     private synchronized void switchCategory(String category) {
+        try {
+            if (category == null) return;
+            mCategory = category;
 
-        if (category == null) return;
-        mCategory = category;
-
-        //make sure selected category is in the database.
-        if (db().getCategoryDisplay(mCategory)==null) {
-            mCategory = getTopCategory();
-        }
-
-        //switch all category tabs to their default style and text
-        for (TextView catTab : mCategoryTabs.values()) {
-            styleCategorySpecial(catTab, CategoryTabStyle.Default);
-            catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
-        }
-
-        //change the selected tab to the full label name
-        TextView catTab = mCategoryTabs.get(mCategory);
-        catTab.setText(db().getCategoryDisplayFull(mCategory));
-        catTab.setVisibility(View.VISIBLE);
-
-        mIconSheet = mIconSheets.get(mCategory);
-
-        //Check the screen rotation and changes column count, if needed
-        checkConfig();
-
-        //refresh icons on page
-        repopulateIconSheet(mCategory);
-
-        //the top frame holds the search zone, but only on the search page.
-        mIconSheetTopFrame.removeAllViews();
-        if (mCategory.equals(Categories.CAT_SEARCH)) {
-
-            mIconSheetTopFrame.addView(mSearchView);
-
-            //Show recent apps
-            populateRecentApps();
-
-            //load our cursor
-            if (mSearchAdapter!=null){
-                mSearchAdapter.refreshCursor();
+            //make sure selected category is in the database.
+            if (db().getCategoryDisplay(mCategory) == null) {
+                mCategory = getTopCategory();
             }
-        } else {
 
-            // not the search page: close the cursor
-            if (mSearchAdapter!=null){
-                mSearchAdapter.close();
+            //switch all category tabs to their default style and text
+            for (TextView catTab : mCategoryTabs.values()) {
+                styleCategorySpecial(catTab, CategoryTabStyle.Default);
+                catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
             }
+
+            //change the selected tab to the full label name
+            TextView catTab = mCategoryTabs.get(mCategory);
+            catTab.setText(db().getCategoryDisplayFull(mCategory));
+            catTab.setVisibility(View.VISIBLE);
+
+            mIconSheet = mIconSheets.get(mCategory);
+
+            //Check the screen rotation and changes column count, if needed
+            checkConfig();
+
+            //refresh icons on page
+            repopulateIconSheet(mCategory);
+
+            //the top frame holds the search zone, but only on the search page.
+            mIconSheetTopFrame.removeAllViews();
+            if (mCategory.equals(Categories.CAT_SEARCH)) {
+
+                mIconSheetTopFrame.addView(mSearchView);
+
+                //Show recent apps
+                populateRecentApps();
+
+                //load our cursor
+                if (mSearchAdapter != null) {
+                    mSearchAdapter.refreshCursor();
+                }
+            } else {
+
+                // not the search page: close the cursor
+                if (mSearchAdapter != null) {
+                    mSearchAdapter.close();
+                }
+            }
+
+            //Actually switch the icon sheet.
+            mIconSheetHolder.removeAllViews();
+            mIconSheetHolder.addView(mIconSheet);
+
+            showButtonBar(false, true);
+        } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), "SwitchCat", e);
         }
-
-        //Actually switch the icon sheet.
-        mIconSheetHolder.removeAllViews();
-        mIconSheetHolder.addView(mIconSheet);
-
-        showButtonBar(false);
     }
 
 
@@ -417,7 +421,7 @@ public class MainActivity extends Activity implements
         if (mChildLock) return;
 
         //Always hide the action buttons and scroll quickbar left
-        showButtonBar(false);
+        showButtonBar(false, true);
         mQuickRowScroller.smoothScrollTo(0, 0);
 
         String topCat = getTopCategory();
@@ -442,7 +446,7 @@ public class MainActivity extends Activity implements
         //Seems to work sometimes, but not always?
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             switchCategory(getTopCategory());
-            showButtonBar(false);
+            showButtonBar(false, true);
             mQuickRowScroller.smoothScrollTo(0, 0);
         } else if (keyCode==KeyEvent.KEYCODE_MENU) {
             openSettings();
@@ -595,7 +599,7 @@ public class MainActivity extends Activity implements
             Log.d("Launch", "Could not launch " + activityname, e);
             Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
-        showButtonBar(false);
+        showButtonBar(false, true);
 
     }
 
@@ -1267,6 +1271,7 @@ public class MainActivity extends Activity implements
                     if (!Categories.isSpeacialCategory(category)) {
                         showRemoveDropzone();
                     }
+                    showHiddenCategories();
                 }
 
 
@@ -1652,7 +1657,7 @@ public class MainActivity extends Activity implements
     private void showRemoveDropzone() {
         if (mChildLock) return;
 
-        showButtonBar(false);
+        showButtonBar(false, false);
         mRemoveDropzone.setVisibility(View.VISIBLE);
 
         if (mDragDropSource == mQuickRow
@@ -2083,7 +2088,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 promptSortCategory(mCategory);
-                showButtonBar(false);
+                showButtonBar(false, true);
             }
         });
 
@@ -2091,7 +2096,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 promptRenameCategory(mCategory);
-                showButtonBar(false);
+                showButtonBar(false, true);
             }
         });
 
@@ -2099,7 +2104,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 promptAddCategory();
-                showButtonBar(false);
+                showButtonBar(false, true);
             }
         });
 
@@ -2108,7 +2113,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 setupWidget();
-                showButtonBar(false);
+                showButtonBar(false, true);
             }
         });
 
@@ -2116,7 +2121,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 openSettings();
-                showButtonBar(false);
+                showButtonBar(false, true);
             }
         });
 
@@ -2130,7 +2135,7 @@ public class MainActivity extends Activity implements
 
     private void toggleButtonBar() {
         int vis = mIconSheetBottomFrame.getVisibility();
-        showButtonBar(vis != View.VISIBLE);
+        showButtonBar(vis != View.VISIBLE, true);
     }
 
     private String kidaccumecode = "";
@@ -2154,7 +2159,7 @@ public class MainActivity extends Activity implements
 
     //initialize the form members
 
-    private void showButtonBar(boolean visible) {
+    private void showButtonBar(boolean visible, boolean hideCats) {
         if (checkChildLock()) return;
 
         if (visible) {
@@ -2169,7 +2174,7 @@ public class MainActivity extends Activity implements
             mIconSheetBottomFrame.setVisibility(View.VISIBLE);
             mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
         } else {
-            hideHiddenCategories();
+            if (hideCats) {hideHiddenCategories();}
             mIconSheetBottomFrame.setVisibility(View.GONE);
             mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
