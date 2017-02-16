@@ -13,6 +13,7 @@ package com.quaap.launchtime;
  * See the GNU General Public License for more details.
  */
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -62,9 +63,15 @@ public class AboutActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_HOME) {
-            setResult(RESULT_OK);
+            Intent home = new Intent(this, MainActivity.class);
+            startActivity(home);
+            finish();
+        } else if (keyCode==KeyEvent.KEYCODE_MENU) {
+            Intent sett = new Intent(this, SettingsActivity.class);
+            startActivity(sett);
             finish();
         }
         return super.onKeyDown(keyCode, event);
     }
+
 }

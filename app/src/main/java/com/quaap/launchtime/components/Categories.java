@@ -51,11 +51,11 @@ public class Categories {
     public static final String CAT_HIDDEN = "Hidden";
     public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS};
     public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
-    public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_SETTINGS, CAT_HIDDEN, CAT_SEARCH};
+    public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
 
     public static final String[] DefCategoryOrder = {
-            CAT_SEARCH,
             CAT_TALK,
+            CAT_SEARCH,
             CAT_GAMES,
             CAT_INTERNET,
             CAT_MEDIA,
@@ -102,6 +102,7 @@ public class Categories {
         return checkCat(context, category);
     }
 
+
     public static String getCategoryForPackage(Context context, String pkgname) {
 
         Map<String, String> prefCat;
@@ -114,12 +115,21 @@ public class Categories {
         }
         String category = prefCat.get(pkgname);
         if (category == null) {
-            OUTER:
-            for (String cat : mCategorKeywords.keySet()) {
-                for (String pkg : mCategorKeywords.get(cat)) {
-                    if (pkgname.contains(pkg)) {
-                        category = cat;
-                        break OUTER;
+
+            for (String pk: prefCat.keySet()) {
+                if (pkgname.startsWith(pk)) {
+                    category = pk;
+                }
+            }
+
+            if (category == null) {
+                OUTER:
+                for (String cat : mCategorKeywords.keySet()) {
+                    for (String pkg : mCategorKeywords.get(cat)) {
+                        if (pkgname.contains(pkg)) {
+                            category = cat;
+                            break OUTER;
+                        }
                     }
                 }
             }
@@ -129,7 +139,7 @@ public class Categories {
     }
 
     private static String checkCat(Context context, String category) {
-        DB db = ((GlobState)context.getApplicationContext()).getDB();
+        DB db = GlobState.getGlobState(context).getDB();
         if (category == null) {
             category = CAT_OTHER;
         } else {

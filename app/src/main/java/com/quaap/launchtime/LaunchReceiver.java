@@ -39,16 +39,24 @@ public class LaunchReceiver extends BroadcastReceiver {
             Log.i("InstallCatch", "The installed package is: " + packageName);
 
             try {
+                DB db = ((GlobState)context.getApplicationContext()).getDB();
+
                 PackageManager pm = context.getPackageManager();
 
                 Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
                 ResolveInfo ri = context.getPackageManager().resolveActivity(packageIntent, 0);
+                String activityName = ri.activityInfo.name;
+                String category = db.getAppCategory(activityName);
+
+                if (category!=null && db.getCategoryDisplay(category) == null) {
+                    category = null;
+                }
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri, prefs.getBoolean("prefs_autocat", true));
+                AppShortcut.removeAppShortcut(activityName);
+                AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri, category, prefs.getBoolean("prefs_autocat", true));
 
-                DB db = ((GlobState)context.getApplicationContext()).getDB();
 
                 if (db.addApp(app)) {
                     db.addAppCategoryOrder(app.getCategory(), app.getActivityName());

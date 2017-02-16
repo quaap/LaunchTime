@@ -13,6 +13,7 @@ package com.quaap.launchtime;
  */
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +94,25 @@ public class FeedbackActivity extends Activity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_HOME) {
+            Intent home = new Intent(this, MainActivity.class);
+            startActivity(home);
+            finish();
+        } else if (keyCode==KeyEvent.KEYCODE_MENU) {
+            Intent sett = new Intent(this, SettingsActivity.class);
+            startActivity(sett);
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     private void loadData() throws PackageManager.NameNotFoundException {
 
 
@@ -102,7 +123,7 @@ public class FeedbackActivity extends Activity {
         txtappver.setText(version);
 
 
-        DB db = ((GlobState)getApplicationContext()).getDB();
+        DB db = GlobState.getGlobState(this).getDB();
 
         List<String> actnames = db.getAppActvNames();
         Collections.sort(actnames);

@@ -40,12 +40,12 @@ public class ExceptionHandler implements
             errorReport.append("Model: ");
             errorReport.append(Build.MODEL);
             errorReport.append(LINE_SEPARATOR);
-            errorReport.append("Id: ");
-            errorReport.append(Build.ID);
-            errorReport.append(LINE_SEPARATOR);
-            errorReport.append("Product: ");
-            errorReport.append(Build.PRODUCT);
-            errorReport.append(LINE_SEPARATOR);
+            //errorReport.append("Id: ");
+            //errorReport.append(Build.ID);
+            //errorReport.append(LINE_SEPARATOR);
+            //errorReport.append("Product: ");
+            //errorReport.append(Build.PRODUCT);
+            //errorReport.append(LINE_SEPARATOR);
             errorReport.append("\n************ FIRMWARE ************\n");
             errorReport.append("SDK: ");
             errorReport.append(Build.VERSION.SDK_INT);

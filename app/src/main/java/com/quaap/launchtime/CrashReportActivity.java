@@ -14,6 +14,7 @@ package com.quaap.launchtime;
  */
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -89,6 +90,17 @@ public class CrashReportActivity extends Activity {
             @Override
             public void onClick(View view) {
                 endItAll();
+            }
+        });
+
+        findViewById(R.id.btn_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent settings = new Intent(CrashReportActivity.this, SettingsActivity.class);
+                settings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                settings.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                startActivity(settings);
+                finish();
             }
         });
     }

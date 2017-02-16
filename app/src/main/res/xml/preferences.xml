@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="applicationPreference">
 
+
     <PreferenceScreen
         android:title="@string/pref_about"
         android:summary="@string/pref_help_about">
@@ -12,8 +13,14 @@
     </PreferenceScreen>
 
 
-    <PreferenceCategory android:title="@string/pref_app_system">
+    <PreferenceCategory android:title="Mode">
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="@string/pref_todd_lock"
+            android:key="prefs_toddler_lock"
+            android:summary="@string/pref_todd_lock_summ"
+            android:paddingBottom="6dp" />
         <ListPreference
             android:defaultValue="0"
             android:title="@string/pref_orient"
@@ -21,6 +28,8 @@
             android:entryValues="@array/pref_orientation_values"
             android:key="preference_orientation"
             android:summary="%s" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_app_system">
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -35,6 +44,14 @@
             android:key="prefs_autocat"
             android:summaryOn="@string/prefs_cat_apps"
             android:summaryOff="@string/prefs_cat_no" />
+
+        <ListPreference
+            android:defaultValue="31536000"
+            android:title="@string/pref_returnhome"
+            android:entries="@array/pref_return_home_strings"
+            android:entryValues="@array/pref_return_home_values"
+            android:key="pref_return_home"
+            android:summary="@string/pref_returnhome_summ" />
 
         <PreferenceScreen
             android:title="@string/pref_senddat"
@@ -65,6 +82,14 @@
 
 
     <PreferenceCategory android:title="@string/pref_color_style">
+
+        <ListPreference
+            android:defaultValue="right"
+            android:title="Categories Location"
+            android:entries="@array/pref_cat_location_strings"
+            android:entryValues="@array/pref_cat_location_values"
+            android:summary="@string/pref_cat_loc"
+            android:key="pref_categories_loc" />
 
         <ListPreference
             android:defaultValue="1"

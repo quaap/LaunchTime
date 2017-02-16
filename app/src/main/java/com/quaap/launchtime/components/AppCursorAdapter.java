@@ -2,10 +2,14 @@ package com.quaap.launchtime.components;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
+import android.os.AsyncTask;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
@@ -26,51 +30,160 @@ import com.quaap.launchtime.db.DB;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
-public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterView.OnItemClickListener {
+public class AppCursorAdapter extends ResourceCursorAdapter implements StaticListView.OnItemClickListener {
     private MainActivity mMain;
 
-    private TextView mTextHolder;
+    private EditText mTextHolder;
 
-    private DB mDB;
 
-    public AppCursorAdapter(MainActivity main, TextView textHolder, int layout, Cursor cursor, int flags) {
-        super(main, layout, cursor, flags);
+    //private DB mDB;
+
+    public AppCursorAdapter(final MainActivity main, EditText textHolder, int layout, int flags) {
+        super(main, layout, null, flags);
         mMain = main;
-        mDB = GlobState.getGlobState(main).getDB();
+
         mTextHolder = textHolder;
+
+//        mTextHolder.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+//                if (actionId==EditorInfo.IME_ACTION_SEARCH) {
+//                    mTextHolder.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            refreshCursor();
+//                        }
+//                    },10);
+//                }
+//                return false;
+//            }
+//        });
+
+        mTextHolder.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mTextHolder.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshCursor();
+                    }
+                },10);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+//        mTextHolder.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                refreshCursor();
+//            }
+//        },10);
+
+    }
+
+    private DB db() {
+        return GlobState.getGlobState(mMain).getDB();
+    }
+
+    public void refreshCursor() {
+        String text = mTextHolder.getText().toString().trim();
+        if (text.length()==0) {
+            text = "XXXXXXXXXXXX";
+        } else {
+
+            text = text.replace(".", "_");
+            text = "%" + text + "%";
+        }
+
+       // Log.d("refreshCursor", text);
+
+        getFilter().filter(text);
 
     }
 
     @Override
     public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-        if (getFilterQueryProvider() != null) {
-            return getFilterQueryProvider().runQuery(constraint);
-        }
+       // Log.d("BackThread", constraint.toString());
+        return db().getAppCursor(constraint.toString());
+    }
 
-        Cursor cursor = mDB.getAppCursor("%" + (constraint == null ? "XXXXXX" : constraint.toString()) + "%");
-
-        return cursor;
+    static class ViewHolder {
+        ViewGroup appholder;
+        TextView labelView;
+        TextView catagoryView;
     }
 
     // The bindView method is used to bind all data to a given view
     // such as setting the text on a TextView.
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
 
-        String activityName = cursor.getString(0);
-
-        ViewGroup appholder = (ViewGroup) view.findViewById(R.id.icontarget);
-        appholder.removeAllViews();
-
-        AppShortcut app = mDB.getApp(activityName);
-        if (app != null) {
-            app.loadAppIconAsync(context, context.getPackageManager());
-            appholder.addView(mMain.getShortcutView(app, false, false));
+        final String activityName;
+        final String label;
+        final String category;
+        try {
+            activityName = cursor.getString(0);
+            label = cursor.getString(1);
+            category = cursor.getString(2);
+        } catch (CursorIndexOutOfBoundsException e) {
+            Log.e("LaunchTime", "Bad cursor");
+            return;
+        } catch (Exception e) {
+            Log.e("LaunchTime", "Bad cursor", e);
+            return;
         }
 
-        String label = cursor.getString(1);
-        TextView labelView = (TextView) view.findViewById(R.id.label);
-        labelView.setText(label);
+        ViewHolder holder = (ViewHolder)view.getTag();
+        if (holder==null) {
+            holder = new ViewHolder();
+
+            holder.appholder = (ViewGroup) view.findViewById(R.id.icontarget);
+            holder.labelView = (TextView) view.findViewById(R.id.label);
+            holder.catagoryView = (TextView) view.findViewById(R.id.catagory);
+            view.setTag(holder);
+        }
+
+        final ViewHolder viewholder = holder;
+        new AsyncTask<Void,Void,AppShortcut>() {
+
+            @Override
+            protected AppShortcut doInBackground(Void... voids) {
+
+                return db().getApp(activityName);
+            }
+
+            @Override
+            protected void onPostExecute(AppShortcut app) {
+                super.onPostExecute(app);
+                if (app != null) {
+                    app.loadAppIconAsync(context, context.getPackageManager());
+                    View v = mMain.getShortcutView(app, false, false);
+
+                    viewholder.appholder.removeAllViews();
+                    if (v!=null) {
+                        viewholder.appholder.addView(v);
+                    } else {
+                        viewholder.appholder.addView(new TextView(context));
+                    }
+                }
+
+                viewholder.labelView.setText(label);
+                viewholder.catagoryView.setText(category);
+            }
+        }.execute();
+
+
+
     }
 
     public void close() {
@@ -82,14 +195,15 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements AdapterVi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+    public void onItemClick(Object item, View itemView, int position, long id) {
+        Cursor cursor = (Cursor) item;
         String activityName = cursor.getString(0);
-        String label = cursor.getString(1);
+        //String label = cursor.getString(1);
 
-        mTextHolder.setText(label);
+       // mTextHolder.setText(label);
 
         mMain.launchApp(activityName);
+
     }
 
 

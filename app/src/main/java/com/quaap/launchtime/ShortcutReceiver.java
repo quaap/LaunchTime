@@ -79,7 +79,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
     }
 
     private void addLink(Context context, String action, String label, Uri uri, Bitmap bitmap) {
-        DB db = ((GlobState)context.getApplicationContext()).getDB();
+        DB db = GlobState.getGlobState(context).getDB();
         String catID = Categories.getCategoryForAction(context, action);
         if (catID.equals(Categories.CAT_OTHER)) {
             catID = Categories.getCategoryForUri(context, uri.toString());
@@ -95,7 +95,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
     }
 
     private void addLink(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
-        DB db = ((GlobState)context.getApplicationContext()).getDB();
+        DB db = GlobState.getGlobState(context).getDB();
         String catID = Categories.getCategoryForPackage(context, cn.getPackageName());
 
         AppShortcut appshortcut = AppShortcut.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);

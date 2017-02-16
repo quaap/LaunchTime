@@ -52,9 +52,10 @@ public class BackupActivity extends Activity {
     Button delbk;
     Button savebk;
     Button loadbk;
+    Button resetdb;
     TextView showExt;
     View btnbar;
-    DB db;
+    //DB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class BackupActivity extends Activity {
         delbk = (Button)findViewById(R.id.btn_deletebak);
         savebk = (Button)findViewById(R.id.btn_savebak);
         loadbk = (Button)findViewById(R.id.btn_loadbak);
+        resetdb = (Button)findViewById(R.id.btn_resetdb);
 
         btnbar = findViewById(R.id.bak_ext_btns);
 
@@ -80,6 +82,8 @@ public class BackupActivity extends Activity {
         });
 
         showExternalButtons(true);
+
+        //this.deleteDatabase(DB.DATABASE_NAME);
     }
     private void showHideExternalButtons() {
         showExternalButtons(btnbar.getVisibility() == View.VISIBLE);
@@ -136,7 +140,13 @@ public class BackupActivity extends Activity {
             }
         });
 
-        db = ((GlobState)getApplicationContext()).getDB();
+        resetdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptResetDb();
+            }
+        });
+
 
         populateBackupsList();
     }
@@ -150,11 +160,20 @@ public class BackupActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_HOME) {
             setResult(RESULT_OK);
+            Intent home = new Intent(this, MainActivity.class);
+            startActivity(home);
+            finish();
+        } else if (keyCode==KeyEvent.KEYCODE_MENU) {
+            Intent sett = new Intent(this, SettingsActivity.class);
+            startActivity(sett);
             finish();
         }
         return super.onKeyDown(keyCode, event);
     }
 
+    private DB db() {
+        return GlobState.getGlobState(this).getDB();
+    }
 
     private void populateBackupsList() {
         backupsLayout.removeAllViews();
@@ -162,7 +181,7 @@ public class BackupActivity extends Activity {
 
         makeRadioButton(baks, getString(R.string.no_backup_selected), false).setChecked(true);
 
-        for(final String bk: db.listBackups()) {
+        for(final String bk: db().listBackups()) {
 
             makeRadioButton(baks, bk, true);
         }
@@ -197,6 +216,45 @@ public class BackupActivity extends Activity {
         savebk.setEnabled(isselected);
     }
 
+
+    private void promptResetDb() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(R.string.reset_db)
+                .setMessage(R.string.reset_db_explain)
+                .setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        db().backup("Before reset");
+                        db().deleteDatabase();
+
+                        String message = getString(R.string.restore_successful);
+
+                        restartApp();
+                        Toast.makeText(BackupActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
+                }).setNegativeButton(R.string.cancel, null);
+        builder.show();
+    }
+
+    public void restartApp() {
+        backupsLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+
+                Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(mainIntent);
+                BackupActivity.this.finish();
+
+            }
+        }, 1000);
+    }
+
+
     private void promptNew() {
 
         final EditText tag = new EditText(this);
@@ -218,7 +276,7 @@ public class BackupActivity extends Activity {
 
 
         String message;
-        if (db.backup(optionalName)!=null) {
+        if (db().backup(optionalName)!=null) {
             message = getString(R.string.backup_success);
         } else {
             message = getString(R.string.backup_failed);
@@ -242,8 +300,8 @@ public class BackupActivity extends Activity {
         if (selected) {
 
 
-            if (db.hasBackup(selectedBackup)) {
-                File backupFile = db.pullBackup(selectedBackup);
+            if (db().hasBackup(selectedBackup)) {
+                File backupFile = db().pullBackup(selectedBackup);
                 confirmRestoreFile(backupFile);
             } else{
                 String  message = getString(R.string.no_backup) + selectedBackup + "\"";
@@ -271,25 +329,15 @@ public class BackupActivity extends Activity {
     @NonNull
     private String restoreFromFile(File backupFile) {
         String message;
-        File prev = db.backup("Before restore");
-        if (db.restoreFullpathBackup(backupFile)) {
+        File prev = db().backup("Before restore");
+        if (db().restoreFullpathBackup(backupFile)) {
             message = getString(R.string.restore_successful);
 
-            backupsLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent mainIntent = new Intent(BackupActivity.this, MainActivity.class);
-                    mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(mainIntent);
-                    BackupActivity.this.finish();
-
-                }
-            }, 1000);
+            restartApp();
 
         } else {
             message = getString(R.string.restore_failed_rollback);
-            if (!db.restoreFullpathBackup(prev)) {
+            if (!db().restoreFullpathBackup(prev)) {
                 message = getString(R.string.restore_failed2);
             }
 
@@ -317,7 +365,7 @@ public class BackupActivity extends Activity {
         if (selected) {
 
             String message;
-            if (db.deleteBackup(selectedBackup)) {
+            if (db().deleteBackup(selectedBackup)) {
                 message = getString(R.string.delete_success);
             } else {
                 message = getString(R.string.delete_failed);
@@ -333,7 +381,7 @@ public class BackupActivity extends Activity {
                 @Override
                 public void selected(File selection) {
                     String message;
-                    if (FsTools.copyFileToDir(db.pullBackup(selectedBackup), selection)!=null) {
+                    if (FsTools.copyFileToDir(db().pullBackup(selectedBackup), selection)!=null) {
                         message = getString(R.string.copy_sucess);
                     } else {
                         message = getString(R.string.copy_failed);

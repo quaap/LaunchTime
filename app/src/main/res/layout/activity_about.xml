@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_about"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,12 +10,15 @@
     tools:context="com.quaap.launchtime.AboutActivity"
     android:background="#ff444444">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+
         android:layout_marginTop="11dp"
         android:id="@+id/txtappname"
         android:textSize="24sp" />
@@ -26,7 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:id="@+id/txtAbout"
-        android:layout_below="@+id/txtappname"
-        android:layout_centerHorizontal="true"
-        android:textSize="18sp" />
-</RelativeLayout>
+        android:textSize="18sp"
+        android:textColor="@color/textcolor"
+        android:textColorHint="@color/textcolor" />
+    </LinearLayout>
+</ScrollView>

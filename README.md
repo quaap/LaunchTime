@@ -9,14 +9,16 @@ app hiding, color selcetion, and portrait and landscape support.
 I've been using it on my LG phone as I develop, but it is still a late alpha or early beta stage,
 so breaking changes are possible.
 
+Version 0.2 is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime).
+
 Features
 ----------
 * Configurable app categories in a scrollable side menu.
 * Scrolling QuickBar on the bottom for easy access to your favorite apps.
 * Text search to find apps.
 * List of recent apps.
-* Widget support (no resizing yet)
-* Rearrange icons and menu items.
+* Some widget support (no resizing yet)
+* Rearrange/sort icons and menu items.
 * Shortcut/link support.
 * Supports both portrait and landscape mode.
 * Can hide apps you don't want but can't uninstall.

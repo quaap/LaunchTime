@@ -57,14 +57,14 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
     public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
-        return createAppShortcut(context, pm, ri, true);
+        return createAppShortcut(context, pm, ri, null, true);
     }
 
-    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri, boolean autocat) {
+    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
         String activityName = ri.activityInfo.name;
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
-            app = new AppShortcut(context, pm, ri, autocat);
+            app = new AppShortcut(context, pm, ri, category, autocat);
             mAppShortcuts.put(activityName, app);
         }
         return app;
@@ -100,6 +100,10 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return mAppShortcuts.get(activityName);
     }
 
+    public static AppShortcut removeAppShortcut(String activityName) {
+        return mAppShortcuts.remove(activityName);
+    }
+
 
     private AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
@@ -123,34 +127,26 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
     }
 
-//    public AppShortcut(PackageManager pm, String packageName) throws PackageManager.NameNotFoundException {
-//        mPackageName = packageName;
-//        ApplicationInfo info = pm.getApplicationInfo(mPackageName, PackageManager.GET_META_DATA);
-//        mActivityName = pm.resolveActivity()
-//        mLabel = pm.getApplicationLabel(info).toString();
-//        mCategory = Categories.getCategoryForPackage(mPackageName);
-//        loadAppIconAsync(pm);
-//        mWidget = false;
-//    }
 
-    private AppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
-
-    }
-    private AppShortcut(Context context, PackageManager pm, ResolveInfo ri, boolean autocat) {
+    private AppShortcut(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
         mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
-        if (autocat) {
+        if (category!=null) {
+            mCategory = category;
+            //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  cat " + category);
+        } else if (autocat) {
             mCategory = Categories.getCategoryForPackage(context, mPackageName);
             if (mCategory.equals(Categories.CAT_OTHER)) {
                 mCategory = Categories.getCategoryForPackage(context, mActivityName);
             }
+            //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  auto " + category);
         } else {
             mCategory = Categories.CAT_OTHER;
+            //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  plain " + category);
         }
         mWidget = false;
 
-        Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel);
 
 
         loadAppIconAsync(context, pm);
@@ -264,7 +260,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
                 }
                 try {
                     app_icon = pm.getActivityIcon(intent);
-                } catch (Exception e) {
+                } catch (Exception | OutOfMemoryError e) {
                     Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
                 }
                 if (app_icon == null) {
@@ -283,7 +279,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
                         app_icon.draw(canvas);
                         app_icon = new BitmapDrawable(context.getResources(), newbm);
                         //Log.d("loadAppIconAsync", " yo");
-                    } catch (Exception e) {
+                    } catch (Exception | OutOfMemoryError e) {
                         Log.e("loadAppIconAsync", "couldn't make special icon", e);
                     }
                 }

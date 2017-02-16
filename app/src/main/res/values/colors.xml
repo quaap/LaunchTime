@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="textcolor">#eeffffff</color>
+    <color name="textcolor">#e9e7e7</color>
     <color name="textcolorinv">#ee111111</color>
 
     <color name="btn_background">#99125912</color>
     <color name="cattab_background">#99119911</color>
-    <color name="cattabdraghover_background">#aa7777ee</color>
     <color name="cattabselected_background">#aa77ee77</color>
 
     <color name="dragover_background">#775555ee</color>
