@@ -441,7 +441,7 @@ public class DB extends SQLiteOpenHelper {
                         " from " + APP_TABLE + " as app " +
                         " inner join " + TAB_ORDER_TABLE + " as tab on app." + CATID + "=tab." + CATID +
                         " where app." + LABEL + " like ? and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
-                        " order by 2 ",
+                        " order by 3 ",
                 new String[]{filter});
 
         return cursor;
