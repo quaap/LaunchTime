@@ -135,7 +135,7 @@
                 android:background="#056605">
 
                 <TextView
-                    android:text="Link"
+                    android:text="@string/link"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:id="@+id/link_dz_text"

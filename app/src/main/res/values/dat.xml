@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="feedback_url">http://quaap.com/appbackend/receivedata.php</string>
+    <string name="feedback_url" translatable="false">http://quaap.com/appbackend/receivedata.php</string>
 </resources>

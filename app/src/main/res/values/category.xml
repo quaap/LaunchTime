@@ -3,7 +3,7 @@
 
     <!-- don't need to translate these -->
 
-    <string-array name="CAT_TALK">
+    <string-array translatable="false" name="CAT_TALK">
         <item>phone</item>
         <item>conv</item>
         <item>call</item>
@@ -21,7 +21,7 @@
         <item>chat</item>
         <item>com.narvii</item>
     </string-array>
-    <string-array name="CAT_GAMES">
+    <string-array translatable="false" name="CAT_GAMES">
         <item>game</item>
         <item>play</item>
         <item>puzz</item>
@@ -38,7 +38,7 @@
         <item>com.miniclip</item>
 
     </string-array>
-    <string-array name="CAT_INTERNET">
+    <string-array translatable="false" name="CAT_INTERNET">
         <item>download</item>
         <item>browser</item>
         <item>maps</item>
@@ -46,7 +46,7 @@
         <item>chrome</item>
         <item>drive</item>
     </string-array>
-    <string-array name="CAT_MEDIA">
+    <string-array translatable="false" name="CAT_MEDIA">
         <item>radio</item>
         <item>voice</item>
         <item>audio</item>
@@ -59,7 +59,7 @@
         <item>sfx</item>
         <item>mic</item>
     </string-array>
-    <string-array name="CAT_GRAPHICS">
+    <string-array translatable="false" name="CAT_GRAPHICS">
         <item>pic</item>
         <item>pix</item>
         <item>gallery</item>
@@ -80,7 +80,7 @@
         <item>svg</item>
         <item>png</item>
     </string-array>
-    <string-array name="CAT_ACCESSORIES">
+    <string-array translatable="false" name="CAT_ACCESSORIES">
         <item>editor</item>
         <item>calc</item>
         <item>calendar</item>
@@ -95,7 +95,7 @@
         <item>reader</item>
         <item>office</item>
     </string-array>
-    <string-array name="CAT_SETTINGS">
+    <string-array translatable="false" name="CAT_SETTINGS">
         <item>setting</item>
         <item>config</item>
         <item>keyboard</item>
