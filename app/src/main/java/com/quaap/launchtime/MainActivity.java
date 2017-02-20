@@ -904,9 +904,9 @@ public class MainActivity extends Activity implements
 
                 if (dbactvnames.contains(appcn) && app != null) {
                     app.loadAppIconAsync(this, mPackageMan);
-                    Log.d("app", "app was in db " + actvname);
+                    //Log.d("app", "app was in db " + actvname);
                 } else {
-                    Log.d("app", "app was not in db " + actvname);
+                    //Log.d("app", "app was not in db " + actvname);
                     app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
                     newapps.add(app);
                 }
