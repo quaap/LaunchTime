@@ -565,6 +565,7 @@ public class MainActivity extends Activity implements
         String packagename = app.getPackageName();
         String uristr = null;
         Uri uri = null;
+        boolean isapplink = false;
         try {
             if (app.isLink()) {
                 uristr = app.getLinkUri();
@@ -572,7 +573,10 @@ public class MainActivity extends Activity implements
                     uri = Uri.parse(uristr);
                     if (uri!=null &&
                             (uri.getScheme()!=null && uri.getScheme().startsWith(linkuri))
-                            ) uri = null;
+                            ) {
+                        uri = null;
+                        isapplink = true;
+                    }
                 }
 
             }
@@ -603,7 +607,11 @@ public class MainActivity extends Activity implements
             // actually start it
             startActivity(intent);
             //log the launch
-            db().appLaunched(app.getComponentName());
+            if (isapplink) {
+                db().appLaunched(new ComponentName(app.getPackageName(), app.getLinkBaseActivityName()));
+            } else {
+                db().appLaunched(app.getComponentName());
+            }
         } catch (Exception e) {
             Log.d("Launch", "Could not launch " + activityname, e);
             Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
@@ -1553,6 +1561,10 @@ public class MainActivity extends Activity implements
             db().setAppCategoryOrder(mRevCategoryMap.get(target), target);
             if (!target.equals(mDragDropSource)) {
                 db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+            }
+
+            if (mCategory.equals(Categories.CAT_SEARCH)) {
+                mSearchAdapter.refreshCursor();
             }
             return false;
         }
