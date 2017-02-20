@@ -1454,18 +1454,22 @@ public class MainActivity extends Activity implements
             Object droppedOnTag = droppedOn.getTag();
             if (droppedOn == mRemoveDropzone) {  // need to delete the dropped thing
                 //Stuff to be deleted
-                if (mQuickRow == mDragDropSource || mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
+                if (mQuickRow == mDragDropSource) {
                     removeDroppedItem(dragObj);
                 } else if (mCategory.equals(Categories.CAT_SEARCH)) {
                     removeDroppedRecentItem(dragObj);
+                } else if (mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
+                    removeDroppedItem(dragObj);
                 } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
                     //delete category tab
                     promptDeleteCategory((String) dragObj.getTag());
 
                 } else {
                     //uninstall app
-                    mBeingUninstalled = dragObj;
-                    launchUninstallIntent(mBeingDragged.getPackageName());
+                    if (mBeingDragged!=null) {
+                        mBeingUninstalled = dragObj;
+                        launchUninstallIntent(mBeingDragged.getPackageName());
+                    }
                 }
                 return true;
             } else if (droppedOn == mLinkDropzone) {
