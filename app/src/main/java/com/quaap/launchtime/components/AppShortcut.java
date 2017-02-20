@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.quaap.launchtime.R;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -273,7 +277,9 @@ public class AppShortcut implements Comparable<AppShortcut> {
                     app_icon = pm.getDefaultActivityIcon();
                 }
 
+
                 Bitmap bitmap = IconCache.loadBitmap(context, mActivityName);
+
 
                 if (bitmap!=null) {
                     Log.d("loadAppIconAsync", "Got special icon for " + mActivityName);
@@ -290,6 +296,9 @@ public class AppShortcut implements Comparable<AppShortcut> {
                     }
                 }
 
+                if (isLink()) {
+                    app_icon = drawLinkSymbol(app_icon, context);
+                }
 
 
                 return app_icon;
@@ -310,6 +319,30 @@ public class AppShortcut implements Comparable<AppShortcut> {
         };
 
         loadAppIconTask.execute(null, null, null);
+    }
+
+    private Drawable drawLinkSymbol(Drawable app_icon, Context context) {
+        try {
+            Bitmap newbm = Bitmap.createBitmap(app_icon.getIntrinsicWidth(), app_icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(newbm);
+            app_icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            app_icon.draw(canvas);
+
+            Drawable link;
+            if (Build.VERSION.SDK_INT >= 21) {
+                link = context.getDrawable(R.drawable.link);
+            } else {
+                link = context.getResources().getDrawable(R.drawable.link);
+            }
+            link.setBounds(canvas.getWidth() / 2, canvas.getHeight()/2, canvas.getWidth(), canvas.getHeight());
+            link.draw(canvas);
+
+            app_icon = new BitmapDrawable(context.getResources(), newbm);
+            //Log.d("loadAppIconAsync", " yo");
+        } catch (Exception | OutOfMemoryError e) {
+            Log.e("loadAppIconAsync", "couldn't make link icon", e);
+        }
+        return app_icon;
     }
 
 }

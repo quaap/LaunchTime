@@ -689,6 +689,7 @@ public class MainActivity extends Activity implements
         List<AppShortcut> apps = db().getApps(category);
 
         for (ComponentName actvname : apporder) {
+            //Log.d("app", "repopulateIconSheet " + category + " " +  actvname.getClassName() + " " +  actvname.getPackageName());
             for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
                 AppShortcut app = it.next();
                 if (actvname.equals(app.getComponentName())) {
@@ -902,9 +903,9 @@ public class MainActivity extends Activity implements
 
                 if (dbactvnames.contains(appcn) && app != null) {
                     app.loadAppIconAsync(this, mPackageMan);
-                    //Log.d("app", "app was in db " + actvname);
+                  //  Log.d("app", "app was in db " + actvname + " " +  ri.activityInfo.packageName);
                 } else {
-                    //Log.d("app", "app was not in db " + actvname);
+                  //  Log.d("app", "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
                     app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
                     newapps.add(app);
                 }
