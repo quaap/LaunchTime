@@ -142,7 +142,8 @@
                     android:layout_gravity="top|center_horizontal"
                     android:gravity="center"
                     android:drawableBottom="@drawable/linkicon"
-                    android:textColor="#ffffff" />
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
             </FrameLayout>
 
             <FrameLayout
@@ -160,7 +161,8 @@
                     android:layout_height="match_parent"
                     android:id="@+id/remove_dz_txt"
                     android:gravity="center"
-                    android:layout_gravity="top|center_horizontal" />
+                    android:layout_gravity="top|center_horizontal"
+                    android:textSize="12sp" />
             </FrameLayout>
 
         </LinearLayout>
