@@ -222,6 +222,7 @@ public class DB extends SQLiteOpenHelper {
                     ContentValues values = new ContentValues();
                     values.put(PKGNAME, pkg);
                     sqLiteDatabase.update(APP_ORDER_TABLE, values, ACTVNAME +"=?", new String[] { actv });
+                    values.put(PKGNAME, pkg);
                     sqLiteDatabase.update(APP_HISTORY_TABLE, values, ACTVNAME +"=?", new String[] { actv });
                 }
             } finally {
@@ -847,7 +848,9 @@ public class DB extends SQLiteOpenHelper {
 
         try {
             while (cursor.moveToNext()) {
-                activitynames.add(new ComponentName(cursor.getString(1), cursor.getString(0)));
+                if (!cursor.isNull(0) && !cursor.isNull(1) ) {
+                    activitynames.add(new ComponentName(cursor.getString(1), cursor.getString(0)));
+                }
             }
         } finally {
             cursor.close();

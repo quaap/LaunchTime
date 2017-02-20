@@ -893,9 +893,6 @@ public class MainActivity extends Activity implements
 
             ResolveInfo ri = activities.get(i);
             String actvname = ri.activityInfo.name;
-            if (actvname.contains("sago")) {
-                Log.d("dd", ri.activityInfo.packageName + " " + actvname);
-            }
             ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
 
             if (!pmactvnames.contains(appcn)) {
