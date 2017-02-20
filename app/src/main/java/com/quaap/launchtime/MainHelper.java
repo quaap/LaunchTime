@@ -33,7 +33,7 @@ public class MainHelper {
 
     //QuickBar
 
-    public static void checkDefaultApps(final Context context, List<AppShortcut> shortcuts, List<String> quickRowOrder, View quickRow) {
+    public static void checkDefaultApps(final Context context, List<AppShortcut> shortcuts, List<ComponentName> quickRowOrder, View quickRow) {
         if (quickRowOrder.isEmpty()) {
             Map<String, List<String>> defactivities = getDefaultActivities(context);
             boolean addeddefault = false;
@@ -57,7 +57,7 @@ public class MainHelper {
                             String test = defactent.getValue().get(i);
                             if (contains(app, test)) {
                                 Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
-                                quickRowOrder.add(app.getActivityName());
+                                quickRowOrder.add(app.getComponentName());
                                 defactit.remove(); // remove this group
                                 addeddefault = true;
                                 break;  //we're using this app for something
@@ -68,7 +68,7 @@ public class MainHelper {
 
             }
             if (quickRowOrder.isEmpty() && firstapp != null) { //nothing found? add first app found.
-                quickRowOrder.add(firstapp.getActivityName());
+                quickRowOrder.add(firstapp.getComponentName());
             }
             String toastmsg = null;
 

@@ -1,6 +1,7 @@
 package com.quaap.launchtime;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,7 +47,8 @@ public class LaunchReceiver extends BroadcastReceiver {
                 Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
                 ResolveInfo ri = context.getPackageManager().resolveActivity(packageIntent, 0);
                 String activityName = ri.activityInfo.name;
-                String category = db.getAppCategory(activityName);
+                ComponentName cn = new ComponentName(ri.activityInfo.packageName, activityName);
+                String category = db.getAppCategory(cn);
 
                 if (category!=null && db.getCategoryDisplay(category) == null) {
                     category = null;
@@ -54,12 +56,12 @@ public class LaunchReceiver extends BroadcastReceiver {
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                AppShortcut.removeAppShortcut(activityName);
+                AppShortcut.removeAppShortcut(cn);
                 AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri, category, prefs.getBoolean("prefs_autocat", true));
 
 
                 if (db.addApp(app)) {
-                    db.addAppCategoryOrder(app.getCategory(), app.getActivityName());
+                    db.addAppCategoryOrder(app.getCategory(), app.getComponentName());
                     Toast.makeText(context, app.getLabel() + " was installed into " + db.getCategoryDisplay(app.getCategory()), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
@@ -72,7 +74,7 @@ public class LaunchReceiver extends BroadcastReceiver {
             Log.i("RemoveCatch", "The uninstalled package is: " + packageName);
             if (!packageName.equals(context.getPackageName())) { //don't catch self uninstall: probably an upgrade
                 DB db = ((GlobState) context.getApplicationContext()).getDB();
-                db.deleteApp(packageName, true);
+                db.deleteApp(null, packageName);
             }
         } else if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
             Log.d("ShortcutCatch", "intent received");

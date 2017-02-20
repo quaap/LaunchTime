@@ -1,5 +1,6 @@
 package com.quaap.launchtime.components;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,14 +45,14 @@ public class AppShortcut implements Comparable<AppShortcut> {
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
 
 
-    private static Map<String,AppShortcut> mAppShortcuts = new HashMap<>();
+    private static Map<ComponentName,AppShortcut> mAppShortcuts = new HashMap<>();
 
 
     public static AppShortcut createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
             app = new AppShortcut(activityName, packageName, label, category, isWidget);
-            mAppShortcuts.put(activityName, app);
+            mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
@@ -65,7 +66,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
             app = new AppShortcut(context, pm, ri, category, autocat);
-            mAppShortcuts.put(activityName, app);
+            mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
@@ -80,7 +81,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
         AppShortcut app = mAppShortcuts.get(activityName);
         if (app == null) {
             app = new AppShortcut(activityName, packageName, label, category, false);
-            mAppShortcuts.put(activityName, app);
+            mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
@@ -91,16 +92,16 @@ public class AppShortcut implements Comparable<AppShortcut> {
         AppShortcut app = mAppShortcuts.get(actionName);
         if (app == null) {
             app = new AppShortcut(actionName, ACTION_PACKAGE, label, category, false);
-            mAppShortcuts.put(actionName, app);
+            mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppShortcut getAppShortcut(String activityName) {
+    public static AppShortcut getAppShortcut(ComponentName activityName) {
         return mAppShortcuts.get(activityName);
     }
 
-    public static AppShortcut removeAppShortcut(String activityName) {
+    public static AppShortcut removeAppShortcut(ComponentName activityName) {
         return mAppShortcuts.remove(activityName);
     }
 
@@ -159,6 +160,11 @@ public class AppShortcut implements Comparable<AppShortcut> {
         }
         Log.e("Link", "Activity is already a link"+ activityName, new Throwable("Activity is already a link"+ activityName));
         return activityName;
+    }
+
+
+    public ComponentName getComponentName() {
+        return new ComponentName(mPackageName, mActivityName);
     }
 
     public boolean isLink() {

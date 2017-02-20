@@ -1,5 +1,6 @@
 package com.quaap.launchtime.components;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
@@ -129,12 +130,14 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     public void bindView(View view, final Context context, Cursor cursor) {
 
         final String activityName;
+        final String pkgName;
         final String label;
         final String category;
         try {
             activityName = cursor.getString(0);
-            label = cursor.getString(1);
-            category = cursor.getString(2);
+            pkgName = cursor.getString(1);
+            label = cursor.getString(2);
+            category = cursor.getString(3);
         } catch (CursorIndexOutOfBoundsException e) {
             Log.e("LaunchTime", "Bad cursor");
             return;
@@ -159,7 +162,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             @Override
             protected AppShortcut doInBackground(Void... voids) {
 
-                return db().getApp(activityName);
+                return db().getApp(new ComponentName(pkgName,activityName));
             }
 
             @Override
@@ -198,11 +201,12 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     public void onItemClick(Object item, View itemView, int position, long id) {
         Cursor cursor = (Cursor) item;
         String activityName = cursor.getString(0);
+        String pkgName = cursor.getString(1);
         //String label = cursor.getString(1);
 
        // mTextHolder.setText(label);
 
-        mMain.launchApp(activityName);
+        mMain.launchApp(activityName, pkgName);
 
     }
 

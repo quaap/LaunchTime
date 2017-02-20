@@ -12,6 +12,7 @@ package com.quaap.launchtime;
  * See the GNU General Public License for more details.
  */
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -125,14 +126,14 @@ public class FeedbackActivity extends Activity {
 
         DB db = GlobState.getGlobState(this).getDB();
 
-        List<String> actnames = db.getAppActvNames();
+        List<ComponentName> actnames = db.getAppNames();
         Collections.sort(actnames);
 
-        for (String activityname: actnames) {
+        for (ComponentName activityname: actnames) {
             AppShortcut app = db.getApp(activityname);
             if (app==null) continue;
             apps.add(app);
-            appMap.put(activityname,app);
+            appMap.put(activityname.getClassName(),app);
 
             int count = db.getAppLaunchedCount(activityname);
 
@@ -148,7 +149,7 @@ public class FeedbackActivity extends Activity {
                 scrubbed = activityname + "." + count;
             }
             
-            scrubbednames.put(activityname, scrubbed);
+            scrubbednames.put(activityname.getClassName(), scrubbed);
             includes.put(scrubbed, true);
 
         }
@@ -159,8 +160,8 @@ public class FeedbackActivity extends Activity {
             includes.put(cat, true);
         }
 
-        for (String actvname: db.getAppCategoryOrder(MainActivity.QUICK_ROW_CAT)) {
-            String name = "qr." + scrubbednames.get(actvname);
+        for (ComponentName actvname: db.getAppCategoryOrder(MainActivity.QUICK_ROW_CAT)) {
+            String name = "qr." + scrubbednames.get(actvname.getClassName());
             scrubbednames.put(name, name);
             includes.put(name, true);
         }
