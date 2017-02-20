@@ -129,6 +129,22 @@
             </HorizontalScrollView>
 
             <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:id="@+id/link_dropzone"
+                android:background="#117711">
+
+                <TextView
+                    android:text="Link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/link_dz_text"
+                    android:layout_gravity="top|center_horizontal"
+                    android:gravity="center"
+                    android:drawableBottom="@drawable/linkicon" />
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_height="match_parent"
                 android:background="#ddff3333"
                 android:id="@+id/remove_dropzone"

@@ -116,6 +116,7 @@ public class MainActivity extends Activity implements
     private LinearLayout mCategoriesLayout;
     private TextView mRemoveAppText;
     private FrameLayout mRemoveDropzone;
+    private FrameLayout mLinkDropzone;
     private PackageManager mPackageMan;
     private AppShortcut mBeingDragged;
     private volatile ViewGroup mDragDropSource;
@@ -551,6 +552,7 @@ public class MainActivity extends Activity implements
             Log.e("Launch", e.getMessage(), e);
         }
     }
+    private static final String linkuri = "_link";
 
 
     //Run/open the thing that was clicked
@@ -562,12 +564,19 @@ public class MainActivity extends Activity implements
         String activityname = app.getLinkBaseActivityName();
         String packagename = app.getPackageName();
         String uristr = null;
-        if (app.isLink()) {
-            uristr = app.getLinkUri();
-        }
-        Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
-
+        Uri uri = null;
         try {
+            if (app.isLink()) {
+                uristr = app.getLinkUri();
+                if (uristr!=null) {
+                    uri = Uri.parse(uristr);
+                    if (uri!=null &&
+                            (uri.getScheme()!=null && uri.getScheme().startsWith(linkuri))
+                            ) uri = null;
+                }
+
+            }
+            Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
             Intent intent;
             // is Link is a shortcut?
             if (app.isActionLink()) {
@@ -577,13 +586,13 @@ public class MainActivity extends Activity implements
                     activityname = "android.intent.action.DIAL";
                 }
                 //build an activity-specific intent with the uri
-                intent = new Intent(activityname, Uri.parse(uristr));
+                intent = new Intent(activityname, uri);
             } else {
                 //regualt activity, start with MAIN
                 if (uristr == null) {
                     intent = new Intent(Intent.ACTION_MAIN);
                 } else {
-                    intent = new Intent(Intent.ACTION_MAIN, Uri.parse(uristr));
+                    intent = new Intent(Intent.ACTION_MAIN, uri);
                 }
                 intent.setClassName(packagename, activityname);
             }
@@ -1348,6 +1357,7 @@ public class MainActivity extends Activity implements
         return categoryTab;
     }
 
+    private long mDropZoneHover=0;
     private View.OnDragListener mMainDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View droppedOn, DragEvent event) {
@@ -1358,7 +1368,7 @@ public class MainActivity extends Activity implements
             if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppShortcut )) {
                 isShortcut = false;
             }
-            boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone || !isShortcut || mQuickRow == mDragDropSource;
+            boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone || droppedOn == mLinkDropzone || !isShortcut || mQuickRow == mDragDropSource;
 
             //prevent dropping categories anywhere but category area and trash
             if (mDragDropSource==mCategoriesLayout && !(droppedOn==mCategoriesLayout || droppedOn==mRemoveDropzone )) {
@@ -1376,11 +1386,20 @@ public class MainActivity extends Activity implements
                     if (isShortcut) {
                         scrollOnDrag(droppedOn, event, mIconSheetScroller);
                         hscrollOnDrag(droppedOn, event, mQuickRowScroller);
+
+                        if (mLinkDropzone.getVisibility()!=View.VISIBLE && droppedOn==mRemoveDropzone && System.currentTimeMillis()-mDropZoneHover > 100) {
+                            mLinkDropzone.setVisibility(View.VISIBLE);
+                           // Log.d("LaunchTime", "mLinkDropzone.setVisibility(View.VISIBLE)");
+                        }
                     }
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if (!nocolor ) {
                         droppedOn.setBackgroundColor(dragoverBackground);
+                    }
+                    if (droppedOn==mRemoveDropzone) {
+                        mDropZoneHover = System.currentTimeMillis();
+                        //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
                     }
                     //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
                     break;
@@ -1389,6 +1408,9 @@ public class MainActivity extends Activity implements
                     if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
                     break;
                 case DragEvent.ACTION_DROP:
+
+                    //Log.d("dropon", droppedOn.toString());
+
                     if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
                     // Dropped, reassign View to ViewGroup
 
@@ -1432,7 +1454,14 @@ public class MainActivity extends Activity implements
                     launchUninstallIntent(mBeingDragged.getPackageName());
                 }
                 return true;
-
+            } else if (droppedOn == mLinkDropzone) {
+                if (isShortcut) {
+                    AppShortcut app = (AppShortcut)dragObj.getTag();
+                    AppShortcut appshortcut = AppShortcut.createActionLink(app.getActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), app.getPackageName(), app.getLabel(), app.getCategory());
+                    db().addApp(appshortcut);
+                    repopulateIconSheet(mCategory);
+                }
+                return true;
             } else if (droppedOn instanceof GridLayout) {
                 target = (GridLayout) droppedOn;
             } else if (droppedOn instanceof FrameLayout) {
@@ -1679,13 +1708,15 @@ public class MainActivity extends Activity implements
             mRemoveDropzone.setBackgroundColor(Color.RED);
            // mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
             mRemoveAppText.setText(R.string.uninstall_app);
-            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.trash);
+            //mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.trash);
+            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showy, 0,0,R.drawable.trash);
             mRemoveAppText.setTextColor(Color.WHITE);
         }
     }
 
     private void hideRemoveDropzone() {
         mRemoveDropzone.setVisibility(View.GONE);
+        mLinkDropzone.setVisibility(View.GONE);
     }
 
     private void launchUninstallIntent(String packageName) {
@@ -2056,6 +2087,12 @@ public class MainActivity extends Activity implements
         mRemoveDropzone = (FrameLayout) findViewById(R.id.remove_dropzone);
         mRemoveDropzone.setOnDragListener(mMainDragListener);
         mRemoveAppText = (TextView) findViewById(R.id.remove_dz_txt);
+
+        mLinkDropzone = (FrameLayout) findViewById(R.id.link_dropzone);
+        mLinkDropzone.setOnDragListener(mMainDragListener);
+
+        //((TextView) findViewById(R.id.link_dz_text)).setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.linkicon);
+
 
         mCategoriesScroller = (ScrollView)findViewById(R.id.layout_categories_scroller);
 
