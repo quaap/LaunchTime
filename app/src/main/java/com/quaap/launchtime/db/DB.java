@@ -94,6 +94,8 @@ public class DB extends SQLiteOpenHelper {
 
     private DBClosedListener mDBClosedListener;
 
+    private ComponentName latestInstall;
+    private long latestInstallTime;
 
     public static DB openDB(Context context, DBClosedListener dBClosedListener) {
          return new DB(context, dBClosedListener);
@@ -401,8 +403,21 @@ public class DB extends SQLiteOpenHelper {
        return addApp(db, actvname, pkgname, label, catID, widget);
     }
 
+    public long getLatestInstallTime() {
+        return latestInstallTime;
+    }
+
+    public ComponentName getLatestInstall() {
+        return latestInstall;
+    }
+
     private boolean addApp(SQLiteDatabase db, String actvname, String pkgname, String label, String catID, boolean widget) {
         try {
+
+            if (pkgname!=null && actvname!=null) {
+                latestInstall = new ComponentName(pkgname, actvname);
+                latestInstallTime = System.currentTimeMillis();
+            }
 
             String dbcat = getCategoryDisplay(catID);
             if (dbcat==null) {

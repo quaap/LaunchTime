@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.quaap.launchtime.components.AppShortcut;
@@ -48,6 +49,8 @@ public class ShortcutReceiver extends BroadcastReceiver {
                     if (intent2 != null) {
                         Uri data = intent2.getData();
                         ComponentName cn = intent2.getComponent();
+
+
                         String intentaction = intent2.getAction();
                         String shortcutLabel = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
 //                        for (String key: intent2.getExtras().keySet()) {
@@ -96,6 +99,15 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     private void addLink(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
         DB db = GlobState.getGlobState(context).getDB();
+
+        ComponentName latest = db.getLatestInstall();
+        if (latest!=null && System.currentTimeMillis() - db.getLatestInstallTime()<4000) {
+            if (latest.equals(cn)) {
+                Log.i("ShortcutCatch", "ignoring cn2package=" + cn.getPackageName() + ", cn2classname=" + cn.getClassName());
+                return;
+            }
+        }
+
         String catID = Categories.getCategoryForPackage(context, cn.getPackageName());
 
         AppShortcut appshortcut = AppShortcut.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
