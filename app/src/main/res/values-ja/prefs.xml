@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Translate only the "_strings" entries -->
+
+    <string-array name="pref_return_home_values">
+        <item>0</item>
+        <item>30</item>
+        <item>60</item>
+        <item>300</item>
+        <item>1800</item>
+        <item>3600</item>
+        <item>86400</item>
+        <item>31536000</item>
+    </string-array>
+
+    <string-array name="pref_return_home_strings">
+        <item>すぐに</item>
+        <item>30 秒後</item>
+        <item>1 分後</item>
+        <item>5 分後</item>
+        <item>30 分後</item>
+        <item>1 時間後</item>
+        <item>1 日後</item>
+        <item>しない</item>
+    </string-array>
+
+
+    <string-array name="pref_orientation_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="pref_orientation_strings">
+        <item>システム</item>
+        <item>必要に応じて回転</item>
+        <item>強制的に縦向き</item>
+        <item>強制的に横向き</item>
+    </string-array>
+
+
+    <string-array name="pref_tab_size_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="pref_size_strings">
+        <item>小</item>
+        <item>中</item>
+        <item>大</item>
+        <item>最大</item>
+    </string-array>
+
+
+    <string-array name="pref_cat_location_values">
+        <item>right</item>
+        <item>left</item>
+    </string-array>
+
+    <string-array name="pref_cat_location_strings">
+        <item>右</item>
+        <item>左</item>
+    </string-array>
+
+</resources>

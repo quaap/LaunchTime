@@ -1,0 +1,325 @@
+<resources>
+
+    <!-- Note: there are some translatable strings in prefs.xml as well -->
+
+    <string name="app_name">LaunchTime</string>
+
+
+    <string name="remove_shortcut">除去</string>
+    <string name="uninstall_app">アンインストール</string>
+    <string name="app_was_uninstalled">アプリケーションはアンインストールされました</string>
+    <string name="uninstall_canceled">アンインストールをキャンセルしました</string>
+    <string name="could_not_uninstall">アプリケーションをアンインストールできませんでした</string>
+
+
+    <string name="category_Search">検索</string>
+    <string name="category_Talk">通信</string>
+    <string name="category_Games">ゲーム</string>
+    <string name="category_Internet">インターネット</string>
+    <string name="category_Media">オーディオ</string>
+    <string name="category_Graphics">グラフィックス</string>
+    <string name="category_Utilities">ユーティリティ</string>
+    <string name="category_Other">その他</string>
+    <string name="category_Settings">設定</string>
+    <string name="category_Hidden">非表示</string>
+
+    <string name="category_Search_full">検索 &amp; 最近使用</string>
+    <string name="category_Talk_full">通信</string>
+    <string name="category_Games_full">ゲーム &amp; アミューズメント</string>
+    <string name="category_Internet_full">インターネット</string>
+    <string name="category_Media_full">オーディオ &amp; 音楽</string>
+    <string name="category_Graphics_full">グラフィックス &amp; ビデオ</string>
+    <string name="category_Utilities_full">ユーティリティ &amp; ツール</string>
+    <string name="category_Other_full">その他</string>
+    <string name="category_Settings_full">設定 &amp; システム</string>
+    <string name="category_Hidden_full">非表示</string>
+
+
+    <string name="search_apps">アプリの検索</string>
+    <string name="recent_apps">最近使用したアプリ</string>
+
+    <string name="sort_category">カテゴリ\n並び替え</string>
+    <string name="add_widgets">ウィジェット\n追加</string>
+    <string name="add_category">カテゴリ\n追加</string>
+    <string name="rename_category">カテゴリ\編集</string>
+
+    <string name="remove">除去</string>
+    <string name="done">完了</string>
+    <string name="cancel">キャンセル</string>
+    <string name="rename_cat">カテゴリの名前を変更</string>
+    <string name="rename_cat2">このカテゴリの名前を変更</string>
+    <string name="rename_cat3">この特別なカテゴリの名前を変更します (以前の機能は残ります)</string>
+    <string name="need_name">名前を入力する必要があります</string>
+    <string name="no_rename">カテゴリの名前を変更できません</string>
+    <string name="add_cat">カテゴリを追加</string>
+    <string name="add_cat2">カテゴリを追加</string>
+    <string name="no_add_cat">カテゴリを追加できません</string>
+    <string name="delete_cat">カテゴリを削除しますか?</string>
+    <string name="delete_cat_prompt">このカテゴリを削除してもよろしいですか?</string>
+    <string name="delete">削除</string>
+    <string name="cat_deleted">カテゴリを削除しました。 アプリケーションはカテゴリ %s に移動しました</string>
+    <string name="no_delete_cat">カテゴリを削除できません</string>
+
+    <string name="short_name">短い名前</string>
+    <string name="full_name">長い名前 (オプション)</string>
+    <string name="is_tiny">小さく</string>
+
+
+    <string name="pref_orient">向き</string>
+    <string name="pref_about">アプリについて</string>
+    <string name="pref_help_about">ヘルプとアプリについて</string>
+
+    <string name="send_info_expl">ユーザーがアプリをどのように分類するかをより深く理解するため、
+        次の情報が開発者（のみ）に送信されます。 ログインした IP のみ。</string>
+    <string name="send">送信</string>
+    <string name="send_comment">任意のコメント:</string>
+    <string name="remove_data">送信したくないアイテムのチェックを外してください</string>
+    <string name="sent_success">データを正常に送信しました。 ありがとうございます!</string>
+    <string name="sent_failed">データの転送に失敗しました:</string>
+    <string name="backup_and_restore">バックアップと復元</string>
+    <string name="backup_explain">お好みのやり方がある場合、または大きな変更を加えようとしている場合は、
+        バックアップを取得してください! アプリをアンインストールするとこれらのバックアップは削除されるので、
+        \"選択したバックアップをファイルシステムにコピー\" ボタンを使用して、
+        残したいバックアップを保存してください。</string>
+    <string name="take_new_backup">新しいバックアップを取得</string>
+    <string name="restore_selected_backup">選択したバックアップを復元</string>
+    <string name="delete_selected_backup">選択したバックアップを削除</string>
+    <string name="copy_selected_backup">選択したバックアップをファイルシステムにコピー</string>
+    <string name="load_a_backup">ファイルシステムからバックアップを読み込み</string>
+    <string name="there_was_a_problem">問題がありました</string>
+    <string name="add_a_comment">コメントを追加</string>
+    <string name="send_error_report">エラー報告を送信</string>
+    <string name="go_to_settings">設定に移動</string>
+
+    <string name="show_extfs_opts">外部バックアップオプションを表示…</string>
+    <string name="hide_extfs_opts">外部バックアップオプションを非表示…</string>
+    <string name="no_backup_selected">選択なし</string>
+    <string name="opt_name">オプションの名前</string>
+    <string name="new_backup">新しいバックアップ</string>
+    <string name="take_backup">バックアップを取得</string>
+    <string name="backup_success">バックアップに成功しました!</string>
+    <string name="backup_failed">バックアップに失敗しました</string>
+    <string name="select_file_restore">復元するファイルを選択</string>
+    <string name="no_backup">そのようなバックアップはありません \"</string>
+    <string name="confirm_restore1">復元しますか?</string>
+    <string name="confirm_restore2">復元すると、現在行われた変更は失われます。</string>
+    <string name="restore">復元</string>
+    <string name="restore_successful">復元に成功しました! 再起動します。</string>
+    <string name="restore_failed_rollback">復元に失敗しました。 ロールバック中</string>
+    <string name="restore_failed2">復元に失敗しました。 データベース状態が不明。</string>
+    <string name="confirm_delete1">削除しますか?</string>
+    <string name="confirm_delete2">バックアップを削除してもよろしいですか \'</string>
+    <string name="delete_success">削除に成功しました!</string>
+    <string name="delete_failed">削除に失敗しました</string>
+    <string name="copy_sucess">コピーに成功しました!</string>
+    <string name="copy_failed">コピーに失敗しました</string>
+    <string name="select_save_location">保存する場所を選択</string>
+    <string name="perm_granted">もう一度操作をやり直してください。</string>
+    <string name="perm_not_granted">ブ～</string>
+    <string name="app">アプリ</string>
+    <string name="config">構成</string>
+    <string name="previously_deleted">以前削除しました</string>
+    <string name="pref_senddat">アプリデータを送信</string>
+    <string name="pref_senddat_summ">どのアプリがインストールされているかについてのデータを
+        アプリ開発者に送信します</string>
+    <string name="pref_backup">バックアップと復元</string>
+    <string name="pref_backup_summ">LaunchTime の構成をバックアップおよび復元します
+        (カテゴリ、アプリの並び、最近使用したアプリ、など)</string>
+    <string name="pref_system">システム設定</string>
+    <string name="pref_system_summ">システム設定を表示します</string>
+    <string name="pref_tabsize">カテゴリタブのサイズ</string>
+    <string name="pref_icontext">アイコン文字色</string>
+    <string name="pref_tabtext">タブ文字色</string>
+    <string name="pref_tabback">タブ背景色</string>
+    <string name="pref_tabsel">選択したタブの色</string>
+    <string name="pref_drag">ドラッグオーバー色</string>
+    <string name="choose_your_color">色を選択</string>
+    <string name="red">赤</string>
+    <string name="green">緑</string>
+    <string name="blue">青</string>
+    <string name="brightness">明度</string>
+    <string name="transparency">透明度</string>
+    <string name="pref_color_style">色とスタイル</string>
+    <string name="pref_app_system">アプリとシステム</string>
+    <string name="pref_hide_empty_cat">空のカテゴリを非表示</string>
+    <string name="prefs_new_apps_cat">新しいアプリを自動カテゴリ</string>
+    <string name="prefs_empty_cats_hid">空のカテゴリを非表示にします</string>
+    <string name="prefs_empty_cats_show">空のカテゴリを表示します</string>
+    <string name="prefs_cat_apps">アプリはカテゴリに分類されます</string>
+    <string name="prefs_cat_no">アプリは \"その他\" に配置されます</string>
+    <string name="pref_cat_loc">カテゴリは %s になります</string>
+    <string name="pref_cat_sort">カテゴリの並び替えg</string>
+    <string name="pref_cat_sort_on">カテゴリは選択した並び順を記憶します</string>
+    <string name="pref_cat_sort_off">カテゴリを並び替えしません</string>
+    <string name="pref_todd_lock">チャイルドモード</string>
+    <string name="pref_todd_lock_summ">現在のカテゴリにロックし、ドラッグ/移動/削除を防止することで、
+        子供の操作によるダメージを限定します。
+        画面にコードを入力して終了します。</string>
+    <string name="pref_returnhome_summ">放置した場合に、一番上のカテゴリに移動します: %s.</string>
+    <string name="pref_returnhome">ホームに戻るタイムアウト</string>
+
+    <string name="search_hint">検索します。 \".\" はワイルドカードです</string>
+    <string name="widget_alreay">このウィジェットはすでにカテゴリ \"%s\" にあります</string>
+
+
+    <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
+
+    <string name="sort_prompt_title">カテゴリの並び替え</string>
+    <string name="kid_escape_text">\'%s\' を押すと終了します</string>
+    <string name="reset_db">データベースをリセットしますか?</string>
+    <string name="reset_db_explain">データベースは再作成され、すべてのアプリは
+        \"アプリを自動カテゴリ\" の設定に従って再カテゴリされます。</string>
+    <string name="reset">リセット</string>
+    <string name="clear_recent">最近使用したアイテムをクリアしますか?</string>
+    <string name="clear">クリア</string>
+    <string name="reset_database">データベースをリセット</string>
+
+
+    <string-array name="sort_strings">
+        <item>名前</item>
+        <item>最近使用</item>
+        <item>インストール日 (最新のものが最初)</item>
+        <item>インストール日 (古いものが最初)</item>
+        <item>パッケージ</item>
+    </string-array>
+
+
+
+
+
+
+
+    <string name="about_app">
+        <![CDATA[
+
+          <h1>ヘルプとアプリについて</h1>
+
+           <p>LaunchTime へようこそ!</p>
+
+           <p>LaunchTime はオープンソースソフトウェアです。 完全なライセンスとソースコードは
+            <a href=\"https://github.com/quaap/LaunchTime\">こちら</a> をご覧ください。</p>
+
+            <p>問題、フィードバック、提案は
+            <a href=\"https://github.com/quaap/LaunchTime/issues\">こちら</a> に報告してください。</p>
+
+            <p>このプログラムは
+            <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a> が作成しました</p>
+
+           <p>このページをもう一度見るには、画面下部の小さな上向き矢印、次にレンチアイコン、
+           そして \"ヘルプとアプリについて\" をくりっくしてください。</p>
+
+
+          <h1>ヘルプ</h1>
+
+            <p>LaunchTime の主な部分:</p>
+
+             <p>* クイックバー: 一番下にあるバーに、一般的に使用されるアプリを保持します。
+             必要に応じて左右にスクロールします。</p>
+             <p>* カテゴリタブ: カテゴリを一覧表示するサイドメニューです。
+             必要に応じて上下にスクロールします。</p>
+             <p>* カテゴリ / アイコンエリア: アプリで、画面の主要部分です。
+             必要に応じて上下にスクロールします。</p>
+             <p>* 検索ボックス: アプリを名前で検索します。 \"検索/最近使用\" カテゴリにあります。</p>
+             <p>* 最近使用したアプリ: 最近使用したアプリの一覧です。
+             \"検索/最近使用\" カテゴリにあります。</p>
+             <p>* アクションバー: カテゴリの並び替え、名前の変更、追加、ウィジェットの追加、
+             設定メニューへのアクセスなどのボタンがあります。
+             クイックバーの上にある小さな上向き矢印をクリックすると表示します。</p>
+
+
+
+            <h2>移動</h2>
+
+            <p>アプリ、ウィジェット、カテゴリは、長押しして目的の場所にドラッグすることで、
+            移動、再配置することができます。</p>
+
+            <p>アプリやウィジェットを別のカテゴリに移動するには、
+            ドラッグしてカテゴリタブにドロップします。
+            アプリは移動元から除去されて、新しいカテゴリに配置されます。</p>
+
+            <p>アプリまたはウィジェットをクイックバーに配置するには、
+            クイックバーにドラッグ・アンド・ドロップします。
+            アプリは元のカテゴリに残りますが、クイックバーでもアクセスできます。</p>
+
+
+            <h2>除去とアンインストール<h2>
+
+            <h3>アンインストール</h3>
+
+            <p>アプリをアンインストールするには、アプリのカテゴリに移動して、アイコンをドラッグします。
+            \"アンインストール\" ゾーンが右下に表示されます。 アプリを \"アンインストール\"
+            ゾーンにドロップすると、アプリのアンインストールを確認するメッセージが表示されます。</p>
+
+            <h3>除去</h3>
+
+            <p>カテゴリタブ、クイックバーアイコン、ウィジェット、ショートカット（リンク）、
+            または最近使用したアプリエリアのアイコンをドラッグすると、代わりに \"除去\"
+            ゾーンが表示されます。 アイテムを除去ゾーンにドロップすると、
+            アイテムは確認なしに除去されますが、アプリはアンインストールされません。</p>
+
+
+            <h3>アプリの非表示</h3>
+
+            <p>アプリを非表示にする場合、アプリのドラッグを開始すると、サイドメニューに \"非表示\"
+            カテゴリタブが表示されます。 画面をスクロールしている場合は、アプリはメニューの上をドラッグし、
+            下部にまで移動する必要があります。 \"非表示\" カテゴリタブにアプリをドロップします。</p>
+
+            <p>後で \"非表示\" カテゴリにアクセスするには、最下部の上向き矢印をクリックするとタブが表示され、
+            それをクリックすることができます。</p>
+
+
+            <h2>検索</h2>
+
+            <p>\"検索/最近使用\" カテゴリタブに移動します。 検索ボックスに入力を開始します。
+            一致するアプリが検索ボックスの下に表示されます。 ワイルドカード文字としてピリオド (\".\")
+            が使用できます。 ピリオドのみを入力すると、インストールされているすべてのアプリが表示されます。</p>
+
+            <p>検索結果からアプリをドラッグしてカテゴリに配置することができます。</p>
+
+
+            <h2>設定</h2>
+
+            <p>右下の小さな上向き矢印（または左のメニューを設定した場合は左下）をクリックすると、
+            クイックバーにアクションメニューが展開されます。 このメニューで、現在のカテゴリを並べ替え、
+            現在のカテゴリの名前を変更、新しいカテゴリを追加、現在のカテゴリにウィジェットを追加、
+            および設定ページを表示することができます。</p>
+
+            <p>上向き矢印をクリックすると、非表示のカテゴリタブも表示され、
+            それをクリックすることができます。</p>
+
+
+            <h2>ウィジェット/アプリウィジェット</h2>
+
+            <p>現在のカテゴリにウィジェットを追加するには、画面の下部にある小さな上向きの矢印をクリックし、
+            \"ウィジェットを追加\" をクリックします。 利用可能なウィジェットのシステムメニューが表示されます。
+            一つ選択してください。 \"LaunchTime がウィジェットのデータにアクセスするのを許可する\"
+            確認を求められることがあります。ウィジェットを追加するには \"承認\" する必要があります。
+            \"常に許可する\" チェックボックスをクリックすることをお勧めします。そうしないと、
+            追加したウィジェットごとに LaunchTime が(再)起動するたびに確認を求められます。</p>
+
+
+            <h2>チャイルドモード</h2>
+
+            <p>\"チャイルドモード\" に入るには、目的のカテゴリを選択してから設定ページに移動して、
+            \"チャイルドモード\" をクリックしてください。 次に、戻るをクリックします。
+            チャイルドモードに入ると、クイックバーは非表示になり、カテゴリタブは無効になり、
+            アプリを移動、除去、またはアンインストールすることはできません。
+            チャイルドモードを終了するには、画面の下部に指定したコードを入力します。</p>
+
+            <p>これにより、子供が終了させないように、子供に安全なアプリの
+            特別なカテゴリを作成することができます。</p>
+
+            <p><b>チャイルドモードは <i>完全ではない</i> ことに注意してください。 たとえば、
+            ステータスドロップダウンメニューは引き続き使用でき、ハードウェアボタンは引き続き機能し、
+            \"ホーム\" (円) キーを長押しすると Google などが表示されます。</b>
+            可能であれば、将来的には \"より安全に\" するつもりです。</p>
+
+
+            <h2>バックアップ</h2>
+
+            <p>バックアップはアプリの内部に保存され、アンインストールすると削除されます。
+            バックアップを保存するには、\"外部バックアップ\" ボタンを使用してファイルシステムにコピーしてください。</p>
+
+            ]]>
+    </string>
+</resources>
