@@ -58,12 +58,13 @@ public class DB extends SQLiteOpenHelper {
     private static final String ISTINY = "tiny";
 
 
-    private static final String APP_TABLE = "apps";
+    private static final String APP_TABLE_OLD = "apps";
+    private static final String APP_TABLE = "apps2";
     private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID, ISWIDGET, ISUNINSTALLED};
-    private static final String[] appcolumntypes = {"TEXT primary key", "TEXT", "TEXT", "TEXT", "SHORT", "SHORT"};
+    private static final String[] appcolumntypes = {"TEXT", "TEXT", "TEXT", "TEXT", "SHORT", "SHORT"};
     private static final String APP_TABLE_CREATE = buildCreateTableStmt(APP_TABLE, appcolumns, appcolumntypes);
 
-    private static final String[] appcolumnsindex = {PKGNAME, CATID, ISUNINSTALLED};
+    private static final String[] appcolumnsindex = {ACTVNAME, PKGNAME, CATID, ISUNINSTALLED};
 
     private static final String APP_ORDER_TABLE = "apps_order";
     private static final String[] appordercolumns = {CATID, ACTVNAME, INDEX, PKGNAME};
@@ -190,6 +191,25 @@ public class DB extends SQLiteOpenHelper {
             sqLiteDatabase.update(APP_TABLE, values, null, null);
         }
         if (i<=2 && i1>=3) {
+
+            sqLiteDatabase.execSQL(APP_TABLE_CREATE);
+            for (String createind : appcolumnsindex) {
+                sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE, createind));
+            }
+
+            boolean first = true;
+            String cols = "";
+            for (String col: appcolumns) {
+                if (first) first = false; else cols += ", ";
+                cols += col;
+
+            }
+
+
+            Log.i("db", "copy to new table");
+            sqLiteDatabase.execSQL("insert into " + APP_TABLE + "(" + cols + ") select " + cols + " from " + APP_TABLE_OLD);
+            sqLiteDatabase.execSQL("drop table " + APP_TABLE_OLD);
+
             sqLiteDatabase.execSQL("alter table " + APP_ORDER_TABLE + " add column " + PKGNAME + " TEXT");
             sqLiteDatabase.execSQL("alter table " + APP_HISTORY_TABLE + " add column " + PKGNAME + " TEXT");
 
@@ -392,15 +412,16 @@ public class DB extends SQLiteOpenHelper {
 
             //Log.d("LaunchDB", "actvname " + actvname + " pkgname "  +pkgname + " added to db");
             ContentValues values = new ContentValues();
-            values.put(PKGNAME, pkgname);
             values.put(LABEL, label);
             values.put(CATID, catID);
             values.put(ISWIDGET, widget ? 1 : 0);
             values.put(ISUNINSTALLED, 0);
 
-            if (db.update(APP_TABLE, values, ACTVNAME+"=?", new String[]{actvname})==0) {
+            if (db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname})==0) {
                 values.put(ACTVNAME, actvname);
+                values.put(PKGNAME, pkgname);
                 db.insert(APP_TABLE, null, values);
+                Log.i("LaunchDB", "inserted " + actvname + " " + pkgname);
             }
 
             return true;

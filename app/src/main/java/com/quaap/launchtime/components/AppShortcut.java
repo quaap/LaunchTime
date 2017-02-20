@@ -49,7 +49,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
 
     public static AppShortcut createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
-        AppShortcut app = mAppShortcuts.get(activityName);
+        AppShortcut app = mAppShortcuts.get(new ComponentName(packageName, activityName));
         if (app == null) {
             app = new AppShortcut(activityName, packageName, label, category, isWidget);
             mAppShortcuts.put(app.getComponentName(), app);
@@ -63,7 +63,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
     public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
         String activityName = ri.activityInfo.name;
-        AppShortcut app = mAppShortcuts.get(activityName);
+        AppShortcut app = mAppShortcuts.get(new ComponentName(ri.activityInfo.packageName, activityName));
         if (app == null) {
             app = new AppShortcut(context, pm, ri, category, autocat);
             mAppShortcuts.put(app.getComponentName(), app);
@@ -78,7 +78,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
     public static AppShortcut createActionLink(String activityName, Uri linkUri, String packageName, String label, String category) {
         activityName = makeLink(activityName, linkUri);
-        AppShortcut app = mAppShortcuts.get(activityName);
+        AppShortcut app = mAppShortcuts.get(new ComponentName(packageName, activityName));
         if (app == null) {
             app = new AppShortcut(activityName, packageName, label, category, false);
             mAppShortcuts.put(app.getComponentName(), app);
@@ -89,7 +89,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
     public static AppShortcut createActionLink(String actionName, Uri linkUri, String label, String category) {
 
         actionName = makeLink(actionName, linkUri);
-        AppShortcut app = mAppShortcuts.get(actionName);
+        AppShortcut app = mAppShortcuts.get(new ComponentName(ACTION_PACKAGE, actionName));
         if (app == null) {
             app = new AppShortcut(actionName, ACTION_PACKAGE, label, category, false);
             mAppShortcuts.put(app.getComponentName(), app);
@@ -221,14 +221,14 @@ public class AppShortcut implements Comparable<AppShortcut> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AppShortcut) {
-            return mActivityName.equals(((AppShortcut) obj).mActivityName);
+            return getComponentName().equals(((AppShortcut) obj).getComponentName());
         }
         return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return mActivityName.hashCode();
+        return getComponentName().hashCode();
     }
 
     @Override
