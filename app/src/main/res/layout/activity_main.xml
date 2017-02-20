@@ -132,7 +132,7 @@
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:id="@+id/link_dropzone"
-                android:background="#117711">
+                android:background="#056605">
 
                 <TextView
                     android:text="Link"
@@ -141,7 +141,8 @@
                     android:id="@+id/link_dz_text"
                     android:layout_gravity="top|center_horizontal"
                     android:gravity="center"
-                    android:drawableBottom="@drawable/linkicon" />
+                    android:drawableBottom="@drawable/linkicon"
+                    android:textColor="#ffffff" />
             </FrameLayout>
 
             <FrameLayout
