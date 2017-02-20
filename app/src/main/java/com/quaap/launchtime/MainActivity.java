@@ -1365,8 +1365,12 @@ public class MainActivity extends Activity implements
 
             View dragObj = (View) event.getLocalState();
             boolean isShortcut = true;
+            boolean isSpecial = false;
             if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppShortcut )) {
                 isShortcut = false;
+            } else  {
+                AppShortcut app = (AppShortcut)dragObj.getTag();
+                isSpecial = app.isLink() || app.isWidget();
             }
             boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone || droppedOn == mLinkDropzone || !isShortcut || mQuickRow == mDragDropSource;
 
@@ -1374,6 +1378,8 @@ public class MainActivity extends Activity implements
             if (mDragDropSource==mCategoriesLayout && !(droppedOn==mCategoriesLayout || droppedOn==mRemoveDropzone )) {
                 return false;
             }
+
+            if (isSpecial && (droppedOn==mQuickRow || isAncestor(mQuickRow, droppedOn))) return false;
 
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -1387,7 +1393,7 @@ public class MainActivity extends Activity implements
                         scrollOnDrag(droppedOn, event, mIconSheetScroller);
                         hscrollOnDrag(droppedOn, event, mQuickRowScroller);
 
-                        if (mLinkDropzone.getVisibility()!=View.VISIBLE && droppedOn==mRemoveDropzone && System.currentTimeMillis()-mDropZoneHover > 100) {
+                        if (!isSpecial && mLinkDropzone.getVisibility()!=View.VISIBLE && droppedOn==mRemoveDropzone && System.currentTimeMillis()-mDropZoneHover > 100) {
                             mLinkDropzone.setVisibility(View.VISIBLE);
                            // Log.d("LaunchTime", "mLinkDropzone.setVisibility(View.VISIBLE)");
                         }
@@ -1595,7 +1601,7 @@ public class MainActivity extends Activity implements
             if (parent == potentialParent) {
                 return true;
             }
-        } while ((parent = parent.getParent()) != null);
+        } while (parent!=null && (parent = parent.getParent()) != null);
         return false;
 
     }
