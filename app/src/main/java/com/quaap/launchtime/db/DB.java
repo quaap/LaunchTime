@@ -731,7 +731,7 @@ public class DB extends SQLiteOpenHelper {
 
     public void setAppCategoryOrder(String catID, List<ComponentName> actvnames, boolean dummy) {
         SQLiteDatabase db = this.getWritableDatabase();
-
+       // Log.d("db", "setAppCategoryOrder " + catID);
         try {
             db.beginTransaction();
             db.delete(APP_ORDER_TABLE, CATID + "=?", new String[]{catID}); //CATID, PKGNAME, INDEX};
@@ -743,6 +743,7 @@ public class DB extends SQLiteOpenHelper {
                 values.put(PKGNAME, actvnames.get(i).getPackageName());
                 values.put(INDEX, i);
                 db.insert(APP_ORDER_TABLE, null, values);
+               // Log.d("db", "  " + i + " " + actvnames.get(i).getPackageName());
             }
 
             db.setTransactionSuccessful();
@@ -775,11 +776,15 @@ public class DB extends SQLiteOpenHelper {
     public List<ComponentName> getAppCategoryOrder(String catID) {
         List<ComponentName> actvnames = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+        //Log.d("db", "getAppCategoryOrder " + catID);
 
         Cursor cursor = db.query(APP_ORDER_TABLE, new String[]{ACTVNAME, PKGNAME}, CATID + "=?", new String[]{catID}, null, null, INDEX);
         try {
+           // int i=0;
             while (cursor.moveToNext()) {
                 actvnames.add(new ComponentName(cursor.getString(1), cursor.getString(0)));
+              //  Log.d("db", "  " + i + " " + cursor.getInt(2) + " " + cursor.getString(1));
+              //  i++;
             }
         } finally {
             cursor.close();

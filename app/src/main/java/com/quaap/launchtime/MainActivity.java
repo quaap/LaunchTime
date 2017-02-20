@@ -691,7 +691,7 @@ public class MainActivity extends Activity implements
         for (ComponentName actvname : apporder) {
             for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
                 AppShortcut app = it.next();
-                if (actvname.equals(app.getActivityName())) {
+                if (actvname.equals(app.getComponentName())) {
                     addAppToIconSheet(iconSheet, app, true);
                     it.remove();
                 }
@@ -700,6 +700,7 @@ public class MainActivity extends Activity implements
 
         for (AppShortcut app : apps) {
             addAppToIconSheet(iconSheet, app, true);
+           // Log.d("order", app.getActivityName());
         }
 
         if (apps.size()>0) {
@@ -1517,7 +1518,9 @@ public class MainActivity extends Activity implements
 
             //save the new order
             db().setAppCategoryOrder(mRevCategoryMap.get(target), target);
-            db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+            if (!target.equals(mDragDropSource)) {
+                db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+            }
             return false;
         }
 
