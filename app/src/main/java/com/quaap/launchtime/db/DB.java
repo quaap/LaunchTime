@@ -184,12 +184,12 @@ public class DB extends SQLiteOpenHelper {
         Log.i("db", "upgrade database");
 
         if (i==1 && i1>=2) {
-            sqLiteDatabase.execSQL("alter table " + APP_TABLE + " add column " + ISUNINSTALLED + " SHORT");
-            sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE,  ISUNINSTALLED));
+            sqLiteDatabase.execSQL("alter table " + APP_TABLE_OLD + " add column " + ISUNINSTALLED + " SHORT");
+            sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE_OLD,  ISUNINSTALLED));
 
             ContentValues values = new ContentValues();
             values.put(ISUNINSTALLED, 0);
-            sqLiteDatabase.update(APP_TABLE, values, null, null);
+            sqLiteDatabase.update(APP_TABLE_OLD, values, null, null);
         }
         if (i<=2 && i1>=3) {
 
@@ -436,7 +436,7 @@ public class DB extends SQLiteOpenHelper {
                 values.put(ACTVNAME, actvname);
                 values.put(PKGNAME, pkgname);
                 db.insert(APP_TABLE, null, values);
-                Log.i("LaunchDB", "inserted " + actvname + " " + pkgname);
+               // Log.i("LaunchDB", "inserted " + actvname + " " + pkgname);
             }
 
             return true;
