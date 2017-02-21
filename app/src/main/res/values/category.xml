@@ -7,8 +7,12 @@
         <item>phone</item>
         <item>conv</item>
         <item>call</item>
+        <item>dial</item>
         <item>sms</item>
         <item>mms</item>
+        <item>messeng</item>
+        <item>messag</item>
+        <item>convers</item>
         <item>contacts</item>
         <item>stk</item>
         <item>mail</item>
@@ -105,6 +109,8 @@
         <item>backup</item>
         <item>prefer</item>
         <item>prefs</item>
+        <item>prefs</item>
+        <item>locale</item>
     </string-array>
 
 </resources>
