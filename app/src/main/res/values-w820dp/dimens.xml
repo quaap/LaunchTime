@@ -3,4 +3,26 @@
          (such as screen margins) for screens with more than 820dp of available width. This
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
     <dimen name="activity_horizontal_margin">64dp</dimen>
+
+    <dimen name="activity_vertical_margin">64dp</dimen>
+
+
+    <dimen name="shortcut_width">100dp</dimen>
+    <dimen name="shortcut_height">100dp</dimen>
+
+    <dimen name="icon_width">75dp</dimen>
+    <dimen name="icon_label_width">77dp</dimen>
+    <dimen name="icont_label_height">45dp</dimen>
+    <dimen name="shortcut_fontsize">14sp</dimen>
+    <dimen name="shortcut_padding_side">15dp</dimen>
+
+    <dimen name="btnbar_textsize">18sp</dimen>
+
+
+    <dimen name="quickbar_height">77dp</dimen>
+
+    <dimen name="shortcut_sm_width">70dp</dimen>
+    <dimen name="icon_sm_width">50dp</dimen>
+    <dimen name="shortcut_sm_fontsize">14sp</dimen>
+    <dimen name="cattabbar_width">130dp</dimen>
 </resources>

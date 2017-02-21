@@ -480,7 +480,7 @@ public class MainActivity extends Activity implements
                     break;
                 case 3: //x-large
                     categoryTabPaddingHeight = 24;
-                    categoryTabFontSize = 18;
+                    categoryTabFontSize = 20;
                     break;
             }
 
