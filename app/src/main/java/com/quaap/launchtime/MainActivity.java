@@ -2038,6 +2038,8 @@ public class MainActivity extends Activity implements
                 dialogInterface.dismiss();
 
                 sortCategory(mCategory, i);
+                repopulateIconSheet(mCategory);
+
             }
         });
 
@@ -2080,7 +2082,6 @@ public class MainActivity extends Activity implements
             });
 
             db().setAppCategoryOrder(category, apps);
-            repopulateIconSheet(category);
         }
 
     }

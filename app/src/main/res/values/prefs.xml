@@ -3,7 +3,7 @@
 
     <!-- Translate only the "_strings" entries -->
 
-    <string-array name="pref_return_home_values">
+    <string-array translatable="false" name="pref_return_home_values">
         <item>0</item>
         <item>30</item>
         <item>60</item>
@@ -26,7 +26,7 @@
     </string-array>
 
 
-    <string-array name="pref_orientation_values">
+    <string-array translatable="false" name="pref_orientation_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -41,7 +41,7 @@
     </string-array>
 
 
-    <string-array name="pref_tab_size_values">
+    <string-array translatable="false" name="pref_tab_size_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -56,7 +56,7 @@
     </string-array>
 
 
-    <string-array name="pref_cat_location_values">
+    <string-array translatable="false" name="pref_cat_location_values">
         <item>right</item>
         <item>left</item>
     </string-array>

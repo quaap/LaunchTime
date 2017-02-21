@@ -3,16 +3,6 @@
 
     <!-- Translate only the "_strings" entries -->
 
-    <string-array name="pref_return_home_values">
-        <item>0</item>
-        <item>30</item>
-        <item>60</item>
-        <item>300</item>
-        <item>1800</item>
-        <item>3600</item>
-        <item>86400</item>
-        <item>31536000</item>
-    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>すぐに</item>
@@ -26,12 +16,6 @@
     </string-array>
 
 
-    <string-array name="pref_orientation_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
 
     <string-array name="pref_orientation_strings">
         <item>システム</item>
@@ -41,12 +25,6 @@
     </string-array>
 
 
-    <string-array name="pref_tab_size_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
 
     <string-array name="pref_size_strings">
         <item>小</item>
@@ -55,11 +33,6 @@
         <item>最大</item>
     </string-array>
 
-
-    <string-array name="pref_cat_location_values">
-        <item>right</item>
-        <item>left</item>
-    </string-array>
 
     <string-array name="pref_cat_location_strings">
         <item>右</item>
