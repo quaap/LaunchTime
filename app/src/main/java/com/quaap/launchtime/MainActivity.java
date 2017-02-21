@@ -1401,7 +1401,7 @@ public class MainActivity extends Activity implements
                         scrollOnDrag(droppedOn, event, mIconSheetScroller);
                         hscrollOnDrag(droppedOn, event, mQuickRowScroller);
 
-                        if (!isSpecial && mLinkDropzone.getVisibility()!=View.VISIBLE && droppedOn==mRemoveDropzone && System.currentTimeMillis()-mDropZoneHover > 100) {
+                        if (!isSpecial && mLinkDropzone.getVisibility()!=View.VISIBLE && droppedOn==mRemoveDropzone && System.currentTimeMillis()-mDropZoneHover > 400) {
                             mLinkDropzone.setVisibility(View.VISIBLE);
                            // Log.d("LaunchTime", "mLinkDropzone.setVisibility(View.VISIBLE)");
                         }
