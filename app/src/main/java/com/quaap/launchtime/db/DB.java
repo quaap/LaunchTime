@@ -180,18 +180,18 @@ public class DB extends SQLiteOpenHelper {
 
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         Log.i("db", "upgrade database");
 
-        if (i==1 && i1>=2) {
+        if (oldVersion==1) {
             sqLiteDatabase.execSQL("alter table " + APP_TABLE_OLD + " add column " + ISUNINSTALLED + " SHORT");
-            sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE_OLD,  ISUNINSTALLED));
+            //sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE_OLD,  ISUNINSTALLED));
 
             ContentValues values = new ContentValues();
             values.put(ISUNINSTALLED, 0);
             sqLiteDatabase.update(APP_TABLE_OLD, values, null, null);
         }
-        if (i<=2 && i1>=3) {
+        if (oldVersion<=2) {
 
             sqLiteDatabase.execSQL(APP_TABLE_CREATE);
             for (String createind : appcolumnsindex) {
