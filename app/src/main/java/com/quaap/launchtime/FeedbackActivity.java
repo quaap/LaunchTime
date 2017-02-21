@@ -64,6 +64,7 @@ public class FeedbackActivity extends Activity {
         setContentView(R.layout.activity_feedback);
 
         appname = getString(R.string.app_name);
+        version = "0";
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
@@ -114,6 +115,10 @@ public class FeedbackActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
+    private String makeCompname(ComponentName componentName) {
+        return componentName.getPackageName() + "/" + componentName.getClassName();
+    }
+
     private void loadData() throws PackageManager.NameNotFoundException {
 
 
@@ -129,13 +134,16 @@ public class FeedbackActivity extends Activity {
         List<ComponentName> actnames = db.getAppNames();
         Collections.sort(actnames);
 
-        for (ComponentName activityname: actnames) {
-            AppShortcut app = db.getApp(activityname);
+        for (ComponentName componentName: actnames) {
+            AppShortcut app = db.getApp(componentName);
             if (app==null) continue;
             apps.add(app);
-            appMap.put(activityname.getClassName(),app);
 
-            int count = db.getAppLaunchedCount(activityname);
+            String activityname = makeCompname(componentName);
+
+            appMap.put(activityname,app);
+
+            int count = db.getAppLaunchedCount(componentName);
 
             String scrubbed;
             if (app.isActionLink() || app.isLink()) {
@@ -149,7 +157,7 @@ public class FeedbackActivity extends Activity {
                 scrubbed = activityname + "." + count;
             }
             
-            scrubbednames.put(activityname.getClassName(), scrubbed);
+            scrubbednames.put(activityname, scrubbed);
             includes.put(scrubbed, true);
 
         }
@@ -160,8 +168,8 @@ public class FeedbackActivity extends Activity {
             includes.put(cat, true);
         }
 
-        for (ComponentName actvname: db.getAppCategoryOrder(MainActivity.QUICK_ROW_CAT)) {
-            String name = "qr." + scrubbednames.get(actvname.getClassName());
+        for (ComponentName componentName: db.getAppCategoryOrder(MainActivity.QUICK_ROW_CAT)) {
+            String name = "qr." + scrubbednames.get(makeCompname(componentName));
             scrubbednames.put(name, name);
             includes.put(name, true);
         }
