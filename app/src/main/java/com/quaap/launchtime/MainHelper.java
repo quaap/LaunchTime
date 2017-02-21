@@ -70,22 +70,22 @@ public class MainHelper {
             if (quickRowOrder.isEmpty() && firstapp != null) { //nothing found? add first app found.
                 quickRowOrder.add(firstapp.getComponentName());
             }
-            String toastmsg = null;
+//            String toastmsg = null;
 
-            if (addeddefault) {
-                toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
-            } else if (quickRowOrder.size() < 3) {
-                toastmsg = "You can add more apps to your Quickrow at the bottom of the screen.";
-            }
-            if (toastmsg != null) {
-                final String toastmsgfinal = toastmsg;
-                quickRow.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, toastmsgfinal, Toast.LENGTH_LONG).show();
-                    }
-                }, 3000);
-            }
+//            if (addeddefault) {
+//                toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
+//            } else if (quickRowOrder.size() < 3) {
+//                toastmsg = "You can add more apps to your Quickrow at the bottom of the screen.";
+//            }
+//            if (toastmsg != null) {
+//                final String toastmsgfinal = toastmsg;
+//                quickRow.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(context, toastmsgfinal, Toast.LENGTH_LONG).show();
+//                    }
+//                }, 3000);
+//            }
         }
     }
 
