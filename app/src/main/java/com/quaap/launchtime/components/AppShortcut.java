@@ -337,8 +337,10 @@ public class AppShortcut implements Comparable<AppShortcut> {
             } else {
                 link = context.getResources().getDrawable(R.drawable.link);
             }
-            link.setBounds(canvas.getWidth() / 2, canvas.getHeight()/2, canvas.getWidth(), canvas.getHeight());
-            link.draw(canvas);
+            if (link!=null) {
+                link.setBounds(canvas.getWidth() * 2 / 3, canvas.getHeight() * 2 / 3, canvas.getWidth(), canvas.getHeight());
+                link.draw(canvas);
+            }
 
             app_icon = new BitmapDrawable(context.getResources(), newbm);
             //Log.d("loadAppIconAsync", " yo");
