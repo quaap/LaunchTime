@@ -108,7 +108,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
             }
         }
 
-        String catID = Categories.getCategoryForPackage(context, cn.getPackageName());
+        String catID = Categories.getCategoryForComponent(context, cn, true);
 
         AppShortcut appshortcut = AppShortcut.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
         db.addApp(appshortcut);

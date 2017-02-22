@@ -9,22 +9,30 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.FsTools;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,6 +63,8 @@ public class DB extends SQLiteOpenHelper {
     private static final String INDEX = "pos";
     private static final String TIME = "time";
     private static final String ISTINY = "tiny";
+    private static final String LEVEL = "level";
+
 
 
     private static final String APP_TABLE_OLD = "apps";
@@ -86,7 +96,16 @@ public class DB extends SQLiteOpenHelper {
     private static final String[] apphistorycolumntypes = {"TEXT", "DATETIME", "TEXT"};
     private static final String APP_HISTORY_TABLE_CREATE = buildCreateTableStmt(APP_HISTORY_TABLE, apphistorycolumns, apphistorycolumntypes);
 
-    private static final String[] apphistorycolumnsindex = {TIME, ACTVNAME};
+    private static final String[] apphistorycolumnsindex = {ACTVNAME, PKGNAME};
+
+
+    private static final String APP_CAT_MAP_TABLE = "app_category_map";
+    private static final String[] appcatmapcolumns = {ACTVNAME, PKGNAME, CATID, LEVEL};
+    private static final String[] appcatmapcolumntypes = {"TEXT", "TEXT", "TEXT", "SHORT"};
+    private static final String APP_CAT_MAP_TABLE_CREATE = buildCreateTableStmt(APP_CAT_MAP_TABLE, appcatmapcolumns, appcatmapcolumntypes);
+
+
+    private static final String[] appcatmapcolumnsindex = {"ACTVNAME, LEVEL", "PKGNAME, LEVEL"};
 
     private boolean firstRun;
 
@@ -173,10 +192,22 @@ public class DB extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(buildIndexStmt(APP_HISTORY_TABLE, createind));
         }
 
+        buildCatTable(sqLiteDatabase);
+
 
     }
 
+    private void buildCatTable(SQLiteDatabase sqLiteDatabase) {
+        Log.i("db", "creating category table");
+        sqLiteDatabase.execSQL(APP_CAT_MAP_TABLE_CREATE);
+        for (String createind : appcatmapcolumnsindex) {
+            sqLiteDatabase.execSQL(buildIndexStmt(APP_CAT_MAP_TABLE, createind));
+        }
 
+        loadCategories(sqLiteDatabase, true, R.raw.submitted_activities,1);
+        loadCategories(sqLiteDatabase, false, R.raw.packages1,2);
+        loadCategories(sqLiteDatabase, false, R.raw.packages2,3);
+    }
 
 
     @Override
@@ -230,6 +261,12 @@ public class DB extends SQLiteOpenHelper {
                 cursor.close();
             }
 
+            sqLiteDatabase.execSQL(APP_CAT_MAP_TABLE_CREATE);
+            for (String createind : appcatmapcolumnsindex) {
+                sqLiteDatabase.execSQL(buildIndexStmt(APP_CAT_MAP_TABLE, createind));
+            }
+
+            buildCatTable(sqLiteDatabase);
         }
     }
 
@@ -898,6 +935,99 @@ public class DB extends SQLiteOpenHelper {
         return count;
 
     }
+
+    public String getCategoryForPackage(String packagename) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // {ACTVNAME, PKGNAME, CATID, LEVEL};
+
+        Cursor cursor = db.query(
+                APP_CAT_MAP_TABLE, new String[]{CATID},
+                PKGNAME + "=?",   new String[]{packagename}, null, null, LEVEL + "");
+
+        String catid = null;
+        try {
+            if (cursor.moveToNext()) {
+                catid = cursor.getString(0);
+            }
+        } finally {
+            cursor.close();
+        }
+        return catid;
+    }
+
+
+    public String getCategoryForActivity(String activityname) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // {ACTVNAME, PKGNAME, CATID, LEVEL};
+
+        Cursor cursor = db.query(
+                APP_CAT_MAP_TABLE, new String[]{CATID},
+                ACTVNAME + "=?",   new String[]{activityname}, null, null, LEVEL + "");
+
+        String catid = null;
+        try {
+            if (cursor.moveToNext()) {
+                catid = cursor.getString(0);
+            }
+        } finally {
+            cursor.close();
+        }
+        return catid;
+    }
+
+    public void loadCategories(SQLiteDatabase db, boolean isactivity, int set, int level) {
+
+        Log.d("LaunchDB", "loadCategories " + level + " " + set);
+
+        InputStream inputStream = mContext.getResources().openRawResource(set);
+        String line;
+        String[] lineSplit;
+
+        try {
+            db.beginTransaction();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            String sql = "INSERT INTO " + APP_CAT_MAP_TABLE + " values(?,?,?,?)";
+            SQLiteStatement statement = db.compileStatement(sql);
+
+            while ((line = reader.readLine()) != null) {
+                if (!line.isEmpty() && !line.startsWith("#")) {
+                    lineSplit = line.split("=",2);
+                    if (lineSplit.length==2) {  // {ACTVNAME, PKGNAME, CATID, LEVEL};
+                        statement.clearBindings();
+                        if (isactivity) {
+                            statement.bindString(1, lineSplit[0]);
+                            statement.bindString(2, "");
+                        } else {
+                            statement.bindString(1, "");
+                            statement.bindString(2, lineSplit[0]);
+                        }
+                        statement.bindString(3, lineSplit[1]);
+                        statement.bindLong(4, level);
+                        try {
+                            statement.executeInsert();
+                        } catch (Exception e) {
+                            Log.d("LaunchDB", "Can't add category", e);
+                        }
+                    }
+                }
+            }
+            db.setTransactionSuccessful();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            db.endTransaction();
+            try {
+                if (inputStream != null) inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 
 
     //synchronize these so that we can also synchronize on the backup and restore, just in case

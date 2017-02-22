@@ -1,5 +1,6 @@
 package com.quaap.launchtime.components;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Resources;
 
@@ -7,11 +8,7 @@ import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.db.DB;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -65,12 +62,12 @@ public class Categories {
             CAT_OTHER,
             CAT_HIDDEN
     };
-    private static WeakReference<Map<String, String>> mPrefCategoriesRef;
+
     private static Map<String, String[]> mCategorKeywords;
 
     public static void init(Context context) {
         resources = context.getResources();
-        mPrefCategoriesRef = new WeakReference<>(getPredefinedCategories());
+
         mCategorKeywords = getCategoryKeywords();
     }
 
@@ -103,34 +100,57 @@ public class Categories {
     }
 
 
-    public static String getCategoryForPackage(Context context, String pkgname) {
+    public static String getCategoryForPackage(Context context, String pkgname, boolean guess) {
+        DB db = GlobState.getGlobState(context).getDB();
 
-        Map<String, String> prefCat;
-        synchronized (Categories.class) {
-            prefCat = mPrefCategoriesRef.get();
-            if (prefCat == null) {
-                prefCat = getPredefinedCategories();
-                mPrefCategoriesRef = new WeakReference<>(prefCat);
-            }
+        String category = db.getCategoryForPackage(pkgname);
+        if (guess && (category == null || category.equals(CAT_OTHER))) {
+            category = guessCategoryForPackage(context,pkgname);
         }
-        String category = prefCat.get(pkgname);
-        if (category == null) {
+        return checkCat(context, category);
+    }
 
-            for (String pk: prefCat.keySet()) {
-                if (pkgname.startsWith(pk)) {
-                    category = pk;
-                }
-            }
+    public static String getCategoryForActivity(Context context, String actvname, boolean guess) {
+        DB db = GlobState.getGlobState(context).getDB();
 
-            if (category == null) {
-                OUTER:
-                for (String cat : mCategorKeywords.keySet()) {
-                    for (String pkg : mCategorKeywords.get(cat)) {
-                        if (pkgname.contains(pkg)) {
-                            category = cat;
-                            break OUTER;
-                        }
-                    }
+        String category = db.getCategoryForActivity(actvname);
+        if (guess && (category == null || category.equals(CAT_OTHER))) {
+            category = guessCategoryForPackage(context,actvname);
+        }
+        return checkCat(context, category);
+    }
+
+    public static String getCategoryForComponent(Context context, ComponentName activity, boolean guess) {
+        return getCategoryForComponent(context, activity.getClassName(), activity.getPackageName(), guess);
+    }
+
+    public static String getCategoryForComponent(Context context, String actvname, String pkgname, boolean guess) {
+
+        String catact = getCategoryForActivity(context, actvname, false);
+        String cat2pack = getCategoryForPackage(context, pkgname, false);
+
+        String category = catact;
+        if (category==null) category = cat2pack;
+
+        if (guess && (category == null || category.equals(CAT_OTHER))) {
+            category = guessCategoryForPackage(context,pkgname);
+        }
+
+
+        return checkCat(context, category);
+
+    }
+
+
+
+    public static String guessCategoryForPackage(Context context, String pkgname) {
+        String category = null;
+        OUTER:
+        for (String cat : mCategorKeywords.keySet()) {
+            for (String pkg : mCategorKeywords.get(cat)) {
+                if (pkgname.contains(pkg)) {
+                    category = cat;
+                    break OUTER;
                 }
             }
         }
@@ -138,11 +158,13 @@ public class Categories {
         return checkCat(context, category);
     }
 
+
+
     private static String checkCat(Context context, String category) {
-        DB db = GlobState.getGlobState(context).getDB();
         if (category == null) {
             category = CAT_OTHER;
-        } else {
+        } else if (!isSpeacialCategory(category)){
+            DB db = GlobState.getGlobState(context).getDB();
             String dbcat = db.getCategoryDisplay(category);
             if (dbcat == null) {
                 category = Categories.CAT_OTHER;  //the user deleted the category
@@ -209,38 +231,5 @@ public class Categories {
         return keywordsDict;
     }
 
-    public static Map<String, String> getPredefinedCategories() {
-        Map<String, String> predefCategories = new HashMap<>();
 
-
-        InputStream inputStream = resources.openRawResource(R.raw.package_category);
-        String line;
-        String[] lineSplit;
-
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-
-            while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty() && !line.startsWith("#")) {
-                    lineSplit = line.split("=",2);
-                    if (lineSplit.length==2) {
-                        if (!predefCategories.containsKey(lineSplit[0])) {
-                            predefCategories.put(lineSplit[0], lineSplit[1]);
-                        }
-                    }
-                }
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return predefCategories;
-    }
 }

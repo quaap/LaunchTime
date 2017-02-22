@@ -140,10 +140,8 @@ public class AppShortcut implements Comparable<AppShortcut> {
             mCategory = category;
             //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  cat " + category);
         } else if (autocat) {
-            mCategory = Categories.getCategoryForPackage(context, mPackageName);
-            if (mCategory.equals(Categories.CAT_OTHER)) {
-                mCategory = Categories.getCategoryForPackage(context, mActivityName);
-            }
+            mCategory = Categories.getCategoryForComponent(context,mActivityName, mPackageName, true);
+
             //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  auto " + category);
         } else {
             mCategory = Categories.CAT_OTHER;
