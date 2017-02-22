@@ -38,6 +38,8 @@ public class AppShortcut implements Comparable<AppShortcut> {
     private String mPackageName;
     private String mActivityName;
     private String mLabel;
+
+
     private String mCategory;
     private boolean mWidget;
 
@@ -198,6 +200,10 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
     public String getCategory() {
         return mCategory;
+    }
+
+    public void setCategory(String category) {
+        mCategory = category;
     }
 
     public boolean isWidget() {

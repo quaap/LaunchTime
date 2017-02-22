@@ -1333,6 +1333,7 @@ public class MainActivity extends Activity implements
                     case DragEvent.ACTION_DROP:
                         if (isAppShortcut) {
                             if (!isSearch) {
+                                mBeingDragged.setCategory(category);
                                 db().updateAppCategory(mBeingDragged.getActivityName(), category);
                                 mMainDragListener.onDrag(iconSheet, event);
                             }
@@ -1475,9 +1476,12 @@ public class MainActivity extends Activity implements
             } else if (droppedOn == mLinkDropzone) {
                 if (isShortcut) {
                     AppShortcut app = (AppShortcut)dragObj.getTag();
-                    AppShortcut appshortcut = AppShortcut.createActionLink(app.getActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), app.getPackageName(), app.getLabel(), app.getCategory());
+                    Log.d("LaunchLink", "Making link: " + app.getActivityName() + " " + app.getPackageName());
+                    AppShortcut appshortcut = AppShortcut.createActionLink(app.getActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), app.getPackageName(), app.getLabel(), mCategory);
                     db().addApp(appshortcut);
                     repopulateIconSheet(mCategory);
+                } else {
+                    Log.d("LaunchLink", "non-shortcut dropped on linker: " + dragObj + " tag=" + dragObj.getTag());
                 }
                 return true;
             } else if (droppedOn instanceof GridLayout) {
