@@ -127,10 +127,10 @@ public class Categories {
     public static String getCategoryForComponent(Context context, String actvname, String pkgname, boolean guess) {
 
         String catact = getCategoryForActivity(context, actvname, false);
-        String cat2pack = getCategoryForPackage(context, pkgname, false);
+        String catpack = getCategoryForPackage(context, pkgname, false);
 
         String category = catact;
-        if (category==null) category = cat2pack;
+        if (category==null || category.equals(CAT_OTHER)) category = catpack;
 
         if (guess && (category == null || category.equals(CAT_OTHER))) {
             category = guessCategoryForPackage(context,pkgname);
