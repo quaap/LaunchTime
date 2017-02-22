@@ -261,11 +261,6 @@ public class DB extends SQLiteOpenHelper {
                 cursor.close();
             }
 
-            sqLiteDatabase.execSQL(APP_CAT_MAP_TABLE_CREATE);
-            for (String createind : appcatmapcolumnsindex) {
-                sqLiteDatabase.execSQL(buildIndexStmt(APP_CAT_MAP_TABLE, createind));
-            }
-
             buildCatTable(sqLiteDatabase);
         }
     }
