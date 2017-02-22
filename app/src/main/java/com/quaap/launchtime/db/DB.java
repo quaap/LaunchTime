@@ -982,7 +982,7 @@ public class DB extends SQLiteOpenHelper {
         return catid;
     }
 
-    public void loadCategories(SQLiteDatabase db, boolean isactivity, int set, int level) {
+    private void loadCategories(SQLiteDatabase db, boolean isactivity, int set, int level) {
 
         Log.d("LaunchDB", "loadCategories " + level + " " + set);
 
@@ -990,6 +990,7 @@ public class DB extends SQLiteOpenHelper {
         String line;
         String[] lineSplit;
 
+        int count = 0;
         try {
             db.beginTransaction();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
@@ -1015,6 +1016,12 @@ public class DB extends SQLiteOpenHelper {
                         } catch (Exception e) {
                             Log.d("LaunchDB", "Can't add category", e);
                         }
+
+                        if (count++%1000==0) {
+                            db.setTransactionSuccessful();
+                            db.endTransaction();
+                            db.beginTransaction();
+                        }
                     }
                 }
             }
@@ -1029,6 +1036,7 @@ public class DB extends SQLiteOpenHelper {
                 e.printStackTrace();
             }
         }
+        Log.d("LaunchDB", " loaded " + count + " rows");
 
     }
 
