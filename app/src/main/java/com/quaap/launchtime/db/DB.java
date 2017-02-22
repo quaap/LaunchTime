@@ -262,6 +262,16 @@ public class DB extends SQLiteOpenHelper {
             }
 
             buildCatTable(sqLiteDatabase);
+
+            ContentValues values = new ContentValues();
+            values.put(INDEX, 1);
+
+            //move search/recent away from top to correct old order.
+            //{CATID, LABEL, LABELFULL, ISTINY, INDEX};
+            if (sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=0", null)>0) {
+                values.put(INDEX, 0);
+                sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
+            }
         }
     }
 
