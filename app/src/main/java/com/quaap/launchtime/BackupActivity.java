@@ -97,6 +97,7 @@ public class BackupActivity extends Activity {
         } else {
             showExt.setText(R.string.hide_extfs_opts);
             btnbar.setVisibility(View.VISIBLE);
+            checkStorageAccess(false);
         }
 
     }
@@ -286,7 +287,7 @@ public class BackupActivity extends Activity {
     }
 
     private void promptRestoreExtFile() {
-        if (checkStorageAccess()) {
+        if (checkStorageAccess(true)) {
             new FsTools(this).selectExternalLocation(new FsTools.SelectionMadeListener() {
                 @Override
                 public void selected(File selection) {
@@ -376,7 +377,7 @@ public class BackupActivity extends Activity {
     }
 
     private void promptExtDir() {
-        if (checkStorageAccess()) {
+        if (checkStorageAccess(true)) {
             new FsTools(this).selectExternalLocation(new FsTools.SelectionMadeListener() {
                 @Override
                 public void selected(File selection) {
@@ -393,31 +394,35 @@ public class BackupActivity extends Activity {
     }
 
 
-    private boolean checkStorageAccess() {
+    private boolean checkStorageAccess(boolean yay) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_WRITE_EXTERNAL_STORAGE);
+                    yay?REQUEST_WRITE_EXTERNAL_STORAGE:REQUEST_WRITE_EXTERNAL_STORAGE_NOYAY);
             return false;
         }
         return true;
     }
 
+    private static final int REQUEST_WRITE_EXTERNAL_STORAGE_NOYAY = 4333;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 4334;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        boolean yay = true;
         switch (requestCode) {
-            case REQUEST_WRITE_EXTERNAL_STORAGE: {
+            case REQUEST_WRITE_EXTERNAL_STORAGE_NOYAY:
+                yay = false;
+            case REQUEST_WRITE_EXTERNAL_STORAGE:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Toast.makeText(this, R.string.perm_granted, Toast.LENGTH_LONG).show();
+                    if (yay) Toast.makeText(this, R.string.perm_granted, Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(this, R.string.perm_not_granted, Toast.LENGTH_LONG).show();
                 }
-            }
+
         }
     }
 
