@@ -117,6 +117,7 @@ public class MainActivity extends Activity implements
     private TextView mRemoveAppText;
     private FrameLayout mRemoveDropzone;
     private FrameLayout mLinkDropzone;
+    private FrameLayout mLinkDropzonePeek;
     private PackageManager mPackageMan;
     private AppShortcut mBeingDragged;
     private volatile ViewGroup mDragDropSource;
@@ -1404,6 +1405,7 @@ public class MainActivity extends Activity implements
 
                         if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility()!=View.VISIBLE && droppedOn==mRemoveDropzone && System.currentTimeMillis()-mDropZoneHover > 400) {
                             mLinkDropzone.setVisibility(View.VISIBLE);
+                            mLinkDropzonePeek.setVisibility(View.GONE);
                            // Log.d("LaunchTime", "mLinkDropzone.setVisibility(View.VISIBLE)");
                         }
                     }
@@ -1730,19 +1732,22 @@ public class MainActivity extends Activity implements
             mRemoveAppText.setText(R.string.remove_shortcut);
             mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.recycle);
             mRemoveAppText.setTextColor(Color.BLACK);
+            mLinkDropzonePeek.setVisibility(View.GONE);
         } else {
             mRemoveDropzone.setBackgroundColor(Color.RED);
            // mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
             mRemoveAppText.setText(R.string.uninstall_app);
-            //mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.trash);
-            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showy, 0,0,R.drawable.trash);
+            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.trash);
+            //mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showy, 0,0,R.drawable.trash);
             mRemoveAppText.setTextColor(Color.WHITE);
+            mLinkDropzonePeek.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideRemoveDropzone() {
         mRemoveDropzone.setVisibility(View.GONE);
         mLinkDropzone.setVisibility(View.GONE);
+        mLinkDropzonePeek.setVisibility(View.GONE);
     }
 
     private void launchUninstallIntent(String packageName) {
@@ -2117,6 +2122,8 @@ public class MainActivity extends Activity implements
 
         mLinkDropzone = (FrameLayout) findViewById(R.id.link_dropzone);
         mLinkDropzone.setOnDragListener(mMainDragListener);
+
+        mLinkDropzonePeek = (FrameLayout) findViewById(R.id.link_dropzone_peek);
 
         //((TextView) findViewById(R.id.link_dz_text)).setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.linkicon);
 

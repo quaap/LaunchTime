@@ -147,6 +147,23 @@
             </FrameLayout>
 
             <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#056605"
+                android:id="@+id/link_dropzone_peek">
+
+                <TextView
+                    android:text="&lt;"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/textcolor"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" />
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_height="match_parent"
                 android:background="#ddff3333"
                 android:id="@+id/remove_dropzone"
