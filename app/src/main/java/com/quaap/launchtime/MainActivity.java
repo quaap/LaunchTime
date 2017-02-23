@@ -1383,7 +1383,12 @@ public class MainActivity extends Activity implements
                 isSpecial = app.isLink() || app.isWidget();
                 isApplink = app.isAppLink();
             }
-            boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone || droppedOn == mLinkDropzone || !isShortcut || mQuickRow == mDragDropSource;
+
+            if (mCategory.equals(Categories.CAT_SEARCH) && isAncestor(mIconSheet, droppedOn)) return false;
+
+            boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone
+                    || droppedOn == mLinkDropzone || !isShortcut || mQuickRow == mDragDropSource
+                    || isAncestor(mSearchView, droppedOn);
 
             //prevent dropping categories anywhere but category area and trash
             if (mDragDropSource==mCategoriesLayout && !(droppedOn==mCategoriesLayout || droppedOn==mRemoveDropzone )) {
@@ -1460,10 +1465,11 @@ public class MainActivity extends Activity implements
                 //Stuff to be deleted
                 if (mQuickRow == mDragDropSource) {
                     removeDroppedItem(dragObj);
-                } else if (mCategory.equals(Categories.CAT_SEARCH)) {
+                } else if (mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)) {
                     removeDroppedRecentItem(dragObj);
                 } else if (mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
                     removeDroppedItem(dragObj);
+                    mSearchAdapter.refreshCursor();
                 } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
                     //delete category tab
                     promptDeleteCategory((String) dragObj.getTag());
@@ -1683,9 +1689,9 @@ public class MainActivity extends Activity implements
             showHiddenCategories();
 
            // Log.d("LaunchTime", "source = " + mDragDropSource);
-            if (mDragDropSource.getId()!=R.id.icontarget) {
+            //if (mDragDropSource.getId()!=R.id.icontarget) {
                 showRemoveDropzone();
-            }
+            //}
             return true;
         }
 
@@ -1726,7 +1732,7 @@ public class MainActivity extends Activity implements
 
         if (mDragDropSource == mQuickRow
             || mDragDropSource == mCategoriesLayout
-            || mCategory.equals(Categories.CAT_SEARCH)
+            || mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)
             || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
         ) ) {
             mRemoveDropzone.setBackgroundColor(Color.YELLOW);
@@ -1775,6 +1781,7 @@ public class MainActivity extends Activity implements
                     db().deleteApp(actvname);
                     removeFromQuickApps(actvname);
                     AppShortcut.removeAppShortcut(actvname);
+                    mSearchAdapter.refreshCursor();
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
