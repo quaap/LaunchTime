@@ -553,7 +553,7 @@ public class MainActivity extends Activity implements
             Log.e("Launch", e.getMessage(), e);
         }
     }
-    private static final String linkuri = "_link";
+
 
 
     //Run/open the thing that was clicked
@@ -572,9 +572,7 @@ public class MainActivity extends Activity implements
                 uristr = app.getLinkUri();
                 if (uristr!=null) {
                     uri = Uri.parse(uristr);
-                    if (uri!=null &&
-                            (uri.getScheme()!=null && uri.getScheme().startsWith(linkuri))
-                            ) {
+                    if (app.isAppLink()) {
                         uri = null;
                         isapplink = true;
                     }
@@ -1072,6 +1070,7 @@ public class MainActivity extends Activity implements
 
             ImageView iconImage = (ImageView) item.findViewById(R.id.shortcut_icon);
             app.setIconImage(iconImage);
+            app.loadAppIconAsync(this,mPackageMan);
 
             if (!smallIcon) {
                 TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
@@ -1376,11 +1375,13 @@ public class MainActivity extends Activity implements
             View dragObj = (View) event.getLocalState();
             boolean isShortcut = true;
             boolean isSpecial = false;
+            boolean isApplink = false;
             if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppShortcut )) {
                 isShortcut = false;
             } else  {
                 AppShortcut app = (AppShortcut)dragObj.getTag();
                 isSpecial = app.isLink() || app.isWidget();
+                isApplink = app.isAppLink();
             }
             boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone || droppedOn == mLinkDropzone || !isShortcut || mQuickRow == mDragDropSource;
 
@@ -1389,7 +1390,7 @@ public class MainActivity extends Activity implements
                 return false;
             }
 
-            if (isSpecial && (droppedOn==mQuickRow || isAncestor(mQuickRow, droppedOn))) return false;
+            if ((isSpecial && !isApplink) && (droppedOn==mQuickRow || isAncestor(mQuickRow, droppedOn))) return false;
 
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -1479,7 +1480,8 @@ public class MainActivity extends Activity implements
                 if (isShortcut) {
                     AppShortcut app = (AppShortcut)dragObj.getTag();
                     Log.d("LaunchLink", "Making link: " + app.getActivityName() + " " + app.getPackageName());
-                    AppShortcut appshortcut = AppShortcut.createActionLink(app.getActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), app.getPackageName(), app.getLabel(), mCategory);
+                    AppShortcut appshortcut = app.makeAppLink();
+                    appshortcut.setCategory(mCategory);
                     db().addApp(appshortcut);
                     repopulateIconSheet(mCategory);
                 } else {
@@ -1529,13 +1531,13 @@ public class MainActivity extends Activity implements
                         for (int i = 0; i < mQuickRow.getChildCount(); i++) {
                             AppShortcut dragging = (AppShortcut) dragObj.getTag();
                             AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
-                            if (dragging.getActivityName().equals(inbar.getActivityName())) {
+                            if (dragging.getLinkBaseActivityName().equals(inbar.getLinkBaseActivityName())) {
                                 return true;
                             }
                         }
                     }
                     //make a copy of the shortcut to put on the quickbar
-                    dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag()), true);
+                    dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag(), true), true);
 
                 } else {
                     dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag()), false, false);

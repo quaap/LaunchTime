@@ -35,22 +35,11 @@ import java.util.Map;
  * See the GNU General Public License for more details.
  */
 public class AppShortcut implements Comparable<AppShortcut> {
-    private String mPackageName;
-    private String mActivityName;
-    private String mLabel;
-
-
-    private String mCategory;
-    private boolean mWidget;
-
-    private volatile Drawable mIconDrawable;
-    private volatile ImageView mIconImage;
-
-    public static final String LINK_SEP = ":IS_APP_LINK:";
-    public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
 
 
     private static Map<ComponentName,AppShortcut> mAppShortcuts = new HashMap<>();
+    public static final String LINK_SEP = ":IS_APP_LINK:";
+    public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
 
 
     public static AppShortcut createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
@@ -77,7 +66,11 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
     public static AppShortcut createAppShortcut(AppShortcut shortcut) {
-        return new AppShortcut(shortcut);
+        return createAppShortcut(shortcut, false);
+    }
+
+    public static AppShortcut createAppShortcut(AppShortcut shortcut, boolean copyOrig) {
+        return new AppShortcut(shortcut, copyOrig);
     }
 
 
@@ -111,6 +104,20 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
 
+
+    private String mPackageName;
+    private String mActivityName;
+    private String mLabel;
+
+
+    private String mCategory;
+    private boolean mWidget;
+
+    private volatile Drawable mIconDrawable;
+    private volatile ImageView mIconImage;
+
+
+
     private AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
         mPackageName = packageName;
@@ -123,12 +130,14 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
 
-    private AppShortcut(AppShortcut shortcut) {
-        mActivityName = shortcut.getActivityName();
+    private AppShortcut(AppShortcut shortcut, boolean copyOrig) {
+        mActivityName = copyOrig ? shortcut.getLinkBaseActivityName() : shortcut.getActivityName();
         mPackageName = shortcut.getPackageName();
         mLabel = shortcut.getLabel();
         mCategory = shortcut.getCategory();
-        mIconDrawable = shortcut.mIconDrawable;
+        if (!copyOrig) {
+            mIconDrawable = shortcut.mIconDrawable;
+        }
         mWidget = shortcut.mWidget;
 
     }
@@ -165,6 +174,16 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return activityName;
     }
 
+    private static final String linkuri = "_link";
+
+    public AppShortcut makeAppLink() {
+        return AppShortcut.createActionLink(getLinkBaseActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), getPackageName(), getLabel(), getCategory());
+    }
+
+    public boolean isAppLink() {
+        String uristr = getLinkUri();
+        return uristr!=null && uristr.startsWith(linkuri);
+    }
 
     public ComponentName getComponentName() {
         return new ComponentName(mPackageName, mActivityName);
