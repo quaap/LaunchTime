@@ -414,18 +414,19 @@ public class MainActivity extends Activity implements
             return;
         }
 
-        //Always hide the action buttons and scroll quickbar left
-        showButtonBar(false, true);
-        mQuickRowScroller.smoothScrollTo(0, 0);
+
 
         String topCat = getTopCategory();
-
-        if (mCategory.equals(Categories.CAT_SEARCH) && mSearchbox!=null && mSearchbox.getText().length()!=0) {
-            //If search is open, clear the searchbox
-            mSearchbox.setText("");
+        if (mIconSheetBottomFrame.getVisibility()==View.VISIBLE) {
+            showButtonBar(false, true);
+        } else if (mQuickRowScroller.getScrollX()>0) {
+            mQuickRowScroller.smoothScrollTo(0, 0);
         } else if (mIconSheetScroller.getScrollY()>0) {
             //Otherwise, scroll to top
             mIconSheetScroller.smoothScrollTo(0, 0);
+        } else if (mCategory.equals(Categories.CAT_SEARCH) && mSearchbox!=null && mSearchbox.getText().length()!=0) {
+            //If search is open, clear the searchbox
+            mSearchbox.setText("");
         } else if (!mCategory.equals(topCat)){
             //Otherwise, switch to known-good category
             switchCategory(topCat);
@@ -462,10 +463,11 @@ public class MainActivity extends Activity implements
                     @Override
                     public void run() {
                         try {
-                            mSearchbox.setText("");
-                            switchCategory(getTopCategory());
+                            if (mSearchbox!=null) mSearchbox.setText("");
                             showButtonBar(false, true);
                             mQuickRowScroller.smoothScrollTo(0, 0);
+                            switchCategory(getTopCategory());
+                            mCategoriesScroller.smoothScrollTo(0, 0);
                         } catch (Exception e) {
                             Log.e("LaunchTime", e.getMessage(), e);
                         }
