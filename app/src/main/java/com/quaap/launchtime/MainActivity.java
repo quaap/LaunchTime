@@ -31,6 +31,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -156,6 +157,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("LaunchTime", "onCreate");
 
         if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
@@ -205,29 +207,9 @@ public class MainActivity extends Activity implements
         // get all the apps installed and process them
         loadApplications();
 
-        // First run is special
-        if (isFirstRun) {
-            String selfAct = this.getPackageName() + "." +this.getClass().getSimpleName();
-            Log.d(this.getClass().getSimpleName(), "My name is " + selfAct);
-
-            //Move self icon to hidden
-            db().updateAppCategory(selfAct,Categories.CAT_HIDDEN);
-
-            //Take a backup no that things are pre-sorted.
-            db().backup("After install");
-
-            //Show the help screen on very first run.
-            mQuickRow.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent help = new Intent(MainActivity.this, AboutActivity.class);
-                    help.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(help);
-                }
-            },5000);
-        }
-
     }
+
+
 
     //All db access is routed through here.
     // We don't store the connection, because the connection might end up closed.
@@ -252,6 +234,7 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onPause() {
+        Log.d("LaunchTime", "onPause");
         checkChildLock();
 
         //save a few items
@@ -271,6 +254,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("LaunchTime", "onResume");
 
         //Check how long we've been gone
         long pausetime = mPrefs.getLong("pausetime", -1);
@@ -623,6 +607,13 @@ public class MainActivity extends Activity implements
     // runs at create time to read all apps and add them to our db, if not there already
     private void loadApplications() {
 
+        //create the grids for each existing category.
+
+        for (final String category : db().getCategories()) {
+
+            createIconSheet(category);
+        }
+
         if (!db().isFirstRun()) {
             //Make sure the displayed icons load first
             //Load the quickrow icons first
@@ -647,20 +638,58 @@ public class MainActivity extends Activity implements
         }
 
         //Look for new apps
-        final List<AppShortcut> shortcuts = processActivities();
+        //final List<AppShortcut> shortcuts = processActivities();
+
+        AsyncTask<Void, Void, List<AppShortcut>> task = new AsyncTask<Void, Void, List<AppShortcut>>() {
+            @Override
+            protected List<AppShortcut> doInBackground(Void... params) {
+                return processActivities();
+            }
+
+            @Override
+            protected void onPostExecute(List<AppShortcut> appShortcuts) {
+                processQuickApps(appShortcuts);
+                firstRunPostApps();
+                if (mCategory.equals(Categories.CAT_SEARCH)) {
+                    populateRecentApps();
+                } else {
+                    repopulateIconSheet(mCategory);
+                }
+            }
+        };
+
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         //loads the quickrow or adds default apps if it is empty
-        processQuickApps(shortcuts);
+       // processQuickApps(shortcuts);
 
-
-        //create the grids for each existing category.
-
-        for (final String category : db().getCategories()) {
-
-            createIconSheet(category);
-        }
 
     }
+
+
+    private void firstRunPostApps() {
+        if (db().isFirstRun()) {
+            String selfAct = this.getPackageName() + "." + this.getClass().getSimpleName();
+            Log.d(this.getClass().getSimpleName(), "My name is " + selfAct);
+
+            //Move self icon to hidden
+            db().updateAppCategory(selfAct, Categories.CAT_HIDDEN);
+
+            //Take a backup no that things are pre-sorted.
+            db().backup("After install");
+
+            //Show the help screen on very first run.
+            mQuickRow.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent help = new Intent(MainActivity.this, AboutActivity.class);
+                    help.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(help);
+                }
+            }, 5000);
+        }
+    }
+
 
     @NonNull
     private GridLayout createIconSheet(String category) {
@@ -942,7 +971,7 @@ public class MainActivity extends Activity implements
                     Log.d("Launch", "Removing " + dbactv);
                     it.remove();
                     db().deleteApp(dbactv);
-                    removeFromQuickApps(dbactv);
+                   // removeFromQuickApps(dbactv);
                 }
             }
         }

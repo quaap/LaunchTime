@@ -340,7 +340,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
             }
         };
 
-        loadAppIconTask.execute(null, null, null);
+        loadAppIconTask.execute();
     }
 
     private Drawable drawLinkSymbol(Drawable app_icon, Context context) {
