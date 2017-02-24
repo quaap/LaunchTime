@@ -429,14 +429,16 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        //Try to get home button press
-        //Seems to work sometimes, but not always?
-        if(keyCode==KeyEvent.KEYCODE_HOME) {
-            switchCategory(getTopCategory());
-            showButtonBar(false, true);
-            mQuickRowScroller.smoothScrollTo(0, 0);
-        } else if (keyCode==KeyEvent.KEYCODE_MENU) {
-            openSettings();
+        if (!mChildLock) {
+            //Try to get home button press
+            //Seems to work sometimes, but not always?
+            if (keyCode == KeyEvent.KEYCODE_HOME) {
+                switchCategory(getTopCategory());
+                showButtonBar(false, true);
+                mQuickRowScroller.smoothScrollTo(0, 0);
+            } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+                openSettings();
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
