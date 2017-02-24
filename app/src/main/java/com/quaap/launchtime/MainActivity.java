@@ -235,6 +235,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onPause() {
         Log.d("LaunchTime", "onPause");
+        mBackPressedSessionCount=0;
         checkChildLock();
 
         //save a few items
@@ -402,10 +403,16 @@ public class MainActivity extends Activity implements
     }
 
 
+    private int mBackPressedSessionCount;
     @Override
     public void onBackPressed() {
         //back does nothign if in toddler mode
-        if (mChildLock) return;
+        if (mChildLock) {
+            if (++mBackPressedSessionCount==17) {
+                deactivateChildLock();
+            }
+            return;
+        }
 
         //Always hide the action buttons and scroll quickbar left
         showButtonBar(false, true);
@@ -2255,24 +2262,6 @@ public class MainActivity extends Activity implements
         showButtonBar(vis != View.VISIBLE, true);
     }
 
-    private String kidaccumecode = "";
-    private String kidcode = "";
-
-    private View.OnClickListener kidescape = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            view.startAnimation(itemClickedAnim);
-            kidaccumecode += view.getTag();
-            if (kidaccumecode.endsWith(kidcode)) {
-                mChildLock = false;
-                mAppPreferences.edit().putBoolean("prefs_toddler_lock", false).apply();
-                kidaccumecode = "";
-                checkChildLock();
-            } else if (kidaccumecode.length()>kidcode.length()) {
-                kidaccumecode = kidaccumecode.substring(kidaccumecode.length()-1-kidcode.length());
-            }
-        }
-    };
 
     //initialize the form members
 
@@ -2296,6 +2285,31 @@ public class MainActivity extends Activity implements
             mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
     }
+
+    private String kidaccumecode = "";
+    private String kidcode = "";
+
+    private View.OnClickListener kidescape = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            view.startAnimation(itemClickedAnim);
+            kidaccumecode += view.getTag();
+            if (kidaccumecode.endsWith(kidcode)) {
+                deactivateChildLock();
+            } else if (kidaccumecode.length()>kidcode.length()) {
+                kidaccumecode = kidaccumecode.substring(kidaccumecode.length()-1-kidcode.length());
+            }
+            mBackPressedSessionCount=0;
+        }
+    };
+
+    private void deactivateChildLock() {
+        mChildLock = false;
+        mAppPreferences.edit().putBoolean("prefs_toddler_lock", false).apply();
+        kidaccumecode = "";
+        checkChildLock();
+    }
+
 
     private boolean checkChildLock() {
         View kid_escape_area = findViewById(R.id.kid_escape_area);
