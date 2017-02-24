@@ -291,6 +291,7 @@ public class MainActivity extends Activity implements
         if (mCategory.equals(Categories.CAT_SEARCH) && mSearchAdapter!=null) {
             mSearchAdapter.refreshCursor();
         }
+        hideRemoveDropzone();
 
         //lock things up if it was in toddler mode
         checkChildLock();
@@ -1758,6 +1759,7 @@ public class MainActivity extends Activity implements
 
         showButtonBar(false, false);
         mRemoveDropzone.setVisibility(View.VISIBLE);
+        mShowButtons.setVisibility(View.GONE);
 
         if (mDragDropSource == mQuickRow
             || mDragDropSource == mCategoriesLayout
@@ -1785,6 +1787,7 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.GONE);
         mLinkDropzone.setVisibility(View.GONE);
         mLinkDropzonePeek.setVisibility(View.GONE);
+        mShowButtons.setVisibility(View.VISIBLE);
     }
 
     private void launchUninstallIntent(String packageName) {
@@ -2167,8 +2170,6 @@ public class MainActivity extends Activity implements
 
 
         mCategoriesScroller = (ScrollView)findViewById(R.id.layout_categories_scroller);
-
-        hideRemoveDropzone();
 
 
         mQuickRow = (GridLayout) findViewById(R.id.layout_quickrow);
