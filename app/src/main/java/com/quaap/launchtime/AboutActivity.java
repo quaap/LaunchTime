@@ -57,7 +57,7 @@ public class AboutActivity extends Activity {
     public void onBackPressed() {
         setResult(RESULT_OK);
         finish();
-        super.onBackPressed();
+        //super.onBackPressed();
     }
 
     @Override

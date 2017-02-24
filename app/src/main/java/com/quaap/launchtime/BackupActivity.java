@@ -15,7 +15,10 @@ package com.quaap.launchtime;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -250,6 +253,13 @@ public class BackupActivity extends Activity {
                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(mainIntent);
                 BackupActivity.this.finish();
+
+
+                Intent mainIntent2 = new Intent(BackupActivity.this, MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(BackupActivity.this, 1010101, mainIntent2, PendingIntent.FLAG_CANCEL_CURRENT);
+                AlarmManager mgr = (AlarmManager)BackupActivity.this.getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
+                Runtime.getRuntime().exit(0);
 
             }
         }, 1000);
