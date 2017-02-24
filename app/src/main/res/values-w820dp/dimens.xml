@@ -7,11 +7,11 @@
     <dimen name="activity_vertical_margin">64dp</dimen>
 
 
-    <dimen name="shortcut_width">100dp</dimen>
-    <dimen name="shortcut_height">100dp</dimen>
+    <dimen name="shortcut_width">110dp</dimen>
+    <dimen name="shortcut_height">110dp</dimen>
 
     <dimen name="icon_width">75dp</dimen>
-    <dimen name="icon_label_width">77dp</dimen>
+    <dimen name="icon_label_width">85dp</dimen>
     <dimen name="icont_label_height">45dp</dimen>
     <dimen name="shortcut_fontsize">14sp</dimen>
     <dimen name="shortcut_padding_side">15dp</dimen>
