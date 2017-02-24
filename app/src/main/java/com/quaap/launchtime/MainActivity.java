@@ -436,20 +436,46 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (!mChildLock) {
-            //Try to get home button press
-            //Seems to work sometimes, but not always?
-            if (keyCode == KeyEvent.KEYCODE_HOME) {
-                switchCategory(getTopCategory());
-                showButtonBar(false, true);
-                mQuickRowScroller.smoothScrollTo(0, 0);
-            } else if (keyCode == KeyEvent.KEYCODE_MENU) {
-                openSettings();
-            }
+       // Log.d("LaunchTime", keyCode + "");
+        if (!mChildLock &&keyCode == KeyEvent.KEYCODE_MENU) {
+            openSettings();
         }
         return super.onKeyDown(keyCode, event);
     }
 
+
+    //Catch home key press
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (Intent.ACTION_MAIN.equals(intent.getAction())) {
+
+            final boolean alreadyOnHome =
+                    ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+                            != Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+           // Log.d("LaunchTime", " new intent " + alreadyOnHome);
+            if (alreadyOnHome && !mChildLock) {
+
+                // If we are on home screen, reset most things and go to top category.
+                mQuickRowScroller.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            mSearchbox.setText("");
+                            switchCategory(getTopCategory());
+                            showButtonBar(false, true);
+                            mQuickRowScroller.smoothScrollTo(0, 0);
+                        } catch (Exception e) {
+                            Log.e("LaunchTime", e.getMessage(), e);
+                        }
+
+                    }
+                }, 400);
+            }
+
+        }
+    }
 
     private void readPrefs() {
 
