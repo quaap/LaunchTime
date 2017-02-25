@@ -468,6 +468,7 @@ public class MainActivity extends Activity implements
                             mQuickRowScroller.smoothScrollTo(0, 0);
                             switchCategory(getTopCategory());
                             mCategoriesScroller.smoothScrollTo(0, 0);
+                            mIconSheetScroller.smoothScrollTo(0, 0);
                         } catch (Exception e) {
                             Log.e("LaunchTime", e.getMessage(), e);
                         }
