@@ -1535,7 +1535,11 @@ public class MainActivity extends Activity implements
                         break;
                     }
 
-                    if (handleDrop(droppedOn, dragObj, isShortcut)) return true;
+                    try {
+                        if (handleDrop(droppedOn, dragObj, isShortcut)) return true;
+                    } catch (Exception e) {
+                        Log.e("LaunchTime", e.getMessage(), e);
+                    }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
@@ -1688,27 +1692,31 @@ public class MainActivity extends Activity implements
                 db().deleteAppLaunchedRecord(mBeingDragged.getComponentName());
                 mDragDropSource.removeView(dragObj);
             } catch (Exception e) {
-                Log.e("LaunchTime", "mBeingDragged= " + mBeingDragged + " mDragDropSource=" + mDragDropSource + " dragObj=" +dragObj, e);
+                Log.e("LaunchTime", e.getMessage(), e);
             }
         }
 
         private void removeDroppedItem(View dragObj) {
             if (mChildLock) return;
 
-            mDragDropSource.removeView(dragObj);
-            db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+            try {
+                mDragDropSource.removeView(dragObj);
+                db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
 
-            if (mBeingDragged.isLink()) {
-                db().deleteApp(mBeingDragged.getComponentName());
-            }
-
-            if (mBeingDragged.isWidget()) {
-
-                db().deleteApp(mBeingDragged.getComponentName());
-                AppWidgetHostView wid = mLoadedWidgets.remove(mBeingDragged.getActivityName());
-                if (wid!=null) {
-                    mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
+                if (mBeingDragged.isLink()) {
+                    db().deleteApp(mBeingDragged.getComponentName());
                 }
+
+                if (mBeingDragged.isWidget()) {
+
+                    db().deleteApp(mBeingDragged.getComponentName());
+                    AppWidgetHostView wid = mLoadedWidgets.remove(mBeingDragged.getActivityName());
+                    if (wid != null) {
+                        mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("LaunchTime", e.getMessage(), e);
             }
         }
 
@@ -1866,40 +1874,43 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == UNINSTALL_RESULT) {
+        try {
+            if (requestCode == UNINSTALL_RESULT) {
+                switch (resultCode) {
+                    case RESULT_OK:
+                        ComponentName actvname = ((AppShortcut) mBeingUninstalled.getTag()).getComponentName();
+                        db().deleteApp(actvname);
+                        removeFromQuickApps(actvname);
+                        AppShortcut.removeAppShortcut(actvname);
+                        refreshSearch(true);
+                        mDragDropSource.removeView(mBeingUninstalled);
+                        db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
+                        Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
+                        break;
+                    case RESULT_CANCELED:
+                        Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(this, R.string.could_not_uninstall, Toast.LENGTH_LONG).show();
 
-            switch (resultCode) {
-                case RESULT_OK:
-                    mDragDropSource.removeView(mBeingUninstalled);
-                    db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
-                    Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
-                    ComponentName actvname = ((AppShortcut) mBeingUninstalled.getTag()).getComponentName();
-                    db().deleteApp(actvname);
-                    removeFromQuickApps(actvname);
-                    AppShortcut.removeAppShortcut(actvname);
-                    refreshSearch(true);
-                    break;
-                case RESULT_CANCELED:
-                    Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
-                    break;
-                default:
-                    Toast.makeText(this, R.string.could_not_uninstall, Toast.LENGTH_LONG).show();
-
-            }
-        } else {
-            AppWidgetHostView appwid = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
-            if (appwid == null) {
-                Log.d("LaunchWidget2", "appwid is null.");
-                ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
-                if (cn!=null) {
-                    Log.d("LaunchWidget2", "classname is " + cn.getClassName());
-                    db().deleteApp(cn);
-                } else {
-                    super.onActivityResult(requestCode, resultCode, data);
                 }
             } else {
-                addWidget(appwid);
+                AppWidgetHostView appwid = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
+                if (appwid == null) {
+                    Log.d("LaunchWidget2", "appwid is null.");
+                    ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
+                    if (cn != null) {
+                        Log.d("LaunchWidget2", "classname is " + cn.getClassName());
+                        db().deleteApp(cn);
+                    } else {
+                        super.onActivityResult(requestCode, resultCode, data);
+                    }
+                } else {
+                    addWidget(appwid);
+                }
             }
+        } catch (Exception e) {
+            Log.e("LaunchTime", e.getMessage(), e);
         }
     }
 
