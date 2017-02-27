@@ -289,8 +289,8 @@ public class MainActivity extends Activity implements
         }
 
         //rerun our query if needed
-        if (mCategory.equals(Categories.CAT_SEARCH) && mSearchAdapter!=null) {
-            mSearchAdapter.refreshCursor();
+        if (mCategory.equals(Categories.CAT_SEARCH)) {
+            refreshSearch(false);
         }
         hideRemoveDropzone();
 
@@ -381,9 +381,8 @@ public class MainActivity extends Activity implements
                 populateRecentApps();
 
                 //load our cursor
-                if (mSearchAdapter != null) {
-                    mSearchAdapter.refreshCursor();
-                }
+                refreshSearch(true);
+
             } else {
 
                 // not the search page: close the cursor
@@ -1209,6 +1208,8 @@ public class MainActivity extends Activity implements
         return mPrefs.getInt(app.getActivityName() + "_height", 0);
     }
 
+    private int mSearchRememberScrollPos;
+
     AppCursorAdapter mSearchAdapter;
     EditText mSearchbox;
     private ViewGroup getSearchView() {
@@ -1222,10 +1223,27 @@ public class MainActivity extends Activity implements
         list.setAdapter(mSearchAdapter);
         list.setOnItemClickListener(mSearchAdapter);
 
+        list.setOnLoadCompleteListener(new StaticListView.OnLoadCompleteListener() {
+            @Override
+            public void loadComplete() {
+                mIconSheetScroller.scrollTo(0, mSearchRememberScrollPos);
+                mIconSheetScroller.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mIconSheetScroller.scrollTo(0, mSearchRememberScrollPos);
+
+                    }
+                }, 100);
+            }
+        });
+
+
+
         searchView.findViewById(R.id.btn_clear_searchbox).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSearchbox.setText("");
+                mSearchRememberScrollPos = 0;
             }
         });
 
@@ -1248,8 +1266,15 @@ public class MainActivity extends Activity implements
             }
         });
 
-        mSearchAdapter.refreshCursor();
+        refreshSearch(false);
         return searchView;
+    }
+
+    private void refreshSearch(boolean rememberPos) {
+        if (rememberPos) mSearchRememberScrollPos = mIconSheetScroller.getScrollY();
+        if (mSearchAdapter!=null) {
+            mSearchAdapter.refreshCursor();
+        }
     }
 
     private CategoryTabStyle getDefaultCategoryStyle(String category) {
@@ -1537,7 +1562,8 @@ public class MainActivity extends Activity implements
                     removeDroppedRecentItem(dragObj);
                 } else if (mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
                     removeDroppedItem(dragObj);
-                    mSearchAdapter.refreshCursor();
+                    refreshSearch(true);
+
                 } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
                     //delete category tab
                     promptDeleteCategory((String) dragObj.getTag());
@@ -1650,7 +1676,7 @@ public class MainActivity extends Activity implements
             }
 
             if (mCategory.equals(Categories.CAT_SEARCH)) {
-                mSearchAdapter.refreshCursor();
+                refreshSearch(true);
             }
             return false;
         }
@@ -1851,7 +1877,7 @@ public class MainActivity extends Activity implements
                     db().deleteApp(actvname);
                     removeFromQuickApps(actvname);
                     AppShortcut.removeAppShortcut(actvname);
-                    mSearchAdapter.refreshCursor();
+                    refreshSearch(true);
                     break;
                 case RESULT_CANCELED:
                     Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();

@@ -25,6 +25,7 @@ public class StaticListView extends LinearLayout {
     protected Adapter mAdapter;
     protected Observer mObserver = new Observer(this);
     private OnItemClickListener mOnItemClickListener;
+    private OnLoadCompleteListener mOnLoadCompleteListener;
 
     public StaticListView(Context context) {
         super(context);
@@ -44,6 +45,10 @@ public class StaticListView extends LinearLayout {
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setOnLoadCompleteListener(OnLoadCompleteListener onLoadCompleteListener) {
+        mOnLoadCompleteListener = onLoadCompleteListener;
     }
 
     private void onItemClick(Object item, View itemView, int position, long id) {
@@ -88,6 +93,9 @@ public class StaticListView extends LinearLayout {
                     }
                 });
             }
+            if (mOnLoadCompleteListener!=null) {
+                mOnLoadCompleteListener.loadComplete();
+            }
 
         }
 
@@ -98,7 +106,11 @@ public class StaticListView extends LinearLayout {
         }
     }
 
-    interface OnItemClickListener {
+    public interface OnLoadCompleteListener {
+        void loadComplete();
+    }
+
+    public interface OnItemClickListener {
         void onItemClick(Object item, View itemView, int position, long id);
     }
 }
