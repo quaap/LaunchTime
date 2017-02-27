@@ -6,10 +6,10 @@ side menu used to organize your apps into common-sense and configurable categori
 features support for widgets, text search for apps, a QuickBar, links/shortcuts, recent apps list, 
 app hiding, color selcetion, and portrait and landscape support.
 
-I've been using it on my LG phone as I develop, but it is still a late alpha or early beta stage,
+I've been using it on my LG phone as I develop, but it is still a beta stage,
 so breaking changes are possible.
 
-Version 0.2 is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime).
+Version 0.4 is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime).
 
 Features
 ----------
@@ -28,10 +28,10 @@ Categorization
 ----------
 On the first run, or when a new app is installed, an attempt is made to place each app into its
 proper category.  However,  many apps could go into several categories, and Android provides no
-way to categorized apps, so, many apps will end up miscategorized, or in the "Other" category.
-If you'd like to help the situation, please go to the settings menu and click "Send app data",
-which will send me information about what apps you have installed and how you have categorized
-them.
+way to categorize apps, so, many apps will end up miscategorized, or in the "Other" category.
+If you'd like to help the situation, please categorize your apps, go to the settings menu and 
+click "Send app data", which will send me information about what apps you have installed and 
+how you have categorized them.
 
 Permissions
 ----------
@@ -41,8 +41,8 @@ Permissions
 Data is never submitted without explicit user permission. Submitted data is as anonymized as
 possible, and no one but the app author sees the submitted data. It is only used to improve the
 app, never sold or used nefariously. (I'm just some guy who programs for fun.)
-If you don't want to use those featues you can disable the permissions in the Application
-Manager.
+If you don't want to use those featues you can skip them, and you can disable the "storage" 
+permissions in the Application Manager.
 
 
 QuickBar
@@ -82,9 +82,7 @@ Known issues
 * No labels on widgets.
 * Widget needing configuration don't always work.
 * Labels on apps don't always reflect changes when the app upgrades and changes the label.
-* The uninstall/remove dropzone is small/partially covers the QuickBar dropzone.
-* Not tested on large devices (my development computer is a small laptop which cannot
-  run the emulator).
+
 
 Credits
 --------
@@ -94,4 +92,3 @@ categorization code).  I decided to develop my own instead of adding to it becau
 different design goals for a few important features (ie single vs multiple widgets,
 unified homescreen vs app-drawer, etc)  If this launcher doesn't suit you, I encourage you
 try it!
-
