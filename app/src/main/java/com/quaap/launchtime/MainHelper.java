@@ -109,7 +109,7 @@ public class MainHelper {
         ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
         activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
 
-        activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", ".camera", "camera", "cam", "photo", "foto"));
+        activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", "camera.Camera", ".camera", "camera", "cam", "photo", "foto"));
         activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
 
         activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
