@@ -1477,7 +1477,7 @@ public class MainActivity extends Activity implements
                         scrollOnDrag(droppedOn, event, mIconSheetScroller);
                         hscrollOnDrag(droppedOn, event, mQuickRowScroller);
 
-                        if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility()!=View.VISIBLE && droppedOn==mRemoveDropzone && System.currentTimeMillis()-mDropZoneHover > 400) {
+                        if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility()!=View.VISIBLE && (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) && System.currentTimeMillis()-mDropZoneHover > 400) {
                             mLinkDropzone.setVisibility(View.VISIBLE);
                             mLinkDropzonePeek.setVisibility(View.GONE);
                            // Log.d("LaunchTime", "mLinkDropzone.setVisibility(View.VISIBLE)");
@@ -1488,7 +1488,7 @@ public class MainActivity extends Activity implements
                     if (!nocolor ) {
                         droppedOn.setBackgroundColor(dragoverBackground);
                     }
-                    if (droppedOn==mRemoveDropzone) {
+                    if (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) {
                         mDropZoneHover = System.currentTimeMillis();
                         //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
                     }
