@@ -351,17 +351,8 @@ public class MainActivity extends Activity implements
             if (db().getCategoryDisplay(mCategory) == null) {
                 mCategory = getTopCategory();
             }
+            setCategoryTabStyles();
 
-            //switch all category tabs to their default style and text
-            for (TextView catTab : mCategoryTabs.values()) {
-                styleCategorySpecial(catTab, CategoryTabStyle.Default);
-                catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
-            }
-
-            //change the selected tab to the full label name
-            TextView catTab = mCategoryTabs.get(mCategory);
-            catTab.setText(db().getCategoryDisplayFull(mCategory));
-            catTab.setVisibility(View.VISIBLE);
 
             mIconSheet = mIconSheets.get(mCategory);
 
@@ -399,6 +390,19 @@ public class MainActivity extends Activity implements
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "SwitchCat", e);
         }
+    }
+
+    private void setCategoryTabStyles() {
+        //switch all category tabs to their default style and text
+        for (TextView catTab : mCategoryTabs.values()) {
+            styleCategorySpecial(catTab, CategoryTabStyle.Default);
+            catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
+        }
+
+        //change the selected tab to the full label name
+        TextView catTab = mCategoryTabs.get(mCategory);
+        catTab.setText(db().getCategoryDisplayFull(mCategory));
+        catTab.setVisibility(View.VISIBLE);
     }
 
 
@@ -1909,6 +1913,7 @@ public class MainActivity extends Activity implements
                     addWidget(appwid);
                 }
             }
+            setCategoryTabStyles();
         } catch (Exception e) {
             Log.e("LaunchTime", e.getMessage(), e);
         }
