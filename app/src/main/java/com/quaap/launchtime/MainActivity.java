@@ -762,7 +762,8 @@ public class MainActivity extends Activity implements
                 //Log.d("Recent", "Trying " + actvname + " " + app);
 
                 addAppToIconSheet(iconSheet, app, false);
-                if (i++ > 60) break;
+                i++;
+                if (i >= 45) break;
             }
         }
     }
