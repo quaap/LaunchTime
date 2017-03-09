@@ -1914,7 +1914,7 @@ public class MainActivity extends Activity implements
                     addWidget(appwid);
                 }
             }
-            setCategoryTabStyles();
+          //  setCategoryTabStyles();
         } catch (Exception e) {
             Log.e("LaunchTime", e.getMessage(), e);
         }
