@@ -288,8 +288,12 @@ public class DB extends SQLiteOpenHelper {
             while (cursor.moveToNext()) {
                 String actv = cursor.getString(0);
                 String pkg = cursor.getString(1);
-                ComponentName cn = new ComponentName(pkg, actv);
-                actvnames.add(cn);
+                try {
+                    ComponentName cn = new ComponentName(pkg, actv);
+                    actvnames.add(cn);
+                } catch (Exception e) {
+                    Log.e("LaunchDB", e.getMessage(), e);
+                }
             }
         } finally {
             cursor.close();
@@ -837,7 +841,11 @@ public class DB extends SQLiteOpenHelper {
         try {
            // int i=0;
             while (cursor.moveToNext()) {
-                actvnames.add(new ComponentName(cursor.getString(1), cursor.getString(0)));
+                try {
+                    actvnames.add(new ComponentName(cursor.getString(1), cursor.getString(0)));
+                } catch (Exception e) {
+                    Log.e("LaunchDB", e.getMessage(), e);
+                }
               //  Log.d("db", "  " + i + " " + cursor.getInt(2) + " " + cursor.getString(1));
               //  i++;
             }
