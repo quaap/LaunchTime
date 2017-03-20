@@ -33,49 +33,52 @@ public class LaunchReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
 
-        String action = intent.getAction();
-        if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
-            Uri data = intent.getData();
-            String packageName = data.getEncodedSchemeSpecificPart();
-            Log.i("InstallCatch", "The installed package is: " + packageName);
+        try {
+            String action = intent.getAction();
+            if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+                Uri data = intent.getData();
+                String packageName = data.getEncodedSchemeSpecificPart();
+                Log.i("InstallCatch", "The installed package is: " + packageName);
 
-            try {
-                DB db = ((GlobState)context.getApplicationContext()).getDB();
+                try {
+                    DB db = ((GlobState) context.getApplicationContext()).getDB();
 
-                PackageManager pm = context.getPackageManager();
+                    PackageManager pm = context.getPackageManager();
 
-                Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
-                ResolveInfo ri = context.getPackageManager().resolveActivity(packageIntent, 0);
-                String activityName = ri.activityInfo.name;
-                ComponentName cn = new ComponentName(ri.activityInfo.packageName, activityName);
-                String category = db.getAppCategory(cn);
+                    Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
+                    ResolveInfo ri = context.getPackageManager().resolveActivity(packageIntent, 0);
+                    String activityName = ri.activityInfo.name;
+                    ComponentName cn = new ComponentName(ri.activityInfo.packageName, activityName);
+                    String category = db.getAppCategory(cn);
 
-                if (category!=null && db.getCategoryDisplay(category) == null) {
-                    category = null;
+                    if (category != null && db.getCategoryDisplay(category) == null) {
+                        category = null;
+                    }
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+                    AppShortcut.removeAppShortcut(cn);
+                    AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri, category, prefs.getBoolean("prefs_autocat", true));
+
+
+                    if (db.addApp(app)) {
+                        db.addAppCategoryOrder(app.getCategory(), app.getComponentName());
+                        if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
+                            Toast.makeText(context, app.getLabel() + " was installed into " + db.getCategoryDisplay(app.getCategory()), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("LaunchReceiver", "Could not get " + packageName, e);
                 }
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-                AppShortcut.removeAppShortcut(cn);
-                AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri, category, prefs.getBoolean("prefs_autocat", true));
-
-
-                if (db.addApp(app)) {
-                    db.addAppCategoryOrder(app.getCategory(), app.getComponentName());
-                    Toast.makeText(context, app.getLabel() + " was installed into " + db.getCategoryDisplay(app.getCategory()), Toast.LENGTH_LONG).show();
+            } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
+                Uri data = intent.getData();
+                String packageName = data.getEncodedSchemeSpecificPart();
+                Log.i("RemoveCatch", "The uninstalled package is: " + packageName);
+                if (!packageName.equals(context.getPackageName()) && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) { //don't catch self uninstall: probably an upgrade
+                    DB db = ((GlobState) context.getApplicationContext()).getDB();
+                    db.deleteApp(null, packageName);
                 }
-            } catch (Exception e) {
-                Log.e("InstallCatch", "Could not get " + packageName, e);
-            }
-
-        } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
-            Uri data = intent.getData();
-            String packageName = data.getEncodedSchemeSpecificPart();
-            Log.i("RemoveCatch", "The uninstalled package is: " + packageName);
-            if (!packageName.equals(context.getPackageName()) && intent.getBooleanExtra(Intent.ACTION_PACKAGE_REPLACED, false)) { //don't catch self uninstall: probably an upgrade
-                DB db = ((GlobState) context.getApplicationContext()).getDB();
-                db.deleteApp(null, packageName);
-            }
 //        } else if (Intent.ACTION_CREATE_SHORTCUT.equals(action)) {
 //            Log.d("ShortcutCatch", "intent received");
 //            if (intent.hasExtra(Intent.EXTRA_TEXT)) {
@@ -83,6 +86,9 @@ public class LaunchReceiver extends BroadcastReceiver {
 //                Log.d("ShortcutCatch", "Shortcut name: " + intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME));
 //            }
 
+            }
+        } catch (Exception e) {
+            Log.e("LaunchReceiver", e.getMessage(), e);
         }
 
     }
