@@ -271,6 +271,7 @@ public class DB extends SQLiteOpenHelper {
                 sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
             }
         }
+        sqLiteDatabase.delete(APP_ORDER_TABLE, PKGNAME + " is null", null);
     }
 
     public boolean isFirstRun() {

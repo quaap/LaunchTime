@@ -584,7 +584,11 @@ public class MainActivity extends Activity implements
 
     //Run/open the thing that was clicked
     public void launchApp(String activityname, String pkgname) {
-        launchApp(db().getApp(new ComponentName(pkgname, activityname)));
+        try {
+            launchApp(db().getApp(new ComponentName(pkgname, activityname)));
+        } catch (Exception e) {
+            Log.e("LaunchTime", e.getMessage(), e);
+        }
     }
 
     public void launchApp(final AppShortcut app) {
@@ -978,29 +982,33 @@ public class MainActivity extends Activity implements
 
         for (int i = 0; i < activities.size(); i++) {
 
-            AppShortcut app;
+            try {
+                AppShortcut app;
 
-            ResolveInfo ri = activities.get(i);
-            String actvname = ri.activityInfo.name;
-            ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
+                ResolveInfo ri = activities.get(i);
+                String actvname = ri.activityInfo.name;
+                ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
 
-            if (!pmactvnames.contains(appcn)) {
-                pmactvnames.add(appcn);
+                if (!pmactvnames.contains(appcn)) {
+                    pmactvnames.add(appcn);
 
-                app = db().getApp(appcn);
+                    app = db().getApp(appcn);
 
-                if (dbactvnames.contains(appcn) && app != null) {
-                    app.loadAppIconAsync(this, mPackageMan);
-                  //  Log.d("app", "app was in db " + actvname + " " +  ri.activityInfo.packageName);
-                } else {
-                  //  Log.d("app", "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
-                    app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
-                    newapps.add(app);
+                    if (dbactvnames.contains(appcn) && app != null) {
+                        app.loadAppIconAsync(this, mPackageMan);
+                        //  Log.d("app", "app was in db " + actvname + " " +  ri.activityInfo.packageName);
+                    } else {
+                        //  Log.d("app", "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
+                        app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
+                        newapps.add(app);
+                    }
+
+                    shortcuts.add(app);
+
+
                 }
-
-                shortcuts.add(app);
-
-
+            } catch (Exception e) {
+                Log.e("LaunchTime", e.getMessage(), e);
             }
 
         }

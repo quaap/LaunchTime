@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes
@@ -98,23 +99,27 @@ public class MainHelper {
 
         Map<String, List<String>> activities = new TreeMap<>();
 
+        try {
 
-        ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://", null);
-        activities.put("browser", Arrays.asList(
-                browseapp.getClassName(), browseapp.getPackageName(),
-                "opera", "dolphin", "firefox", "mozilla", "chromium",
-                "uc.browser", "brave.browser", "TunnyBrowser", "chrome",
-                ".browser", "browser"));
+            ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://", null);
+            activities.put("browser", Arrays.asList(
+                    browseapp.getClassName(), browseapp.getPackageName(),
+                    "opera", "dolphin", "firefox", "mozilla", "chromium",
+                    "uc.browser", "brave.browser", "TunnyBrowser", "chrome",
+                    ".browser", "browser"));
 
-        ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
-        activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
+            ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
+            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
 
-        activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", "camera.Camera", ".camera", "camera", "cam", "photo", "foto"));
-        activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
+            activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", "camera.Camera", ".camera", "camera", "cam", "photo", "foto"));
+            activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
 
-        activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
-        activities.put("email", Arrays.asList("k9", "inbox", "outlook", "mail"));
+            activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
+            activities.put("email", Arrays.asList("k9", "inbox", "outlook", "mail"));
 
+        } catch (Exception e) {
+            Log.e("LaunchTime", e.getMessage(), e);
+        }
 
         return activities;
     }
