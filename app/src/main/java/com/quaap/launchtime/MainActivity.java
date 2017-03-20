@@ -267,6 +267,7 @@ public class MainActivity extends Activity implements
             mCategory = getTopCategory();
             skiphome = true;
             mQuickRowScroller.smoothScrollTo(0, 0);
+            mCategoriesScroller.smoothScrollTo(0, 0);
         } else {
             mCategory = mPrefs.getString("category", getTopCategory());
         }
@@ -434,6 +435,8 @@ public class MainActivity extends Activity implements
             //Otherwise, switch to known-good category
             switchCategory(topCat);
             mCategoriesScroller.smoothScrollTo(0, 0);
+        } else if (mCategoriesScroller.getScrollY()>0) {
+            mCategoriesScroller.smoothScrollTo(0, 0);
         }
     }
 
@@ -469,6 +472,7 @@ public class MainActivity extends Activity implements
                             if (mSearchbox!=null) mSearchbox.setText("");
                             showButtonBar(false, true);
                             mQuickRowScroller.smoothScrollTo(0, 0);
+                            mCategoriesScroller.smoothScrollTo(0, 0);
                             switchCategory(getTopCategory());
                             mCategoriesScroller.smoothScrollTo(0, 0);
                             mIconSheetScroller.smoothScrollTo(0, 0);
