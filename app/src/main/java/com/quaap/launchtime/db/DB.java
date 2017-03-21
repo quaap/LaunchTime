@@ -523,9 +523,24 @@ public class DB extends SQLiteOpenHelper {
 //    }
 
     public boolean deleteApp(ComponentName appname) {
+
         String actvname = appname.getClassName();
 
         String pkgname = appname.getPackageName();
+
+        try {
+            AppShortcut app = getApp(appname);
+            if (app != null && (app.isLink() || app.isWidget())) {
+                SQLiteDatabase db = this.getWritableDatabase();
+
+                db.delete(APP_TABLE, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
+                return true;
+            }
+        } catch (Exception e) {
+            Log.e("LaunchDB", "Can't delete app " + actvname, e);
+        }
+
+
 
         return deleteApp(actvname,pkgname);
     }
