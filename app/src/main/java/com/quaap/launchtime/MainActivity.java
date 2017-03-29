@@ -1870,7 +1870,9 @@ public class MainActivity extends Activity implements
             mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.trash);
             //mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showy, 0,0,R.drawable.trash);
             mRemoveAppText.setTextColor(Color.WHITE);
-            mLinkDropzonePeek.setVisibility(View.VISIBLE);
+            if (!Categories.CAT_SEARCH.equals(mCategory)) {
+                mLinkDropzonePeek.setVisibility(View.VISIBLE);
+            }
         }
     }
 
