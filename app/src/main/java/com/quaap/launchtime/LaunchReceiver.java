@@ -75,7 +75,7 @@ public class LaunchReceiver extends BroadcastReceiver {
                 Uri data = intent.getData();
                 String packageName = data.getEncodedSchemeSpecificPart();
                 Log.i("RemoveCatch", "The uninstalled package is: " + packageName);
-                if (!packageName.equals(context.getPackageName()) && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) { //don't catch self uninstall: probably an upgrade
+                if (!packageName.equals(context.getPackageName()) && !intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) { //don't catch self uninstall: probably an upgrade
                     DB db = ((GlobState) context.getApplicationContext()).getDB();
                     db.deleteApp(null, packageName);
                 }
