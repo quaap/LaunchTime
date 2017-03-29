@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Translate only the "_strings" entries -->
+	<!-- Devinfostring: Transl. in ru, date: 2017-02-25, for: 0.4, by: Vladimir Berkut/lct@mail.ru -->
+
+
+    <string-array name="pref_return_home_strings">
+        <item>немедленно</item>
+        <item>через 30 секунд</item>
+        <item>через 1 минуту</item>
+        <item>через 5 минут</item>
+        <item>через 30 minutes</item>
+        <item>через 1 час</item>
+        <item>через 1 день</item>
+        <item>никогда</item>
+    </string-array>
+
+
+    <string-array name="pref_orientation_strings">
+        <item>Как в системе</item>
+        <item>Адаптивно</item>
+        <item>Только вертикально</item>
+        <item>Только горизонтально</item>
+    </string-array>
+
+
+    <string-array name="pref_size_strings">
+        <item>Маленький</item>
+        <item>Средний</item>
+        <item>Большой</item>
+        <item>Огромный</item>
+    </string-array>
+
+    <string-array name="pref_cat_location_strings">
+        <item>Справа</item>
+        <item>Слева</item>
+    </string-array>
+
+</resources>
