@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 public class DB extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
@@ -197,6 +197,7 @@ public class DB extends SQLiteOpenHelper {
 
     private void buildCatTable(SQLiteDatabase sqLiteDatabase) {
         Log.i("db", "creating category table");
+        sqLiteDatabase.execSQL("drop table if exists " + APP_CAT_MAP_TABLE);
         sqLiteDatabase.execSQL(APP_CAT_MAP_TABLE_CREATE);
         for (String createind : appcatmapcolumnsindex) {
             sqLiteDatabase.execSQL(buildIndexStmt(APP_CAT_MAP_TABLE, createind));
@@ -229,8 +230,9 @@ public class DB extends SQLiteOpenHelper {
 
             boolean first = true;
             String cols = "";
-            for (String col: appcolumns) {
-                if (first) first = false; else cols += ", ";
+            for (String col : appcolumns) {
+                if (first) first = false;
+                else cols += ", ";
                 cols += col;
 
             }
@@ -251,15 +253,13 @@ public class DB extends SQLiteOpenHelper {
 
                     ContentValues values = new ContentValues();
                     values.put(PKGNAME, pkg);
-                    sqLiteDatabase.update(APP_ORDER_TABLE, values, ACTVNAME +"=?", new String[] { actv });
+                    sqLiteDatabase.update(APP_ORDER_TABLE, values, ACTVNAME + "=?", new String[]{actv});
                     values.put(PKGNAME, pkg);
-                    sqLiteDatabase.update(APP_HISTORY_TABLE, values, ACTVNAME +"=?", new String[] { actv });
+                    sqLiteDatabase.update(APP_HISTORY_TABLE, values, ACTVNAME + "=?", new String[]{actv});
                 }
             } finally {
                 cursor.close();
             }
-
-            buildCatTable(sqLiteDatabase);
 
             ContentValues values = new ContentValues();
             values.put(INDEX, 1);
@@ -270,6 +270,10 @@ public class DB extends SQLiteOpenHelper {
                 values.put(INDEX, 0);
                 sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
             }
+        }
+
+        if (oldVersion<=3) {
+            buildCatTable(sqLiteDatabase);
         }
         sqLiteDatabase.delete(APP_ORDER_TABLE, PKGNAME + " is null", null);
     }
