@@ -204,8 +204,9 @@ public class DB extends SQLiteOpenHelper {
         }
 
         loadCategories(sqLiteDatabase, true, R.raw.submitted_activities,1);
-        loadCategories(sqLiteDatabase, false, R.raw.packages1,2);
-        loadCategories(sqLiteDatabase, false, R.raw.packages2,3);
+        loadCategories(sqLiteDatabase, false, R.raw.submitted_packages, 2);
+        loadCategories(sqLiteDatabase, false, R.raw.packages1,3);
+        loadCategories(sqLiteDatabase, false, R.raw.packages2,4);
     }
 
 
