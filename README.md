@@ -6,7 +6,7 @@ side menu used to organize your apps into common-sense and configurable categori
 features support for widgets, text search for apps, a QuickBar, links/shortcuts, recent apps list, 
 app hiding, color selcetion, and portrait and landscape support.
 
-Update 2017-04-05: If you downloaded the app from the Google Play Store from "A-Z Man": That is NOT me. MY app contains NO ads. That person added them and is not complying with the GPL by not release the source, among other things. 
+Update 2017-04-05: If you downloaded the app from the Google Play Store from "A-Z Man": That is NOT me. My app contains no ads. That person added them and is not complying with the GPL by not releasing the source.
 
 LaunchTime is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime) and the [Play Store](https://play.google.com/store/apps/details?id=com.quaap.launchtime_official).
 
