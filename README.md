@@ -6,10 +6,11 @@ side menu used to organize your apps into common-sense and configurable categori
 features support for widgets, text search for apps, a QuickBar, links/shortcuts, recent apps list, 
 app hiding, color selcetion, and portrait and landscape support.
 
-I've been using it on my LG phone as I develop, but it is still a beta stage,
-so breaking changes are possible.
+Update 2017-04-05: If you downloaded the app from the Google Play Store from "A-Z Man": That is NOT me. My app contains no ads. That person added them and is not complying with the GPL by not releasing the source.
 
-Version 0.4 is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime).
+LaunchTime is available in [F-Droid](https://f-droid.org/repository/browse/?fdid=com.quaap.launchtime) and the [Play Store](https://play.google.com/store/apps/details?id=com.quaap.launchtime_official).
+
+
 
 Features
 ----------
