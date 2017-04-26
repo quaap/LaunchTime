@@ -337,7 +337,11 @@ public class MainActivity extends Activity implements
     @Override
     public void onDestroy() {
         mAppPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        mWidgetHelper.done();
+        try {
+            mWidgetHelper.done();
+        } catch (Exception e) {
+            Log.e("LaunchTime", "Exception killing widgets", e);
+        }
         super.onDestroy();
     }
 
@@ -981,7 +985,14 @@ public class MainActivity extends Activity implements
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         // Get all activities that have those filters
-        List<ResolveInfo> activities = mPackageMan.queryIntentActivities(intent, 0);
+        List<ResolveInfo> activities;
+
+        try {
+            activities = mPackageMan.queryIntentActivities(intent, PackageManager.GET_META_DATA);
+        } catch (Exception e) {
+            Toast.makeText(this, "Problem getting app list: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            return shortcuts;
+        }
 
 
         for (int i = 0; i < activities.size(); i++) {
