@@ -3,6 +3,7 @@ package com.quaap.launchtime;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
@@ -101,9 +102,8 @@ public class MainHelper {
 
         try {
 
-            ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://", null);
-            activities.put("browser", Arrays.asList(
-                    browseapp.getClassName(), browseapp.getPackageName(),
+            ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://www", null);
+            activities.put("browser", Arrays.asList(browseapp.getPackageName(),
                     "opera", "dolphin", "firefox", "mozilla", "chromium",
                     "uc.browser", "brave.browser", "TunnyBrowser", "chrome",
                     ".browser", "browser"));
@@ -137,12 +137,14 @@ public class MainHelper {
         if (intentcategory != null) {
             intent.addCategory(intentcategory);
         }
-        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, 0);
+        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
         if (resolveInfo != null) {
             Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
+            if (resolveInfo.activityInfo.name!=null && !resolveInfo.activityInfo.name.equals("com.android.internal.app.ResolverActivity")) {
 
-            cn = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+                cn = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+            }
         }
         return cn;
 
