@@ -233,6 +233,10 @@ public class AppShortcut implements Comparable<AppShortcut> {
         return mPackageName.equals(ACTION_PACKAGE);
     }
 
+    public boolean isNormalApp() {
+        return !(isWidget() || isLink() || isActionLink() || isAppLink());
+    }
+
     public boolean iconLoaded() {
         return mIconDrawable != null;
     }

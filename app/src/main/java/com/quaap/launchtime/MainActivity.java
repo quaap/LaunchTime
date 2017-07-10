@@ -601,50 +601,21 @@ public class MainActivity extends Activity implements
 
     public void launchApp(final AppShortcut app) {
         String activityname = app.getLinkBaseActivityName();
-        String packagename = app.getPackageName();
-        String uristr = null;
-        Uri uri = null;
-        boolean isapplink = false;
-        try {
-            if (app.isLink()) {
-                uristr = app.getLinkUri();
-                if (uristr!=null) {
-                    uri = Uri.parse(uristr);
-                    if (app.isAppLink()) {
-                        uri = null;
-                        isapplink = true;
-                    }
-                }
 
-            }
-            Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
-            Intent intent;
-            // is Link is a shortcut?
-            if (app.isActionLink()) {
-                //Change "CALL" to "DIAL" so we can avoid needing the
-                // android.permission.CALL_PHONE permission
-                if (activityname.startsWith("android.intent.action.CALL")) {
-                    activityname = "android.intent.action.DIAL";
-                }
-                //build an activity-specific intent with the uri
-                intent = new Intent(activityname, uri);
-            } else {
-                //regualt activity, start with MAIN
-                if (uristr == null) {
-                    intent = new Intent(Intent.ACTION_MAIN);
-                } else {
-                    intent = new Intent(Intent.ACTION_MAIN, uri);
-                }
-                intent.setClassName(packagename, activityname);
-            }
+        try {
 
             //needed to place in the open apps list
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = getAppIntent(app);
 
-            // actually start it
-            startActivity(intent);
+            if (isValidActivity(intent)) {
+                // actually start it
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Could not launch item", Toast.LENGTH_LONG).show();
+            }
+
             //log the launch
-            if (isapplink) {
+            if (app.isAppLink()) {
                 db().appLaunched(new ComponentName(app.getPackageName(), app.getLinkBaseActivityName()));
             } else {
                 db().appLaunched(app.getComponentName());
@@ -657,6 +628,58 @@ public class MainActivity extends Activity implements
 
     }
 
+    public Intent getAppIntent(final AppShortcut app) {
+        String activityname = app.getLinkBaseActivityName();
+        String packagename = app.getPackageName();
+        String uristr = null;
+        Uri uri = null;
+
+        if (app.isLink()) {
+            uristr = app.getLinkUri();
+            if (uristr!=null) {
+                uri = Uri.parse(uristr);
+                if (app.isAppLink()) {
+                    uri = null;
+                }
+            }
+
+        }
+        Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
+        Intent intent;
+        // is Link is a shortcut?
+        if (app.isActionLink()) {
+            //Change "CALL" to "DIAL" so we can avoid needing the
+            // android.permission.CALL_PHONE permission
+            if (activityname.startsWith("android.intent.action.CALL")) {
+                activityname = "android.intent.action.DIAL";
+            }
+            //build an activity-specific intent with the uri
+            intent = new Intent(activityname, uri);
+        } else {
+            //regualt activity, start with MAIN
+            if (uristr == null) {
+                intent = new Intent(Intent.ACTION_MAIN);
+            } else {
+                intent = new Intent(Intent.ACTION_MAIN, uri);
+            }
+            intent.setClassName(packagename, activityname);
+        }
+
+        //needed to place in the open apps list
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        return intent;
+
+    }
+
+    private boolean isValidActivity(AppShortcut app) {
+        return isValidActivity(getAppIntent(app));
+    }
+
+    private boolean isValidActivity(Intent intent) {
+        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
 
     // runs at create time to read all apps and add them to our db, if not there already
     private void loadApplications() {
@@ -816,7 +839,7 @@ public class MainActivity extends Activity implements
     private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, int pos, boolean reuse) {
         if (app != null) {
             try {
-                if (isAppInstalled(app.getPackageName())) {
+                if (isValidActivity(app)) {
                     ViewGroup item = getShortcutView(app, false, reuse);
                     if (item != null) {
                         if (!app.iconLoaded()) {
@@ -828,9 +851,10 @@ public class MainActivity extends Activity implements
                         iconSheet.addView(item, pos, lp);
                         return true;
                     }
-                } //else {
-                //Log.d("LaunchTime", "Not showing recent " + app.getPackageName() + " " + app.getActivityName() + ": Not installed.");
-                //}
+                } else {
+                    db().deleteApp(app.getComponentName());
+                    Log.d("LaunchTime", "removed " + app.getPackageName() + " " + app.getActivityName() + ":activity not valid.");
+                }
             } catch (Exception e) {
                 Log.e("LaunchTime", "exception adding icon to sheet", e);
                 Toast.makeText(this,"Couldn't place icon: " + e.getMessage(), Toast.LENGTH_LONG).show();
