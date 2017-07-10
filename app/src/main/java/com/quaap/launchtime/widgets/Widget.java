@@ -155,25 +155,30 @@ public class Widget {
     }
 
     public boolean checkBindPermission(final int appWidgetId, final ComponentName cn) {
-        boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
+        try {
+            boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
 
 
-        // Ask the user to allow this app to have access to their widgets
-        if (!allowed_to_bind) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("LaunchWidgeth", "asking for permission");
-                    Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
+            // Ask the user to allow this app to have access to their widgets
+            if (!allowed_to_bind) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("LaunchWidgeth", "asking for permission");
+                        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
+                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
 
-                    addEmptyData(intent);
-                    mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
+                        addEmptyData(intent);
+                        mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
 
-                }
-            },500);
-            return true;
+                    }
+                }, 500);
+                return true;
+            }
+        } catch( Exception e) {
+            Log.e("LaunchTime", e.getMessage());
+            return false;
         }
         return false;
     }
