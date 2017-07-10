@@ -2377,6 +2377,7 @@ public class MainActivity extends Activity implements
     public void openSettings() {
         Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         startActivity(settingsIntent);
     }
 

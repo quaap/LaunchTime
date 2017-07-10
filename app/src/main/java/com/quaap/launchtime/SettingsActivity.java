@@ -63,9 +63,9 @@ public class SettingsActivity extends PreferenceActivity {
     public void onBackPressed() {
 
         Intent main = new Intent(this, MainActivity.class);
-        startActivity(main);
-        setResult(RESULT_OK);
+        //setResult(RESULT_OK);
         finish();
+        startActivity(main);
 
     }
 
