@@ -644,7 +644,7 @@ public class MainActivity extends Activity implements
             }
 
         }
-        Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
+       // Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
         Intent intent;
         // is Link is a shortcut?
         if (app.isActionLink()) {
