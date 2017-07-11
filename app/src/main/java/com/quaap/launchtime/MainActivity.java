@@ -839,7 +839,7 @@ public class MainActivity extends Activity implements
     private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, int pos, boolean reuse) {
         if (app != null) {
             try {
-                if (isValidActivity(app)) {
+                if ((app.isWidget() && isAppInstalled(app.getPackageName())) || isValidActivity(app)) {
                     ViewGroup item = getShortcutView(app, false, reuse);
                     if (item != null) {
                         if (!app.iconLoaded()) {
@@ -1057,7 +1057,7 @@ public class MainActivity extends Activity implements
             ComponentName dbactv = it.next();
             if (!pmactvnames.contains(dbactv)) {
                 AppShortcut app = db().getApp(dbactv);
-                if (!isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
+                if (app==null || !isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
                     Log.d("Launch", "Removing " + dbactv);
                     it.remove();
                     db().deleteApp(dbactv);
