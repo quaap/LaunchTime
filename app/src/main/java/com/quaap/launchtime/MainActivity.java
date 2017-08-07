@@ -24,8 +24,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -41,6 +44,7 @@ import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -57,6 +61,7 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -1825,6 +1830,9 @@ public class MainActivity extends Activity implements
         if (mChildLock) return false;
 
         AppShortcut dragitem = (AppShortcut) view.getTag();
+
+        handle25Shortcuts(view, dragitem);
+
         String label = dragitem.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
@@ -1851,6 +1859,79 @@ public class MainActivity extends Activity implements
 
 
         return false;
+    }
+
+
+    private void handle25Shortcuts(View view, AppShortcut item) {
+        if (Build.VERSION.SDK_INT>=25) {
+
+            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+
+            LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
+            if (launcherApps.hasShortcutHostPermission()) {
+                List<ShortcutInfo> shortcutInfos = null;
+                try {
+
+                    LauncherApps.ShortcutQuery q = new LauncherApps.ShortcutQuery();
+                    q.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC | LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST | LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED);
+                    q.setPackage(item.getPackageName());
+                    q.setActivity(item.getComponentName());
+
+
+                    shortcutInfos = launcherApps.getShortcuts(q, android.os.Process.myUserHandle());
+
+                    Log.d("short", "Queried shortcuts");
+
+                } catch (SecurityException | IllegalStateException e) {
+                    Log.e("LaunchShotcuts", "Couldn't query shortcuts", e);
+                }
+
+                try {
+                    if (shortcutInfos != null && shortcutInfos.size()>0) {
+
+                        PopupMenu popup = new PopupMenu(this, view);
+
+
+                        for (final ShortcutInfo shortcutInfo : shortcutInfos) {
+                            //shortcutInfo.
+                            if (shortcutInfo !=null && shortcutInfo.getActivity() !=null) {
+                                Log.d("short", shortcutInfo.getShortLabel() + " " + shortcutInfo.getActivity().getClassName());
+                                MenuItem menuItem = popup.getMenu().add(shortcutInfo.getShortLabel());
+
+                                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                    @Override
+                                    public boolean onMenuItemClick(MenuItem menuItem) {
+                                        if (Build.VERSION.SDK_INT>=25) {
+                                            try {
+
+                                                Intent intent = shortcutInfo.getIntent();
+                                                if (intent != null) {
+                                                    startActivity(intent);
+                                                } else {
+                                                    launchApp(shortcutInfo.getActivity().getClassName(), shortcutInfo.getActivity().getPackageName());
+                                                }
+                                            } catch (Exception e) {
+                                                Log.e("LaunchShotcuts", "Couldn't Launch shortcut", e);
+                                            }
+                                        }
+
+                                        return true;
+                                    }
+                                });
+                            }
+                        }
+
+
+                        popup.show();
+                    }
+
+
+                } catch (Exception e) {
+                    Log.e("LaunchShotcuts", "Couldn't query shortcuts", e);
+                }
+            }
+
+        }
     }
 
 
