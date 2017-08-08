@@ -165,11 +165,13 @@ public class MainActivity extends Activity implements
     private boolean mChildLockSetup;
 
     //private DB db();
+    
+    private static String TAG = "LaunchTime";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("LaunchTime", "onCreate");
+        Log.d(TAG, "onCreate");
 
         if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
@@ -246,7 +248,7 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onPause() {
-        Log.d("LaunchTime", "onPause");
+        Log.d(TAG, "onPause");
         mBackPressedSessionCount=0;
         checkChildLock();
 
@@ -267,7 +269,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("LaunchTime", "onResume");
+        Log.d(TAG, "onResume");
 
         //Check how long we've been gone
         long pausetime = mPrefs.getLong("pausetime", -1);
@@ -322,7 +324,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d("debug", "A preference has been changed: " +  key);
+        Log.d(TAG, "A preference has been changed: " +  key);
 
         if (key!=null) {
             //Delete our icon cache so the labels can be regenerated.
@@ -459,7 +461,7 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-       // Log.d("LaunchTime", keyCode + "");
+       // Log.d(TAG, keyCode + "");
         if (!mChildLock &&keyCode == KeyEvent.KEYCODE_MENU) {
             openSettings();
         }
@@ -634,7 +636,7 @@ public class MainActivity extends Activity implements
                 db().appLaunched(app.getComponentName());
             }
         } catch (Exception e) {
-            Log.d("Launch", "Could not launch " + activityname, e);
+            Log.d(TAG, "Could not launch " + activityname, e);
             Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
         showButtonBar(false, true);
@@ -657,7 +659,7 @@ public class MainActivity extends Activity implements
             }
 
         }
-       // Log.d("Launch", app.getActivityName() + " " + app.getPackageName() + " " + uristr);
+       // Log.d(TAG, app.getActivityName() + " " + app.getPackageName() + " " + uristr);
         Intent intent;
         // is Link is a shortcut?
         if (app.isActionLink()) {
@@ -760,7 +762,7 @@ public class MainActivity extends Activity implements
     private void firstRunPostApps() {
         if (db().isFirstRun()) {
             String selfAct = this.getPackageName() + "." + this.getClass().getSimpleName();
-            Log.d(this.getClass().getSimpleName(), "My name is " + selfAct);
+            Log.d(TAG, "My name is " + selfAct);
 
             //Move self icon to hidden
             db().updateAppCategory(selfAct, Categories.CAT_HIDDEN);
@@ -837,7 +839,7 @@ public class MainActivity extends Activity implements
 
         for (AppShortcut app : apps) {
             addAppToIconSheet(iconSheet, app, true);
-           // Log.d("order", app.getActivityName());
+           // Log.d(TAG, app.getActivityName());
         }
 
         if (apps.size()>0) {
@@ -866,14 +868,14 @@ public class MainActivity extends Activity implements
                     }
                 } else {
                     db().deleteApp(app.getComponentName());
-                    Log.d("LaunchTime", "removed " + app.getPackageName() + " " + app.getActivityName() + ":activity not valid.");
+                    Log.d(TAG, "removed " + app.getPackageName() + " " + app.getActivityName() + ":activity not valid.");
                 }
             } catch (Exception e) {
                 Log.e("LaunchTime", "exception adding icon to sheet", e);
                 Toast.makeText(this,"Couldn't place icon: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
-            Log.d("LaunchTime", "Not showing recent: Null.");
+            Log.d(TAG, "Not showing recent: Null.");
         }
         return false;
     }
@@ -957,7 +959,7 @@ public class MainActivity extends Activity implements
             for (int i = gridLayout.getChildCount()-1; i >=0 ; i--) {
                 View view = gridLayout.getChildAt(i);
                 if (view == null) {
-                    Log.d("gridrelayout", "null child at " + i);
+                    Log.d(TAG, "null child at " + i);
                     continue;
                 }
                 childViews.add(view);
@@ -1048,9 +1050,9 @@ public class MainActivity extends Activity implements
 
                     if (dbactvnames.contains(appcn) && app != null) {
                         app.loadAppIconAsync(this, mPackageMan);
-                        //  Log.d("app", "app was in db " + actvname + " " +  ri.activityInfo.packageName);
+                        //  Log.d(TAG, "app was in db " + actvname + " " +  ri.activityInfo.packageName);
                     } else {
-                        //  Log.d("app", "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
+                        //  Log.d(TAG, "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
                         app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
                         newapps.add(app);
                     }
@@ -1071,7 +1073,7 @@ public class MainActivity extends Activity implements
             if (!pmactvnames.contains(dbactv)) {
                 AppShortcut app = db().getApp(dbactv);
                 if (app==null || !isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
-                    Log.d("Launch", "Removing " + dbactv);
+                    Log.d(TAG, "Removing " + dbactv);
                     it.remove();
                     db().deleteApp(dbactv);
                    // removeFromQuickApps(dbactv);
@@ -1150,7 +1152,7 @@ public class MainActivity extends Activity implements
             if (appwid == null) {
                 appwid = mWidgetHelper.loadWidget(app);
                 if (appwid==null) {
-                    Log.d("Widget2", "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
+                    Log.d(TAG, "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
                    // db().deleteApp(app.getActivityName());
                     return null;
                 }
@@ -1158,9 +1160,9 @@ public class MainActivity extends Activity implements
 
             mLoadedWidgets.put(app.getActivityName(), appwid);
             AppWidgetProviderInfo pinfo = appwid.getAppWidgetInfo();
-            Log.d("widsize", "Min: " + pinfo.minWidth + "," + pinfo.minHeight);
-            Log.d("widsize", "MinResize: " + pinfo.minResizeWidth + "," + pinfo.minResizeHeight);
-            Log.d("widsize", "Resizemode: " + pinfo.resizeMode);
+            //Log.d(TAG, "Min: " + pinfo.minWidth + "," + pinfo.minHeight);
+            //Log.d(TAG, "MinResize: " + pinfo.minResizeWidth + "," + pinfo.minResizeHeight);
+            //Log.d(TAG, "Resizemode: " + pinfo.resizeMode);
 
             storeShortCutDimen(app, pinfo.minWidth, pinfo.minHeight);
 
@@ -1236,7 +1238,7 @@ public class MainActivity extends Activity implements
         String catId = db().getAppCategory(cn);
         if (catId == null || catId.equals(mCategory)) {
 
-            Log.d("Widget", actvname + " " + pkgname);
+            //Log.d(TAG, actvname + " " + pkgname);
 
             mLoadedWidgets.put(actvname, appwid);
 
@@ -1474,7 +1476,7 @@ public class MainActivity extends Activity implements
                         if (catstyle == CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
                             styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
                         }
-                       // Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
+                       // Log.d(TAG, "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
 
                         break;
 
@@ -1573,7 +1575,7 @@ public class MainActivity extends Activity implements
                         if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility()!=View.VISIBLE && (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) && System.currentTimeMillis()-mDropZoneHover > 400) {
                             mLinkDropzone.setVisibility(View.VISIBLE);
                             mLinkDropzonePeek.setVisibility(View.GONE);
-                           // Log.d("LaunchTime", "mLinkDropzone.setVisibility(View.VISIBLE)");
+                           // Log.d(TAG, "mLinkDropzone.setVisibility(View.VISIBLE)");
                         }
                     }
                     break;
@@ -1599,7 +1601,7 @@ public class MainActivity extends Activity implements
                     // Dropped, reassign View to ViewGroup
 
                     if (dragObj == droppedOn) {
-                        // Log.d("sort", "self drop");
+                        // Log.d(TAG, "self drop");
                         break;
                     }
 
@@ -1651,13 +1653,13 @@ public class MainActivity extends Activity implements
             } else if (droppedOn == mLinkDropzone) {
                 if (isShortcut) {
                     AppShortcut app = (AppShortcut)dragObj.getTag();
-                    Log.d("LaunchLink", "Making link: " + app.getActivityName() + " " + app.getPackageName());
+                    Log.d(TAG, "Making link: " + app.getActivityName() + " " + app.getPackageName());
                     AppShortcut appshortcut = app.makeAppLink();
                     appshortcut.setCategory(mCategory);
                     db().addApp(appshortcut);
                     repopulateIconSheet(mCategory);
                 } else {
-                    Log.d("LaunchLink", "non-shortcut dropped on linker: " + dragObj + " tag=" + dragObj.getTag());
+                    Log.d(TAG, "non-shortcut dropped on linker: " + dragObj + " tag=" + dragObj.getTag());
                 }
                 return true;
             } else if (droppedOn instanceof GridLayout) {
@@ -1873,7 +1875,7 @@ public class MainActivity extends Activity implements
                         mDragPotential = null;
                         //dismissActionPopup();
                     } else {
-                        Log.d("move", event.getActionMasked() + "");
+                        //Log.d(TAG, event.getActionMasked() + "");
                     }
 
 
@@ -1905,10 +1907,10 @@ public class MainActivity extends Activity implements
         if (dragstarted) {
             mBeingDragged = dragitem;
             mDragDropSource = (ViewGroup) mDragPotential.getParent();
-            Log.d("LaunchTime", "Drag started: " + dragitem.getActivityName() +  ", source = " + mDragDropSource);
+            Log.d(TAG, "Drag started: " + dragitem.getActivityName() +  ", source = " + mDragDropSource);
             showHiddenCategories();
 
-           // Log.d("LaunchTime", "source = " + mDragDropSource);
+           // Log.d(TAG, "source = " + mDragDropSource);
             //if (mDragDropSource.getId()!=R.id.icontarget) {
                 showRemoveDropzone();
             //}
@@ -1942,7 +1944,7 @@ public class MainActivity extends Activity implements
 
                     shortcutInfos = launcherApps.getShortcuts(q, android.os.Process.myUserHandle());
 
-                    Log.d("short", "Queried shortcuts");
+                    //Log.d(TAG, "Queried shortcuts");
 
                 } catch (SecurityException | IllegalStateException e) {
                     Log.e("LaunchShotcuts", "Couldn't query shortcuts", e);
@@ -1998,7 +2000,7 @@ public class MainActivity extends Activity implements
     private void addShortcutToActionPopup(final LauncherApps launcherApps, final ShortcutInfo shortcutInfo) {
         if (Build.VERSION.SDK_INT>=25) {
             if (shortcutInfo != null && shortcutInfo.getActivity() != null) {
-                Log.d("short", shortcutInfo.getShortLabel() + " " + shortcutInfo.getActivity().getClassName());
+                //Log.d(TAG, shortcutInfo.getShortLabel() + " " + shortcutInfo.getActivity().getClassName());
 
                 if (shortcutInfo.isEnabled()) {
 
@@ -2129,7 +2131,7 @@ public class MainActivity extends Activity implements
     private void launchUninstallIntent(String packageName) {
         if (mChildLock) return;
 
-        Log.d("Launch", "Uninstalling " + packageName);
+        Log.d(TAG, "Uninstalling " + packageName);
         Uri packageUri = Uri.parse("package:" + packageName);
         Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
         uninstallIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
@@ -2161,10 +2163,10 @@ public class MainActivity extends Activity implements
             } else {
                 AppWidgetHostView appwid = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
                 if (appwid == null) {
-                    Log.d("LaunchWidget2", "appwid is null.");
+                    Log.d(TAG, "appwid is null.");
                     ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
                     if (cn != null) {
-                        Log.d("LaunchWidget2", "classname is " + cn.getClassName());
+                        Log.d(TAG, "classname is " + cn.getClassName());
                         db().deleteApp(cn);
                     } else {
                         super.onActivityResult(requestCode, resultCode, data);
@@ -2353,7 +2355,7 @@ public class MainActivity extends Activity implements
         if (newDisplayName.length() < 1) {
             throw new IllegalArgumentException("Must give a name");
         }
-        Log.d("AddCat", category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
+        Log.d(TAG, category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
         if (db().addCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
             createIconSheet(category);
 
