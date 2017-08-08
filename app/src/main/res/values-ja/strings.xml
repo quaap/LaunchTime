@@ -131,6 +131,7 @@
     <string name="pref_icontext">アイコン文字色</string>
     <string name="pref_tabtext">タブ文字色</string>
     <string name="pref_tabback">タブ背景色</string>
+    <string name="pref_tabsel_text">タブで選択したテキストの色</string>
     <string name="pref_tabsel">選択したタブの色</string>
     <string name="pref_drag">ドラッグオーバー色</string>
     <string name="choose_your_color">色を選択</string>

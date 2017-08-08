@@ -133,6 +133,7 @@
     <string name="pref_icontext">Цвет текста значка</string>
     <string name="pref_tabtext">Цвет текста закладки</string>
     <string name="pref_tabback">Цвет фона закладки</string>
+    <string name="pref_tabsel_text">Вкладка выбранного цвета текста</string>
     <string name="pref_tabsel">Цвет активной закладки</string>
     <string name="pref_drag">Цвет элемента при переносе</string>
     <string name="choose_your_color">Укажите желаемый цвет</string>

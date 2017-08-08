@@ -142,6 +142,7 @@ public class MainActivity extends Activity implements
     private int cattabTextColorInvert;
     private int cattabBackground;
     private int cattabSelectedBackground;
+    private int cattabSelectedText;
     private int dragoverBackground;
     private int textColor;
     private int backgroundDefault = Color.TRANSPARENT;
@@ -906,7 +907,7 @@ public class MainActivity extends Activity implements
 
 
 
-                Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+                //Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
             }
             int hcells = (int) Math.ceil(h / cellheight);
             if (hcells > 1) {
@@ -925,7 +926,7 @@ public class MainActivity extends Activity implements
                 lp.width = (int)(cellwidth*wcells);
                 lp.height = (int)(cellheight*hcells);
 
-                Log.d("widcol2", "w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+                //Log.d("widcol2", "w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
                 appwid.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1366,18 +1367,21 @@ public class MainActivity extends Activity implements
         switch (catstyle) {
             case Tiny:
                 categoryTab.setPadding(6, categoryTabPaddingHeight/6, 2, categoryTabPaddingHeight/6);
+                categoryTab.setTextColor(cattabTextColor);
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize-3);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 break;
             case DragHover:
                 categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
+                categoryTab.setTextColor(cattabTextColor);
                 categoryTab.setBackgroundColor(dragoverBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 break;
             case Selected:
                 categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
+                categoryTab.setTextColor(cattabSelectedText);
                 categoryTab.setBackgroundColor(cattabSelectedBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
@@ -1385,6 +1389,7 @@ public class MainActivity extends Activity implements
             case Normal:
             default:
                 categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
+                categoryTab.setTextColor(cattabTextColor);
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
@@ -1397,7 +1402,6 @@ public class MainActivity extends Activity implements
         categoryTab.setTag(category);
         // categoryTab.setWidth((int)Utils.dpToPx(this,categoryTabWidth));
 
-        categoryTab.setTextColor(cattabTextColor);
         categoryTab.setTypeface(null, Typeface.BOLD);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -2713,6 +2717,7 @@ public class MainActivity extends Activity implements
 
         cattabBackground = mAppPreferences.getInt("cattab_background", getResColor(R.color.cattab_background));
         cattabSelectedBackground = mAppPreferences.getInt("cattabselected_background", getResColor(R.color.cattabselected_background));
+        cattabSelectedText = mAppPreferences.getInt("cattabselected_text", getResColor(R.color.cattabselected_text));
 
         dragoverBackground = mAppPreferences.getInt("dragover_background", getResColor(R.color.dragover_background));
 

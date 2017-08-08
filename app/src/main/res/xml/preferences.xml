@@ -84,7 +84,7 @@
     <PreferenceCategory android:title="@string/pref_color_style">
 
         <ListPreference
-            android:defaultValue="right"
+            android:defaultValue="1"
             android:title="Categories Location"
             android:entries="@array/pref_cat_location_strings"
             android:entryValues="@array/pref_cat_location_values"
@@ -110,6 +110,10 @@
             android:title="@string/pref_tabback"
             android:key="cattab_background"
             android:defaultValue="@color/cattab_background" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabsel_text"
+            android:key="cattabselected_text"
+            android:defaultValue="@color/cattabselected_text" />
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabsel"
             android:key="cattabselected_background"
