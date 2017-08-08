@@ -476,7 +476,7 @@ public class MainActivity extends Activity implements
             final boolean alreadyOnHome =
                     ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
                             != Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-           // Log.d("LaunchTime", " new intent " + alreadyOnHome);
+            //Log.d("LaunchTime", " new intent " + alreadyOnHome);
             if (alreadyOnHome && !mChildLock) {
 
                 // If we are on home screen, reset most things and go to top category.
@@ -485,18 +485,19 @@ public class MainActivity extends Activity implements
                     public void run() {
                         try {
                             if (mSearchbox!=null) mSearchbox.setText("");
+                            mCategoriesScroller.smoothScrollTo(0, 0);
                             showButtonBar(false, true);
-                            mQuickRowScroller.smoothScrollTo(0, 0);
-                            mCategoriesScroller.smoothScrollTo(0, 0);
-                            switchCategory(getTopCategory());
-                            mCategoriesScroller.smoothScrollTo(0, 0);
                             mIconSheetScroller.smoothScrollTo(0, 0);
+                            switchCategory(getTopCategory());
+                            mQuickRowScroller.smoothScrollTo(0, 0);
+                            mIconSheetScroller.smoothScrollTo(0, 0);
+                            mCategoriesScroller.smoothScrollTo(0, 0);
                         } catch (Exception e) {
                             Log.e("LaunchTime", e.getMessage(), e);
                         }
 
                     }
-                }, 100);
+                }, 200);
             }
 
         }
