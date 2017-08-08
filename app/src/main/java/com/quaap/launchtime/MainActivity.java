@@ -354,7 +354,7 @@ public class MainActivity extends Activity implements
         try {
             mWidgetHelper.done();
         } catch (Exception e) {
-            Log.e("LaunchTime", "Exception killing widgets", e);
+            Log.e(TAG, "Exception killing widgets", e);
         }
         super.onDestroy();
     }
@@ -496,7 +496,7 @@ public class MainActivity extends Activity implements
                             mIconSheetScroller.smoothScrollTo(0, 0);
                             mCategoriesScroller.smoothScrollTo(0, 0);
                         } catch (Exception e) {
-                            Log.e("LaunchTime", e.getMessage(), e);
+                            Log.e(TAG, e.getMessage(), e);
                         }
 
                     }
@@ -553,7 +553,7 @@ public class MainActivity extends Activity implements
             }
 
         } catch (Exception e) {
-            Log.e("Launch", e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -599,7 +599,7 @@ public class MainActivity extends Activity implements
             }
 
         } catch (Exception e) {
-            Log.e("Launch", e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -610,7 +610,7 @@ public class MainActivity extends Activity implements
         try {
             launchApp(db().getApp(new ComponentName(pkgname, activityname)));
         } catch (Exception e) {
-            Log.e("LaunchTime", e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -871,7 +871,7 @@ public class MainActivity extends Activity implements
                     Log.d(TAG, "removed " + app.getPackageName() + " " + app.getActivityName() + ":activity not valid.");
                 }
             } catch (Exception e) {
-                Log.e("LaunchTime", "exception adding icon to sheet", e);
+                Log.e(TAG, "exception adding icon to sheet", e);
                 Toast.makeText(this,"Couldn't place icon: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
@@ -1062,7 +1062,7 @@ public class MainActivity extends Activity implements
 
                 }
             } catch (Exception e) {
-                Log.e("LaunchTime", e.getMessage(), e);
+                Log.e(TAG, e.getMessage(), e);
             }
 
         }
@@ -1608,7 +1608,7 @@ public class MainActivity extends Activity implements
                     try {
                         if (handleDrop(droppedOn, dragObj, isShortcut)) return true;
                     } catch (Exception e) {
-                        Log.e("LaunchTime", e.getMessage(), e);
+                        Log.e(TAG, e.getMessage(), e);
                     }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -1723,7 +1723,7 @@ public class MainActivity extends Activity implements
                 try {
                     ViewParent parent = dragObj.getParent();
                     if (parent!=null) {
-                        Log.e("LaunchTime", "dragObj " + dragObj + " still has parent " + parent, new Throwable() );
+                        Log.e(TAG, "dragObj " + dragObj + " still has parent " + parent, new Throwable() );
                         ((ViewGroup)parent).removeView(dragObj);
                     }
 
@@ -1738,7 +1738,7 @@ public class MainActivity extends Activity implements
                         target.addView(dragObj, index, lp);
                     }
                 } catch (Exception e) {
-                    Log.e("LaunchTime", "exception adding icon to sheet", e);
+                    Log.e(TAG, "exception adding icon to sheet", e);
                     Toast.makeText(MainActivity.this,"Couldn't place icon: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -1762,7 +1762,7 @@ public class MainActivity extends Activity implements
                 db().deleteAppLaunchedRecord(mBeingDragged.getComponentName());
                 mDragDropSource.removeView(dragObj);
             } catch (Exception e) {
-                Log.e("LaunchTime", e.getMessage(), e);
+                Log.e(TAG, e.getMessage(), e);
             }
         }
 
@@ -1786,7 +1786,7 @@ public class MainActivity extends Activity implements
                     }
                 }
             } catch (Exception e) {
-                Log.e("LaunchTime", e.getMessage(), e);
+                Log.e(TAG, e.getMessage(), e);
             }
         }
 
@@ -1947,7 +1947,7 @@ public class MainActivity extends Activity implements
                     //Log.d(TAG, "Queried shortcuts");
 
                 } catch (SecurityException | IllegalStateException e) {
-                    Log.e("LaunchShotcuts", "Couldn't query shortcuts", e);
+                    Log.e(TAG, "Couldn't query shortcuts", e);
                 }
             }
 
@@ -1989,7 +1989,7 @@ public class MainActivity extends Activity implements
 
 
             } catch (Exception e) {
-                Log.e("LaunchShotcuts", "Couldn't create menu", e);
+                Log.e(TAG, "Couldn't create menu", e);
             }
 
 
@@ -2025,7 +2025,7 @@ public class MainActivity extends Activity implements
                                 try {
                                     launcherApps.startShortcut(shortcutInfo, null, null);
                                 } catch (Exception e) {
-                                    Log.e("LaunchShotcuts", "Couldn't Launch shortcut", e);
+                                    Log.e(TAG, "Couldn't Launch shortcut", e);
                                 }
                             }
 
@@ -2177,7 +2177,7 @@ public class MainActivity extends Activity implements
             }
           //  setCategoryTabStyles();
         } catch (Exception e) {
-            Log.e("LaunchTime", e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
