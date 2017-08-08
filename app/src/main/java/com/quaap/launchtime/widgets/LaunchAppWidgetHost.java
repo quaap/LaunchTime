@@ -56,7 +56,4 @@ public class LaunchAppWidgetHost extends AppWidgetHost {
         super.deleteAppWidgetId(appWidgetId);
     }
 
-    public List<Integer> getAppWidgetIds() {
-        return Collections.unmodifiableList(mAppIds);
-    }
 }

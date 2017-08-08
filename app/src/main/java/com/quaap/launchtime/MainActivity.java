@@ -24,24 +24,32 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -57,6 +65,7 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -71,6 +80,8 @@ import com.quaap.launchtime.components.StaticListView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1820,25 +1831,75 @@ public class MainActivity extends Activity implements
         }
     }
 
+
+    private View mDragPotential;
     @Override
     public boolean onLongClick(View view) {
         if (mChildLock) return false;
 
         AppShortcut dragitem = (AppShortcut) view.getTag();
+        mDragPotential = view;
+
+        if (handle25Shortcuts(view, dragitem)) {
+
+            final int slop  = ViewConfiguration.get(this).getScaledTouchSlop();
+            mDragPotential.setOnTouchListener(new View.OnTouchListener() {
+                float oX = -1;
+                float oY = -1;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                        dismissActionPopup();
+                        startDrag();
+                    } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+                        if (oX == -1) {
+                            oX = event.getX();
+                            oY = event.getY();
+                        } else {
+                            if (Math.abs(oX - event.getX()) > slop || Math.abs(oY - event.getY()) > slop) {
+                                dismissActionPopup();
+                                startDrag();
+                            }
+                        }
+                        //Log.d("movet", event.getX() + "," + event.getY());
+                    } else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+                        if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
+                        mDragPotential = null;
+                        //dismissActionPopup();
+                    } else {
+                        Log.d("move", event.getActionMasked() + "");
+                    }
+
+
+                    return false;
+                }
+            });
+        } else {
+            startDrag();
+        }
+        return true;
+    }
+
+    public boolean startDrag() {
+
+        if (mDragPotential==null) return false;
+
+        AppShortcut dragitem = (AppShortcut) mDragPotential.getTag();
         String label = dragitem.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
-        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(mDragPotential);
 
         boolean dragstarted;
         if (Build.VERSION.SDK_INT>=24) {
-            dragstarted = view.startDragAndDrop(data, shadowBuilder, view, 0);
+            dragstarted = mDragPotential.startDragAndDrop(data, shadowBuilder, mDragPotential, 0);
         } else {
-            dragstarted = view.startDrag(data, shadowBuilder, view, 0);
+            dragstarted = mDragPotential.startDrag(data, shadowBuilder, mDragPotential, 0);
         }
 
         if (dragstarted) {
             mBeingDragged = dragitem;
-            mDragDropSource = (ViewGroup) view.getParent();
+            mDragDropSource = (ViewGroup) mDragPotential.getParent();
             Log.d("LaunchTime", "Drag started: " + dragitem.getActivityName() +  ", source = " + mDragDropSource);
             showHiddenCategories();
 
@@ -1854,6 +1915,148 @@ public class MainActivity extends Activity implements
     }
 
 
+
+
+
+    private PopupMenu mShortcutActionsPopup;
+
+    private boolean handle25Shortcuts(View view, final AppShortcut appitem) {
+        if (Build.VERSION.SDK_INT>=25) {
+
+
+            final LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
+            List<ShortcutInfo> shortcutInfos = null;
+            if (launcherApps.hasShortcutHostPermission()) {
+                try {
+
+                    LauncherApps.ShortcutQuery q = new LauncherApps.ShortcutQuery();
+                    q.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC | LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST);
+                    q.setPackage(appitem.getPackageName());
+                    q.setActivity(appitem.getComponentName());
+
+
+                    shortcutInfos = launcherApps.getShortcuts(q, android.os.Process.myUserHandle());
+
+                    Log.d("short", "Queried shortcuts");
+
+                } catch (SecurityException | IllegalStateException e) {
+                    Log.e("LaunchShotcuts", "Couldn't query shortcuts", e);
+                }
+            }
+
+            try {
+                if (shortcutInfos != null && shortcutInfos.size()>0) {
+                    dismissActionPopup();
+
+                    mShortcutActionsPopup = new PopupMenu(this, view);
+                    setForceShowIcon(mShortcutActionsPopup);
+
+                    MenuItem appmenuItem = mShortcutActionsPopup.getMenu().add(appitem.getLabel());
+                    appmenuItem.setIcon(appitem.getIconDrawable());
+                    appmenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            launchApp(appitem);
+                            dismissActionPopup();
+                            return true;
+                        }
+                    });
+
+                    for (final ShortcutInfo shortcutInfo : shortcutInfos) {
+
+                        addShortcutToActionPopup(launcherApps, shortcutInfo);
+                    }
+
+                    MenuItem menuItem = mShortcutActionsPopup.getMenu().add("⌧");
+                    menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            dismissActionPopup();
+                            return true;
+                        }
+                    });
+
+                    mShortcutActionsPopup.show();
+                    return true;
+                }
+
+
+            } catch (Exception e) {
+                Log.e("LaunchShotcuts", "Couldn't create menu", e);
+            }
+
+
+        }
+        return false;
+    }
+
+    private void addShortcutToActionPopup(final LauncherApps launcherApps, final ShortcutInfo shortcutInfo) {
+        if (Build.VERSION.SDK_INT>=25) {
+            if (shortcutInfo != null && shortcutInfo.getActivity() != null) {
+                Log.d("short", shortcutInfo.getShortLabel() + " " + shortcutInfo.getActivity().getClassName());
+
+                if (shortcutInfo.isEnabled()) {
+
+                    String label = "";
+                    if (shortcutInfo.getShortLabel() != null)
+                        label += shortcutInfo.getShortLabel();
+
+                    if (shortcutInfo.getLongLabel() != null && !label.equals(shortcutInfo.getLongLabel()))
+                        label += " (" + shortcutInfo.getLongLabel() + ")";
+
+                    MenuItem menuItem = mShortcutActionsPopup.getMenu().add(label.trim());
+
+
+                    Drawable icon = launcherApps.getShortcutIconDrawable(shortcutInfo, DisplayMetrics.DENSITY_DEFAULT);
+                    if (icon != null) menuItem.setIcon(icon);
+
+
+                    menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            if (Build.VERSION.SDK_INT >= 25) {
+                                try {
+                                    launcherApps.startShortcut(shortcutInfo, null, null);
+                                } catch (Exception e) {
+                                    Log.e("LaunchShotcuts", "Couldn't Launch shortcut", e);
+                                }
+                            }
+
+                            return true;
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void dismissActionPopup() {
+        if (mShortcutActionsPopup!=null) {
+            mShortcutActionsPopup.dismiss();
+            mShortcutActionsPopup = null;
+
+        }
+    }
+
+    public static void setForceShowIcon(PopupMenu popupMenu) {
+        try {
+            Field[] fields = popupMenu.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper
+                            .getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod(
+                            "setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 
     private void showHiddenCategories() {
         for (String cat: db().getCategories()) {

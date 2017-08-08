@@ -236,9 +236,9 @@ public class Widget {
 
     }
 
-    public List<Integer> getAppWidgetIds() {
-        return mAppWidgetHost.getAppWidgetIds();
-    }
+//    public List<Integer> getAppWidgetIds() {
+//        return mAppWidgetHost.getAppWidgetIds();
+//    }
 
     public AppWidgetHostView onActivityResult(int requestCode, int resultCode, Intent data) {
 
