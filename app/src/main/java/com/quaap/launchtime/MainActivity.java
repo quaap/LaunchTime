@@ -1952,6 +1952,7 @@ public class MainActivity extends Activity implements
                     setForceShowIcon(mShortcutActionsPopup);
 
                     MenuItem appmenuItem = mShortcutActionsPopup.getMenu().add(appitem.getLabel());
+                    appmenuItem.setIcon(appitem.getIconDrawable());
                     appmenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {

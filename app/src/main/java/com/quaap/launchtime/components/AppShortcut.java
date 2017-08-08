@@ -248,6 +248,10 @@ public class AppShortcut implements Comparable<AppShortcut> {
         }
     }
 
+    public Drawable getIconDrawable() {
+        return mIconDrawable;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AppShortcut) {
