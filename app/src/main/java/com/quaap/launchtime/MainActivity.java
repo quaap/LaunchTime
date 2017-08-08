@@ -72,6 +72,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.AppCursorAdapter;
+import com.quaap.launchtime.components.AppLauncher;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
@@ -164,6 +165,8 @@ public class MainActivity extends Activity implements
     private boolean mChildLock;
     private boolean mChildLockSetup;
 
+    private AppLauncher mAppLauncher;
+
     //private DB db();
     
     private static String TAG = "LaunchTime";
@@ -217,6 +220,8 @@ public class MainActivity extends Activity implements
         mCategory = mPrefs.getString("category", getTopCategory());
 
         readPrefs();
+
+        mAppLauncher = new AppLauncher(this);
 
         // get all the apps installed and process them
         loadApplications();
@@ -603,97 +608,8 @@ public class MainActivity extends Activity implements
         }
     }
 
-
-
-    //Run/open the thing that was clicked
-    public void launchApp(String activityname, String pkgname) {
-        try {
-            launchApp(db().getApp(new ComponentName(pkgname, activityname)));
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
-    }
-
-    public void launchApp(final AppShortcut app) {
-        String activityname = app.getLinkBaseActivityName();
-
-        try {
-
-            //needed to place in the open apps list
-            Intent intent = getAppIntent(app);
-
-            if (isValidActivity(intent)) {
-                // actually start it
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "Could not launch item", Toast.LENGTH_LONG).show();
-            }
-
-            //log the launch
-            if (app.isAppLink()) {
-                db().appLaunched(new ComponentName(app.getPackageName(), app.getLinkBaseActivityName()));
-            } else {
-                db().appLaunched(app.getComponentName());
-            }
-        } catch (Exception e) {
-            Log.d(TAG, "Could not launch " + activityname, e);
-            Toast.makeText(this, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
-        }
-        showButtonBar(false, true);
-
-    }
-
-    public Intent getAppIntent(final AppShortcut app) {
-        String activityname = app.getLinkBaseActivityName();
-        String packagename = app.getPackageName();
-        String uristr = null;
-        Uri uri = null;
-
-        if (app.isLink()) {
-            uristr = app.getLinkUri();
-            if (uristr!=null) {
-                uri = Uri.parse(uristr);
-                if (app.isAppLink()) {
-                    uri = null;
-                }
-            }
-
-        }
-       // Log.d(TAG, app.getActivityName() + " " + app.getPackageName() + " " + uristr);
-        Intent intent;
-        // is Link is a shortcut?
-        if (app.isActionLink()) {
-            //Change "CALL" to "DIAL" so we can avoid needing the
-            // android.permission.CALL_PHONE permission
-            if (activityname.startsWith("android.intent.action.CALL")) {
-                activityname = "android.intent.action.DIAL";
-            }
-            //build an activity-specific intent with the uri
-            intent = new Intent(activityname, uri);
-        } else {
-            //regualt activity, start with MAIN
-            if (uristr == null) {
-                intent = new Intent(Intent.ACTION_MAIN);
-            } else {
-                intent = new Intent(Intent.ACTION_MAIN, uri);
-            }
-            intent.setClassName(packagename, activityname);
-        }
-
-        //needed to place in the open apps list
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        return intent;
-
-    }
-
-    private boolean isValidActivity(AppShortcut app) {
-        return isValidActivity(getAppIntent(app));
-    }
-
-    private boolean isValidActivity(Intent intent) {
-        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
+    public AppLauncher getAppLauncher() {
+        return mAppLauncher;
     }
 
     // runs at create time to read all apps and add them to our db, if not there already
@@ -854,7 +770,7 @@ public class MainActivity extends Activity implements
     private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, int pos, boolean reuse) {
         if (app != null) {
             try {
-                if ((app.isWidget() && isAppInstalled(app.getPackageName())) || isValidActivity(app)) {
+                if ((app.isWidget() && isAppInstalled(app.getPackageName())) || mAppLauncher.isValidActivity(app)) {
                     ViewGroup item = getShortcutView(app, false, reuse);
                     if (item != null) {
                         if (!app.iconLoaded()) {
@@ -1198,7 +1114,8 @@ public class MainActivity extends Activity implements
                 @Override
                 public void onClick(View view) {
                     view.startAnimation(itemClickedAnim);
-                    launchApp(app);
+                    mAppLauncher.launchApp(app);
+                    showButtonBar(false, true);
                 }
             });
 
@@ -1963,7 +1880,8 @@ public class MainActivity extends Activity implements
                     appmenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            launchApp(appitem);
+                            mAppLauncher.launchApp(appitem);
+                            showButtonBar(false, true);
                             dismissActionPopup();
                             return true;
                         }

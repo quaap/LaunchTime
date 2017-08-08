@@ -206,7 +206,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
        // mTextHolder.setText(label);
 
-        mMain.launchApp(activityName, pkgName);
+        mMain.getAppLauncher().launchApp(activityName, pkgName);
 
     }
 
