@@ -1967,7 +1967,7 @@ public class MainActivity extends Activity implements
                         addShortcutToActionPopup(launcherApps, shortcutInfo);
                     }
 
-                    MenuItem menuItem = mShortcutActionsPopup.getMenu().add("Dismiss");
+                    MenuItem menuItem = mShortcutActionsPopup.getMenu().add("⌧");
                     menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
