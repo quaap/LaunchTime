@@ -78,6 +78,7 @@ import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.ui.QuickRow;
 import com.quaap.launchtime.ui.SearchBox;
 import com.quaap.launchtime.db.DB;
+import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
 import java.lang.reflect.Field;
@@ -136,21 +137,12 @@ public class MainActivity extends Activity implements
     private View mBeingUninstalled;
     private Widget mWidgetHelper;
 
-    private int cattabTextColor;
-    private int cattabTextColorInvert;
-    private int cattabBackground;
-    private int cattabSelectedBackground;
-    private int cattabSelectedText;
-    private int dragoverBackground;
-    private int textColor;
-    private int backgroundDefault = Color.TRANSPARENT;
+
     private Animation itemClickedAnim;
 
-    private float categoryTabFontSize = 16;
-    private int categoryTabPaddingHeight = 16;
+
     private int mColumns = 3;
 
-    private boolean leftHandCategories;
 
     private Point mScreenDim;
 
@@ -169,7 +161,9 @@ public class MainActivity extends Activity implements
     //private DB db();
 
     private SearchBox mSearchBox;
-    
+
+    private Style mStyle;
+
     private static String TAG = "LaunchTime";
 
     @Override
@@ -201,11 +195,8 @@ public class MainActivity extends Activity implements
         mScreenDim = getScreenDimensions();
 
         //Load resources and init the form members
-        setColors();
+
         initUI();
-
-
-
 
 
         mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
@@ -216,6 +207,8 @@ public class MainActivity extends Activity implements
         mSearchBox = new SearchBox(this, mIconSheetScroller);
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
         mCategory = mPrefs.getString("category", getTopCategory());
+
+        mStyle = new Style(this, mAppPreferences);
 
         readPrefs();
 
@@ -416,7 +409,7 @@ public class MainActivity extends Activity implements
     private void setCategoryTabStyles() {
         //switch all category tabs to their default style and text
         for (TextView catTab : mCategoryTabs.values()) {
-            styleCategorySpecial(catTab, CategoryTabStyle.Default);
+            styleCategorySpecial(catTab, Style.CategoryTabStyle.Default);
             catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
         }
 
@@ -514,28 +507,10 @@ public class MainActivity extends Activity implements
         //Checks application preferences and adjust accordingly
         try {
 
-            leftHandCategories = mAppPreferences.getString("pref_categories_loc", "right").equals("left");
+            mStyle.readPrefs();
+
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
 
-            int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
-            switch (tabsizePref) {
-                case 0:  //small
-                    categoryTabPaddingHeight = 12;
-                    categoryTabFontSize = 14;
-                    break;
-                case 1:  //medium
-                    categoryTabPaddingHeight = 16;
-                    categoryTabFontSize = 16;
-                    break;
-                case 2:  //large
-                    categoryTabPaddingHeight = 20;
-                    categoryTabFontSize = 18;
-                    break;
-                case 3: //x-large
-                    categoryTabPaddingHeight = 24;
-                    categoryTabFontSize = 20;
-                    break;
-            }
 
             int orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "0"));
 
@@ -566,7 +541,12 @@ public class MainActivity extends Activity implements
     //  if we need to change the column count, etc
     private void checkConfig() {
         readPrefs();
-        setColors();
+
+
+        itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
+        itemClickedAnim.setDuration(200);
+        itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+
         try {
 
             mScreenDim = getScreenDimensions();
@@ -579,8 +559,8 @@ public class MainActivity extends Activity implements
                 changeColumnCount(mIconSheet, mColumns);
             }
 
-            mShowButtons.setBackgroundColor(cattabBackground);
-            mShowButtons.setMinimumHeight(categoryTabPaddingHeight*3);
+            mShowButtons.setBackgroundColor(mStyle.getCattabBackground());
+            mShowButtons.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
             //mShowButtons.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, categoryTabPaddingHeight*3));
             //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
 
@@ -589,7 +569,7 @@ public class MainActivity extends Activity implements
             ViewGroup wrap = (ViewGroup)findViewById(R.id.icon_and_cat_wrap);
             View cats = findViewById(R.id.category_tabs_wrap);
             boolean isleft = wrap.getChildAt(0) == cats;
-            if (leftHandCategories) {
+            if (mStyle.isLeftHandCategories()) {
                 if (!isleft) {
                     wrap.removeView(cats);
                     wrap.addView(cats, 0);
@@ -1080,7 +1060,7 @@ public class MainActivity extends Activity implements
 
             if (!smallIcon) {
                 TextView iconLabel = (TextView) item.findViewById(R.id.shortcut_text);
-                iconLabel.setTextColor(textColor);
+                iconLabel.setTextColor(mStyle.getTextColor());
                 iconLabel.setText(app.getLabel());
             }
 
@@ -1148,58 +1128,29 @@ public class MainActivity extends Activity implements
     }
 
 
-    private CategoryTabStyle getDefaultCategoryStyle(String category) {
-        CategoryTabStyle catstyle = CategoryTabStyle.Normal;
+    private Style.CategoryTabStyle getDefaultCategoryStyle(String category) {
+        Style.CategoryTabStyle catstyle =  Style.CategoryTabStyle.Normal;
 
         if (category.equals(mCategory)) {
-            catstyle = CategoryTabStyle.Selected;
+            catstyle =  Style.CategoryTabStyle.Selected;
         } else if (db().isTinyCategory(category)) {
-            catstyle = CategoryTabStyle.Tiny;
+            catstyle =  Style.CategoryTabStyle.Tiny;
         }
         return catstyle;
     }
 
-    private void styleCategorySpecial(TextView categoryTab, CategoryTabStyle catstyle) {
+    private void styleCategorySpecial(TextView categoryTab,  Style.CategoryTabStyle catstyle) {
         styleCategorySpecial(categoryTab, catstyle, mRevCategoryMap.get(categoryTab));
     }
 
 
-    private void styleCategorySpecial(TextView categoryTab, CategoryTabStyle catstyle, String category) {
+    private void styleCategorySpecial(TextView categoryTab,  Style.CategoryTabStyle catstyle, String category) {
 
-        if (catstyle == CategoryTabStyle.Default) {
+        if (catstyle ==  Style.CategoryTabStyle.Default) {
             catstyle = getDefaultCategoryStyle(category);
         }
+        mStyle.styleCategoryStyle(categoryTab, catstyle);
 
-        switch (catstyle) {
-            case Tiny:
-                categoryTab.setPadding(6, categoryTabPaddingHeight/6, 2, categoryTabPaddingHeight/6);
-                categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(cattabBackground);
-                categoryTab.setTextSize(categoryTabFontSize-3);
-                categoryTab.setShadowLayer(0, 0, 0, 0);
-                break;
-            case DragHover:
-                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
-                categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(dragoverBackground);
-                categoryTab.setTextSize(categoryTabFontSize);
-                categoryTab.setShadowLayer(0, 0, 0, 0);
-                break;
-            case Selected:
-                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
-                categoryTab.setTextColor(cattabSelectedText);
-                categoryTab.setBackgroundColor(cattabSelectedBackground);
-                categoryTab.setTextSize(categoryTabFontSize);
-                categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
-                break;
-            case Normal:
-            default:
-                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
-                categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(cattabBackground);
-                categoryTab.setTextSize(categoryTabFontSize);
-                categoryTab.setShadowLayer(0, 0, 0, 0);
-        }
     }
 
     private TextView createCategoryTab(final String category, final GridLayout iconSheet) {
@@ -1211,16 +1162,16 @@ public class MainActivity extends Activity implements
         categoryTab.setTypeface(null, Typeface.BOLD);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        final CategoryTabStyle catstyle = getDefaultCategoryStyle(category);
+        final Style.CategoryTabStyle catstyle = getDefaultCategoryStyle(category);
 
         if (Categories.isHiddenCategory(category)) {
             categoryTab.setVisibility(View.GONE);
         }
 
-        if (catstyle == CategoryTabStyle.Normal) {
+        if (catstyle == Style.CategoryTabStyle.Normal) {
             lp.weight = 1;
         }
-        styleCategorySpecial(categoryTab, CategoryTabStyle.Default, category);
+        styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default, category);
         lp.gravity = Gravity.CENTER;
         lp.setMargins(2, 3, 2, 3);
         categoryTab.setLayoutParams(lp);
@@ -1277,8 +1228,8 @@ public class MainActivity extends Activity implements
                 boolean isSearch = category.equals(Categories.CAT_SEARCH);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        if (catstyle == CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
-                            styleCategorySpecial(categoryTab, CategoryTabStyle.DragHover);
+                        if (catstyle == Style.CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
+                            styleCategorySpecial(categoryTab, Style.CategoryTabStyle.DragHover);
                         }
                        // Log.d(TAG, "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
 
@@ -1294,7 +1245,7 @@ public class MainActivity extends Activity implements
                         hideHiddenCategories();
                     case DragEvent.ACTION_DRAG_EXITED:
 
-                        styleCategorySpecial(categoryTab, CategoryTabStyle.Default);
+                        styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default);
                         break;
 
                     case DragEvent.ACTION_DROP:
@@ -1385,7 +1336,7 @@ public class MainActivity extends Activity implements
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if (!nocolor ) {
-                        droppedOn.setBackgroundColor(dragoverBackground);
+                        droppedOn.setBackgroundColor(mStyle.getDragoverBackground());
                     }
                     if (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) {
                         mDropZoneHover = System.currentTimeMillis();
@@ -1395,13 +1346,13 @@ public class MainActivity extends Activity implements
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
 
-                    if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
+                    if (!nocolor) droppedOn.setBackgroundColor(mStyle.getBackgroundDefault());
                     break;
                 case DragEvent.ACTION_DROP:
 
                     //Log.d("dropon", droppedOn.toString());
 
-                    if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
+                    if (!nocolor) droppedOn.setBackgroundColor(mStyle.getBackgroundDefault());
                     // Dropped, reassign View to ViewGroup
 
                     if (dragObj == droppedOn) {
@@ -1416,7 +1367,7 @@ public class MainActivity extends Activity implements
                     }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    if (!nocolor) droppedOn.setBackgroundColor(backgroundDefault);
+                    if (!nocolor) droppedOn.setBackgroundColor(mStyle.getBackgroundDefault());
                     mBeingDragged = null;
                     hideRemoveDropzone();
                     hideHiddenCategories();
@@ -2513,32 +2464,6 @@ public class MainActivity extends Activity implements
     }
 
 
-    private void setColors() {
-
-
-        cattabBackground = mAppPreferences.getInt("cattab_background", getResColor(R.color.cattab_background));
-        cattabSelectedBackground = mAppPreferences.getInt("cattabselected_background", getResColor(R.color.cattabselected_background));
-        cattabSelectedText = mAppPreferences.getInt("cattabselected_text", getResColor(R.color.cattabselected_text));
-
-        dragoverBackground = mAppPreferences.getInt("dragover_background", getResColor(R.color.dragover_background));
-
-        cattabTextColor =  mAppPreferences.getInt("cattabtextcolor", getResColor(R.color.textcolor));
-        cattabTextColorInvert = mAppPreferences.getInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
-
-        textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
-
-        itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
-        itemClickedAnim.setDuration(200);
-        itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-    }
-
-    private int getResColor(int res) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return getColor(res);
-        } else {
-            return getResources().getColor(res);
-        }
-    }
 
 
     public boolean isAppInstalled(String packageName) {
@@ -2566,7 +2491,7 @@ public class MainActivity extends Activity implements
 
 
 
-    enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
+
 
     interface CategoryChangerListener {
         void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean istiny);
