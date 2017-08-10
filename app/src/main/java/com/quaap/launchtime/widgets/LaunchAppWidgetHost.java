@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
