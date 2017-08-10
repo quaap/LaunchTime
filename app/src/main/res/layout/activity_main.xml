@@ -22,7 +22,7 @@
             android:layout_weight="8"
             android:id="@+id/iconarea_wrap">
 
-            <com.quaap.launchtime.components.InteractiveScrollView
+            <com.quaap.launchtime.apps.InteractiveScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:id="@+id/layout_icons_scroller"
@@ -54,7 +54,7 @@
                     </FrameLayout>
 
                 </LinearLayout>
-            </com.quaap.launchtime.components.InteractiveScrollView>
+            </com.quaap.launchtime.apps.InteractiveScrollView>
 
         </LinearLayout>
 

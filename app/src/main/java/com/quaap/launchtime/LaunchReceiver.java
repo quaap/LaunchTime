@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.db.DB;
 

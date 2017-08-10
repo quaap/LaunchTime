@@ -12,7 +12,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.apps.AppShortcut;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.quaap.launchtime.components;
+package com.quaap.launchtime.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,6 +10,9 @@ import android.widget.EditText;
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.apps.AppCursorAdapter;
+import com.quaap.launchtime.apps.InteractiveScrollView;
+import com.quaap.launchtime.apps.StaticListView;
 import com.quaap.launchtime.db.DB;
 
 /**

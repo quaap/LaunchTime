@@ -1,4 +1,4 @@
-package com.quaap.launchtime;
+package com.quaap.launchtime.apps;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,8 +8,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
-
-import com.quaap.launchtime.components.AppShortcut;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,7 +27,7 @@ import java.util.TreeMap;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
-public class MainHelper {
+public class DefaultApps {
 
     //QuickBar
 

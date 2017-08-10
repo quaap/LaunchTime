@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.quaap.launchtime.R;
-import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.FsTools;
 

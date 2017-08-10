@@ -35,10 +35,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.HttpUtils;
-import com.quaap.launchtime.components.QuickRow;
+import com.quaap.launchtime.ui.QuickRow;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;

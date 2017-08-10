@@ -1,4 +1,4 @@
-package com.quaap.launchtime.components;
+package com.quaap.launchtime.ui;
 
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
@@ -10,8 +10,9 @@ import android.widget.HorizontalScrollView;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
-import com.quaap.launchtime.MainHelper;
+import com.quaap.launchtime.apps.DefaultApps;
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class QuickRow {
         List<AppShortcut> quickRowApps = new ArrayList<>();
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
 
-        MainHelper.checkDefaultApps(mQuickRow.getContext(), shortcuts, quickRowOrder, mQuickRow);
+        DefaultApps.checkDefaultApps(mQuickRow.getContext(), shortcuts, quickRowOrder, mQuickRow);
 
 
         for (AppShortcut app : shortcuts) {

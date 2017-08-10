@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconCache;

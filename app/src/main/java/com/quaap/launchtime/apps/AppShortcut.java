@@ -1,4 +1,4 @@
-package com.quaap.launchtime.components;
+package com.quaap.launchtime.apps;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.components.IconCache;
 
 import java.util.HashMap;
 import java.util.Locale;

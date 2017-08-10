@@ -70,15 +70,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quaap.launchtime.components.AppCursorAdapter;
-import com.quaap.launchtime.components.AppLauncher;
-import com.quaap.launchtime.components.AppShortcut;
+import com.quaap.launchtime.apps.AppLauncher;
+import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
-import com.quaap.launchtime.components.InteractiveScrollView;
-import com.quaap.launchtime.components.QuickRow;
-import com.quaap.launchtime.components.SearchBox;
-import com.quaap.launchtime.components.StaticListView;
+import com.quaap.launchtime.apps.InteractiveScrollView;
+import com.quaap.launchtime.ui.QuickRow;
+import com.quaap.launchtime.ui.SearchBox;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
 

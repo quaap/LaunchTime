@@ -1,4 +1,4 @@
-package com.quaap.launchtime.components;
+package com.quaap.launchtime.apps;
 
 /**
  * Triggers a event when scrolling reaches bottom.

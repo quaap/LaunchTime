@@ -55,7 +55,7 @@
 
     </LinearLayout>
 
-    <com.quaap.launchtime.components.StaticListView
+    <com.quaap.launchtime.apps.StaticListView
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

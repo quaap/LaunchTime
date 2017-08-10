@@ -1,4 +1,4 @@
-package com.quaap.launchtime.components;
+package com.quaap.launchtime.apps;
 
 import android.content.Context;
 import android.database.DataSetObserver;
