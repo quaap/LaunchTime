@@ -28,7 +28,6 @@ import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -77,6 +76,7 @@ import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.InteractiveScrollView;
+import com.quaap.launchtime.components.QuickRow;
 import com.quaap.launchtime.components.StaticListView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
@@ -101,7 +101,6 @@ public class MainActivity extends Activity implements
     //TODO: everything needs a major refactor.
     // custom views or fragments?
 
-    public static final String QUICK_ROW_CAT = "QuickRow";
     private static final int UNINSTALL_RESULT = 3454;
 
     private FrameLayout mIconSheetTopFrame;
@@ -109,13 +108,13 @@ public class MainActivity extends Activity implements
     private ViewGroup mIconSheetBottomFrame;
     private ViewGroup mIconSheetHolder;
     private Map<String, GridLayout> mIconSheets;
+
     private GridLayout mIconSheet;
+
     private ScrollView mCategoriesScroller;
     private Map<String, TextView> mCategoryTabs;
     private Map<View, String> mRevCategoryMap;
     private volatile String mCategory;
-    private GridLayout mQuickRow;
-    private HorizontalScrollView mQuickRowScroller;
     private ImageView mShowButtons;
 
 
@@ -167,6 +166,8 @@ public class MainActivity extends Activity implements
 
     private AppLauncher mAppLauncher;
 
+    private QuickRow mQuickRow;
+
     //private DB db();
     
     private static String TAG = "LaunchTime";
@@ -203,13 +204,10 @@ public class MainActivity extends Activity implements
         initUI();
 
 
-        mQuickRow.setOnDragListener(mMainDragListener);
-        mQuickRowScroller.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-                return mMainDragListener.onDrag(mQuickRow, dragEvent);
-            }
-        });
+
+        mQuickRow = new QuickRow(mMainDragListener, this);
+
+
         mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
 
         findViewById(R.id.iconarea_wrap).setOnDragListener(iconSheetDropRedirector);
@@ -285,7 +283,7 @@ public class MainActivity extends Activity implements
         if (pausetime>-1 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
             mCategory = getTopCategory();
             skiphome = true;
-            mQuickRowScroller.smoothScrollTo(0, 0);
+            mQuickRow.scrollToStart();
             mCategoriesScroller.smoothScrollTo(0, 0);
         } else {
             mCategory = mPrefs.getString("category", getTopCategory());
@@ -446,8 +444,8 @@ public class MainActivity extends Activity implements
         String topCat = getTopCategory();
         if (mIconSheetBottomFrame.getVisibility()==View.VISIBLE) {
             showButtonBar(false, true);
-        } else if (mQuickRowScroller.getScrollX()>0) {
-            mQuickRowScroller.smoothScrollTo(0, 0);
+        } else if (mQuickRow.getScrollPos()>0) {
+            mQuickRow.scrollToStart();
         } else if (mIconSheetScroller.getScrollY()>0) {
             //Otherwise, scroll to top
             mIconSheetScroller.smoothScrollTo(0, 0);
@@ -488,7 +486,7 @@ public class MainActivity extends Activity implements
             if (alreadyOnHome && !mChildLock) {
 
                 // If we are on home screen, reset most things and go to top category.
-                mQuickRowScroller.postDelayed(new Runnable() {
+                mCategoriesScroller.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -497,7 +495,7 @@ public class MainActivity extends Activity implements
                             showButtonBar(false, true);
                             mIconSheetScroller.smoothScrollTo(0, 0);
                             switchCategory(getTopCategory());
-                            mQuickRowScroller.smoothScrollTo(0, 0);
+                            mQuickRow.scrollToStart();
                             mIconSheetScroller.smoothScrollTo(0, 0);
                             mCategoriesScroller.smoothScrollTo(0, 0);
                         } catch (Exception e) {
@@ -625,7 +623,7 @@ public class MainActivity extends Activity implements
         if (!db().isFirstRun()) {
             //Make sure the displayed icons load first
             //Load the quickrow icons first
-            for (ComponentName actvname : db().getAppCategoryOrder(QUICK_ROW_CAT)) {
+            for (ComponentName actvname : db().getAppCategoryOrder(QuickRow.QUICK_ROW_CAT)) {
                 if (db().isAppInstalled(actvname)) {
                     AppShortcut app = db().getApp(actvname);
                     if (app != null) {
@@ -656,7 +654,8 @@ public class MainActivity extends Activity implements
 
             @Override
             protected void onPostExecute(List<AppShortcut> appShortcuts) {
-                processQuickApps(appShortcuts);
+                mQuickRow.processQuickApps(appShortcuts, mPackageMan);
+                db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow.getGridLayout()), mQuickRow.getGridLayout());
                 firstRunPostApps();
                 if (mCategory.equals(Categories.CAT_SEARCH)) {
                     populateRecentApps();
@@ -687,7 +686,7 @@ public class MainActivity extends Activity implements
             db().backup("After install");
 
             //Show the help screen on very first run.
-            mQuickRow.postDelayed(new Runnable() {
+            mCategoriesScroller.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent help = new Intent(MainActivity.this, AboutActivity.class);
@@ -1001,50 +1000,6 @@ public class MainActivity extends Activity implements
 
         return shortcuts;
     }
-
-    private void processQuickApps(List<AppShortcut> shortcuts) {
-        List<AppShortcut> quickRowApps = new ArrayList<>();
-        final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
-
-        MainHelper.checkDefaultApps(this, shortcuts, quickRowOrder, mQuickRow);
-
-
-        for (AppShortcut app : shortcuts) {
-
-            if (quickRowOrder.contains(app.getComponentName())) {
-                AppShortcut qapp = AppShortcut.createAppShortcut(app);
-                qapp.loadAppIconAsync(this, mPackageMan);
-                quickRowApps.add(qapp);
-            }
-        }
-
-
-        mQuickRow.removeAllViews();
-        for (ComponentName actvname : quickRowOrder) {
-            for (AppShortcut app : quickRowApps) {
-                if (app.getComponentName().equals(actvname)) {
-                    ViewGroup item = getShortcutView(app, true);
-                    if (item!=null) {
-                        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-                        lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
-                        mQuickRow.addView(item, lp);
-                    }
-                }
-            }
-        }
-        db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow), mQuickRow);
-
-    }
-
-    private void removeFromQuickApps(ComponentName actvname) {
-        for (int i = mQuickRow.getChildCount()-1; i>=0; i--) {
-            AppShortcut app = (AppShortcut) mQuickRow.getChildAt(i).getTag();
-            if (app != null && actvname.equals(app.getComponentName())) {
-                mQuickRow.removeView(mQuickRow.getChildAt(i));
-            }
-        }
-    }
-
 
     public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
         return getShortcutView(app, smallIcon, true);
@@ -1467,7 +1422,7 @@ public class MainActivity extends Activity implements
             if (mCategory.equals(Categories.CAT_SEARCH) && isAncestor(mIconSheet, droppedOn)) return false;
 
             boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone
-                    || droppedOn == mLinkDropzone || !isShortcut || mQuickRow == mDragDropSource
+                    || droppedOn == mLinkDropzone || !isShortcut || mQuickRow.getGridLayout() == mDragDropSource
                     || isAncestor(mSearchView, droppedOn);
 
             //prevent dropping categories anywhere but category area and trash
@@ -1475,7 +1430,7 @@ public class MainActivity extends Activity implements
                 return false;
             }
 
-            if ((isSpecial && !isApplink) && (droppedOn==mQuickRow || isAncestor(mQuickRow, droppedOn))) return false;
+            if ((isSpecial && !isApplink) && (droppedOn==mQuickRow.getGridLayout() || isAncestor(mQuickRow.getGridLayout(), droppedOn))) return false;
 
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -1487,7 +1442,7 @@ public class MainActivity extends Activity implements
 
                     if (isShortcut) {
                         scrollOnDrag(droppedOn, event, mIconSheetScroller);
-                        hscrollOnDrag(droppedOn, event, mQuickRowScroller);
+                        hscrollOnDrag(droppedOn, event, mQuickRow.getScroller());
 
                         if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility()!=View.VISIBLE && (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) && System.currentTimeMillis()-mDropZoneHover > 400) {
                             mLinkDropzone.setVisibility(View.VISIBLE);
@@ -1547,7 +1502,7 @@ public class MainActivity extends Activity implements
             Object droppedOnTag = droppedOn.getTag();
             if (droppedOn == mRemoveDropzone) {  // need to delete the dropped thing
                 //Stuff to be deleted
-                if (mQuickRow == mDragDropSource) {
+                if (mQuickRow.getGridLayout() == mDragDropSource) {
                     removeDroppedItem(dragObj);
                 } else if (mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)) {
                     removeDroppedRecentItem(dragObj);
@@ -1607,21 +1562,21 @@ public class MainActivity extends Activity implements
 
             //remove icon from source?
             boolean remove = false;
-            if (mDragDropSource == mQuickRow && mQuickRow == target) remove = true;
+            if (mDragDropSource == mQuickRow.getGridLayout() && mQuickRow.getGridLayout() == target) remove = true;
 
             if (!mCategory.equals(Categories.CAT_SEARCH)) {
-                if (mQuickRow != mDragDropSource && mQuickRow != target) remove = true;
+                if (mQuickRow.getGridLayout() != mDragDropSource && mQuickRow.getGridLayout() != target) remove = true;
             }
 
             if (remove) {
                 mDragDropSource.removeView(dragObj);
             } else {
-                if (target == mQuickRow) {
-                    if (mQuickRow != mDragDropSource) {
+                if (target == mQuickRow.getGridLayout()) {
+                    if (mQuickRow.getGridLayout() != mDragDropSource) {
                         //prevent copies of the same app on the quickrow
-                        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+                        for (int i = 0; i < mQuickRow.getGridLayout().getChildCount(); i++) {
                             AppShortcut dragging = (AppShortcut) dragObj.getTag();
-                            AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+                            AppShortcut inbar = (AppShortcut) mQuickRow.getGridLayout().getChildAt(i).getTag();
                             if (dragging.getLinkBaseActivityName().equals(inbar.getLinkBaseActivityName())) {
                                 return true;
                             }
@@ -1636,7 +1591,7 @@ public class MainActivity extends Activity implements
             }
 
 
-            if (!(target != mQuickRow && mQuickRow == mDragDropSource)) {
+            if (!(target != mQuickRow.getGridLayout() && mQuickRow.getGridLayout() == mDragDropSource)) {
                 try {
                     ViewParent parent = dragObj.getParent();
                     if (parent!=null) {
@@ -2015,7 +1970,7 @@ public class MainActivity extends Activity implements
         mRemoveDropzone.setVisibility(View.VISIBLE);
         mShowButtons.setVisibility(View.GONE);
 
-        if (mDragDropSource == mQuickRow
+        if (mDragDropSource == mQuickRow.getGridLayout()
             || mDragDropSource == mCategoriesLayout
             || mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)
             || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
@@ -2064,7 +2019,7 @@ public class MainActivity extends Activity implements
                     case RESULT_OK:
                         ComponentName actvname = ((AppShortcut) mBeingUninstalled.getTag()).getComponentName();
                         db().deleteApp(actvname);
-                        removeFromQuickApps(actvname);
+                        mQuickRow.removeFromQuickApps(actvname);
                         AppShortcut.removeAppShortcut(actvname);
                         refreshSearch(true);
                         mDragDropSource.removeView(mBeingUninstalled);
@@ -2432,15 +2387,13 @@ public class MainActivity extends Activity implements
         mCategoriesScroller = (ScrollView)findViewById(R.id.layout_categories_scroller);
 
 
-        mQuickRow = (GridLayout) findViewById(R.id.layout_quickrow);
 
-        mQuickRowScroller = (HorizontalScrollView) findViewById(R.id.layout_quickrow_scroll);
 
 
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
         mRevCategoryMap = new HashMap<>();
-        mRevCategoryMap.put(mQuickRow, QUICK_ROW_CAT);
+        mRevCategoryMap.put(mQuickRow.getGridLayout(), mQuickRow.QUICK_ROW_CAT);
 
         mShowButtons = (ImageView) findViewById(R.id.settings_button);
 
@@ -2576,7 +2529,7 @@ public class MainActivity extends Activity implements
 
 
             if (!mChildLockSetup) {
-                mQuickRowScroller.setVisibility(View.GONE);
+                mQuickRow.getScroller().setVisibility(View.GONE);
 
                 mIconSheetBottomFrame.setVisibility(View.GONE);
                 mShowButtons.setVisibility(View.GONE);
@@ -2621,7 +2574,7 @@ public class MainActivity extends Activity implements
         } else {
 
             mChildLockSetup = false;
-            mQuickRowScroller.setVisibility(View.VISIBLE);
+            mQuickRow.getScroller().setVisibility(View.VISIBLE);
 
             mShowButtons.setVisibility(View.VISIBLE);
             kid_escape_area.setVisibility(View.GONE);
