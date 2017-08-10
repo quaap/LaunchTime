@@ -196,6 +196,7 @@ public class MainActivity extends Activity implements
         mAppPreferences.registerOnSharedPreferenceChangeListener(this);
         mWidgetHelper = new Widget(this);
 
+        mQuickRow = new QuickRow(mMainDragListener, this);
 
         mScreenDim = getScreenDimensions();
 
@@ -205,7 +206,6 @@ public class MainActivity extends Activity implements
 
 
 
-        mQuickRow = new QuickRow(mMainDragListener, this);
 
 
         mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
@@ -1422,7 +1422,7 @@ public class MainActivity extends Activity implements
             if (mCategory.equals(Categories.CAT_SEARCH) && isAncestor(mIconSheet, droppedOn)) return false;
 
             boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone
-                    || droppedOn == mLinkDropzone || !isShortcut || mQuickRow.getGridLayout() == mDragDropSource
+                    || droppedOn == mLinkDropzone || !isShortcut || mQuickRow.isSelf(mDragDropSource)
                     || isAncestor(mSearchView, droppedOn);
 
             //prevent dropping categories anywhere but category area and trash
@@ -1430,7 +1430,7 @@ public class MainActivity extends Activity implements
                 return false;
             }
 
-            if ((isSpecial && !isApplink) && (droppedOn==mQuickRow.getGridLayout() || isAncestor(mQuickRow.getGridLayout(), droppedOn))) return false;
+            if ((isSpecial && !isApplink) && (mQuickRow.isSelf(droppedOn) || isAncestor(mQuickRow.getGridLayout(), droppedOn))) return false;
 
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
@@ -1502,7 +1502,7 @@ public class MainActivity extends Activity implements
             Object droppedOnTag = droppedOn.getTag();
             if (droppedOn == mRemoveDropzone) {  // need to delete the dropped thing
                 //Stuff to be deleted
-                if (mQuickRow.getGridLayout() == mDragDropSource) {
+                if (mQuickRow.isSelf(mDragDropSource)) {
                     removeDroppedItem(dragObj);
                 } else if (mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)) {
                     removeDroppedRecentItem(dragObj);
@@ -1562,24 +1562,20 @@ public class MainActivity extends Activity implements
 
             //remove icon from source?
             boolean remove = false;
-            if (mDragDropSource == mQuickRow.getGridLayout() && mQuickRow.getGridLayout() == target) remove = true;
+            if (mQuickRow.isSelf(mDragDropSource)  && mQuickRow.isSelf(target)) remove = true;
 
             if (!mCategory.equals(Categories.CAT_SEARCH)) {
-                if (mQuickRow.getGridLayout() != mDragDropSource && mQuickRow.getGridLayout() != target) remove = true;
+                if (!mQuickRow.isSelf(mDragDropSource) && !mQuickRow.isSelf(target)) remove = true;
             }
 
             if (remove) {
                 mDragDropSource.removeView(dragObj);
             } else {
-                if (target == mQuickRow.getGridLayout()) {
-                    if (mQuickRow.getGridLayout() != mDragDropSource) {
+                if (mQuickRow.isSelf(target)) {
+                    if (!mQuickRow.isSelf(mDragDropSource)) {
                         //prevent copies of the same app on the quickrow
-                        for (int i = 0; i < mQuickRow.getGridLayout().getChildCount(); i++) {
-                            AppShortcut dragging = (AppShortcut) dragObj.getTag();
-                            AppShortcut inbar = (AppShortcut) mQuickRow.getGridLayout().getChildAt(i).getTag();
-                            if (dragging.getLinkBaseActivityName().equals(inbar.getLinkBaseActivityName())) {
-                                return true;
-                            }
+                        if (mQuickRow.appAlreadyHere((AppShortcut) dragObj.getTag())) {
+                            return true;
                         }
                     }
                     //make a copy of the shortcut to put on the quickbar
@@ -2393,7 +2389,7 @@ public class MainActivity extends Activity implements
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
         mRevCategoryMap = new HashMap<>();
-        mRevCategoryMap.put(mQuickRow.getGridLayout(), mQuickRow.QUICK_ROW_CAT);
+        mRevCategoryMap.put(mQuickRow.getGridLayout(), QuickRow.QUICK_ROW_CAT);
 
         mShowButtons = (ImageView) findViewById(R.id.settings_button);
 

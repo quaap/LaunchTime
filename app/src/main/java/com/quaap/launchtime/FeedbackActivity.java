@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.quaap.launchtime.components.AppShortcut;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.HttpUtils;
+import com.quaap.launchtime.components.QuickRow;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
@@ -168,7 +169,7 @@ public class FeedbackActivity extends Activity {
             includes.put(cat, true);
         }
 
-        for (ComponentName componentName: db.getAppCategoryOrder(MainActivity.QUICK_ROW_CAT)) {
+        for (ComponentName componentName: db.getAppCategoryOrder(QuickRow.QUICK_ROW_CAT)) {
             String name = "qr." + scrubbednames.get(makeCompname(componentName));
             scrubbednames.put(name, name);
             includes.put(name, true);

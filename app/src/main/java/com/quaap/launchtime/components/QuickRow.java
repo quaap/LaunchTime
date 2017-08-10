@@ -63,6 +63,21 @@ public class QuickRow {
     }
 
 
+    public boolean appAlreadyHere(AppShortcut app) {
+        //prevent copies of the same app on the quickrow
+        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+
+            AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+            if (app.getLinkBaseActivityName().equals(inbar.getLinkBaseActivityName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isSelf(View other) {
+        return other == mQuickRow;
+    }
 
     public void processQuickApps(List<AppShortcut> shortcuts, PackageManager packageMan) {
         List<AppShortcut> quickRowApps = new ArrayList<>();
