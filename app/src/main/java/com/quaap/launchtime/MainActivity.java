@@ -77,6 +77,7 @@ import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.InteractiveScrollView;
 import com.quaap.launchtime.components.QuickRow;
+import com.quaap.launchtime.components.SearchBox;
 import com.quaap.launchtime.components.StaticListView;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.widgets.Widget;
@@ -136,7 +137,6 @@ public class MainActivity extends Activity implements
     private SharedPreferences mPrefs;
     private View mBeingUninstalled;
     private Widget mWidgetHelper;
-    private ViewGroup mSearchView;
 
     private int cattabTextColor;
     private int cattabTextColorInvert;
@@ -169,6 +169,8 @@ public class MainActivity extends Activity implements
     private QuickRow mQuickRow;
 
     //private DB db();
+
+    private SearchBox mSearchBox;
     
     private static String TAG = "LaunchTime";
 
@@ -213,7 +215,7 @@ public class MainActivity extends Activity implements
         findViewById(R.id.iconarea_wrap).setOnDragListener(iconSheetDropRedirector);
 
 
-        mSearchView = getSearchView();
+        mSearchBox = new SearchBox(this, mIconSheetScroller);
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
         mCategory = mPrefs.getString("category", getTopCategory());
 
@@ -263,9 +265,7 @@ public class MainActivity extends Activity implements
                 .apply();
 
         //close our search cursor, if needed
-        if (mSearchAdapter!=null){
-            mSearchAdapter.close();
-        }
+        mSearchBox.closeSeachAdapter();
         super.onPause();
     }
 
@@ -308,7 +308,7 @@ public class MainActivity extends Activity implements
 
         //rerun our query if needed
         if (mCategory.equals(Categories.CAT_SEARCH)) {
-            refreshSearch(false);
+            mSearchBox.refreshSearch(false);
         }
         hideRemoveDropzone();
 
@@ -388,20 +388,18 @@ public class MainActivity extends Activity implements
             mIconSheetTopFrame.removeAllViews();
             if (mCategory.equals(Categories.CAT_SEARCH)) {
 
-                mIconSheetTopFrame.addView(mSearchView);
+                mIconSheetTopFrame.addView(mSearchBox.getSearchView());
 
                 //Show recent apps
                 populateRecentApps();
 
                 //load our cursor
-                refreshSearch(true);
+                mSearchBox.refreshSearch(true);
 
             } else {
 
                 // not the search page: close the cursor
-                if (mSearchAdapter != null) {
-                    mSearchAdapter.close();
-                }
+                mSearchBox.closeSeachAdapter();
             }
 
             //Actually switch the icon sheet.
@@ -449,9 +447,9 @@ public class MainActivity extends Activity implements
         } else if (mIconSheetScroller.getScrollY()>0) {
             //Otherwise, scroll to top
             mIconSheetScroller.smoothScrollTo(0, 0);
-        } else if (mCategory.equals(Categories.CAT_SEARCH) && mSearchbox!=null && mSearchbox.getText().length()!=0) {
+        } else if (mCategory.equals(Categories.CAT_SEARCH) && mSearchBox.getSeachText().length()!=0) {
             //If search is open, clear the searchbox
-            mSearchbox.setText("");
+            mSearchBox.setSearchText("");
         } else if (!mCategory.equals(topCat)){
             //Otherwise, switch to known-good category
             switchCategory(topCat);
@@ -490,7 +488,7 @@ public class MainActivity extends Activity implements
                     @Override
                     public void run() {
                         try {
-                            if (mSearchbox!=null) mSearchbox.setText("");
+                            mSearchBox.setSearchText("");
                             mCategoriesScroller.smoothScrollTo(0, 0);
                             showButtonBar(false, true);
                             mIconSheetScroller.smoothScrollTo(0, 0);
@@ -714,7 +712,7 @@ public class MainActivity extends Activity implements
         return iconSheet;
     }
 
-    private void populateRecentApps() {
+    public void populateRecentApps() {
 
         GridLayout iconSheet = mIconSheets.get(Categories.CAT_SEARCH);
 
@@ -1147,74 +1145,6 @@ public class MainActivity extends Activity implements
         return mPrefs.getInt(app.getActivityName() + "_height", 0);
     }
 
-    private int mSearchRememberScrollPos;
-
-    AppCursorAdapter mSearchAdapter;
-    EditText mSearchbox;
-    private ViewGroup getSearchView() {
-        ViewGroup searchView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.search_layout, (ViewGroup) null);
-
-        mSearchbox = (EditText) searchView.findViewById(R.id.search_box);
-
-        mSearchAdapter = new AppCursorAdapter(this, mSearchbox, R.layout.search_item, 0);
-        StaticListView list = (StaticListView) searchView.findViewById(R.id.search_dropdownarea);
-
-        list.setAdapter(mSearchAdapter);
-        list.setOnItemClickListener(mSearchAdapter);
-
-        list.setOnLoadCompleteListener(new StaticListView.OnLoadCompleteListener() {
-            @Override
-            public void loadComplete() {
-                mIconSheetScroller.scrollTo(0, mSearchRememberScrollPos);
-                mIconSheetScroller.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mIconSheetScroller.scrollTo(0, mSearchRememberScrollPos);
-
-                    }
-                }, 100);
-            }
-        });
-
-
-
-        searchView.findViewById(R.id.btn_clear_searchbox).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSearchbox.setText("");
-                mSearchRememberScrollPos = 0;
-            }
-        });
-
-
-        searchView.findViewById(R.id.btn_clear_recents).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle(R.string.clear_recent)
-                        .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                db().deleteAppLaunchedRecords();
-                                populateRecentApps();
-                            }
-                        }).setNegativeButton(R.string.cancel, null);
-                builder.show();
-
-            }
-        });
-
-        refreshSearch(false);
-        return searchView;
-    }
-
-    private void refreshSearch(boolean rememberPos) {
-        if (rememberPos) mSearchRememberScrollPos = mIconSheetScroller.getScrollY();
-        if (mSearchAdapter!=null) {
-            mSearchAdapter.refreshCursor();
-        }
-    }
 
     private CategoryTabStyle getDefaultCategoryStyle(String category) {
         CategoryTabStyle catstyle = CategoryTabStyle.Normal;
@@ -1423,7 +1353,7 @@ public class MainActivity extends Activity implements
 
             boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone
                     || droppedOn == mLinkDropzone || !isShortcut || mQuickRow.isSelf(mDragDropSource)
-                    || isAncestor(mSearchView, droppedOn);
+                    || isAncestor(mSearchBox.getSearchView(), droppedOn);
 
             //prevent dropping categories anywhere but category area and trash
             if (mDragDropSource==mCategoriesLayout && !(droppedOn==mCategoriesLayout || droppedOn==mRemoveDropzone )) {
@@ -1508,7 +1438,7 @@ public class MainActivity extends Activity implements
                     removeDroppedRecentItem(dragObj);
                 } else if (mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
                     removeDroppedItem(dragObj);
-                    refreshSearch(true);
+                    mSearchBox.refreshSearch(true);
 
                 } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
                     //delete category tab
@@ -1618,7 +1548,7 @@ public class MainActivity extends Activity implements
             }
 
             if (mCategory.equals(Categories.CAT_SEARCH)) {
-                refreshSearch(true);
+                mSearchBox.refreshSearch(true);
             }
             return false;
         }
@@ -2017,7 +1947,7 @@ public class MainActivity extends Activity implements
                         db().deleteApp(actvname);
                         mQuickRow.removeFromQuickApps(actvname);
                         AppShortcut.removeAppShortcut(actvname);
-                        refreshSearch(true);
+                        mSearchBox.refreshSearch(true);
                         mDragDropSource.removeView(mBeingUninstalled);
                         db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
                         Toast.makeText(this, R.string.app_was_uninstalled, Toast.LENGTH_SHORT).show();
