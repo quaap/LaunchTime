@@ -251,6 +251,8 @@ public class MainActivity extends Activity implements
         checkConfig();
     }
 
+    private long mPauseTime = 0;
+
     @Override
     protected void onPause() {
         Log.d(TAG, "onPause");
@@ -266,6 +268,7 @@ public class MainActivity extends Activity implements
 
         //close our search cursor, if needed
         mSearchBox.closeSeachAdapter();
+        mPauseTime = System.currentTimeMillis();
         super.onPause();
     }
 
@@ -475,12 +478,13 @@ public class MainActivity extends Activity implements
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        if (Intent.ACTION_MAIN.equals(intent.getAction())) {
+
+        if (System.currentTimeMillis() - mPauseTime < 1000  && Intent.ACTION_MAIN.equals(intent.getAction())) {
 
             final boolean alreadyOnHome =
                     ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
                             != Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-            //Log.d("LaunchTime", " new intent " + alreadyOnHome);
+            Log.d("LaunchTime", " new intent " + alreadyOnHome);
             if (alreadyOnHome && !mChildLock) {
 
                 // If we are on home screen, reset most things and go to top category.
