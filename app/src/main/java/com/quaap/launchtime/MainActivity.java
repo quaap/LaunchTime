@@ -12,6 +12,7 @@ package com.quaap.launchtime;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -72,12 +73,12 @@ import android.widget.Toast;
 
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.AppShortcut;
+import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
-import com.quaap.launchtime.apps.InteractiveScrollView;
+import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.ui.QuickRow;
 import com.quaap.launchtime.ui.SearchBox;
-import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
