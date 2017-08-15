@@ -324,7 +324,7 @@ public class DB extends SQLiteOpenHelper {
                 boolean widget = cursor.getShort(4) == 1;
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-                appLauncher = AppLauncher.createAppShortcut(actvname, pkgname, label, catID, widget);
+                appLauncher = AppLauncher.createAppLauncher(actvname, pkgname, label, catID, widget);
             }
         } finally {
             cursor.close();
@@ -349,7 +349,7 @@ public class DB extends SQLiteOpenHelper {
                 boolean widget = cursor.getShort(4) == 1;
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-                appLaunchers.add(AppLauncher.createAppShortcut(actvname, pkgname, label, catID, widget));
+                appLaunchers.add(AppLauncher.createAppLauncher(actvname, pkgname, label, catID, widget));
             }
         } finally {
             cursor.close();
@@ -428,7 +428,7 @@ public class DB extends SQLiteOpenHelper {
                 if (widget) {
                     Log.d("db", "Found widget: " + actvname + " " + pkgname);
                 }
-                apps.add(AppLauncher.createAppShortcut(actvname, pkgname, label, catID, widget));
+                apps.add(AppLauncher.createAppLauncher(actvname, pkgname, label, catID, widget));
             }
         } finally {
             cursor.close();

@@ -8,8 +8,8 @@
 
 
     <FrameLayout
-        android:layout_width="@dimen/shortcut_width"
-        android:layout_height="@dimen/shortcut_height"
+        android:layout_width="@dimen/launcher_width"
+        android:layout_height="@dimen/launcher_height"
         android:id="@+id/icontarget"
         android:layout_gravity="center_vertical|start">
 

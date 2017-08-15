@@ -195,7 +195,7 @@
             android:clickable="true">
 
             <TextView
-                android:layout_width="@dimen/shortcut_width"
+                android:layout_width="@dimen/launcher_width"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_sort_cat"
                 android:layout_weight="1"
@@ -208,7 +208,7 @@
 
 
             <TextView
-                android:layout_width="@dimen/shortcut_width"
+                android:layout_width="@dimen/launcher_width"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_rename_cat"
                 android:layout_weight="1"
@@ -220,7 +220,7 @@
                 android:textColor="@color/textcolor" />
 
             <TextView
-                android:layout_width="@dimen/shortcut_width"
+                android:layout_width="@dimen/launcher_width"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_add_cat"
                 android:layout_weight="1"

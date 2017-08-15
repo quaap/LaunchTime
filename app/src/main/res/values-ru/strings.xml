@@ -7,7 +7,7 @@
     <string name="app_name">LaunchTime</string>
 
 
-    <string name="remove_shortcut">Убрать</string>
+    <string name="remove_launcher">Убрать</string>
     <string name="uninstall_app">Деинсталлировать</string>
     <string name="app_was_uninstalled">Приложение было деинсталлировано</string>
     <string name="uninstall_canceled">Деинсталляция отменена</string>

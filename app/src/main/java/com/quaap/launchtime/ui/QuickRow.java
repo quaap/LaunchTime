@@ -99,7 +99,7 @@ public class QuickRow {
         for (AppLauncher app : shortcuts) {
 
             if (quickRowOrder.contains(app.getComponentName())) {
-                AppLauncher qapp = AppLauncher.createAppShortcut(app);
+                AppLauncher qapp = AppLauncher.createAppLauncher(app);
                 qapp.loadAppIconAsync(mQuickRow.getContext(), packageMan);
                 quickRowApps.add(qapp);
             }

@@ -5,7 +5,7 @@
     <string name="app_name">LaunchTime 0.6</string>
 
 
-    <string name="remove_shortcut">Remove</string>
+    <string name="remove_launcher">Remove</string>
     <string name="uninstall_app">Uninstall</string>
     <string name="app_was_uninstalled">Application was uninstalled</string>
     <string name="uninstall_canceled">Uninstall cancelled</string>

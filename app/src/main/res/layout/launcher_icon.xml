@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="@dimen/shortcut_width"
-    android:layout_height="@dimen/shortcut_height"
+    android:layout_width="@dimen/launcher_width"
+    android:layout_height="@dimen/launcher_height"
     android:gravity="center_horizontal"
-    android:paddingEnd="@dimen/shortcut_padding_side"
-    android:paddingStart="@dimen/shortcut_padding_side"
+    android:paddingEnd="@dimen/launcher_padding_side"
+    android:paddingStart="@dimen/launcher_padding_side"
     android:paddingBottom="4dp"
     android:paddingTop="8dp">
 
@@ -18,17 +18,17 @@
     <ImageView
         android:layout_width="@dimen/icon_width"
         android:layout_height="@dimen/icon_width"
-        android:id="@+id/shortcut_icon"
+        android:id="@+id/launcher_icon"
         android:contentDescription="@string/app"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="@dimen/icon_label_width"
         android:layout_height="wrap_content"
-        android:id="@+id/shortcut_text"
+        android:id="@+id/launcher_text"
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/shortcut_fontsize"
+        android:textSize="@dimen/launcher_fontsize"
         android:maxLines="2"
         android:height="@dimen/icont_label_height"
         android:textStyle="bold"

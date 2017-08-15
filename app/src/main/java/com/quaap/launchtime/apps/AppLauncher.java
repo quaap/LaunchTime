@@ -39,49 +39,49 @@ import java.util.Map;
 public class AppLauncher implements Comparable<AppLauncher> {
 
 
-    private static Map<ComponentName,AppLauncher> mAppShortcuts = new HashMap<>();
+    private static Map<ComponentName,AppLauncher> mAppLaunchers = new HashMap<>();
     public static final String LINK_SEP = ":IS_APP_LINK:";
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
 
 
-    public static AppLauncher createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
-        AppLauncher app = mAppShortcuts.get(new ComponentName(packageName, activityName));
+    public static AppLauncher createAppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {
+        AppLauncher app = mAppLaunchers.get(new ComponentName(packageName, activityName));
         if (app == null) {
             app = new AppLauncher(activityName, packageName, label, category, isWidget);
-            mAppShortcuts.put(app.getComponentName(), app);
+            mAppLaunchers.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppLauncher createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
-        return createAppShortcut(context, pm, ri, null, true);
+    public static AppLauncher createAppLauncher(Context context, PackageManager pm, ResolveInfo ri) {
+        return createAppLauncher(context, pm, ri, null, true);
     }
 
-    public static AppLauncher createAppShortcut(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
+    public static AppLauncher createAppLauncher(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
         String activityName = ri.activityInfo.name;
-        AppLauncher app = mAppShortcuts.get(new ComponentName(ri.activityInfo.packageName, activityName));
+        AppLauncher app = mAppLaunchers.get(new ComponentName(ri.activityInfo.packageName, activityName));
         if (app == null) {
             app = new AppLauncher(context, pm, ri, category, autocat);
-            mAppShortcuts.put(app.getComponentName(), app);
+            mAppLaunchers.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppLauncher createAppShortcut(AppLauncher shortcut) {
-        return createAppShortcut(shortcut, false);
+    public static AppLauncher createAppLauncher(AppLauncher shortcut) {
+        return createAppLauncher(shortcut, false);
     }
 
-    public static AppLauncher createAppShortcut(AppLauncher shortcut, boolean copyOrig) {
+    public static AppLauncher createAppLauncher(AppLauncher shortcut, boolean copyOrig) {
         return new AppLauncher(shortcut, copyOrig);
     }
 
 
     public static AppLauncher createActionLink(String activityName, Uri linkUri, String packageName, String label, String category) {
         activityName = makeLink(activityName, linkUri);
-        AppLauncher app = mAppShortcuts.get(new ComponentName(packageName, activityName));
+        AppLauncher app = mAppLaunchers.get(new ComponentName(packageName, activityName));
         if (app == null) {
             app = new AppLauncher(activityName, packageName, label, category, false);
-            mAppShortcuts.put(app.getComponentName(), app);
+            mAppLaunchers.put(app.getComponentName(), app);
         }
         return app;
     }
@@ -89,20 +89,20 @@ public class AppLauncher implements Comparable<AppLauncher> {
     public static AppLauncher createActionLink(String actionName, Uri linkUri, String label, String category) {
 
         actionName = makeLink(actionName, linkUri);
-        AppLauncher app = mAppShortcuts.get(new ComponentName(ACTION_PACKAGE, actionName));
+        AppLauncher app = mAppLaunchers.get(new ComponentName(ACTION_PACKAGE, actionName));
         if (app == null) {
             app = new AppLauncher(actionName, ACTION_PACKAGE, label, category, false);
-            mAppShortcuts.put(app.getComponentName(), app);
+            mAppLaunchers.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppLauncher getAppShortcut(ComponentName activityName) {
-        return mAppShortcuts.get(activityName);
+    public static AppLauncher getAppLauncher(ComponentName activityName) {
+        return mAppLaunchers.get(activityName);
     }
 
-    public static AppLauncher removeAppShortcut(ComponentName activityName) {
-        return mAppShortcuts.remove(activityName);
+    public static AppLauncher removeAppLauncher(ComponentName activityName) {
+        return mAppLaunchers.remove(activityName);
     }
 
 
