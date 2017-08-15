@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.quaap.launchtime.R;
-import com.quaap.launchtime.apps.AppShortcut;
+import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.FsTools;
 
@@ -307,12 +307,12 @@ public class DB extends SQLiteOpenHelper {
         return actvnames;
     }
 
-    public AppShortcut getApp(ComponentName appname) {
+    public AppLauncher getApp(ComponentName appname) {
 
         String actvname = appname.getClassName();
         String pkgname =  appname.getPackageName();
 
-        AppShortcut appShortcut = null;
+        AppLauncher appLauncher = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(APP_TABLE, appcolumns, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname}, null, null, null);
@@ -324,18 +324,18 @@ public class DB extends SQLiteOpenHelper {
                 boolean widget = cursor.getShort(4) == 1;
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-                appShortcut = AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget);
+                appLauncher = AppLauncher.createAppShortcut(actvname, pkgname, label, catID, widget);
             }
         } finally {
             cursor.close();
         }
-        return appShortcut;
+        return appLauncher;
     }
 
-    public List<AppShortcut> getAppsForPackage(String pkgname) {
+    public List<AppLauncher> getAppsForPackage(String pkgname) {
 
 
-        List<AppShortcut> appShortcuts = new ArrayList<>();
+        List<AppLauncher> appLaunchers = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -349,12 +349,12 @@ public class DB extends SQLiteOpenHelper {
                 boolean widget = cursor.getShort(4) == 1;
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-                appShortcuts.add(AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget));
+                appLaunchers.add(AppLauncher.createAppShortcut(actvname, pkgname, label, catID, widget));
             }
         } finally {
             cursor.close();
         }
-        return appShortcuts;
+        return appLaunchers;
     }
 
 
@@ -411,9 +411,9 @@ public class DB extends SQLiteOpenHelper {
         return count;
     }
 
-    public List<AppShortcut> getApps(String catID) {
+    public List<AppLauncher> getApps(String catID) {
 
-        List<AppShortcut> apps = new ArrayList<>();
+        List<AppLauncher> apps = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -428,7 +428,7 @@ public class DB extends SQLiteOpenHelper {
                 if (widget) {
                     Log.d("db", "Found widget: " + actvname + " " + pkgname);
                 }
-                apps.add(AppShortcut.createAppShortcut(actvname, pkgname, label, catID, widget));
+                apps.add(AppLauncher.createAppShortcut(actvname, pkgname, label, catID, widget));
             }
         } finally {
             cursor.close();
@@ -437,13 +437,13 @@ public class DB extends SQLiteOpenHelper {
         return apps;
     }
 
-    public boolean addApp(AppShortcut shortcut) {
+    public boolean addApp(AppLauncher shortcut) {
         return addApp(shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
     }
 
-    public void addApps(List<AppShortcut> shortcuts) {
+    public void addApps(List<AppLauncher> shortcuts) {
         SQLiteDatabase db = this.getWritableDatabase();
-        for (AppShortcut shortcut : shortcuts) {
+        for (AppLauncher shortcut : shortcuts) {
             addApp(db, shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
         }
     }
@@ -534,7 +534,7 @@ public class DB extends SQLiteOpenHelper {
         String pkgname = appname.getPackageName();
 
         try {
-            AppShortcut app = getApp(appname);
+            AppLauncher app = getApp(appname);
             if (app != null && (app.isLink() || app.isWidget())) {
                 SQLiteDatabase db = this.getWritableDatabase();
 
@@ -557,9 +557,9 @@ public class DB extends SQLiteOpenHelper {
         try {
             if (actvname==null) {
 
-                List<AppShortcut> apps = getAppsForPackage(pkgname);
+                List<AppLauncher> apps = getAppsForPackage(pkgname);
                 if (apps != null) {
-                    for (AppShortcut app: apps) {
+                    for (AppLauncher app: apps) {
                         if (app.isWidget() || app.isLink() || app.isActionLink()) {
                             db.delete(APP_TABLE, ACTVNAME + "=?", new String[]{app.getActivityName()});
                         }
@@ -789,21 +789,21 @@ public class DB extends SQLiteOpenHelper {
 
     public void setAppCategoryOrder(String catID, ViewGroup container) {
 
-        List<AppShortcut> apps = new ArrayList<>();
+        List<AppLauncher> apps = new ArrayList<>();
 
         for (int i = 0; i < container.getChildCount(); i++) {
             Object tag = container.getChildAt(i).getTag();
-            if (tag instanceof AppShortcut) {
-                apps.add((AppShortcut) tag);
+            if (tag instanceof AppLauncher) {
+                apps.add((AppLauncher) tag);
             }
         }
 
         setAppCategoryOrder(catID, apps);
     }
 
-    public void setAppCategoryOrder(String catID, List<AppShortcut> apps) {
+    public void setAppCategoryOrder(String catID, List<AppLauncher> apps) {
         List<ComponentName> actvnames = new ArrayList<>();
-        for (AppShortcut app : apps) {
+        for (AppLauncher app : apps) {
             actvnames.add(new ComponentName(app.getPackageName(), app.getActivityName()));
         }
         setAppCategoryOrder(catID, actvnames, true);

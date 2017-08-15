@@ -71,8 +71,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.LaunchApp;
-import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
@@ -132,7 +132,7 @@ public class MainActivity extends Activity implements
     private FrameLayout mLinkDropzone;
     private FrameLayout mLinkDropzonePeek;
     private PackageManager mPackageMan;
-    private AppShortcut mBeingDragged;
+    private AppLauncher mBeingDragged;
     private volatile ViewGroup mDragDropSource;
     private SharedPreferences mPrefs;
     private View mBeingUninstalled;
@@ -150,7 +150,7 @@ public class MainActivity extends Activity implements
     private SharedPreferences mAppPreferences;
 
     private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
-    public Map<AppShortcut,ViewGroup> mAppShortcutViews = new HashMap<>();
+    public Map<AppLauncher,ViewGroup> mAppShortcutViews = new HashMap<>();
 
     private boolean mChildLock;
     private boolean mChildLockSetup;
@@ -606,7 +606,7 @@ public class MainActivity extends Activity implements
             //Load the quickrow icons first
             for (ComponentName actvname : db().getAppCategoryOrder(QuickRow.QUICK_ROW_CAT)) {
                 if (db().isAppInstalled(actvname)) {
-                    AppShortcut app = db().getApp(actvname);
+                    AppLauncher app = db().getApp(actvname);
                     if (app != null) {
                         app.loadAppIconAsync(this, mPackageMan);
                     }
@@ -616,7 +616,7 @@ public class MainActivity extends Activity implements
             //Load the selected category icons
             for (ComponentName actvname : db().getAppCategoryOrder(mCategory)) {
                 if (db().isAppInstalled(actvname)) {
-                    AppShortcut app = db().getApp(actvname);
+                    AppLauncher app = db().getApp(actvname);
                     if (app != null) {
                         app.loadAppIconAsync(this, mPackageMan);
                     }
@@ -625,16 +625,16 @@ public class MainActivity extends Activity implements
         }
 
         //Look for new apps
-        //final List<AppShortcut> shortcuts = processActivities();
+        //final List<AppLauncher> shortcuts = processActivities();
 
-        AsyncTask<Void, Void, List<AppShortcut>> task = new AsyncTask<Void, Void, List<AppShortcut>>() {
+        AsyncTask<Void, Void, List<AppLauncher>> task = new AsyncTask<Void, Void, List<AppLauncher>>() {
             @Override
-            protected List<AppShortcut> doInBackground(Void... params) {
+            protected List<AppLauncher> doInBackground(Void... params) {
                 return processActivities();
             }
 
             @Override
-            protected void onPostExecute(List<AppShortcut> appShortcuts) {
+            protected void onPostExecute(List<AppLauncher> appShortcuts) {
                 mQuickRow.processQuickApps(appShortcuts, mPackageMan);
                 db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow.getGridLayout()), mQuickRow.getGridLayout());
                 firstRunPostApps();
@@ -704,7 +704,7 @@ public class MainActivity extends Activity implements
         int i=0;
         for (ComponentName actvname : db().getAppLaunchedList()) {
             if (db().isAppInstalled(actvname)) {
-                AppShortcut app = db().getApp(actvname);
+                AppLauncher app = db().getApp(actvname);
                 //Log.d("Recent", "Trying " + actvname + " " + app);
 
                 addAppToIconSheet(iconSheet, app, false);
@@ -720,12 +720,12 @@ public class MainActivity extends Activity implements
         iconSheet.removeAllViews();
 
         final List<ComponentName> apporder = db().getAppCategoryOrder(category);
-        List<AppShortcut> apps = db().getApps(category);
+        List<AppLauncher> apps = db().getApps(category);
 
         for (ComponentName actvname : apporder) {
             //Log.d("app", "repopulateIconSheet " + category + " " +  actvname.getClassName() + " " +  actvname.getPackageName());
-            for (Iterator<AppShortcut> it = apps.iterator(); it.hasNext(); ) {
-                AppShortcut app = it.next();
+            for (Iterator<AppLauncher> it = apps.iterator(); it.hasNext(); ) {
+                AppLauncher app = it.next();
                 if (actvname.equals(app.getComponentName())) {
                     addAppToIconSheet(iconSheet, app, true);
                     it.remove();
@@ -733,7 +733,7 @@ public class MainActivity extends Activity implements
             }
         }
 
-        for (AppShortcut app : apps) {
+        for (AppLauncher app : apps) {
             addAppToIconSheet(iconSheet, app, true);
            // Log.d(TAG, app.getActivityName());
         }
@@ -743,11 +743,11 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, boolean reuse) {
+    private boolean addAppToIconSheet(GridLayout iconSheet, AppLauncher app, boolean reuse) {
         return addAppToIconSheet(iconSheet, app, -1, reuse);
     }
 
-    private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, int pos, boolean reuse) {
+    private boolean addAppToIconSheet(GridLayout iconSheet, AppLauncher app, int pos, boolean reuse) {
         if (app != null) {
             try {
                 if ((app.isWidget() && isAppInstalled(app.getPackageName())) || mLaunchApp.isValidActivity(app)) {
@@ -777,7 +777,7 @@ public class MainActivity extends Activity implements
     }
 
     @NonNull
-    private GridLayout.LayoutParams getAppShortcutLayoutParams(GridLayout grid, AppShortcut app) {
+    private GridLayout.LayoutParams getAppShortcutLayoutParams(GridLayout grid, AppLauncher app) {
 
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
 
@@ -868,8 +868,8 @@ public class MainActivity extends Activity implements
 
             for (View view: childViews) {
                 GridLayout.LayoutParams lp;
-                if (view.getTag() instanceof AppShortcut) {
-                    AppShortcut app = (AppShortcut) view.getTag();
+                if (view.getTag() instanceof AppLauncher) {
+                    AppLauncher app = (AppLauncher) view.getTag();
 
                     lp = getAppShortcutLayoutParams(gridLayout, app);
                 } else {
@@ -893,7 +893,7 @@ public class MainActivity extends Activity implements
 //
 //        for (int i = 0; i < activities.size(); i++) {
 //
-//            AppShortcut app;
+//            AppLauncher app;
 //
 //            ResolveInfo resolveInfo = activities.get(i);
 //            ActivityInfo activityInfo = resolveInfo.activityInfo;
@@ -907,13 +907,13 @@ public class MainActivity extends Activity implements
 //        }
 //    }
 
-    private List<AppShortcut> processActivities() {
-        final List<AppShortcut> shortcuts = new ArrayList<>();
+    private List<AppLauncher> processActivities() {
+        final List<AppLauncher> shortcuts = new ArrayList<>();
 
         List<ComponentName> dbactvnames = db().getAppNames();
 
         Set<ComponentName> pmactvnames = new HashSet<>();
-        List<AppShortcut> newapps = new ArrayList<>();
+        List<AppLauncher> newapps = new ArrayList<>();
 
         // Set MAIN and LAUNCHER filters, so we only get activities with that defined on their manifest
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
@@ -933,7 +933,7 @@ public class MainActivity extends Activity implements
         for (int i = 0; i < activities.size(); i++) {
 
             try {
-                AppShortcut app;
+                AppLauncher app;
 
                 ResolveInfo ri = activities.get(i);
                 String actvname = ri.activityInfo.name;
@@ -949,7 +949,7 @@ public class MainActivity extends Activity implements
                         //  Log.d(TAG, "app was in db " + actvname + " " +  ri.activityInfo.packageName);
                     } else {
                         //  Log.d(TAG, "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
-                        app = AppShortcut.createAppShortcut(this, mPackageMan, ri);
+                        app = AppLauncher.createAppShortcut(this, mPackageMan, ri);
                         newapps.add(app);
                     }
 
@@ -967,7 +967,7 @@ public class MainActivity extends Activity implements
         for (Iterator<ComponentName> it = dbactvnames.iterator(); it.hasNext(); ) {
             ComponentName dbactv = it.next();
             if (!pmactvnames.contains(dbactv)) {
-                AppShortcut app = db().getApp(dbactv);
+                AppLauncher app = db().getApp(dbactv);
                 if (app==null || !isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
                     Log.d(TAG, "Removing " + dbactv);
                     it.remove();
@@ -982,13 +982,13 @@ public class MainActivity extends Activity implements
         return shortcuts;
     }
 
-    public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon) {
+    public ViewGroup getShortcutView(final AppLauncher app, boolean smallIcon) {
         return getShortcutView(app, smallIcon, true);
     }
 
 
 
-    public ViewGroup getShortcutView(final AppShortcut app, boolean smallIcon, boolean reuse) {
+    public ViewGroup getShortcutView(final AppLauncher app, boolean smallIcon, boolean reuse) {
 
 
         if (smallIcon) reuse = false;
@@ -1097,8 +1097,8 @@ public class MainActivity extends Activity implements
 
             String label = pkgname;
 
-            AppShortcut.removeAppShortcut(cn);
-            AppShortcut app = AppShortcut.createAppShortcut(actvname, pkgname, label, mCategory, true);
+            AppLauncher.removeAppShortcut(cn);
+            AppLauncher app = AppLauncher.createAppShortcut(actvname, pkgname, label, mCategory, true);
 
             db().addApp(app);
             db().addAppCategoryOrder(mCategory, app.getComponentName());
@@ -1109,7 +1109,7 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void storeShortCutDimen(AppShortcut app, int width, int height) {
+    private void storeShortCutDimen(AppLauncher app, int width, int height) {
         SharedPreferences.Editor ePrefs = mPrefs.edit();
 
         ePrefs.putInt(app.getActivityName() + "_width", width);
@@ -1120,11 +1120,11 @@ public class MainActivity extends Activity implements
 
     }
 
-    private int getShortCutWidth(AppShortcut app) {
+    private int getShortCutWidth(AppLauncher app) {
         return mPrefs.getInt(app.getActivityName() + "_width", 0);
     }
 
-    private int getShortCutHeight(AppShortcut app) {
+    private int getShortCutHeight(AppLauncher app) {
         return mPrefs.getInt(app.getActivityName() + "_height", 0);
     }
 
@@ -1225,14 +1225,14 @@ public class MainActivity extends Activity implements
             public boolean onDrag(View overView, final DragEvent event) {
                 if (mChildLock) return true;
                 View dragObj = (View) event.getLocalState();
-                boolean isAppShortcut = dragObj.getTag() instanceof AppShortcut;
+                boolean isAppShortcut = dragObj.getTag() instanceof AppLauncher;
                 boolean isSearch = category.equals(Categories.CAT_SEARCH);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
                         if (catstyle == Style.CategoryTabStyle.Tiny || (!isAppShortcut || !isSearch)) {
                             styleCategorySpecial(categoryTab, Style.CategoryTabStyle.DragHover);
                         }
-                       // Log.d(TAG, "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
+                       // Log.d(TAG, "DRAG_ENTERED: " + ((AppLauncher)dragObj.getTag()).getActivityName());
 
                         break;
 
@@ -1295,10 +1295,10 @@ public class MainActivity extends Activity implements
             boolean isShortcut = true;
             boolean isSpecial = false;
             boolean isApplink = false;
-            if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppShortcut )) {
+            if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppLauncher)) {
                 isShortcut = false;
             } else  {
-                AppShortcut app = (AppShortcut)dragObj.getTag();
+                AppLauncher app = (AppLauncher)dragObj.getTag();
                 isSpecial = app.isLink() || app.isWidget();
                 isApplink = app.isAppLink();
             }
@@ -1341,9 +1341,9 @@ public class MainActivity extends Activity implements
                     }
                     if (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) {
                         mDropZoneHover = System.currentTimeMillis();
-                        //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
+                        //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppLauncher)dragObj.getTag()).getActivityName());
                     }
-                    //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppShortcut)dragObj.getTag()).getActivityName());
+                    //Log.d("LaunchTime", "DRAG_ENTERED: " + ((AppLauncher)dragObj.getTag()).getActivityName());
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
 
@@ -1408,9 +1408,9 @@ public class MainActivity extends Activity implements
                 return true;
             } else if (droppedOn == mLinkDropzone) {
                 if (isShortcut) {
-                    AppShortcut app = (AppShortcut)dragObj.getTag();
+                    AppLauncher app = (AppLauncher)dragObj.getTag();
                     Log.d(TAG, "Making link: " + app.getActivityName() + " " + app.getPackageName());
-                    AppShortcut appshortcut = app.makeAppLink();
+                    AppLauncher appshortcut = app.makeAppLink();
                     appshortcut.setCategory(mCategory);
                     db().addApp(appshortcut);
                     repopulateIconSheet(mCategory);
@@ -1428,8 +1428,8 @@ public class MainActivity extends Activity implements
                 return true;
             }
 
-            if (droppedOnTag!=null && droppedOnTag instanceof AppShortcut) {
-                if (((AppShortcut)droppedOnTag).isWidget()) {
+            if (droppedOnTag!=null && droppedOnTag instanceof AppLauncher) {
+                if (((AppLauncher)droppedOnTag).isWidget()) {
                     target = (GridLayout) droppedOn.getParent();
                 }
             }
@@ -1458,15 +1458,15 @@ public class MainActivity extends Activity implements
                 if (mQuickRow.isSelf(target)) {
                     if (!mQuickRow.isSelf(mDragDropSource)) {
                         //prevent copies of the same app on the quickrow
-                        if (mQuickRow.appAlreadyHere((AppShortcut) dragObj.getTag())) {
+                        if (mQuickRow.appAlreadyHere((AppLauncher) dragObj.getTag())) {
                             return true;
                         }
                     }
                     //make a copy of the shortcut to put on the quickbar
-                    dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag(), true), true);
+                    dragObj = getShortcutView(AppLauncher.createAppShortcut((AppLauncher) dragObj.getTag(), true), true);
 
                 } else {
-                    dragObj = getShortcutView(AppShortcut.createAppShortcut((AppShortcut) dragObj.getTag()), false, false);
+                    dragObj = getShortcutView(AppLauncher.createAppShortcut((AppLauncher) dragObj.getTag()), false, false);
                 }
             }
 
@@ -1480,8 +1480,8 @@ public class MainActivity extends Activity implements
                     }
 
                     ViewGroup.LayoutParams lp = null;
-                    if (target instanceof GridLayout && dragObj.getTag() instanceof AppShortcut) {
-                        lp = getAppShortcutLayoutParams((GridLayout)target, (AppShortcut)dragObj.getTag());
+                    if (target instanceof GridLayout && dragObj.getTag() instanceof AppLauncher) {
+                        lp = getAppShortcutLayoutParams((GridLayout)target, (AppLauncher)dragObj.getTag());
                     }
 
                     if (index == -1) {
@@ -1596,7 +1596,7 @@ public class MainActivity extends Activity implements
     public boolean onLongClick(View view) {
         if (mChildLock) return false;
 
-        AppShortcut dragitem = (AppShortcut) view.getTag();
+        AppLauncher dragitem = (AppLauncher) view.getTag();
         mDragPotential = view;
 
         if (handle25Shortcuts(view, dragitem)) {
@@ -1644,7 +1644,7 @@ public class MainActivity extends Activity implements
 
         if (mDragPotential==null) return false;
 
-        AppShortcut dragitem = (AppShortcut) mDragPotential.getTag();
+        AppLauncher dragitem = (AppLauncher) mDragPotential.getTag();
         String label = dragitem.getLabel();
         ClipData data = ClipData.newPlainText(label, label);
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(mDragPotential);
@@ -1679,7 +1679,7 @@ public class MainActivity extends Activity implements
 
     private PopupMenu mShortcutActionsPopup;
 
-    private boolean handle25Shortcuts(View view, final AppShortcut appitem) {
+    private boolean handle25Shortcuts(View view, final AppLauncher appitem) {
         if (Build.VERSION.SDK_INT>=25) {
 
 
@@ -1897,10 +1897,10 @@ public class MainActivity extends Activity implements
             if (requestCode == UNINSTALL_RESULT) {
                 switch (resultCode) {
                     case RESULT_OK:
-                        ComponentName actvname = ((AppShortcut) mBeingUninstalled.getTag()).getComponentName();
+                        ComponentName actvname = ((AppLauncher) mBeingUninstalled.getTag()).getComponentName();
                         db().deleteApp(actvname);
                         mQuickRow.removeFromQuickApps(actvname);
-                        AppShortcut.removeAppShortcut(actvname);
+                        AppLauncher.removeAppShortcut(actvname);
                         mSearchBox.refreshSearch(true);
                         mDragDropSource.removeView(mBeingUninstalled);
                         db().setAppCategoryOrder(mRevCategoryMap.get(mDragDropSource), mDragDropSource);
@@ -2197,10 +2197,10 @@ public class MainActivity extends Activity implements
 
         final List<ComponentName> recents = db().getAppLaunchedList();
         if (sortby != APPSORT_NONE) {
-            List<AppShortcut> apps = db().getApps(category);
-            Collections.sort(apps, new Comparator<AppShortcut>() {
+            List<AppLauncher> apps = db().getApps(category);
+            Collections.sort(apps, new Comparator<AppLauncher>() {
                 @Override
-                public int compare(AppShortcut appfirst, AppShortcut appsecond) {
+                public int compare(AppLauncher appfirst, AppLauncher appsecond) {
                     switch (sortby) {
                         case APPSORT_LABEL:
                             return appfirst.getLabel().compareToIgnoreCase(appsecond.getLabel());
@@ -2470,7 +2470,7 @@ public class MainActivity extends Activity implements
 
 
     public boolean isAppInstalled(String packageName) {
-        if (packageName.equals(AppShortcut.ACTION_PACKAGE)) return true;
+        if (packageName.equals(AppLauncher.ACTION_PACKAGE)) return true;
         try {
             getPackageManager().getApplicationInfo(packageName, 0);
             return true;

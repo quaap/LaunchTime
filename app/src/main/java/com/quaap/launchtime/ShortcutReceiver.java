@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.quaap.launchtime.apps.AppShortcut;
+import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconCache;
@@ -87,7 +87,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
             catID = Categories.getCategoryForUri(context, uri.toString());
         }
 
-        AppShortcut appshortcut = AppShortcut.createActionLink(action, uri,label, catID);
+        AppLauncher appshortcut = AppLauncher.createActionLink(action, uri,label, catID);
         db.addApp(appshortcut);
 
         if (bitmap!=null) {
@@ -109,7 +109,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
         String catID = Categories.getCategoryForComponent(context, cn, true);
 
-        AppShortcut appshortcut = AppShortcut.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
+        AppLauncher appshortcut = AppLauncher.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
         db.addApp(appshortcut);
 
         if (bitmap!=null) {

@@ -10,9 +10,9 @@ import android.widget.HorizontalScrollView;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
+import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.DefaultApps;
 import com.quaap.launchtime.R;
-import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.db.DB;
 
 import java.util.ArrayList;
@@ -73,11 +73,11 @@ public class QuickRow {
     }
 
 
-    public boolean appAlreadyHere(AppShortcut app) {
+    public boolean appAlreadyHere(AppLauncher app) {
         //prevent copies of the same app on the quickrow
         for (int i = 0; i < mQuickRow.getChildCount(); i++) {
 
-            AppShortcut inbar = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+            AppLauncher inbar = (AppLauncher) mQuickRow.getChildAt(i).getTag();
             if (app.getLinkBaseActivityName().equals(inbar.getLinkBaseActivityName())) {
                 return true;
             }
@@ -89,17 +89,17 @@ public class QuickRow {
         return other == mQuickRow;
     }
 
-    public void processQuickApps(List<AppShortcut> shortcuts, PackageManager packageMan) {
-        List<AppShortcut> quickRowApps = new ArrayList<>();
+    public void processQuickApps(List<AppLauncher> shortcuts, PackageManager packageMan) {
+        List<AppLauncher> quickRowApps = new ArrayList<>();
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
 
         DefaultApps.checkDefaultApps(mQuickRow.getContext(), shortcuts, quickRowOrder, mQuickRow);
 
 
-        for (AppShortcut app : shortcuts) {
+        for (AppLauncher app : shortcuts) {
 
             if (quickRowOrder.contains(app.getComponentName())) {
-                AppShortcut qapp = AppShortcut.createAppShortcut(app);
+                AppLauncher qapp = AppLauncher.createAppShortcut(app);
                 qapp.loadAppIconAsync(mQuickRow.getContext(), packageMan);
                 quickRowApps.add(qapp);
             }
@@ -108,7 +108,7 @@ public class QuickRow {
 
         mQuickRow.removeAllViews();
         for (ComponentName actvname : quickRowOrder) {
-            for (AppShortcut app : quickRowApps) {
+            for (AppLauncher app : quickRowApps) {
                 if (app.getComponentName().equals(actvname)) {
                     ViewGroup item = mMainActivity.getShortcutView(app, true);
                     if (item!=null) {
@@ -124,7 +124,7 @@ public class QuickRow {
 
     public void removeFromQuickApps(ComponentName actvname) {
         for (int i = mQuickRow.getChildCount()-1; i>=0; i--) {
-            AppShortcut app = (AppShortcut) mQuickRow.getChildAt(i).getTag();
+            AppLauncher app = (AppLauncher) mQuickRow.getChildAt(i).getTag();
             if (app != null && actvname.equals(app.getComponentName())) {
                 mQuickRow.removeView(mQuickRow.getChildAt(i));
             }

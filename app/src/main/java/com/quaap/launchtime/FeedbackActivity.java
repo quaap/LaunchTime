@@ -35,7 +35,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quaap.launchtime.apps.AppShortcut;
+import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.HttpUtils;
 import com.quaap.launchtime.ui.QuickRow;
@@ -52,8 +52,8 @@ public class FeedbackActivity extends Activity {
 
     private LinkedHashMap<String,String> scrubbednames = new LinkedHashMap<>();
     private Map<String,Boolean> includes = new HashMap<>();
-    List<AppShortcut> apps = new ArrayList<>();
-    Map<String,AppShortcut> appMap = new HashMap<>();
+    List<AppLauncher> apps = new ArrayList<>();
+    Map<String,AppLauncher> appMap = new HashMap<>();
     String version;
     String appname;
 
@@ -136,7 +136,7 @@ public class FeedbackActivity extends Activity {
         Collections.sort(actnames);
 
         for (ComponentName componentName: actnames) {
-            AppShortcut app = db.getApp(componentName);
+            AppLauncher app = db.getApp(componentName);
             if (app==null) continue;
             apps.add(app);
 
@@ -225,7 +225,7 @@ public class FeedbackActivity extends Activity {
             Boolean checked = includes.get(scrubbed);
             if (checked==null || checked){
                 sb.append(scrubbed);
-                AppShortcut app = appMap.get(actvname);
+                AppLauncher app = appMap.get(actvname);
                 if (app!=null) {
                     sb.append(":");
                     sb.append(app.getCategory());
@@ -258,7 +258,7 @@ public class FeedbackActivity extends Activity {
             CheckBox includeit = (CheckBox)convertView.findViewById(R.id.info_include);
             TextView pcknameview = (TextView)convertView.findViewById(R.id.item_text);
             TextView catnameview = (TextView)convertView.findViewById(R.id.item_cat);
-            final AppShortcut app = appMap.get(activityname);
+            final AppLauncher app = appMap.get(activityname);
             if (app!=null) {
                 catnameview.setText(app.getCategory());
             } else {

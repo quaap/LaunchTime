@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.quaap.launchtime.apps.AppShortcut;
+import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.db.DB;
 
@@ -57,8 +57,8 @@ public class LaunchReceiver extends BroadcastReceiver {
 
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-                    AppShortcut.removeAppShortcut(cn);
-                    AppShortcut app = AppShortcut.createAppShortcut(context, context.getPackageManager(), ri, category, prefs.getBoolean("prefs_autocat", true));
+                    AppLauncher.removeAppShortcut(cn);
+                    AppLauncher app = AppLauncher.createAppShortcut(context, context.getPackageManager(), ri, category, prefs.getBoolean("prefs_autocat", true));
 
 
                     if (db.addApp(app)) {

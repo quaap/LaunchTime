@@ -36,72 +36,72 @@ import java.util.Map;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
-public class AppShortcut implements Comparable<AppShortcut> {
+public class AppLauncher implements Comparable<AppLauncher> {
 
 
-    private static Map<ComponentName,AppShortcut> mAppShortcuts = new HashMap<>();
+    private static Map<ComponentName,AppLauncher> mAppShortcuts = new HashMap<>();
     public static final String LINK_SEP = ":IS_APP_LINK:";
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
 
 
-    public static AppShortcut createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
-        AppShortcut app = mAppShortcuts.get(new ComponentName(packageName, activityName));
+    public static AppLauncher createAppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
+        AppLauncher app = mAppShortcuts.get(new ComponentName(packageName, activityName));
         if (app == null) {
-            app = new AppShortcut(activityName, packageName, label, category, isWidget);
+            app = new AppLauncher(activityName, packageName, label, category, isWidget);
             mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
+    public static AppLauncher createAppShortcut(Context context, PackageManager pm, ResolveInfo ri) {
         return createAppShortcut(context, pm, ri, null, true);
     }
 
-    public static AppShortcut createAppShortcut(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
+    public static AppLauncher createAppShortcut(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
         String activityName = ri.activityInfo.name;
-        AppShortcut app = mAppShortcuts.get(new ComponentName(ri.activityInfo.packageName, activityName));
+        AppLauncher app = mAppShortcuts.get(new ComponentName(ri.activityInfo.packageName, activityName));
         if (app == null) {
-            app = new AppShortcut(context, pm, ri, category, autocat);
+            app = new AppLauncher(context, pm, ri, category, autocat);
             mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppShortcut createAppShortcut(AppShortcut shortcut) {
+    public static AppLauncher createAppShortcut(AppLauncher shortcut) {
         return createAppShortcut(shortcut, false);
     }
 
-    public static AppShortcut createAppShortcut(AppShortcut shortcut, boolean copyOrig) {
-        return new AppShortcut(shortcut, copyOrig);
+    public static AppLauncher createAppShortcut(AppLauncher shortcut, boolean copyOrig) {
+        return new AppLauncher(shortcut, copyOrig);
     }
 
 
-    public static AppShortcut createActionLink(String activityName, Uri linkUri, String packageName, String label, String category) {
+    public static AppLauncher createActionLink(String activityName, Uri linkUri, String packageName, String label, String category) {
         activityName = makeLink(activityName, linkUri);
-        AppShortcut app = mAppShortcuts.get(new ComponentName(packageName, activityName));
+        AppLauncher app = mAppShortcuts.get(new ComponentName(packageName, activityName));
         if (app == null) {
-            app = new AppShortcut(activityName, packageName, label, category, false);
+            app = new AppLauncher(activityName, packageName, label, category, false);
             mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppShortcut createActionLink(String actionName, Uri linkUri, String label, String category) {
+    public static AppLauncher createActionLink(String actionName, Uri linkUri, String label, String category) {
 
         actionName = makeLink(actionName, linkUri);
-        AppShortcut app = mAppShortcuts.get(new ComponentName(ACTION_PACKAGE, actionName));
+        AppLauncher app = mAppShortcuts.get(new ComponentName(ACTION_PACKAGE, actionName));
         if (app == null) {
-            app = new AppShortcut(actionName, ACTION_PACKAGE, label, category, false);
+            app = new AppLauncher(actionName, ACTION_PACKAGE, label, category, false);
             mAppShortcuts.put(app.getComponentName(), app);
         }
         return app;
     }
 
-    public static AppShortcut getAppShortcut(ComponentName activityName) {
+    public static AppLauncher getAppShortcut(ComponentName activityName) {
         return mAppShortcuts.get(activityName);
     }
 
-    public static AppShortcut removeAppShortcut(ComponentName activityName) {
+    public static AppLauncher removeAppShortcut(ComponentName activityName) {
         return mAppShortcuts.remove(activityName);
     }
 
@@ -120,7 +120,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
 
 
-    private AppShortcut(String activityName, String packageName, String label, String category, boolean isWidget) {
+    private AppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
         mPackageName = packageName;
         mLabel = label;
@@ -132,7 +132,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
 
-    private AppShortcut(AppShortcut shortcut, boolean copyOrig) {
+    private AppLauncher(AppLauncher shortcut, boolean copyOrig) {
         mActivityName = copyOrig ? shortcut.getLinkBaseActivityName() : shortcut.getActivityName();
         mPackageName = shortcut.getPackageName();
         mLabel = shortcut.getLabel();
@@ -145,7 +145,7 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
 
-    private AppShortcut(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
+    private AppLauncher(Context context, PackageManager pm, ResolveInfo ri, String category, boolean autocat) {
         mActivityName = ri.activityInfo.name;
         mPackageName = ri.activityInfo.packageName;
         mLabel = ri.loadLabel(pm).toString();
@@ -178,8 +178,8 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
     private static final String linkuri = "_link";
 
-    public AppShortcut makeAppLink() {
-        return AppShortcut.createActionLink(getLinkBaseActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), getPackageName(), getLabel(), getCategory());
+    public AppLauncher makeAppLink() {
+        return AppLauncher.createActionLink(getLinkBaseActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), getPackageName(), getLabel(), getCategory());
     }
 
     public boolean isAppLink() {
@@ -256,8 +256,8 @@ public class AppShortcut implements Comparable<AppShortcut> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof AppShortcut) {
-            return getComponentName().equals(((AppShortcut) obj).getComponentName());
+        if (obj instanceof AppLauncher) {
+            return getComponentName().equals(((AppLauncher) obj).getComponentName());
         }
         return super.equals(obj);
     }
@@ -268,8 +268,8 @@ public class AppShortcut implements Comparable<AppShortcut> {
     }
 
     @Override
-    public int compareTo(@NonNull AppShortcut appShortcut) {
-        return this.mLabel.toLowerCase(Locale.getDefault()).compareTo(appShortcut.mLabel.toLowerCase(Locale.getDefault()));
+    public int compareTo(@NonNull AppLauncher appLauncher) {
+        return this.mLabel.toLowerCase(Locale.getDefault()).compareTo(appLauncher.mLabel.toLowerCase(Locale.getDefault()));
     }
 
 

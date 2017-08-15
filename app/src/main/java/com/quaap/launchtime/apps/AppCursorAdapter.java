@@ -157,16 +157,16 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
         }
 
         final ViewHolder viewholder = holder;
-        new AsyncTask<Void,Void,AppShortcut>() {
+        new AsyncTask<Void,Void,AppLauncher>() {
 
             @Override
-            protected AppShortcut doInBackground(Void... voids) {
+            protected AppLauncher doInBackground(Void... voids) {
 
                 return db().getApp(new ComponentName(pkgName,activityName));
             }
 
             @Override
-            protected void onPostExecute(AppShortcut app) {
+            protected void onPostExecute(AppLauncher app) {
                 super.onPostExecute(app);
                 if (app != null) {
                     app.loadAppIconAsync(context, context.getPackageManager());

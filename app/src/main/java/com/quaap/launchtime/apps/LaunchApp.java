@@ -50,7 +50,7 @@ public class LaunchApp {
         }
     }
 
-    public void launchApp(final AppShortcut app) {
+    public void launchApp(final AppLauncher app) {
         String activityname = app.getLinkBaseActivityName();
 
         try {
@@ -78,7 +78,7 @@ public class LaunchApp {
         //showButtonBar(false, true);
     }
 
-    public Intent getAppIntent(final AppShortcut app) {
+    public Intent getAppIntent(final AppLauncher app) {
         String activityname = app.getLinkBaseActivityName();
         String packagename = app.getPackageName();
         String uristr = null;
@@ -122,7 +122,7 @@ public class LaunchApp {
 
     }
 
-    public boolean isValidActivity(AppShortcut app) {
+    public boolean isValidActivity(AppLauncher app) {
         return isValidActivity(getAppIntent(app));
     }
 

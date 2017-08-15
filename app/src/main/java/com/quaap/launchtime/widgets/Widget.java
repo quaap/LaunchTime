@@ -12,7 +12,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.quaap.launchtime.apps.AppShortcut;
+import com.quaap.launchtime.apps.AppLauncher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,7 @@ public class Widget {
     }
 
 
-    public AppWidgetHostView loadWidget(AppShortcut app) {
+    public AppWidgetHostView loadWidget(AppLauncher app) {
         ComponentName cn = new ComponentName(app.getPackageName(), app.getActivityName());
 
         Log.d("LaunchWidgeth", "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());

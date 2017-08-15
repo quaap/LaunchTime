@@ -31,7 +31,7 @@ public class DefaultApps {
 
     //QuickBar
 
-    public static void checkDefaultApps(final Context context, List<AppShortcut> shortcuts, List<ComponentName> quickRowOrder, View quickRow) {
+    public static void checkDefaultApps(final Context context, List<AppLauncher> shortcuts, List<ComponentName> quickRowOrder, View quickRow) {
         if (quickRowOrder.isEmpty()) {
             Map<String, List<String>> defactivities = getDefaultActivities(context);
             boolean addeddefault = false;
@@ -40,10 +40,10 @@ public class DefaultApps {
                 if (tests.size() > max) max = tests.size();
             }
 
-            AppShortcut firstapp = null;
+            AppLauncher firstapp = null;
             for (int i = 0; i < max; i++) { // try the tests in order.
 
-                for (AppShortcut app : shortcuts) {
+                for (AppLauncher app : shortcuts) {
                     if (firstapp == null) firstapp = app;
                     //Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
                     //try the app for each one of the activities
@@ -87,7 +87,7 @@ public class DefaultApps {
         }
     }
 
-    public static boolean contains(AppShortcut app, String test) {
+    public static boolean contains(AppLauncher app, String test) {
         return app.getActivityName().toLowerCase().contains(test.toLowerCase())
                 || app.getPackageName().toLowerCase().contains(test.toLowerCase());
     }
