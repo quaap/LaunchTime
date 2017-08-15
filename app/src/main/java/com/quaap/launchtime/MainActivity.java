@@ -2436,13 +2436,15 @@ public class MainActivity extends Activity implements
                 }
                 List<String> kidcodearr = Arrays.asList(kidcode.split("(?!^)"));
                 String shuffled;
+                int i = 0;
                 do {
                     Collections.shuffle(kidcodearr);
                     shuffled = "";
                     for (String letter : kidcodearr) {
                         shuffled += letter;
                     }
-                } while (kidcode.equals(shuffled));
+                    if (i++>100) break;
+                } while (kidcode.equals(shuffled) || (new StringBuilder(kidcode)).reverse().toString().equals(shuffled));
                 kidcode = shuffled;
 
                 kid_code_txt.setText(getString(R.string.kid_escape_text, kidcode) );
