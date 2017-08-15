@@ -71,7 +71,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quaap.launchtime.apps.AppLauncher;
+import com.quaap.launchtime.apps.LaunchApp;
 import com.quaap.launchtime.apps.AppShortcut;
 import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.components.Categories;
@@ -155,7 +155,7 @@ public class MainActivity extends Activity implements
     private boolean mChildLock;
     private boolean mChildLockSetup;
 
-    private AppLauncher mAppLauncher;
+    private LaunchApp mLaunchApp;
 
     private QuickRow mQuickRow;
 
@@ -213,7 +213,7 @@ public class MainActivity extends Activity implements
 
         readPrefs();
 
-        mAppLauncher = new AppLauncher(this);
+        mLaunchApp = new LaunchApp(this);
 
         // get all the apps installed and process them
         loadApplications();
@@ -587,8 +587,8 @@ public class MainActivity extends Activity implements
         }
     }
 
-    public AppLauncher getAppLauncher() {
-        return mAppLauncher;
+    public LaunchApp getAppLauncher() {
+        return mLaunchApp;
     }
 
     // runs at create time to read all apps and add them to our db, if not there already
@@ -750,7 +750,7 @@ public class MainActivity extends Activity implements
     private boolean addAppToIconSheet(GridLayout iconSheet, AppShortcut app, int pos, boolean reuse) {
         if (app != null) {
             try {
-                if ((app.isWidget() && isAppInstalled(app.getPackageName())) || mAppLauncher.isValidActivity(app)) {
+                if ((app.isWidget() && isAppInstalled(app.getPackageName())) || mLaunchApp.isValidActivity(app)) {
                     ViewGroup item = getShortcutView(app, false, reuse);
                     if (item != null) {
                         if (!app.iconLoaded()) {
@@ -1050,7 +1050,7 @@ public class MainActivity extends Activity implements
                 @Override
                 public void onClick(View view) {
                     view.startAnimation(itemClickedAnim);
-                    mAppLauncher.launchApp(app);
+                    mLaunchApp.launchApp(app);
                     showButtonBar(false, true);
                 }
             });
@@ -1715,7 +1715,7 @@ public class MainActivity extends Activity implements
                     appmenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            mAppLauncher.launchApp(appitem);
+                            mLaunchApp.launchApp(appitem);
                             showButtonBar(false, true);
                             dismissActionPopup();
                             return true;

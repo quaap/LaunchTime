@@ -27,14 +27,14 @@ import java.util.List;
  * See the GNU General Public License for more details.
  */
 
-public class AppLauncher {
+public class LaunchApp {
 
 
-    private static String TAG = "LT AppLauncher";
+    private static String TAG = "LT LaunchApp";
 
     private Activity activity;
 
-    public AppLauncher(Activity activity) {
+    public LaunchApp(Activity activity) {
         this.activity = activity;
     }
 
