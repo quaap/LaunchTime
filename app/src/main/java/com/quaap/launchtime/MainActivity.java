@@ -751,7 +751,7 @@ public class MainActivity extends Activity implements
         if (app != null) {
             try {
                 if ((app.isWidget() && isAppInstalled(app.getPackageName())) || mLaunchApp.isValidActivity(app)) {
-                    ViewGroup item = getShortcutView(app, false, reuse);
+                    ViewGroup item = getLauncherView(app, false, reuse);
                     if (item != null) {
                         if (!app.iconLoaded()) {
                             app.loadAppIconAsync(this, mPackageMan);
@@ -781,8 +781,8 @@ public class MainActivity extends Activity implements
 
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
 
-        int w = getShortCutWidth(app);
-        int h = getShortCutHeight(app);
+        int w = getLauncherWidth(app);
+        int h = getLauncherHeight(app);
 
         if (w>0 || h>0) {
             float sw = getResources().getDimension(R.dimen.launcher_width);
@@ -984,13 +984,13 @@ public class MainActivity extends Activity implements
 
     
     
-    public ViewGroup getShortcutView(final AppLauncher app, boolean smallIcon) {
-        return getShortcutView(app, smallIcon, true);
+    public ViewGroup getLauncherView(final AppLauncher app, boolean smallIcon) {
+        return getLauncherView(app, smallIcon, true);
     }
 
 
 
-    public ViewGroup getShortcutView(final AppLauncher app, boolean smallIcon, boolean reuse) {
+    public ViewGroup getLauncherView(final AppLauncher app, boolean smallIcon, boolean reuse) {
 
 
         if (smallIcon) reuse = false;
@@ -1018,7 +1018,7 @@ public class MainActivity extends Activity implements
             //Log.d(TAG, "MinResize: " + pinfo.minResizeWidth + "," + pinfo.minResizeHeight);
             //Log.d(TAG, "Resizemode: " + pinfo.resizeMode);
 
-            storeShortCutDimen(app, pinfo.minWidth, pinfo.minHeight);
+            storeLauncherDimen(app, pinfo.minWidth, pinfo.minHeight);
 
             ViewGroup parent = (ViewGroup) appwid.getParent();
             if (parent != null) {
@@ -1111,7 +1111,7 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void storeShortCutDimen(AppLauncher app, int width, int height) {
+    private void storeLauncherDimen(AppLauncher app, int width, int height) {
         SharedPreferences.Editor ePrefs = mPrefs.edit();
 
         ePrefs.putInt(app.getActivityName() + "_width", width);
@@ -1122,11 +1122,11 @@ public class MainActivity extends Activity implements
 
     }
 
-    private int getShortCutWidth(AppLauncher app) {
+    private int getLauncherWidth(AppLauncher app) {
         return mPrefs.getInt(app.getActivityName() + "_width", 0);
     }
 
-    private int getShortCutHeight(AppLauncher app) {
+    private int getLauncherHeight(AppLauncher app) {
         return mPrefs.getInt(app.getActivityName() + "_height", 0);
     }
 
@@ -1294,11 +1294,11 @@ public class MainActivity extends Activity implements
             if (mChildLock) return false;
 
             View dragObj = (View) event.getLocalState();
-            boolean isShortcut = true;
+            boolean isLauncher = true;
             boolean isSpecial = false;
             boolean isApplink = false;
             if (dragObj.getTag() == null || !(dragObj.getTag() instanceof AppLauncher)) {
-                isShortcut = false;
+                isLauncher = false;
             } else  {
                 AppLauncher app = (AppLauncher)dragObj.getTag();
                 isSpecial = app.isLink() || app.isWidget();
@@ -1308,7 +1308,7 @@ public class MainActivity extends Activity implements
             if (mCategory.equals(Categories.CAT_SEARCH) && isAncestor(mIconSheet, droppedOn)) return false;
 
             boolean nocolor = droppedOn instanceof GridLayout || droppedOn == mRemoveDropzone
-                    || droppedOn == mLinkDropzone || !isShortcut || mQuickRow.isSelf(mDragDropSource)
+                    || droppedOn == mLinkDropzone || !isLauncher || mQuickRow.isSelf(mDragDropSource)
                     || isAncestor(mSearchBox.getSearchView(), droppedOn);
 
             //prevent dropping categories anywhere but category area and trash
@@ -1326,7 +1326,7 @@ public class MainActivity extends Activity implements
                 case DragEvent.ACTION_DRAG_LOCATION:
                     //scroll the scrollview
 
-                    if (isShortcut) {
+                    if (isLauncher) {
                         scrollOnDrag(droppedOn, event, mIconSheetScroller);
                         hscrollOnDrag(droppedOn, event, mQuickRow.getScroller());
 
@@ -1364,7 +1364,7 @@ public class MainActivity extends Activity implements
                     }
 
                     try {
-                        if (handleDrop(droppedOn, dragObj, isShortcut)) return true;
+                        if (handleDrop(droppedOn, dragObj, isLauncher)) return true;
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage(), e);
                     }
@@ -1381,7 +1381,7 @@ public class MainActivity extends Activity implements
             return true;
         }
 
-        private boolean handleDrop(View droppedOn, View dragObj, boolean isShortcut) {
+        private boolean handleDrop(View droppedOn, View dragObj, boolean isLauncher) {
             if (mChildLock) return false;
 
             ViewGroup target;
@@ -1396,7 +1396,7 @@ public class MainActivity extends Activity implements
                     removeDroppedItem(dragObj);
                     mSearchBox.refreshSearch(true);
 
-                } else if (mDragDropSource == mCategoriesLayout && !isShortcut) {
+                } else if (mDragDropSource == mCategoriesLayout && !isLauncher) {
                     //delete category tab
                     promptDeleteCategory((String) dragObj.getTag());
 
@@ -1409,7 +1409,7 @@ public class MainActivity extends Activity implements
                 }
                 return true;
             } else if (droppedOn == mLinkDropzone) {
-                if (isShortcut) {
+                if (isLauncher) {
                     AppLauncher app = (AppLauncher)dragObj.getTag();
                     Log.d(TAG, "Making link: " + app.getActivityName() + " " + app.getPackageName());
                     AppLauncher applauncher = app.makeAppLink();
@@ -1465,10 +1465,10 @@ public class MainActivity extends Activity implements
                         }
                     }
                     //make a copy of the launcher to put on the quickbar
-                    dragObj = getShortcutView(AppLauncher.createAppLauncher((AppLauncher) dragObj.getTag(), true), true);
+                    dragObj = getLauncherView(AppLauncher.createAppLauncher((AppLauncher) dragObj.getTag(), true), true);
 
                 } else {
-                    dragObj = getShortcutView(AppLauncher.createAppLauncher((AppLauncher) dragObj.getTag()), false, false);
+                    dragObj = getLauncherView(AppLauncher.createAppLauncher((AppLauncher) dragObj.getTag()), false, false);
                 }
             }
 

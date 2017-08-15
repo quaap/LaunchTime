@@ -2,7 +2,7 @@
 
     <!-- Note: there are some translatable strings in prefs.xml as well -->
 
-    <string name="app_name">LaunchTime 0.6</string>
+    <string name="app_name">LaunchTime</string>
 
 
     <string name="remove_launcher">Remove</string>

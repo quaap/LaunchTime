@@ -89,14 +89,14 @@ public class QuickRow {
         return other == mQuickRow;
     }
 
-    public void processQuickApps(List<AppLauncher> shortcuts, PackageManager packageMan) {
+    public void processQuickApps(List<AppLauncher> launchers, PackageManager packageMan) {
         List<AppLauncher> quickRowApps = new ArrayList<>();
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
 
-        DefaultApps.checkDefaultApps(mQuickRow.getContext(), shortcuts, quickRowOrder, mQuickRow);
+        DefaultApps.checkDefaultApps(mQuickRow.getContext(), launchers, quickRowOrder, mQuickRow);
 
 
-        for (AppLauncher app : shortcuts) {
+        for (AppLauncher app : launchers) {
 
             if (quickRowOrder.contains(app.getComponentName())) {
                 AppLauncher qapp = AppLauncher.createAppLauncher(app);
@@ -110,7 +110,7 @@ public class QuickRow {
         for (ComponentName actvname : quickRowOrder) {
             for (AppLauncher app : quickRowApps) {
                 if (app.getComponentName().equals(actvname)) {
-                    ViewGroup item = mMainActivity.getShortcutView(app, true);
+                    ViewGroup item = mMainActivity.getLauncherView(app, true);
                     if (item!=null) {
                         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
                         lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);

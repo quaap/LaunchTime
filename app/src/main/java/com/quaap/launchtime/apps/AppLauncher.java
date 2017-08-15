@@ -67,12 +67,12 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return app;
     }
 
-    public static AppLauncher createAppLauncher(AppLauncher shortcut) {
-        return createAppLauncher(shortcut, false);
+    public static AppLauncher createAppLauncher(AppLauncher launcher) {
+        return createAppLauncher(launcher, false);
     }
 
-    public static AppLauncher createAppLauncher(AppLauncher shortcut, boolean copyOrig) {
-        return new AppLauncher(shortcut, copyOrig);
+    public static AppLauncher createAppLauncher(AppLauncher launcher, boolean copyOrig) {
+        return new AppLauncher(launcher, copyOrig);
     }
 
 
@@ -132,15 +132,15 @@ public class AppLauncher implements Comparable<AppLauncher> {
     }
 
 
-    private AppLauncher(AppLauncher shortcut, boolean copyOrig) {
-        mActivityName = copyOrig ? shortcut.getLinkBaseActivityName() : shortcut.getActivityName();
-        mPackageName = shortcut.getPackageName();
-        mLabel = shortcut.getLabel();
-        mCategory = shortcut.getCategory();
+    private AppLauncher(AppLauncher launcher, boolean copyOrig) {
+        mActivityName = copyOrig ? launcher.getLinkBaseActivityName() : launcher.getActivityName();
+        mPackageName = launcher.getPackageName();
+        mLabel = launcher.getLabel();
+        mCategory = launcher.getCategory();
         if (!copyOrig) {
-            mIconDrawable = shortcut.mIconDrawable;
+            mIconDrawable = launcher.mIconDrawable;
         }
-        mWidget = shortcut.mWidget;
+        mWidget = launcher.mWidget;
 
     }
 

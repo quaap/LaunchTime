@@ -170,7 +170,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
                 super.onPostExecute(app);
                 if (app != null) {
                     app.loadAppIconAsync(context, context.getPackageManager());
-                    View v = mMain.getShortcutView(app, false, false);
+                    View v = mMain.getLauncherView(app, false, false);
 
                     viewholder.appholder.removeAllViews();
                     if (v!=null) {

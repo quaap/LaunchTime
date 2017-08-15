@@ -31,7 +31,7 @@ public class DefaultApps {
 
     //QuickBar
 
-    public static void checkDefaultApps(final Context context, List<AppLauncher> shortcuts, List<ComponentName> quickRowOrder, View quickRow) {
+    public static void checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder, View quickRow) {
         if (quickRowOrder.isEmpty()) {
             Map<String, List<String>> defactivities = getDefaultActivities(context);
             boolean addeddefault = false;
@@ -43,7 +43,7 @@ public class DefaultApps {
             AppLauncher firstapp = null;
             for (int i = 0; i < max; i++) { // try the tests in order.
 
-                for (AppLauncher app : shortcuts) {
+                for (AppLauncher app : launchers) {
                     if (firstapp == null) firstapp = app;
                     //Log.d("Trying: ", app.getActivityName() + " " + app.getPackageName());
                     //try the app for each one of the activities

@@ -437,14 +437,14 @@ public class DB extends SQLiteOpenHelper {
         return apps;
     }
 
-    public boolean addApp(AppLauncher shortcut) {
-        return addApp(shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
+    public boolean addApp(AppLauncher launcher) {
+        return addApp(launcher.getActivityName(), launcher.getPackageName(), launcher.getLabel(), launcher.getCategory(), launcher.isWidget());
     }
 
-    public void addApps(List<AppLauncher> shortcuts) {
+    public void addApps(List<AppLauncher> launchers) {
         SQLiteDatabase db = this.getWritableDatabase();
-        for (AppLauncher shortcut : shortcuts) {
-            addApp(db, shortcut.getActivityName(), shortcut.getPackageName(), shortcut.getLabel(), shortcut.getCategory(), shortcut.isWidget());
+        for (AppLauncher launcher : launchers) {
+            addApp(db, launcher.getActivityName(), launcher.getPackageName(), launcher.getLabel(), launcher.getCategory(), launcher.isWidget());
         }
     }
 

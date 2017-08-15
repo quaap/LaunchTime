@@ -87,11 +87,11 @@ public class ShortcutReceiver extends BroadcastReceiver {
             catID = Categories.getCategoryForUri(context, uri.toString());
         }
 
-        AppLauncher appshortcut = AppLauncher.createActionLink(action, uri,label, catID);
-        db.addApp(appshortcut);
+        AppLauncher appLauncher = AppLauncher.createActionLink(action, uri,label, catID);
+        db.addApp(appLauncher);
 
         if (bitmap!=null) {
-            IconCache.saveBitmap(context, appshortcut.getActivityName(), bitmap);
+            IconCache.saveBitmap(context, appLauncher.getActivityName(), bitmap);
         }
 
     }
@@ -109,11 +109,11 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
         String catID = Categories.getCategoryForComponent(context, cn, true);
 
-        AppLauncher appshortcut = AppLauncher.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
-        db.addApp(appshortcut);
+        AppLauncher appLauncher = AppLauncher.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
+        db.addApp(appLauncher);
 
         if (bitmap!=null) {
-            IconCache.saveBitmap(context, appshortcut.getActivityName(), bitmap);
+            IconCache.saveBitmap(context, appLauncher.getActivityName(), bitmap);
         }
 
     }
