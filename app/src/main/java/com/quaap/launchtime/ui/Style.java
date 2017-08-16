@@ -38,6 +38,10 @@ public class Style {
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 16;
 
+    private int launcherIconSize = 55;
+    private int launcherSize = 80;
+    private int launcherFontSize = 12;
+
     private SharedPreferences mAppPreferences;
 
     private Context mContext;
@@ -87,6 +91,18 @@ public class Style {
         }
     }
 
+    public int getLauncherIconSize() {
+        return launcherIconSize;
+    }
+
+    public int getLauncherSize() {
+        return launcherSize;
+    }
+
+    public int getLauncherFontSize() {
+        return launcherFontSize;
+    }
+
     public void readPrefs() {
         //Checks application preferences and adjust accordingly
 
@@ -111,6 +127,28 @@ public class Style {
                 categoryTabFontSize = 20;
                 break;
         }
+
+
+        int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));
+        switch (iconsizePref) {
+            case 0:  //small
+                launcherIconSize = 40;
+                launcherFontSize = 11;
+                break;
+            case 1:  //medium
+                launcherIconSize = 55;
+                launcherFontSize = 13;
+                break;
+            case 2:  //large
+                launcherIconSize = 70;
+                launcherFontSize = 14;
+                break;
+            case 3: //x-large
+                launcherIconSize = 90;
+                launcherFontSize = 15;
+                break;
+        }
+        launcherSize = (int)(launcherIconSize*1.3);
 
         cattabBackground = mAppPreferences.getInt("cattab_background", getResColor(R.color.cattab_background));
         cattabSelectedBackground = mAppPreferences.getInt("cattabselected_background", getResColor(R.color.cattabselected_background));

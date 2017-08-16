@@ -326,7 +326,7 @@ public class MainActivity extends Activity implements
 
         if (key!=null) {
             //Delete our icon cache so the labels can be regenerated.
-            if (key.equals("textcolor")) {
+            if (key.equals("textcolor") || key.equals("preference_iconsize")) {
                 mAppLauncherViews.clear();
             }
             checkConfig();
@@ -551,7 +551,8 @@ public class MainActivity extends Activity implements
         try {
 
             mScreenDim = getScreenDimensions();
-            float launcherw = getResources().getDimension(R.dimen.launcher_width);
+            //float launcherw = getResources().getDimension(R.dimen.launcher_width);
+            float launcherw = dipToPx(mStyle.getLauncherSize());
             float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
 
             mColumns = (int)((mScreenDim.x - catwidth)/(launcherw + 2));
@@ -785,7 +786,8 @@ public class MainActivity extends Activity implements
         int h = getLauncherHeight(app);
 
         if (w>0 || h>0) {
-            float sw = getResources().getDimension(R.dimen.launcher_width);
+            //float sw = getResources().getDimension(R.dimen.launcher_width);
+            float sw = dipToPx(mStyle.getLauncherSize());
             //float sh = getResources().getDimension(R.dimen.launcher_height);
 
             //int width = (int)(sw + 20) * mColumns;
@@ -845,6 +847,12 @@ public class MainActivity extends Activity implements
     public int pxToDip(float pixel){
         float scale = getResources().getDisplayMetrics().density;
         return (int)((pixel - 0.5f)/scale);
+    }
+
+    public int dipToPx(float dip){
+        float scale = getResources().getDisplayMetrics().density;
+        return (int)(dip * scale + .5f);
+       // return (int)((pixel - 0.5f)/scale);
     }
 
     public void changeColumnCount(GridLayout gridLayout, int columnCount) {
@@ -1048,6 +1056,8 @@ public class MainActivity extends Activity implements
 
             item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon ? R.layout.launcher_small_icon : R.layout.launcher_icon, (ViewGroup) null);
 
+
+
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1058,14 +1068,23 @@ public class MainActivity extends Activity implements
             });
 
             ImageView iconImage = (ImageView) item.findViewById(R.id.launcher_icon);
-            app.setIconImage(iconImage);
-            app.loadAppIconAsync(this,mPackageMan);
 
             if (!smallIcon) {
+
+                setLayoutSize(item, dipToPx(mStyle.getLauncherSize()), dipToPx(mStyle.getLauncherSize()));
+
                 TextView iconLabel = (TextView) item.findViewById(R.id.launcher_text);
                 iconLabel.setTextColor(mStyle.getTextColor());
                 iconLabel.setText(app.getLabel());
+
+                setLayoutSize(iconImage, dipToPx(mStyle.getLauncherIconSize()), dipToPx(mStyle.getLauncherIconSize()));
+
+                iconLabel.setTextSize(mStyle.getLauncherFontSize()*.92f);
+                setLayoutSize(iconLabel, dipToPx(mStyle.getLauncherSize()), ViewGroup.LayoutParams.WRAP_CONTENT);
+
             }
+            app.setIconImage(iconImage);
+            app.loadAppIconAsync(this,mPackageMan);
 
         }
         item.setTag(app);
@@ -1077,6 +1096,17 @@ public class MainActivity extends Activity implements
             mAppLauncherViews.put(app, item);
         }
         return item;
+    }
+
+    private void setLayoutSize(View view, double width, double height) {
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        if (lp!=null) {
+            lp.height = (int) height;
+            lp.width = (int) width;
+        } else {
+            lp = new ViewGroup.LayoutParams((int) width, (int) height);
+        }
+        view.setLayoutParams(lp);
     }
 
     private void setupWidget() {

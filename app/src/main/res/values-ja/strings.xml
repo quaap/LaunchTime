@@ -128,7 +128,8 @@
     <string name="pref_system">システム設定</string>
     <string name="pref_system_summ">システム設定を表示します</string>
     <string name="pref_tabsize">カテゴリタブのサイズ</string>
-    <string name="pref_icontext">アイコン文字色</string>
+    <string name="pref_iconsize">ランチャーのサイズ</string>
+    <string name="pref_icontext">ランチャーのテキストの色</string>
     <string name="pref_tabtext">タブ文字色</string>
     <string name="pref_tabback">タブ背景色</string>
     <string name="pref_tabsel_text">タブで選択したテキストの色</string>

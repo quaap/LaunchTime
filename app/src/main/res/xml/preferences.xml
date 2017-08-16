@@ -98,6 +98,15 @@
             android:entryValues="@array/pref_tab_size_values"
             android:key="preference_tabsize"
             android:summary="%s" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:title="@string/pref_iconsize"
+            android:entries="@array/pref_size_strings"
+            android:entryValues="@array/pref_tab_size_values"
+            android:key="preference_iconsize"
+            android:summary="%s" />
+
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icontext"
             android:key="textcolor"

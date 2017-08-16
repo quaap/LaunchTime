@@ -8,9 +8,9 @@
 
 
     <FrameLayout
-        android:layout_width="@dimen/launcher_width"
-        android:layout_height="@dimen/launcher_height"
         android:id="@+id/icontarget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start">
 
     </FrameLayout>

@@ -130,7 +130,8 @@
     <string name="pref_system">Настройки Устройства</string>
     <string name="pref_system_summ">Показать настройки устройства</string>
     <string name="pref_tabsize">Размер закладки панели</string>
-    <string name="pref_icontext">Цвет текста значка</string>
+    <string name="pref_iconsize">Размер пусковой установки</string>
+    <string name="pref_icontext">Цвет текста пусковой установки</string>
     <string name="pref_tabtext">Цвет текста закладки</string>
     <string name="pref_tabback">Цвет фона закладки</string>
     <string name="pref_tabsel_text">Вкладка выбранного цвета текста</string>
