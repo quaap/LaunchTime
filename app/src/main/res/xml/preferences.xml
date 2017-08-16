@@ -84,6 +84,11 @@
     <PreferenceCategory android:title="@string/pref_color_style">
 
         <ListPreference
+            android:defaultValue="default"
+            android:key="icons-pack"
+            android:title="@string/icons_pack_name" />
+
+        <ListPreference
             android:defaultValue="1"
             android:title="Categories Location"
             android:entries="@array/pref_cat_location_strings"

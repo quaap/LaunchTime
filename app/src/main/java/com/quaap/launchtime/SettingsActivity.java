@@ -1,14 +1,20 @@
 package com.quaap.launchtime;
 
+import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+
+import com.quaap.launchtime.components.IconsHandler;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes
@@ -23,11 +29,17 @@ import android.view.KeyEvent;
  * See the GNU General Public License for more details.
  */
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
+
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         getListView().setBackgroundColor(Color.DKGRAY);
         // Display the fragment as the main content.
@@ -54,6 +66,10 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
+
+            ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
+            setListPreferenceIconsPacksData(iconsPack, this.getActivity());
+
         }
 
     }
@@ -79,5 +95,36 @@ public class SettingsActivity extends PreferenceActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        prefs.registerOnSharedPreferenceChangeListener(this);
+    }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equalsIgnoreCase("icons-pack")) {
+            GlobState.getIconsHandler(this).loadIconsPack(sharedPreferences.getString(key, "default"));
+        }
+    }
+    
+    protected static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
+        IconsHandler iph = GlobState.getIconsHandler(context);
+
+                CharSequence[] entries = new CharSequence[iph.getIconsPacks().size()+1];
+        CharSequence[] entryValues = new CharSequence[iph.getIconsPacks().size()+1];
+
+                int i = 0;
+        entries[0] = context.getString(R.string.icons_pack_default_name);
+        entryValues[0] = "default";
+        for (String packageIconsPack : iph.getIconsPacks().keySet()) {
+            entries[++i] = iph.getIconsPacks().get(packageIconsPack);
+            entryValues[i] = packageIconsPack;
+        }
+
+        lp.setEntries(entries);
+        lp.setDefaultValue("default");
+        lp.setEntryValues(entryValues);
+    }
 }

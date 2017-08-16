@@ -18,12 +18,15 @@ import android.content.Context;
 
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
+import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.db.DB;
 
 
 public class GlobState extends Application implements  DB.DBClosedListener {
 
     private static DB mDB;
+
+    private IconsHandler mIconsHandler;
 
 
     public static GlobState getGlobState(Context context) {
@@ -39,9 +42,13 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         Categories.init(this);
 
         //this.deleteDatabase(DB.DATABASE_NAME);
+        mIconsHandler = new IconsHandler(this);
 
 
+    }
 
+    public static IconsHandler getIconsHandler(Context context) {
+        return ((GlobState) context.getApplicationContext()).mIconsHandler;
     }
 
     public synchronized DB getDB() {
