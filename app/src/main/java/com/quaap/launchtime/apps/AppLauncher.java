@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.IconCache;
@@ -105,6 +106,12 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return mAppLaunchers.remove(activityName);
     }
 
+    public static void clearIcons() {
+        for (AppLauncher app: mAppLaunchers.values()) {
+            app.clearDrawable();
+        }
+        mAppLaunchers.clear();
+    }
 
 
     private String mPackageName;
@@ -254,6 +261,11 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return mIconDrawable;
     }
 
+    public void clearDrawable() {
+        mIconDrawable = null;
+        mIconImage = null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AppLauncher) {
@@ -287,26 +299,33 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 // load the icon
                 Drawable app_icon = null;
 
-                Intent intent;
-                if (isActionLink()) {
-                    String uristr = getLinkUri();
-                    if (uristr==null) {
-                        intent = new Intent(getLinkBaseActivityName());
+
+                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(getComponentName(), android.os.Process.myUserHandle());
+
+                if (app_icon==null) {
+                    Intent intent;
+                    if (isActionLink()) {
+                        String uristr = getLinkUri();
+                        if (uristr == null) {
+                            intent = new Intent(getLinkBaseActivityName());
+                        } else {
+                            intent = new Intent(getLinkBaseActivityName(), Uri.parse(uristr));
+                        }
+
                     } else {
-                        intent = new Intent(getLinkBaseActivityName(), Uri.parse(uristr));
+                        intent = new Intent(Intent.ACTION_MAIN);
+                        intent.setClassName(mPackageName, getLinkBaseActivityName());
                     }
 
-                } else {
-                    intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setClassName(mPackageName, getLinkBaseActivityName());
-                }
-                try {
-                    app_icon = pm.getActivityIcon(intent);
-                } catch (Exception | OutOfMemoryError e) {
-                    Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
-                }
-                if (app_icon == null) {
-                    app_icon = pm.getDefaultActivityIcon();
+
+                    try {
+                        app_icon = pm.getActivityIcon(intent);
+                    } catch (Exception | OutOfMemoryError e) {
+                        Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
+                    }
+                    if (app_icon == null) {
+                        app_icon = pm.getDefaultActivityIcon();
+                    }
                 }
 
 

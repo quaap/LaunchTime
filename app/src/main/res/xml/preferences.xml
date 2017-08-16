@@ -86,6 +86,7 @@
         <ListPreference
             android:defaultValue="default"
             android:key="icons-pack"
+            android:summary="%s"
             android:title="@string/icons_pack_name" />
 
         <ListPreference

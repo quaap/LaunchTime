@@ -85,8 +85,32 @@ public class QuickRow {
         return false;
     }
 
+    public void clearIcons() {
+        for (int i = 0; i < mQuickRow.getChildCount(); i++) {
+
+            AppLauncher inbar = (AppLauncher) mQuickRow.getChildAt(i).getTag();
+            inbar.clearDrawable();
+        }
+    }
+
     public boolean isSelf(View other) {
         return other == mQuickRow;
+    }
+
+    public void repopulate() {
+        final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
+        mQuickRow.removeAllViews();
+
+        for (ComponentName actvname : quickRowOrder) {
+            AppLauncher app = db().getApp(actvname);
+            ViewGroup item = mMainActivity.getLauncherView(app, true);
+            if (item!=null) {
+                GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
+                mQuickRow.addView(item, lp);
+            }
+        }
+
     }
 
     public void processQuickApps(List<AppLauncher> launchers, PackageManager packageMan) {

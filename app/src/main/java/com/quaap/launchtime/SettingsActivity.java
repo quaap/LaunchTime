@@ -29,8 +29,7 @@ import com.quaap.launchtime.components.IconsHandler;
  * See the GNU General Public License for more details.
  */
 
-public class SettingsActivity extends PreferenceActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity {
 
 
     private SharedPreferences prefs;
@@ -98,16 +97,16 @@ public class SettingsActivity extends PreferenceActivity implements
     @Override
     public void onResume() {
         super.onResume();
-        prefs.registerOnSharedPreferenceChangeListener(this);
+      //  prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        if (key.equalsIgnoreCase("icons-pack")) {
-            GlobState.getIconsHandler(this).loadIconsPack(sharedPreferences.getString(key, "default"));
-        }
-    }
+//    @Override
+//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//
+//        if (key.equalsIgnoreCase("icons-pack")) {
+//            GlobState.getIconsHandler(this).loadIconsPack(sharedPreferences.getString(key, "default"));
+//        }
+//    }
     
     protected static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
         IconsHandler iph = GlobState.getIconsHandler(context);
