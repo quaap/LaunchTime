@@ -149,6 +149,7 @@
     <string name="prefs_empty_cats_show">空のカテゴリを表示します</string>
     <string name="prefs_cat_apps">アプリはカテゴリに分類されます</string>
     <string name="prefs_cat_no">アプリは \"その他\" に配置されます</string>
+    <string name="pref_cat_loc_text">カテゴリロケーション</string>
     <string name="pref_cat_loc">カテゴリは %s になります</string>
     <string name="pref_cat_sort">カテゴリの並び替えg</string>
     <string name="pref_cat_sort_on">カテゴリは選択した並び順を記憶します</string>
@@ -163,6 +164,10 @@
     <string name="search_hint">検索します。 \".\" はワイルドカードです</string>
     <string name="widget_alreay">このウィジェットはすでにカテゴリ \"%s\" にあります</string>
 
+
+    <string name="icons_pack_desc">アイコンテーマを選択する</string>
+    <string name="icons_pack_name">アイコンのテーマ</string>
+    <string name="icons_pack_default_name">システムアイコン</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 

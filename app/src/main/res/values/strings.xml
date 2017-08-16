@@ -11,10 +11,6 @@
     <string name="uninstall_canceled">Uninstall cancelled</string>
     <string name="could_not_uninstall">Application could not be uninstalled</string>
 
-    <string name="icons_pack_desc">Choose an icon theme</string>
-    <string name="icons_pack_name">Icons theme</string>
-    <string name="icons_pack_default_name">System icons</string>
-
     <string name="category_Search">Search</string>
     <string name="category_Talk">Comm.</string>
     <string name="category_Games">Games</string>
@@ -152,6 +148,7 @@
     <string name="prefs_empty_cats_show">Empty categories will be shown</string>
     <string name="prefs_cat_apps">Apps will be categorized</string>
     <string name="prefs_cat_no">Apps will be placed in \"Other\"</string>
+    <string name="pref_cat_loc_text">Categories Location</string>
     <string name="pref_cat_loc">Categories will be on the %s</string>
     <string name="pref_cat_sort">Category sorting</string>
     <string name="pref_cat_sort_on">Categories will remember selected sort order</string>
@@ -166,6 +163,10 @@
     <string name="search_hint">Search. \".\" is a wildcard</string>
     <string name="widget_alreay">This widget is already in category \"%s\"</string>
 
+
+    <string name="icons_pack_desc">Choose an icon theme</string>
+    <string name="icons_pack_name">Icons theme</string>
+    <string name="icons_pack_default_name">System icons</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 

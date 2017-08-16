@@ -91,7 +91,7 @@
 
         <ListPreference
             android:defaultValue="right"
-            android:title="Categories Location"
+            android:title="@string/pref_cat_loc_text"
             android:entries="@array/pref_cat_location_strings"
             android:entryValues="@array/pref_cat_location_values"
             android:summary="@string/pref_cat_loc"
