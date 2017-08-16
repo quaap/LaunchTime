@@ -129,23 +129,26 @@ public class Style {
         }
 
 
+        float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
+        float iconfontsize = mContext.getResources().getDimension(R.dimen.launcher_fontsize);
+
         int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));
         switch (iconsizePref) {
             case 0:  //small
-                launcherIconSize = 40;
-                launcherFontSize = 11;
+                launcherIconSize = (int)(iconsize*.9);
+                launcherFontSize = (int)iconfontsize-1;
                 break;
             case 1:  //medium
-                launcherIconSize = 55;
-                launcherFontSize = 13;
+                launcherIconSize = (int)iconsize;
+                launcherFontSize = (int)iconfontsize;
                 break;
             case 2:  //large
-                launcherIconSize = 70;
-                launcherFontSize = 14;
+                launcherIconSize = (int)(iconsize*1.3);
+                launcherFontSize = (int)iconfontsize+1;
                 break;
             case 3: //x-large
-                launcherIconSize = 90;
-                launcherFontSize = 15;
+                launcherIconSize = (int)(iconsize*1.6);
+                launcherFontSize = (int)iconfontsize+2;
                 break;
         }
         launcherSize = (int)(launcherIconSize*1.3);
