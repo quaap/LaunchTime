@@ -109,15 +109,15 @@ public class Style {
         int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
         switch (tabsizePref) {
             case 0:  //small
-                categoryTabPaddingHeight = 12;
+                categoryTabPaddingHeight = 14;
                 categoryTabFontSize = 14;
                 break;
             case 1:  //medium
-                categoryTabPaddingHeight = 16;
+                categoryTabPaddingHeight = 18;
                 categoryTabFontSize = 16;
                 break;
             case 2:  //large
-                categoryTabPaddingHeight = 20;
+                categoryTabPaddingHeight = 22;
                 categoryTabFontSize = 18;
                 break;
             case 3: //x-large
