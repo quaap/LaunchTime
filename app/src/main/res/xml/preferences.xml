@@ -90,7 +90,7 @@
             android:title="@string/icons_pack_name" />
 
         <ListPreference
-            android:defaultValue="1"
+            android:defaultValue="right"
             android:title="Categories Location"
             android:entries="@array/pref_cat_location_strings"
             android:entryValues="@array/pref_cat_location_values"
