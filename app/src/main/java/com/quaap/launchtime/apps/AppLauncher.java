@@ -198,6 +198,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return new ComponentName(mPackageName, mActivityName);
     }
 
+    public ComponentName getBaseComponentName() {
+        return new ComponentName(mPackageName, getLinkBaseActivityName());
+    }
+
     public boolean isLink() {
         return mActivityName.contains(LINK_SEP);
     }
@@ -300,7 +304,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 Drawable app_icon = null;
 
 
-                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(getComponentName(), android.os.Process.myUserHandle());
+                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(getBaseComponentName(), android.os.Process.myUserHandle());
 
                 if (app_icon==null) {
                     Intent intent;
