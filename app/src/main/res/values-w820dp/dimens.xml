@@ -10,8 +10,8 @@
     <dimen name="launcher_width">110dp</dimen>
     <dimen name="launcher_height">110dp</dimen>
 
-    <dimen name="icon_width">75dp</dimen>
-    <dimen name="icon_label_width">85dp</dimen>
+    <dimen name="icon_width">65dp</dimen>
+    <dimen name="icon_label_width">75dp</dimen>
     <dimen name="icont_label_height">45dp</dimen>
     <dimen name="launcher_fontsize">14sp</dimen>
     <dimen name="launcher_padding_side">15dp</dimen>

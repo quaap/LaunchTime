@@ -42,6 +42,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -557,7 +558,7 @@ public class MainActivity extends Activity implements
 
             mScreenDim = getScreenDimensions();
             //float launcherw = getResources().getDimension(R.dimen.launcher_width);
-            float launcherw = dipToPx(mStyle.getLauncherSize());
+            float launcherw = mStyle.getLauncherSize();
             float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
 
             mColumns = (int)((mScreenDim.x - catwidth)/(launcherw + 2));
@@ -792,7 +793,7 @@ public class MainActivity extends Activity implements
 
         if (w>0 || h>0) {
             //float sw = getResources().getDimension(R.dimen.launcher_width);
-            float sw = dipToPx(mStyle.getLauncherSize());
+            float sw = mStyle.getLauncherSize();
             //float sh = getResources().getDimension(R.dimen.launcher_height);
 
             //int width = (int)(sw + 20) * mColumns;
@@ -1076,16 +1077,16 @@ public class MainActivity extends Activity implements
 
             if (!smallIcon) {
 
-                setLayoutSize(item, dipToPx(mStyle.getLauncherSize()), dipToPx(mStyle.getLauncherSize()));
+                setLayoutSize(item, mStyle.getLauncherSize(), mStyle.getLauncherSize());
 
                 TextView iconLabel = (TextView) item.findViewById(R.id.launcher_text);
                 iconLabel.setTextColor(mStyle.getTextColor());
                 iconLabel.setText(app.getLabel());
 
-                setLayoutSize(iconImage, dipToPx(mStyle.getLauncherIconSize()), dipToPx(mStyle.getLauncherIconSize()));
+                setLayoutSize(iconImage, mStyle.getLauncherIconSize(), mStyle.getLauncherIconSize());
 
-                iconLabel.setTextSize(mStyle.getLauncherFontSize()*.92f);
-                setLayoutSize(iconLabel, dipToPx(mStyle.getLauncherSize()), ViewGroup.LayoutParams.WRAP_CONTENT);
+                iconLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, mStyle.getLauncherFontSize());
+                setLayoutSize(iconLabel, mStyle.getLauncherSize(), ViewGroup.LayoutParams.WRAP_CONTENT);
 
             }
             app.setIconImage(iconImage);

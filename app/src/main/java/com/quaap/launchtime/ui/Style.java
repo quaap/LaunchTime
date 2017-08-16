@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.quaap.launchtime.MainActivity;
@@ -132,11 +133,12 @@ public class Style {
         float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
         float iconfontsize = mContext.getResources().getDimension(R.dimen.launcher_fontsize);
 
+
         int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));
         switch (iconsizePref) {
             case 0:  //small
-                launcherIconSize = (int)(iconsize*.9);
-                launcherFontSize = (int)iconfontsize-1;
+                launcherIconSize = (int)(iconsize*.85);
+                launcherFontSize = (int)(iconfontsize*.9);
                 break;
             case 1:  //medium
                 launcherIconSize = (int)iconsize;
@@ -144,13 +146,14 @@ public class Style {
                 break;
             case 2:  //large
                 launcherIconSize = (int)(iconsize*1.3);
-                launcherFontSize = (int)iconfontsize+1;
+                launcherFontSize = (int)(iconfontsize*1.2);
                 break;
             case 3: //x-large
                 launcherIconSize = (int)(iconsize*1.6);
-                launcherFontSize = (int)iconfontsize+2;
+                launcherFontSize = (int)(iconfontsize*1.3);
                 break;
         }
+        //Log.d("style", "launcherFontSize = " + launcherFontSize);
         launcherSize = (int)(launcherIconSize*1.3);
 
         cattabBackground = mAppPreferences.getInt("cattab_background", getResColor(R.color.cattab_background));
