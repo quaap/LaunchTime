@@ -55,7 +55,7 @@
         <item>X-Large</item>
     </string-array>
 
-
+    <string translatable="false" name="pref_cat_location_values_def">right</string>
     <string-array translatable="false" name="pref_cat_location_values">
         <item>right</item>
         <item>left</item>
@@ -65,5 +65,8 @@
         <item>Right</item>
         <item>Left</item>
     </string-array>
+
+    <string translatable="false" name="pref_iconpack_def">default</string>
+
 
 </resources>
