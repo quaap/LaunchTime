@@ -27,7 +27,12 @@ import com.quaap.launchtime.components.IconsHandler;
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
+ *
+ *  Some portions derived from KISS.
+ *  https://github.com/Neamar/KISS
+ *
  */
+
 
 public class SettingsActivity extends PreferenceActivity {
 
