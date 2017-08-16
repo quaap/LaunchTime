@@ -284,12 +284,14 @@ public class IconsHandler {
     /**
      * Scan for installed icons packs
      */
-    private void loadAvailableIconsPacks() {
+    public void loadAvailableIconsPacks() {
 
         List<ResolveInfo> launcherthemes = pm.queryIntentActivities(new Intent("fr.neamar.kiss.THEMES"), PackageManager.GET_META_DATA);
         List<ResolveInfo> adwlauncherthemes = pm.queryIntentActivities(new Intent("org.adw.launcher.THEMES"), PackageManager.GET_META_DATA);
 
         launcherthemes.addAll(adwlauncherthemes);
+
+        iconsPacks.clear();
 
         for (ResolveInfo ri : launcherthemes) {
             String packageName = ri.activityInfo.packageName;

@@ -110,8 +110,9 @@ public class SettingsActivity extends PreferenceActivity {
     
     protected static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
         IconsHandler iph = GlobState.getIconsHandler(context);
+        iph.loadAvailableIconsPacks();
 
-                CharSequence[] entries = new CharSequence[iph.getIconsPacks().size()+1];
+        CharSequence[] entries = new CharSequence[iph.getIconsPacks().size()+1];
         CharSequence[] entryValues = new CharSequence[iph.getIconsPacks().size()+1];
 
                 int i = 0;
