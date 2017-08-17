@@ -66,6 +66,14 @@ public class LaunchReceiver extends BroadcastReceiver {
                         if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
                             Toast.makeText(context, app.getLabel() + " was installed into " + db.getCategoryDisplay(app.getCategory()), Toast.LENGTH_LONG).show();
                         }
+//                        else {
+//                            String label = ri.loadLabel(context.getPackageManager()).toString();
+//                            if (app.getLabel()==null || !app.getLabel().equals(label)) {
+//
+//                                db.updateAppLabel(ri.activityInfo.packageName, activityName, label);
+//                                app.setLabel(label);
+//                            }
+//                        }
                     }
                 } catch (Exception e) {
                     Log.e("LaunchReceiver", "Could not get " + packageName, e);
