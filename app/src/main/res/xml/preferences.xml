@@ -8,8 +8,8 @@
         android:summary="@string/pref_help_about">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.quaap.launchtime"
-            android:targetClass="com.quaap.launchtime.AboutActivity"/>
+            android:targetPackage="com.quaap.launchtime_official"
+            android:targetClass="com.quaap.launchtime_official.AboutActivity"/>
     </PreferenceScreen>
 
 
@@ -58,8 +58,8 @@
             android:summary="@string/pref_senddat_summ">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetPackage="com.quaap.launchtime"
-                android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
+                android:targetPackage="com.quaap.launchtime_official"
+                android:targetClass="com.quaap.launchtime_official.FeedbackActivity"/>
         </PreferenceScreen>
 
 
@@ -68,8 +68,8 @@
             android:summary="@string/pref_backup_summ">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetPackage="com.quaap.launchtime"
-                android:targetClass="com.quaap.launchtime.BackupActivity"/>
+                android:targetPackage="com.quaap.launchtime_official"
+                android:targetClass="com.quaap.launchtime_official.BackupActivity"/>
         </PreferenceScreen>
 
         <PreferenceScreen
@@ -113,27 +113,27 @@
             android:key="preference_iconsize"
             android:summary="%s" />
 
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_icontext"
             android:key="textcolor"
             android:defaultValue="@color/textcolor"/>
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabtext"
             android:key="cattabtextcolor"
             android:defaultValue="@color/textcolor"/>
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabback"
             android:key="cattab_background"
             android:defaultValue="@color/cattab_background" />
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabsel_text"
             android:key="cattabselected_text"
             android:defaultValue="@color/cattabselected_text" />
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabsel"
             android:key="cattabselected_background"
             android:defaultValue="@color/cattabselected_background" />
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_drag"
             android:key="dragover_background"
             android:defaultValue="@color/dragover_background" />
