@@ -73,11 +73,15 @@ public class SettingsActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.preferences);
 
 
-            ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
-            setListPreferenceIconsPacksData(iconsPack, this.getActivity());
 
         }
 
+        @Override
+        public void onResume() {
+            super.onResume();
+            ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
+            setListPreferenceIconsPacksData(iconsPack, this.getActivity());
+        }
     }
 
 
@@ -117,6 +121,7 @@ public class SettingsActivity extends PreferenceActivity {
     
     protected static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
         IconsHandler iph = GlobState.getIconsHandler(context);
+
         iph.loadAvailableIconsPacks();
 
         Map<String, String> iconsPacks = iph.getIconsPacks();
