@@ -960,6 +960,12 @@ public class MainActivity extends Activity implements
 
                     if (dbactvnames.contains(appcn) && app != null) {
                         app.loadAppIconAsync(this, mPackageMan);
+                        String label = ri.loadLabel(mPackageMan).toString();
+                        if (app.getLabel()==null || !app.getLabel().equals(label)) {
+                            db().updateAppLabel(ri.activityInfo.packageName, actvname, label);
+                            app.setLabel(label);
+                        }
+
                         //  Log.d(TAG, "app was in db " + actvname + " " +  ri.activityInfo.packageName);
                     } else {
                         //  Log.d(TAG, "app was not in db " + actvname + " " +  ri.activityInfo.packageName);

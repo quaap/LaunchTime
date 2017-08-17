@@ -222,6 +222,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return mLabel;
     }
 
+    public void setLabel(String label) {
+        mLabel = label;
+    }
+
     public String getPackageName() {
         return mPackageName;
     }

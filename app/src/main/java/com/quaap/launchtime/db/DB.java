@@ -496,6 +496,13 @@ public class DB extends SQLiteOpenHelper {
         return false;
     }
 
+    public void updateAppLabel(String actvname, String pkgname, String label) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(LABEL, label);
+        db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
+    }
+
     public Cursor getAppCursor(String filter) {
         SQLiteDatabase db = this.getReadableDatabase();
 
