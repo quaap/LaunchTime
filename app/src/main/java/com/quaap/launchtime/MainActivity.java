@@ -77,6 +77,7 @@ import com.quaap.launchtime.apps.LaunchApp;
 import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
+import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.ui.QuickRow;
 import com.quaap.launchtime.ui.SearchBox;
@@ -332,10 +333,13 @@ public class MainActivity extends Activity implements
             }
             if (key.equals("icons-pack")) {
                 AppLauncher.clearIcons();
-                GlobState.getIconsHandler(this).loadIconsPack(sharedPreferences.getString(key, "default"));
+                //mIconSheet.removeAllViews();
+                IconsHandler ich = GlobState.getIconsHandler(this);
+                ich.loadIconsPack(sharedPreferences.getString(key, "default"));
                 mQuickRow.repopulate();
             }
             checkConfig();
+
             switchCategory(mCategory);
 
             if (key.equals("prefs_toddler_lock")) {

@@ -15,16 +15,19 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.UserHandle;
+
 import android.preference.PreferenceManager;
 import android.os.Build;
 import android.util.Log;
+
+import com.quaap.launchtime.R;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -32,7 +35,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -70,7 +76,7 @@ public class IconsHandler {
     // instance of a resource object of an icon pack
     private Resources iconPackres;
     // package name of the icons pack
-    private String iconsPackPackageName;
+    private volatile String iconsPackPackageName;
     // list of back images available on an icons pack
     private List<Bitmap> backImages = new ArrayList<>();
     // bitmap mask of an icons pack
@@ -82,13 +88,38 @@ public class IconsHandler {
     private PackageManager pm;
     private Context ctx;
 
+    public static final String DEFAULT_PACK = "default";
+
+    private Map<String, BuiltinIconTheme> builtinThemes = new LinkedHashMap<>();
+
     public IconsHandler(Context ctx) {
         super();
         this.ctx = ctx;
         this.pm = ctx.getPackageManager();
+        initBuiltinIconThemes();
         loadAvailableIconsPacks();
         loadIconsPack();
     }
+
+    private void initBuiltinIconThemes() {
+        builtinThemes.put("termcap", new MonochromeIconTheme("termcap", "Termcap", Color.parseColor("#dd00dd00"), Color.BLACK));
+        builtinThemes.put("coolblue", new MonochromeIconTheme("coolblue", "Coolblue", Color.parseColor("#dd0000ff"), Color.BLACK));
+        builtinThemes.put("sunrise", new MonochromeIconTheme("sunrise", "Sunrise", Color.parseColor("#ddff0000"), Color.BLACK));
+        builtinThemes.put("candy", new PolychromeIconTheme("candy", "Candy",
+                new int [] {
+                        Color.parseColor("#ffee6666"), Color.parseColor("#ff66ee66"), Color.parseColor("#ff6666ee"),
+                        Color.parseColor("#ffeeee66"), Color.parseColor("#ff66eeee"), Color.parseColor("#ffee66ee"),
+                }, Color.WHITE));
+    }
+
+    public Collection<BuiltinIconTheme> getBuiltinIconThemes() {
+        return builtinThemes.values();
+    }
+
+    public BuiltinIconTheme getBuiltinIconTheme(String key) {
+        return builtinThemes.get(key);
+    }
+
 
     /**
      * Load configured icons pack
@@ -96,7 +127,7 @@ public class IconsHandler {
     public void loadIconsPack() {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        loadIconsPack(prefs.getString("icons-pack", "default"));
+        loadIconsPack(prefs.getString("icons-pack", DEFAULT_PACK));
 
     }
 
@@ -112,9 +143,15 @@ public class IconsHandler {
         packagesDrawables.clear();
         backImages.clear();
         cacheClear();
+        iconPackres = null;
 
         // system icons, nothing to do
-        if (iconsPackPackageName.equalsIgnoreCase("default")) {
+        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
+            return;
+        }
+
+        // inbuilt theme icons, nothing to do
+        if (builtinThemes.keySet().contains(iconsPackPackageName)) {
             return;
         }
 
@@ -205,7 +242,6 @@ public class IconsHandler {
 
     public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
 
-
         Drawable app_icon = null;
 
         Intent intent;
@@ -255,8 +291,16 @@ public class IconsHandler {
      */
     public Drawable getDrawableIconForPackage(ComponentName componentName, String uristr) {
         // system icons, nothing to do
-        if (iconsPackPackageName.equalsIgnoreCase("default")) {
-            return this.getDefaultAppDrawable(componentName, uristr);
+        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
+           // Log.d(TAG, "getDrawableIconForPackage called for " + componentName);
+            return getDefaultAppDrawable(componentName, uristr);
+        }
+
+        for (String key: builtinThemes.keySet()) {
+
+            if (iconsPackPackageName.equalsIgnoreCase(key)) {
+                return builtinThemes.get(key).getDrawable(componentName, uristr);
+            }
         }
 
         String drawable = packagesDrawables.get(componentName.toString());
@@ -330,6 +374,7 @@ public class IconsHandler {
         return new BitmapDrawable(iconPackres, result);
     }
 
+
     private String [] packs = {"org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME", "com.anddoes.launcher.THEME" };
 
     /**
@@ -368,6 +413,20 @@ public class IconsHandler {
     }
 
     public Map<String, String> getIconsPacks() {
+        return iconsPacks;
+    }
+
+    public Map<String, String> getAllIconsThemes() {
+        Map<String, String> iconsPacks = new LinkedHashMap<>();
+
+        iconsPacks.put(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name));
+
+        for (IconsHandler.BuiltinIconTheme ic: getBuiltinIconThemes()) {
+            iconsPacks.put(ic.getPackKey(),ic.getPackName());
+        }
+
+        iconsPacks.putAll(getIconsPacks());
+
         return iconsPacks;
     }
 
@@ -440,5 +499,128 @@ public class IconsHandler {
             }
         }
     }
+
+
+    public abstract class BuiltinIconTheme {
+
+        private String mKey;
+        private String mName;
+
+        public BuiltinIconTheme(String key, String name) {
+            mKey = key;
+            mName = name;
+        }
+
+        public String getPackKey() {
+            return mKey;
+        }
+        public String getPackName() {
+            return mName;
+        }
+        public abstract Drawable getDrawable(ComponentName componentName, String uristr);
+
+        public abstract int getTextColor(ComponentName componentName, String uristr);
+        public abstract int getBackgroundColor(ComponentName componentName, String uristr);
+    }
+
+
+    public class DefaultIconTheme extends BuiltinIconTheme {
+
+
+        public DefaultIconTheme(String key, String name) {
+            super(key, name);
+        }
+
+        @Override
+        public Drawable getDrawable(ComponentName componentName, String uristr) {
+            return getDefaultAppDrawable(componentName, uristr);
+        }
+
+        @Override
+        public int getTextColor(ComponentName componentName, String uristr) {
+            return Color.WHITE;
+        }
+
+        @Override
+        public int getBackgroundColor(ComponentName componentName, String uristr) {
+            return Color.BLACK;
+        }
+    }
+
+    public class MonochromeIconTheme extends BuiltinIconTheme {
+        private int mFGColor;
+        private int mBGColor;
+
+        public MonochromeIconTheme(String key, String name, int fgcolor, int bgcolor) {
+            super(key, name);
+            mFGColor = fgcolor;
+            mBGColor = bgcolor;
+        }
+
+
+        @Override
+        public Drawable getDrawable(ComponentName componentName, String uristr) {
+
+            //Log.d(TAG, "getDrawable called for " + componentName.getPackageName());
+
+            Drawable app_icon = getDefaultAppDrawable(componentName, uristr);
+
+            app_icon = app_icon.mutate();
+            PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
+
+            app_icon.setColorFilter(mFGColor,mode);
+
+            return app_icon;
+        }
+
+        @Override
+        public int getTextColor(ComponentName componentName, String uristr) {
+            return mFGColor;
+        }
+
+        @Override
+        public int getBackgroundColor(ComponentName componentName, String uristr) {
+            return mBGColor;
+        }
+    }
+
+    public class PolychromeIconTheme extends BuiltinIconTheme {
+        private int [] mFGColors;
+        private int mBGColor;
+
+        public PolychromeIconTheme(String key, String name, int [] color, int bgcolor) {
+            super(key, name);
+            mFGColors = Arrays.copyOf(color, color.length);
+            mBGColor = bgcolor;
+        }
+
+
+        @Override
+        public Drawable getDrawable(ComponentName componentName, String uristr) {
+
+            //Log.d(TAG, "getDrawable called for " + componentName.getPackageName());
+
+            Drawable app_icon = getDefaultAppDrawable(componentName, uristr);
+
+            app_icon = app_icon.mutate();
+            PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
+
+            int color = Math.abs(componentName.getPackageName().hashCode()) % mFGColors.length;
+            app_icon.setColorFilter(mFGColors[color], mode);
+
+            return app_icon;
+        }
+
+        @Override
+        public int getTextColor(ComponentName componentName, String uristr) {
+            return Math.abs(componentName.getPackageName().hashCode()) % mFGColors.length;
+        }
+
+        @Override
+        public int getBackgroundColor(ComponentName componentName, String uristr) {
+            return mBGColor;
+        }
+    }
+
 
 }

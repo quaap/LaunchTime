@@ -26,11 +26,10 @@ public class Style {
     private int cattabTextColorInvert;
     private int cattabBackground;
     private int cattabSelectedBackground;
-
-
     private int cattabSelectedText;
     private int dragoverBackground;
     private int textColor;
+
     private int backgroundDefault = Color.TRANSPARENT;
     private boolean leftHandCategories;
     private float categoryTabFontSize = 16;
