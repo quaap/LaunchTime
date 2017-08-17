@@ -329,7 +329,7 @@ public class IconsHandler {
         return new BitmapDrawable(iconPackres, result);
     }
 
-    private String [] packs = {"com.anddoes.launcher.THEME", "org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME"  };
+    private String [] packs = {"org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME", "com.anddoes.launcher.THEME" };
 
     /**
      * Scan for installed icons packs
@@ -351,14 +351,17 @@ public class IconsHandler {
         iconsPacks.clear();
 
         for (ResolveInfo ri : launcherthemes) {
+
             String packageName = ri.activityInfo.packageName;
-            try {
-                ApplicationInfo ai = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-                String name = pm.getApplicationLabel(ai).toString();
-                iconsPacks.put(packageName, name);
-            } catch (PackageManager.NameNotFoundException e) {
-                // shouldn't happen
-                Log.e(TAG, "Unable to found package " + packageName + e);
+            if (!iconsPacks.containsKey(packageName)) {
+                try {
+                    ApplicationInfo ai = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+                    String name = pm.getApplicationLabel(ai).toString();
+                    iconsPacks.put(packageName, name);
+                } catch (PackageManager.NameNotFoundException e) {
+                    // shouldn't happen
+                    Log.e(TAG, "Unable to found package " + packageName + e);
+                }
             }
         }
     }

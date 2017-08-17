@@ -17,12 +17,18 @@ Features
 * Scrolling QuickBar on the bottom for easy access to your favorite apps.
 * Text search to find apps.
 * List of recent apps.
-* Some widget support (no resizing yet)
+* Multiple widget support (no resizing yet)
 * Rearrange/sort icons and menu items.
 * Shortcut/link support.
 * Supports both portrait and landscape mode.
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
+
+New features in v0.6
+-----------
+* Beta support for Android 7.1 [shortcut actions](https://developer.android.com/guide/topics/ui/shortcuts.html)
+* Beta support for adw/nova/apex iconpacks
+
 
 Categorization
 ----------
@@ -76,19 +82,17 @@ Apps
 
 Known issues
 ----------
-* Not all apps are automatically sorted properly, or at all.
+* Not all apps are automatically sorted properly.
 * Auto-screen-scrolling while dragging is a bit choppy.
 * Widgets cannot be manually resized.
-* No labels on widgets.
-* Widget needing configuration don't always work.
-* Labels on apps don't always reflect changes when the app upgrades and changes the label.
 
 
 Credits
 --------
 I developed this after testing and using several alternative FOSS Launchers, the most influential
-was @Silverfish, from which I borrowed some ideas and some code (mainly widget and package
-categorization code).  I decided to develop my own instead of adding to it because we have
-different design goals for a few important features (ie single vs multiple widgets,
-unified homescreen vs app-drawer, etc)  If this launcher doesn't suit you, I encourage you
-try it!
+was [Silverfish](https://github.com/stanipintjuk/Silverfish), from which I borrowed some ideas and 
+some code (mainly widget and package categorization code).  I decided to develop my own instead 
+of adding to it because we have different design goals for a few important features (ie single vs 
+multiple widgets, unified homescreen vs app-drawer, etc)  If this launcher doesn't suit you, I 
+encourage you try it!  I've also borrowed some icon-pack handling code from the 
+[KISS Launcher](https://github.com/Neamar/KISS)
