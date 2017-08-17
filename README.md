@@ -24,6 +24,8 @@ Features
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
 
+New features in v0.6
+-----------
 * Beta support for Android 7.1 [shortcut actions](https://developer.android.com/guide/topics/ui/shortcuts.html)
 * Beta support for adw/nova/apex iconpacks
 
