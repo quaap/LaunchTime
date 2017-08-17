@@ -17,12 +17,16 @@ Features
 * Scrolling QuickBar on the bottom for easy access to your favorite apps.
 * Text search to find apps.
 * List of recent apps.
-* Some widget support (no resizing yet)
+* Multiple widget support (no resizing yet)
 * Rearrange/sort icons and menu items.
 * Shortcut/link support.
 * Supports both portrait and landscape mode.
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
+
+* Beta support for Android 7.1 [shortcut actions](https://developer.android.com/guide/topics/ui/shortcuts.html)
+* Beta support for adw/nova/apex iconpacks
+
 
 Categorization
 ----------
