@@ -33,6 +33,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -336,6 +337,8 @@ public class MainActivity extends Activity implements
                 //mIconSheet.removeAllViews();
                 IconsHandler ich = GlobState.getIconsHandler(this);
                 ich.loadIconsPack(sharedPreferences.getString(key, "default"));
+                ich.updateStyles(mStyle);
+
                 mQuickRow.repopulate();
             }
             checkConfig();
@@ -553,6 +556,10 @@ public class MainActivity extends Activity implements
     private void checkConfig() {
         readPrefs();
 
+        View view = findViewById(R.id.main_layout_view);
+        view.setBackgroundColor(mStyle.getWallpaperColor());
+        getWindow().setBackgroundDrawable(new ColorDrawable(mStyle.getWallpaperColor()));
+        Log.d(TAG,"bg:" + mStyle.getWallpaperColor());
 
         itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
         itemClickedAnim.setDuration(200);

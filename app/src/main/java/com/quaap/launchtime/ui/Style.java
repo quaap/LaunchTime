@@ -31,6 +31,9 @@ public class Style {
     private int textColor;
 
     private int backgroundDefault = Color.TRANSPARENT;
+
+    private int wallpaperColor = Color.TRANSPARENT;
+
     private boolean leftHandCategories;
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 16;
@@ -50,6 +53,11 @@ public class Style {
         readPrefs();
 
     }
+
+    public int getWallpaperColor() {
+        return wallpaperColor;
+    }
+
 
     public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
 
@@ -162,6 +170,27 @@ public class Style {
         cattabTextColorInvert = mAppPreferences.getInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
 
         textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
+
+        wallpaperColor = mAppPreferences.getInt("wallpapercolor", Color.TRANSPARENT);
+    }
+
+    public void setDefaultColors() {
+        SharedPreferences.Editor edit = mAppPreferences.edit();
+
+        try {
+            edit.putInt("cattab_background", getResColor(R.color.cattab_background));
+            edit.putInt("cattabselected_background",  getResColor(R.color.cattabselected_background));
+            edit.putInt("cattabselected_text",  getResColor(R.color.cattabselected_text));
+
+            edit.putInt("cattabtextcolor", getResColor(R.color.textcolor));
+            edit.putInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
+
+            edit.putInt("wallpapercolor", Color.TRANSPARENT);
+
+            edit.putInt("textcolor", getResColor(R.color.textcolor));
+        } finally {
+            edit.apply();
+        }
     }
 
     private int getResColor(int res) {

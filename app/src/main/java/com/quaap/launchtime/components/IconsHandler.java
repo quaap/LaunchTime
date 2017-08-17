@@ -28,6 +28,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.ui.Style;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -102,6 +103,8 @@ public class IconsHandler {
     }
 
     private void initBuiltinIconThemes() {
+        builtinThemes.put(DEFAULT_PACK, new DefaultIconTheme(DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
+        builtinThemes.put("bw", new MonochromeIconTheme("bw", "BlackWhite", Color.WHITE, Color.BLACK));
         builtinThemes.put("termcap", new MonochromeIconTheme("termcap", "Termcap", Color.parseColor("#dd00dd00"), Color.BLACK));
         builtinThemes.put("coolblue", new MonochromeIconTheme("coolblue", "Coolblue", Color.parseColor("#dd0000ff"), Color.BLACK));
         builtinThemes.put("sunrise", new MonochromeIconTheme("sunrise", "Sunrise", Color.parseColor("#ddff0000"), Color.BLACK));
@@ -145,10 +148,10 @@ public class IconsHandler {
         cacheClear();
         iconPackres = null;
 
-        // system icons, nothing to do
-        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
-            return;
-        }
+//        // system icons, nothing to do
+//        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
+//            return;
+//        }
 
         // inbuilt theme icons, nothing to do
         if (builtinThemes.keySet().contains(iconsPackPackageName)) {
@@ -290,11 +293,11 @@ public class IconsHandler {
      * Get or generate icon for an app
      */
     public Drawable getDrawableIconForPackage(ComponentName componentName, String uristr) {
-        // system icons, nothing to do
-        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
-           // Log.d(TAG, "getDrawableIconForPackage called for " + componentName);
-            return getDefaultAppDrawable(componentName, uristr);
-        }
+//        // system icons, nothing to do
+//        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
+//           // Log.d(TAG, "getDrawableIconForPackage called for " + componentName);
+//            return getDefaultAppDrawable(componentName, uristr);
+//        }
 
         for (String key: builtinThemes.keySet()) {
 
@@ -375,6 +378,39 @@ public class IconsHandler {
     }
 
 
+    public void updateStyles(Style style) {
+        for (String key: builtinThemes.keySet()) {
+
+            if (iconsPackPackageName.equalsIgnoreCase(key)) {
+
+                IconsHandler.BuiltinIconTheme theme = builtinThemes.get(iconsPackPackageName);
+                if (!theme.hasColors()) {
+                    style.setDefaultColors();
+                    return;
+                }
+
+                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+
+                try {
+                    edit.putInt("cattab_background", theme.getBackgroundColor());
+                    edit.putInt("cattabselected_background", theme.getBackgroundColor());
+                    edit.putInt("cattabselected_text", theme.getTextColor());
+
+                    edit.putInt("cattabtextcolor", theme.getTextColor());
+                    edit.putInt("cattabtextcolorinv", theme.getBackgroundColor());
+
+                    edit.putInt("wallpapercolor", theme.getBackgroundColor());
+
+                    edit.putInt("textcolor", theme.getTextColor());
+                } finally {
+                    edit.apply();
+                }
+                return;
+            }
+        }
+    }
+
+
     private String [] packs = {"org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME", "com.anddoes.launcher.THEME" };
 
     /**
@@ -419,7 +455,7 @@ public class IconsHandler {
     public Map<String, String> getAllIconsThemes() {
         Map<String, String> iconsPacks = new LinkedHashMap<>();
 
-        iconsPacks.put(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name));
+       // iconsPacks.put(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name));
 
         for (IconsHandler.BuiltinIconTheme ic: getBuiltinIconThemes()) {
             iconsPacks.put(ic.getPackKey(),ic.getPackName());
@@ -501,6 +537,7 @@ public class IconsHandler {
     }
 
 
+
     public abstract class BuiltinIconTheme {
 
         private String mKey;
@@ -519,8 +556,11 @@ public class IconsHandler {
         }
         public abstract Drawable getDrawable(ComponentName componentName, String uristr);
 
-        public abstract int getTextColor(ComponentName componentName, String uristr);
-        public abstract int getBackgroundColor(ComponentName componentName, String uristr);
+        public boolean hasColors() {
+            return false;
+        }
+        public abstract int getTextColor();
+        public abstract int getBackgroundColor();
     }
 
 
@@ -537,13 +577,13 @@ public class IconsHandler {
         }
 
         @Override
-        public int getTextColor(ComponentName componentName, String uristr) {
-            return Color.WHITE;
+        public int getTextColor() {
+            return -1;
         }
 
         @Override
-        public int getBackgroundColor(ComponentName componentName, String uristr) {
-            return Color.BLACK;
+        public int getBackgroundColor() {
+            return -1;
         }
     }
 
@@ -574,12 +614,17 @@ public class IconsHandler {
         }
 
         @Override
-        public int getTextColor(ComponentName componentName, String uristr) {
+        public boolean hasColors() {
+            return true;
+        }
+
+        @Override
+        public int getTextColor() {
             return mFGColor;
         }
 
         @Override
-        public int getBackgroundColor(ComponentName componentName, String uristr) {
+        public int getBackgroundColor() {
             return mBGColor;
         }
     }
@@ -612,12 +657,18 @@ public class IconsHandler {
         }
 
         @Override
-        public int getTextColor(ComponentName componentName, String uristr) {
-            return Math.abs(componentName.getPackageName().hashCode()) % mFGColors.length;
+        public boolean hasColors() {
+            return true;
+        }
+
+
+        @Override
+        public int getTextColor() {
+            return mFGColors[0];
         }
 
         @Override
-        public int getBackgroundColor(ComponentName componentName, String uristr) {
+        public int getBackgroundColor() {
             return mBGColor;
         }
     }
