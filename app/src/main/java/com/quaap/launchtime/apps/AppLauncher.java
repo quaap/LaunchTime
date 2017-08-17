@@ -303,34 +303,39 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 // load the icon
                 Drawable app_icon = null;
 
-
-                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(getBaseComponentName(), android.os.Process.myUserHandle());
-
-                if (app_icon==null) {
-                    Intent intent;
-                    if (isActionLink()) {
-                        String uristr = getLinkUri();
-                        if (uristr == null) {
-                            intent = new Intent(getLinkBaseActivityName());
-                        } else {
-                            intent = new Intent(getLinkBaseActivityName(), Uri.parse(uristr));
-                        }
-
-                    } else {
-                        intent = new Intent(Intent.ACTION_MAIN);
-                        intent.setClassName(mPackageName, getLinkBaseActivityName());
-                    }
-
-
-                    try {
-                        app_icon = pm.getActivityIcon(intent);
-                    } catch (Exception | OutOfMemoryError e) {
-                        Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
-                    }
-                    if (app_icon == null) {
-                        app_icon = pm.getDefaultActivityIcon();
-                    }
+                String uristr = null;
+                if  (isActionLink()) {
+                    uristr = getLinkUri();
+                    if (uristr == null) uristr = "";
                 }
+
+                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(getBaseComponentName(), uristr);
+
+//                if (app_icon==null) {
+//                    Intent intent;
+//                    if (isActionLink()) {
+//                        String uristr = getLinkUri();
+//                        if (uristr == null) {
+//                            intent = new Intent(getLinkBaseActivityName());
+//                        } else {
+//                            intent = new Intent(getLinkBaseActivityName(), Uri.parse(uristr));
+//                        }
+//
+//                    } else {
+//                        intent = new Intent(Intent.ACTION_MAIN);
+//                        intent.setClassName(mPackageName, getLinkBaseActivityName());
+//                    }
+//
+//
+//                    try {
+//                        app_icon = pm.getActivityIcon(intent);
+//                    } catch (Exception | OutOfMemoryError e) {
+//                        Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
+//                    }
+//                    if (app_icon == null) {
+//                        app_icon = pm.getDefaultActivityIcon();
+//                    }
+//                }
 
 
                 Bitmap bitmap = IconCache.loadBitmap(context, mActivityName);

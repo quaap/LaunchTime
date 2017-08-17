@@ -20,6 +20,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.UserHandle;
 import android.preference.PreferenceManager;
 import android.os.Build;
@@ -202,29 +203,60 @@ public class IconsHandler {
     }
 
 
-    public Drawable getDefaultAppDrawable(ComponentName componentName, UserHandle userHandle) {
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-                LauncherActivityInfo info = launcher.getActivityList(componentName.getPackageName(), userHandle).get(0);
-                return info.getBadgedIcon(0);
+    public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
+
+
+        Drawable app_icon = null;
+
+        Intent intent;
+        if (uristr!=null) {
+            if (uristr.equals("")) {
+                intent = new Intent(componentName.getClassName());
             } else {
-                return pm.getActivityIcon(componentName);
+                intent = new Intent(componentName.getClassName(), Uri.parse(uristr));
             }
-        } catch (NameNotFoundException | IndexOutOfBoundsException e) {
-            Log.e(TAG, "Unable to found component " + componentName.toString() + e);
-            return null;
+
+        } else {
+            intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClassName(componentName.getPackageName(), componentName.getClassName());
         }
+
+        try {
+            app_icon = pm.getActivityIcon(intent);
+        } catch (Exception | OutOfMemoryError e) {
+            Log.e("IconLookup", "Couldn't get icon for" + componentName.getClassName(), e);
+        }
+
+        if (app_icon==null) {
+            try {
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+                    LauncherActivityInfo info = launcher.getActivityList(componentName.getPackageName(), android.os.Process.myUserHandle()).get(0);
+                    app_icon = info.getBadgedIcon(0);
+                } else {
+                    app_icon = pm.getActivityIcon(componentName);
+                }
+            } catch (NameNotFoundException | IndexOutOfBoundsException e) {
+                Log.e(TAG, "Unable to found component " + componentName.toString() + e);
+                return null;
+            }
+        }
+
+        if (app_icon == null) {
+            app_icon = pm.getDefaultActivityIcon();
+        }
+
+        return app_icon;
     }
 
 
     /**
      * Get or generate icon for an app
      */
-    public Drawable getDrawableIconForPackage(ComponentName componentName, UserHandle userHandle) {
+    public Drawable getDrawableIconForPackage(ComponentName componentName, String uristr) {
         // system icons, nothing to do
         if (iconsPackPackageName.equalsIgnoreCase("default")) {
-            return this.getDefaultAppDrawable(componentName, userHandle);
+            return this.getDefaultAppDrawable(componentName, uristr);
         }
 
         String drawable = packagesDrawables.get(componentName.toString());
@@ -241,7 +273,7 @@ public class IconsHandler {
         if (systemIcon != null)
             return systemIcon;
 
-        systemIcon = this.getDefaultAppDrawable(componentName, userHandle);
+        systemIcon = this.getDefaultAppDrawable(componentName, uristr);
         if (systemIcon instanceof BitmapDrawable) {
             Drawable generated = generateBitmap(systemIcon);
             cacheStoreDrawable(componentName.toString(), generated);
