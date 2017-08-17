@@ -16,6 +16,8 @@ import android.view.KeyEvent;
 
 import com.quaap.launchtime.components.IconsHandler;
 
+import java.util.Map;
+
 /**
  * Copyright (C) 2017   Tom Kliethermes
  *
@@ -117,14 +119,16 @@ public class SettingsActivity extends PreferenceActivity {
         IconsHandler iph = GlobState.getIconsHandler(context);
         iph.loadAvailableIconsPacks();
 
-        CharSequence[] entries = new CharSequence[iph.getIconsPacks().size()+1];
-        CharSequence[] entryValues = new CharSequence[iph.getIconsPacks().size()+1];
+        Map<String, String> iconsPacks = iph.getIconsPacks();
 
-                int i = 0;
+        CharSequence[] entries = new CharSequence[iconsPacks.size()+1];
+        CharSequence[] entryValues = new CharSequence[iconsPacks.size()+1];
+
+        int i = 0;
         entries[0] = context.getString(R.string.icons_pack_default_name);
         entryValues[0] = "default";
-        for (String packageIconsPack : iph.getIconsPacks().keySet()) {
-            entries[++i] = iph.getIconsPacks().get(packageIconsPack);
+        for (String packageIconsPack : iconsPacks.keySet()) {
+            entries[++i] = iconsPacks.get(packageIconsPack);
             entryValues[i] = packageIconsPack;
         }
 

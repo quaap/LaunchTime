@@ -64,7 +64,7 @@ public class IconsHandler {
 
     private static final String TAG = "IconsHandler";
     // map with available icons packs
-    private HashMap<String, String> iconsPacks = new HashMap<>();
+    private Map<String, String> iconsPacks = new HashMap<>();
     // map with available drawable for an icons pack
     private Map<String, String> packagesDrawables = new HashMap<>();
     // instance of a resource object of an icon pack
@@ -330,15 +330,24 @@ public class IconsHandler {
         return new BitmapDrawable(iconPackres, result);
     }
 
+    private String [] packs = {"com.anddoes.launcher.THEME", "org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME"  };
+
     /**
      * Scan for installed icons packs
      */
     public void loadAvailableIconsPacks() {
 
-        List<ResolveInfo> launcherthemes = pm.queryIntentActivities(new Intent("fr.neamar.kiss.THEMES"), PackageManager.GET_META_DATA);
-        List<ResolveInfo> adwlauncherthemes = pm.queryIntentActivities(new Intent("org.adw.launcher.THEMES"), PackageManager.GET_META_DATA);
+        List<ResolveInfo> launcherthemes = new ArrayList<>();
 
-        launcherthemes.addAll(adwlauncherthemes);
+        for (String pack: packs) {
+            try {
+                launcherthemes.addAll(pm.queryIntentActivities(new Intent(pack), PackageManager.GET_META_DATA));
+            } catch (Exception e) {
+                Log.e(TAG, "Unable to query theme: " + pack, e);
+            }
+        }
+
+
 
         iconsPacks.clear();
 
@@ -355,7 +364,7 @@ public class IconsHandler {
         }
     }
 
-    public HashMap<String, String> getIconsPacks() {
+    public Map<String, String> getIconsPacks() {
         return iconsPacks;
     }
 
