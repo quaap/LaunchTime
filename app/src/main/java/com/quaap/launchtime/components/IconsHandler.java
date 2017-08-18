@@ -46,14 +46,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-/**
+/*
  *  This file is part of KISS and is licensed under the GPL v3.
  *  https://github.com/Neamar/KISS
  *
  *  Modified by Tom Kliethermes. 2017
  */
 
-/**
+/*
  * Inspired from http://stackoverflow.com/questions/31490630/how-to-load-icon-from-icon-pack
  */
 
@@ -107,17 +107,17 @@ public class IconsHandler {
     private void initBuiltinIconThemes() {
         builtinThemes.put(DEFAULT_PACK, new DefaultIconTheme(DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
 
-        BuiltinIconTheme bw = new MonochromeIconTheme("bw", "BlackWhite")
-                .setColor(Thing.Mask, Color.BLACK)
+        BuiltinIconTheme bw = new MonochromeIconTheme("bw", "BlackWhite (sys)")
+                .setColor(Thing.Mask, Color.WHITE)
                 .setColor(Thing.Text, Color.WHITE)
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.BLACK)
                 .setColor(Thing.AltBackground, Color.parseColor("#ff222222"));
 
-
         builtinThemes.put(bw.getPackKey(), bw);
 
-        BuiltinIconTheme termcap = new MonochromeIconTheme("termcap", "Termcap")
+
+        BuiltinIconTheme termcap = new MonochromeIconTheme("termcap", "Termcap (sys)")
                 .setColor(Thing.Mask, Color.parseColor("#dd22ff22"))
                 .setColor(Thing.Text, Color.parseColor("#dd22ff22"))
                 .setColor(Thing.AltText, Color.parseColor("#dd22ff22"))
@@ -126,31 +126,37 @@ public class IconsHandler {
 
         builtinThemes.put(termcap.getPackKey(), termcap);
 
-        BuiltinIconTheme coolblue = new MonochromeIconTheme("coolblue", "Coolblue")
+
+        BuiltinIconTheme coolblue = new MonochromeIconTheme("coolblue", "Coolblue (sys)")
                 .setColor(Thing.Mask, Color.parseColor("#ff1111ff"))
-                .setColor(Thing.Text, Color.parseColor("#ee3333ff"))
+                .setColor(Thing.Text, Color.parseColor("#ee2222ff"))
                 .setColor(Thing.AltText, Color.parseColor("#ee2222ff"))
                 .setColor(Thing.Background, Color.parseColor("#ff000001"))
                 .setColor(Thing.AltBackground, Color.parseColor("#ff111112"));
 
         builtinThemes.put(coolblue.getPackKey(), coolblue);
 
+        BuiltinIconTheme vulcan = new MonochromeIconTheme("vulcan", "Vulcan (sys)")
+                .setColor(Thing.Mask, Color.parseColor("#ffff2222"))
+                .setColor(Thing.Text, Color.parseColor("#eeff2222"))
+                .setColor(Thing.AltText, Color.parseColor("#eeff2222"))
+                .setColor(Thing.Background, Color.parseColor("#ff010000"))
+                .setColor(Thing.AltBackground, Color.parseColor("#ff121111"));
+
+        builtinThemes.put(vulcan.getPackKey(), vulcan);
 
     }
 
-    public Collection<BuiltinIconTheme> getBuiltinIconThemes() {
+    private Collection<BuiltinIconTheme> getBuiltinIconThemes() {
         return builtinThemes.values();
     }
 
-    public BuiltinIconTheme getBuiltinIconTheme(String key) {
-        return builtinThemes.get(key);
-    }
 
 
     /**
      * Load configured icons pack
      */
-    public void loadIconsPack() {
+    private void loadIconsPack() {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         loadIconsPack(prefs.getString("icons-pack", DEFAULT_PACK));
@@ -266,7 +272,7 @@ public class IconsHandler {
     }
 
 
-    public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
+    private Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
 
         Drawable app_icon = null;
 
@@ -438,7 +444,7 @@ public class IconsHandler {
         }
     }
 
-    public Map<String, String> getIconsPacks() {
+    private Map<String, String> getIconsPacks() {
         return iconsPacks;
     }
 
@@ -561,20 +567,20 @@ public class IconsHandler {
 
 
 
-    public enum Thing {Mask, Text, AltText, Background, AltBackground}
+    private enum Thing {Mask, Text, AltText, Background, AltBackground}
 
-    public abstract class BuiltinIconTheme {
+    abstract class BuiltinIconTheme {
 
         private String mKey;
         private String mName;
 
         private Map<Thing,Integer> mColors = new HashMap<>();
 
-        public BuiltinIconTheme(String key, String name) {
+        BuiltinIconTheme(String key, String name) {
             this(key, name, null);
         }
 
-        public BuiltinIconTheme(String key, String name, Map<Thing,Integer> colors) {
+        BuiltinIconTheme(String key, String name, Map<Thing, Integer> colors) {
             mKey = key;
             mName = name;
             if (colors != null) {
@@ -583,35 +589,35 @@ public class IconsHandler {
 
         }
 
-        public String getPackKey() {
+        String getPackKey() {
             return mKey;
         }
 
-        public String getPackName() {
+        String getPackName() {
             return mName;
         }
 
         public abstract Drawable getDrawable(ComponentName componentName, String uristr);
 
-        public boolean hasColors() {
+        boolean hasColors() {
             return mColors.size()>0;
         }
 
-        public BuiltinIconTheme setColor(Thing thing, int color) {
+        BuiltinIconTheme setColor(Thing thing, int color) {
             mColors.put(thing, color);
             return this;
         }
 
-        public Integer getColor(Thing thing) {
+        Integer getColor(Thing thing) {
             return mColors.get(thing);
         }
     }
 
 
-    public class DefaultIconTheme extends BuiltinIconTheme {
+    private class DefaultIconTheme extends BuiltinIconTheme {
 
 
-        public DefaultIconTheme(String key, String name) {
+        DefaultIconTheme(String key, String name) {
             super(key, name);
         }
 
@@ -623,8 +629,8 @@ public class IconsHandler {
 
     }
 
-    public class MonochromeIconTheme extends BuiltinIconTheme {
-        public MonochromeIconTheme(String key, String name) {
+    private class MonochromeIconTheme extends BuiltinIconTheme {
+        MonochromeIconTheme(String key, String name) {
             super(key, name);
         }
 
@@ -640,12 +646,14 @@ public class IconsHandler {
             Drawable app_icon = getDefaultAppDrawable(componentName, uristr);
 
             app_icon = app_icon.mutate();
-            if (getColor(Thing.Mask) == Color.BLACK) {
+
+            if (getColor(Thing.Mask) == Color.WHITE) {
                 app_icon = convertToGrayscale(app_icon);
             } else {
                 PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
                 app_icon.setColorFilter(getColor(Thing.Mask), mode);
             }
+
 
             return app_icon;
         }
@@ -684,7 +692,7 @@ public class IconsHandler {
 
     }
 
-    protected Drawable convertToGrayscale(Drawable drawable)
+    private Drawable convertToGrayscale(Drawable drawable)
     {
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
