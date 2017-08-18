@@ -16,6 +16,8 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -104,15 +106,36 @@ public class IconsHandler {
 
     private void initBuiltinIconThemes() {
         builtinThemes.put(DEFAULT_PACK, new DefaultIconTheme(DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
-        builtinThemes.put("bw", new MonochromeIconTheme("bw", "BlackWhite", Color.WHITE, Color.BLACK));
-        builtinThemes.put("termcap", new MonochromeIconTheme("termcap", "Termcap", Color.parseColor("#dd00dd00"), Color.BLACK));
-        builtinThemes.put("coolblue", new MonochromeIconTheme("coolblue", "Coolblue", Color.parseColor("#dd0000ff"), Color.BLACK));
-        builtinThemes.put("sunrise", new MonochromeIconTheme("sunrise", "Sunrise", Color.parseColor("#ddff0000"), Color.BLACK));
-        builtinThemes.put("candy", new PolychromeIconTheme("candy", "Candy",
-                new int [] {
-                        Color.parseColor("#ffee6666"), Color.parseColor("#ff66ee66"), Color.parseColor("#ff6666ee"),
-                        Color.parseColor("#ffeeee66"), Color.parseColor("#ff66eeee"), Color.parseColor("#ffee66ee"),
-                }, Color.WHITE));
+
+        BuiltinIconTheme bw = new MonochromeIconTheme("bw", "BlackWhite")
+                .setColor(Thing.Mask, Color.BLACK)
+                .setColor(Thing.Text, Color.WHITE)
+                .setColor(Thing.AltText, Color.WHITE)
+                .setColor(Thing.Background, Color.BLACK)
+                .setColor(Thing.AltBackground, Color.parseColor("#ff222222"));
+
+
+        builtinThemes.put(bw.getPackKey(), bw);
+
+        BuiltinIconTheme termcap = new MonochromeIconTheme("termcap", "Termcap")
+                .setColor(Thing.Mask, Color.parseColor("#dd22ff22"))
+                .setColor(Thing.Text, Color.parseColor("#dd22ff22"))
+                .setColor(Thing.AltText, Color.parseColor("#dd22ff22"))
+                .setColor(Thing.Background, Color.BLACK)
+                .setColor(Thing.AltBackground, Color.parseColor("#dd112211"));
+
+        builtinThemes.put(termcap.getPackKey(), termcap);
+
+        BuiltinIconTheme coolblue = new MonochromeIconTheme("coolblue", "Coolblue")
+                .setColor(Thing.Mask, Color.parseColor("#ff1111ff"))
+                .setColor(Thing.Text, Color.parseColor("#ee3333ff"))
+                .setColor(Thing.AltText, Color.parseColor("#ee2222ff"))
+                .setColor(Thing.Background, Color.parseColor("#ff000001"))
+                .setColor(Thing.AltBackground, Color.parseColor("#ff111112"));
+
+        builtinThemes.put(coolblue.getPackKey(), coolblue);
+
+
     }
 
     public Collection<BuiltinIconTheme> getBuiltinIconThemes() {
@@ -378,39 +401,6 @@ public class IconsHandler {
     }
 
 
-    public void updateStyles(Style style) {
-        for (String key: builtinThemes.keySet()) {
-
-            if (iconsPackPackageName.equalsIgnoreCase(key)) {
-
-                IconsHandler.BuiltinIconTheme theme = builtinThemes.get(iconsPackPackageName);
-                if (!theme.hasColors()) {
-                    style.setDefaultColors();
-                    return;
-                }
-
-                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-
-                try {
-                    edit.putInt("cattab_background", theme.getBackgroundColor());
-                    edit.putInt("cattabselected_background", theme.getBackgroundColor());
-                    edit.putInt("cattabselected_text", theme.getTextColor());
-
-                    edit.putInt("cattabtextcolor", theme.getTextColor());
-                    edit.putInt("cattabtextcolorinv", theme.getBackgroundColor());
-
-                    edit.putInt("wallpapercolor", theme.getBackgroundColor());
-
-                    edit.putInt("textcolor", theme.getTextColor());
-                } finally {
-                    edit.apply();
-                }
-                return;
-            }
-        }
-    }
-
-
     private String [] packs = {"org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME", "com.anddoes.launcher.THEME" };
 
     /**
@@ -537,30 +527,84 @@ public class IconsHandler {
     }
 
 
+    public void updateStyles(Style style) {
+        for (String key: builtinThemes.keySet()) {
+
+            if (iconsPackPackageName.equalsIgnoreCase(key)) {
+
+                IconsHandler.BuiltinIconTheme theme = builtinThemes.get(iconsPackPackageName);
+                if (!theme.hasColors()) {
+                    style.setDefaultColors();
+                    return;
+                }
+
+                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+
+                try {
+                    edit.putInt("cattab_background", theme.getColor(Thing.AltBackground));
+                    edit.putInt("cattabselected_background", theme.getColor(Thing.AltBackground));
+                    edit.putInt("cattabselected_text", theme.getColor(Thing.AltText));
+
+                    edit.putInt("cattabtextcolor", theme.getColor(Thing.Text));
+                    edit.putInt("cattabtextcolorinv",theme.getColor(Thing.Background));
+
+                    edit.putInt("wallpapercolor", theme.getColor(Thing.Background));
+
+                    edit.putInt("textcolor", theme.getColor(Thing.Text));
+                } finally {
+                    edit.apply();
+                }
+                return;
+            }
+        }
+    }
+
+
+
+    public enum Thing {Mask, Text, AltText, Background, AltBackground}
 
     public abstract class BuiltinIconTheme {
 
         private String mKey;
         private String mName;
 
+        private Map<Thing,Integer> mColors = new HashMap<>();
+
         public BuiltinIconTheme(String key, String name) {
+            this(key, name, null);
+        }
+
+        public BuiltinIconTheme(String key, String name, Map<Thing,Integer> colors) {
             mKey = key;
             mName = name;
+            if (colors != null) {
+                mColors.putAll(colors);
+            }
+
         }
 
         public String getPackKey() {
             return mKey;
         }
+
         public String getPackName() {
             return mName;
         }
+
         public abstract Drawable getDrawable(ComponentName componentName, String uristr);
 
         public boolean hasColors() {
-            return false;
+            return mColors.size()>0;
         }
-        public abstract int getTextColor();
-        public abstract int getBackgroundColor();
+
+        public BuiltinIconTheme setColor(Thing thing, int color) {
+            mColors.put(thing, color);
+            return this;
+        }
+
+        public Integer getColor(Thing thing) {
+            return mColors.get(thing);
+        }
     }
 
 
@@ -576,27 +620,17 @@ public class IconsHandler {
             return getDefaultAppDrawable(componentName, uristr);
         }
 
-        @Override
-        public int getTextColor() {
-            return -1;
-        }
 
-        @Override
-        public int getBackgroundColor() {
-            return -1;
-        }
     }
 
     public class MonochromeIconTheme extends BuiltinIconTheme {
-        private int mFGColor;
-        private int mBGColor;
-
-        public MonochromeIconTheme(String key, String name, int fgcolor, int bgcolor) {
+        public MonochromeIconTheme(String key, String name) {
             super(key, name);
-            mFGColor = fgcolor;
-            mBGColor = bgcolor;
         }
 
+        public MonochromeIconTheme(String key, String name, Map<Thing, Integer> colors) {
+            super(key, name, colors);
+        }
 
         @Override
         public Drawable getDrawable(ComponentName componentName, String uristr) {
@@ -606,27 +640,17 @@ public class IconsHandler {
             Drawable app_icon = getDefaultAppDrawable(componentName, uristr);
 
             app_icon = app_icon.mutate();
-            PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
-
-            app_icon.setColorFilter(mFGColor,mode);
+            if (getColor(Thing.Mask) == Color.BLACK) {
+                app_icon = convertToGrayscale(app_icon);
+            } else {
+                PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
+                app_icon.setColorFilter(getColor(Thing.Mask), mode);
+            }
 
             return app_icon;
         }
 
-        @Override
-        public boolean hasColors() {
-            return true;
-        }
 
-        @Override
-        public int getTextColor() {
-            return mFGColor;
-        }
-
-        @Override
-        public int getBackgroundColor() {
-            return mBGColor;
-        }
     }
 
     public class PolychromeIconTheme extends BuiltinIconTheme {
@@ -639,7 +663,6 @@ public class IconsHandler {
             mBGColor = bgcolor;
         }
 
-
         @Override
         public Drawable getDrawable(ComponentName componentName, String uristr) {
 
@@ -648,6 +671,8 @@ public class IconsHandler {
             Drawable app_icon = getDefaultAppDrawable(componentName, uristr);
 
             app_icon = app_icon.mutate();
+
+
             PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
 
             int color = Math.abs(componentName.getPackageName().hashCode()) % mFGColors.length;
@@ -656,22 +681,18 @@ public class IconsHandler {
             return app_icon;
         }
 
-        @Override
-        public boolean hasColors() {
-            return true;
-        }
 
-
-        @Override
-        public int getTextColor() {
-            return mFGColors[0];
-        }
-
-        @Override
-        public int getBackgroundColor() {
-            return mBGColor;
-        }
     }
 
+    protected Drawable convertToGrayscale(Drawable drawable)
+    {
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
 
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+        drawable.setColorFilter(filter);
+
+        return drawable;
+    }
 }

@@ -556,10 +556,10 @@ public class MainActivity extends Activity implements
     private void checkConfig() {
         readPrefs();
 
-        View view = findViewById(R.id.main_layout_view);
-        view.setBackgroundColor(mStyle.getWallpaperColor());
+        //View view = findViewById(R.id.main_layout_view);
+        //view.setBackgroundColor(mStyle.getWallpaperColor());
         getWindow().setBackgroundDrawable(new ColorDrawable(mStyle.getWallpaperColor()));
-        Log.d(TAG,"bg:" + mStyle.getWallpaperColor());
+        //Log.d(TAG,"bg:" + mStyle.getWallpaperColor());
 
         itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
         itemClickedAnim.setDuration(200);
