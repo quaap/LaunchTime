@@ -111,6 +111,12 @@ public class SettingsActivity extends PreferenceActivity {
       //  prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        finish();
+    }
+
 //    @Override
 //    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 //
