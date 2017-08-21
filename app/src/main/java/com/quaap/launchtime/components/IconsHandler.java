@@ -449,17 +449,20 @@ public class IconsHandler {
     }
 
     public Map<String, String> getAllIconsThemes() {
-        Map<String, String> iconsPacks = new LinkedHashMap<>();
+        Map<String, String> iconsThemes = new LinkedHashMap<>();
 
-       // iconsPacks.put(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name));
+        iconsThemes.put(DEFAULT_PACK, builtinThemes.get(DEFAULT_PACK).getPackName());
+
+
+        iconsThemes.putAll(getIconsPacks());
 
         for (IconsHandler.BuiltinIconTheme ic: getBuiltinIconThemes()) {
-            iconsPacks.put(ic.getPackKey(),ic.getPackName());
+            if ( !ic.getPackKey().equals(DEFAULT_PACK)) {
+                iconsThemes.put(ic.getPackKey(), ic.getPackName());
+            }
         }
 
-        iconsPacks.putAll(getIconsPacks());
-
-        return iconsPacks;
+        return iconsThemes;
     }
 
     private boolean isDrawableInCache(String key) {
