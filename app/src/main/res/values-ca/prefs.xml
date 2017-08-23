@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Aquest fitxer es va traduir automàticament a la màquina. Si us plau, no dubteu a corregir els errors de traducció que trobis. -->
+
+
+    <string-array name="pref_return_home_strings">
+        <item>immediatament</item>
+        <item>després de 30 segons</item>
+        <item>després de 1 minut</item>
+        <item>després de 5 minuts</item>
+        <item>després de 30 minuts</item>
+        <item>després de 1 hora</item>
+        <item>després de 1 dia</item>
+        <item>mai</item>
+    </string-array>
+
+
+    <string-array name="pref_orientation_strings">
+        <item>Sistema</item>
+        <item>Rotate mentre Força</item>
+        <item>de Retrat de Força</item>
+        <item>necessitada Paisatge</item>
+    </string-array>
+
+    <string-array name="pref_size_strings">
+        <item>Medi</item>
+        <item>Petit</item>
+        <item>Gran</item>
+        <item>X-Gran</item>
+    </string-array>
+
+    <string-array name="pref_cat_location_strings">
+        <item>Correcte</item>
+        <item>Esquerre</item>
+    </string-array>
+
+
+</resources>

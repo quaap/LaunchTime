@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Ce fichier a été automatiquement traduit par machine. N\'hésitez pas à corriger toutes les erreurs de traduction que vous trouvez. -->
+
+
+    <string-array name="pref_return_home_strings">
+        <item>Aussitôt après</item>
+        <item>de 30 secondes</item>
+        <item>après 1 minute</item>
+        <item>après 5 minutes</item>
+        <item>après 30 minutes</item>
+        <item>après 1 heure</item>
+        <item>après 1 jour</item>
+        <item>jamais</item>
+    </string-array>
+
+
+
+    <string-array name="pref_orientation_strings">
+        <item>Système</item>
+        <item>Rotate lorsque Force</item>
+        <item>de Portrait de Force</item>
+        <item>précisée Paysage</item>
+    </string-array>
+
+
+    <string-array name="pref_size_strings">
+        <item>Moyen</item>
+        <item>Petit</item>
+        <item>Grand</item>
+        <item>X-le droit</item>
+    </string-array>
+
+
+    <string-array name="pref_cat_location_strings">
+        <item>Bien</item>
+        <item>a Laissé</item>
+    </string-array>
+
+
+
+</resources>

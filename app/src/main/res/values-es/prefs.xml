@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Este archivo fue traducido automáticamente por máquina. No dude en corregir los errores de traducción que encuentre. -->
+
+
+    <string-array name="pref_return_home_strings">
+        <item>inmediatamente</item>
+        <item>después de 30 segundos</item>
+        <item>después de 1 minuto</item>
+        <item>después de 5 minutos</item>
+        <item>después de 30 minutos</item>
+        <item>después de 1 hora</item>
+        <item>después de 1 día</item>
+        <item>nunca</item>
+    </string-array>
+
+
+
+    <string-array name="pref_orientation_strings">
+        <item>Sistema</item>
+        <item>Rotate cuando Fuerza</item>
+        <item>de Retrato de Fuerza</item>
+        <item>necesitada Paisaje</item>
+    </string-array>
+
+
+    <string-array name="pref_size_strings">
+        <item>Medio</item>
+        <item>Pequeño</item>
+        <item>Grande</item>
+        <item>X-el derecho</item>
+    </string-array>
+
+
+    <string-array name="pref_cat_location_strings">
+        <item>Bien</item>
+        <item>Dejó</item>
+    </string-array>
+
+
+
+</resources>
