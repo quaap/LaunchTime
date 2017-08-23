@@ -8,11 +8,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.quaap.launchtime.components.IconsHandler;
 
@@ -63,9 +65,6 @@ public class SettingsActivity extends PreferenceActivity {
         return super.isValidFragment(fragmentName);
     }
 
-
-
-
     public static class SettingsFragment extends PreferenceFragment {
 
         @Override
@@ -73,7 +72,16 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-
+            Preference button = findPreference("reset_colors");
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    IconsHandler ich = GlobState.getIconsHandler(getActivity());
+                    ich.resetUserColors();
+                    Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
 
         }
 

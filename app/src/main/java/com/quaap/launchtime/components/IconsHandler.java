@@ -30,7 +30,6 @@ import android.os.Build;
 import android.util.Log;
 
 import com.quaap.launchtime.R;
-import com.quaap.launchtime.ui.Style;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -170,12 +169,18 @@ public class IconsHandler {
      */
     public void loadIconsPack(String packageName) {
 
+        //setDefaultColors();
+
+        saveUserColors();
+
         //clear icons pack
         iconsPackPackageName = packageName;
         packagesDrawables.clear();
         backImages.clear();
         cacheClear();
         iconPackres = null;
+
+        restoreUserColors();
 
 //        // system icons, nothing to do
 //        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
@@ -444,6 +449,11 @@ public class IconsHandler {
         }
     }
 
+    public String getIconsPackName() {
+        return iconsPackPackageName;
+    }
+
+
     private Map<String, String> getIconsPacks() {
         return iconsPacks;
     }
@@ -536,41 +546,223 @@ public class IconsHandler {
     }
 
 
-    public void updateStyles(Style style) {
-        for (String key: builtinThemes.keySet()) {
+//    public void updateStyles(Style style) {
+//       // restoreUserColors(iconsPackPackageName);
+//
+//        for (String key: builtinThemes.keySet()) {
+//
+//            if (iconsPackPackageName.equalsIgnoreCase(key)) {
+//
+//                IconsHandler.BuiltinIconTheme theme = builtinThemes.get(iconsPackPackageName);
+//                if (!theme.hasColors()) {
+//                   // style.setDefaultColors();
+//                    return;
+//                }
+//
+//                //saveUserColors(theme.getPackKey());
+//                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+//
+//                try {
+//                    edit.putInt("cattab_background", theme.getColor(Thing.AltBackground));
+//                    edit.putInt("cattabselected_background", theme.getColor(Thing.AltBackground));
+//                    edit.putInt("cattabselected_text", theme.getColor(Thing.AltText));
+//
+//                    edit.putInt("cattabtextcolor", theme.getColor(Thing.Text));
+//                    edit.putInt("cattabtextcolorinv",theme.getColor(Thing.Background));
+//
+//                    edit.putInt("wallpapercolor", theme.getColor(Thing.Background));
+//
+//                    edit.putInt("textcolor", theme.getColor(Thing.Text));
+//                } finally {
+//                    edit.apply();
+//                }
+//                return;
+//            }
+//        }
+//    }
 
-            if (iconsPackPackageName.equalsIgnoreCase(key)) {
 
-                IconsHandler.BuiltinIconTheme theme = builtinThemes.get(iconsPackPackageName);
-                if (!theme.hasColors()) {
-                    style.setDefaultColors();
-                    return;
-                }
+//
+//    public void setDefaultColors() {
+//
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+//        SharedPreferences.Editor edit = prefs.edit();
+//
+//        try {
+//            edit.putInt("cattab_background", getResColor(R.color.cattab_background));
+//            edit.putInt("cattabselected_background",  getResColor(R.color.cattabselected_background));
+//            edit.putInt("cattabselected_text",  getResColor(R.color.cattabselected_text));
+//
+//            edit.putInt("cattabtextcolor", getResColor(R.color.textcolor));
+//            edit.putInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
+//
+//            edit.putInt("wallpapercolor", Color.TRANSPARENT);
+//
+//            edit.putInt("textcolor", getResColor(R.color.textcolor));
+//        } finally {
+//            edit.apply();
+//        }
+//    }
+//
+//    public void saveUserColors() {
+//        String themename = iconsPackPackageName;
+//
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+//        SharedPreferences.Editor edit = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE).edit();
+//
+//        try {
+//            edit.putInt("cattab_background" + themename, prefs.getInt("cattab_background", getResColor(R.color.cattab_background)));
+//            edit.putInt("cattabselected_background" + themename, prefs.getInt("cattabselected_background", getResColor(R.color.cattabselected_background)));
+//            edit.putInt("cattabselected_text" + themename, prefs.getInt("cattabselected_text", getResColor(R.color.cattabselected_text)));
+//
+//            edit.putInt("cattabtextcolor" + themename, prefs.getInt("cattabtextcolor", getResColor(R.color.textcolor)));
+//            edit.putInt("cattabtextcolorinv" + themename, prefs.getInt("cattabtextcolorinv", getResColor(R.color.textcolorinv)));
+//
+//            edit.putInt("wallpapercolor" + themename,  prefs.getInt("wallpapercolor", Color.TRANSPARENT));
+//
+//            edit.putInt("textcolor" + themename, prefs.getInt("textcolor", getResColor(R.color.textcolor)));
+//        } finally {
+//            edit.apply();
+//        }
+//    }
+//
+//    public void restoreUserColors() {
+//        String themename = iconsPackPackageName;
+//
+//        SharedPreferences prefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
+//        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+//
+//        try {
+//            edit.putInt("cattab_background", prefs.getInt("cattab_background" + themename, getResColor(R.color.cattab_background)));
+//            edit.putInt("cattabselected_background", prefs.getInt("cattabselected_background" + themename, getResColor(R.color.cattabselected_background)));
+//            edit.putInt("cattabselected_text", prefs.getInt("cattabselected_text" + themename, getResColor(R.color.cattabselected_text)));
+//
+//            edit.putInt("cattabtextcolor", prefs.getInt("cattabtextcolor" + themename, getResColor(R.color.textcolor)));
+//            edit.putInt("cattabtextcolorinv", prefs.getInt("cattabtextcolorinv" + themename, getResColor(R.color.textcolorinv)));
+//
+//            edit.putInt("wallpapercolor",  prefs.getInt("wallpapercolor" + themename, Color.TRANSPARENT));
+//
+//            edit.putInt("textcolor", prefs.getInt("textcolor" + themename, getResColor(R.color.textcolor)));
+//        } finally {
+//            edit.apply();
+//        }
+//    }
 
-                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
 
-                try {
-                    edit.putInt("cattab_background", theme.getColor(Thing.AltBackground));
-                    edit.putInt("cattabselected_background", theme.getColor(Thing.AltBackground));
-                    edit.putInt("cattabselected_text", theme.getColor(Thing.AltText));
 
-                    edit.putInt("cattabtextcolor", theme.getColor(Thing.Text));
-                    edit.putInt("cattabtextcolorinv",theme.getColor(Thing.Background));
 
-                    edit.putInt("wallpapercolor", theme.getColor(Thing.Background));
+    private final String [] COLOR_PREFS = {"cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
+            "wallpapercolor",  "textcolor"};
 
-                    edit.putInt("textcolor", theme.getColor(Thing.Text));
-                } finally {
-                    edit.apply();
-                }
-                return;
-            }
+    private Thing [] THING_MAP = {Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
+
+
+    private int [] getColorDefaults()  {
+        return new int [] {getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
+            getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
+            Color.TRANSPARENT,  getResColor(R.color.textcolor)};
+    };
+
+
+
+
+    private int getResColor(int res) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            return ctx.getColor(res);
+        } else {
+            return ctx.getResources().getColor(res);
         }
     }
 
 
 
+    private int getCurrentThemeColor(String pref) {
+        BuiltinIconTheme theme = builtinThemes.get(iconsPackPackageName);
+        if (theme!=null && theme.hasColors()) {
+            int max = COLOR_PREFS.length;
+            for (int i=0; i<max; i++) {
+                if (pref.equals(COLOR_PREFS[i])) {
+                    return theme.getColor(THING_MAP[i]);
+                }
+            }
+        }
+
+        int [] colorDefaults = getColorDefaults();
+        int max = COLOR_PREFS.length;
+        for (int i=0; i<max; i++) {
+            if (pref.equals(COLOR_PREFS[i])) {
+                return colorDefaults[i];
+            }
+        }
+        throw new IllegalArgumentException("No such preference '" + pref + "'");
+    }
+
+
+    private String getThemePrefName(String pref) {
+        return "theme_" + iconsPackPackageName + "_" + pref;
+    }
+
+
+    public void resetUserColors() {
+
+
+        SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor appedit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+
+        try {
+
+            int max = COLOR_PREFS.length;
+            for (int i=0; i<max; i++) {
+                appedit.putInt(COLOR_PREFS[i],  getCurrentThemeColor(COLOR_PREFS[i]));
+                //themeedit.putInt(getThemePrefName(COLOR_PREFS[i]),  getCurrentThemeColor(COLOR_PREFS[i]));
+                themeedit.remove(getThemePrefName(COLOR_PREFS[i]));
+            }
+
+        } finally {
+            appedit.apply();
+            themeedit.apply();
+        }
+    }
+
+
+    private void saveUserColors() {
+
+        SharedPreferences appprefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE).edit();
+
+        try {
+
+            int max = COLOR_PREFS.length;
+            for (int i=0; i<max; i++) {
+                themeedit.putInt(getThemePrefName(COLOR_PREFS[i]),  appprefs.getInt(COLOR_PREFS[i], getCurrentThemeColor(COLOR_PREFS[i])));
+            }
+
+        } finally {
+            themeedit.apply();
+        }
+    }
+
+
+    private void restoreUserColors() {
+
+        SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
+        SharedPreferences.Editor appedit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+
+        try {
+
+            int max = COLOR_PREFS.length;
+            for (int i=0; i<max; i++) {
+                appedit.putInt(COLOR_PREFS[i],  themeprefs.getInt(getThemePrefName(COLOR_PREFS[i]), getCurrentThemeColor(COLOR_PREFS[i])));
+            }
+
+        } finally {
+            appedit.apply();
+        }
+    }
+
+
     private enum Thing {Mask, Text, AltText, Background, AltBackground}
+
 
     abstract class BuiltinIconTheme {
 
@@ -614,6 +806,33 @@ public class IconsHandler {
         Integer getColor(Thing thing) {
             return mColors.get(thing);
         }
+
+
+
+        void applyTheme() {
+
+            //SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
+
+            SharedPreferences appprefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor appedit = appprefs.edit();
+            try {
+
+                int[] colorDefaults = getColorDefaults();
+                int max = COLOR_PREFS.length;
+                for (int i = 0; i < max; i++) {
+                    if (hasColors()) {
+                        appedit.putInt(COLOR_PREFS[i], getColor(THING_MAP[i]));
+                    } else {
+                        appedit.putInt(COLOR_PREFS[i], colorDefaults[i]);
+                    }
+                }
+            } finally {
+                appedit.apply();
+            }
+
+        }
+
+
     }
 
 

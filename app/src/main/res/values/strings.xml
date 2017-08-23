@@ -328,4 +328,7 @@
             ]]>
     </string>
     <string name="link">Shortcut</string>
+    <string name="reset_colors_title">Reset colors</string>
+    <string name="reset_color_summ">Click to reset the current theme\'s colors</string>
+    <string name="colors_reset_default">Colors have been reset</string>
 </resources>

@@ -84,12 +84,6 @@
     <PreferenceCategory android:title="@string/pref_color_style">
 
         <ListPreference
-            android:defaultValue="@string/pref_iconpack_def"
-            android:key="icons-pack"
-            android:summary="%s"
-            android:title="@string/icons_pack_name" />
-
-        <ListPreference
             android:defaultValue="@string/pref_cat_location_values_def"
             android:title="@string/pref_cat_loc_text"
             android:entries="@array/pref_cat_location_strings"
@@ -113,9 +107,20 @@
             android:key="preference_iconsize"
             android:summary="%s" />
 
+
+        <ListPreference
+            android:defaultValue="@string/pref_iconpack_def"
+            android:key="icons-pack"
+            android:summary="%s"
+            android:title="@string/icons_pack_name" />
+
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icontext"
             android:key="textcolor"
+            android:defaultValue="@color/textcolor"/>
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="Background color"
+            android:key="wallpapercolor"
             android:defaultValue="@color/textcolor"/>
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabtext"
@@ -137,6 +142,12 @@
             android:title="@string/pref_drag"
             android:key="dragover_background"
             android:defaultValue="@color/dragover_background" />
+
+
+        <Preference android:title="@string/reset_colors_title"
+            android:key="reset_colors"
+            android:summary="@string/reset_color_summ"/>
+
     </PreferenceCategory>
 
 

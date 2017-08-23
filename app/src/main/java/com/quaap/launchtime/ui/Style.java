@@ -174,24 +174,7 @@ public class Style {
         wallpaperColor = mAppPreferences.getInt("wallpapercolor", Color.TRANSPARENT);
     }
 
-    public void setDefaultColors() {
-        SharedPreferences.Editor edit = mAppPreferences.edit();
 
-        try {
-            edit.putInt("cattab_background", getResColor(R.color.cattab_background));
-            edit.putInt("cattabselected_background",  getResColor(R.color.cattabselected_background));
-            edit.putInt("cattabselected_text",  getResColor(R.color.cattabselected_text));
-
-            edit.putInt("cattabtextcolor", getResColor(R.color.textcolor));
-            edit.putInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
-
-            edit.putInt("wallpapercolor", Color.TRANSPARENT);
-
-            edit.putInt("textcolor", getResColor(R.color.textcolor));
-        } finally {
-            edit.apply();
-        }
-    }
 
     private int getResColor(int res) {
         if (Build.VERSION.SDK_INT >= 23) {

@@ -336,8 +336,9 @@ public class MainActivity extends Activity implements
                 AppLauncher.clearIcons();
                 //mIconSheet.removeAllViews();
                 IconsHandler ich = GlobState.getIconsHandler(this);
-                ich.loadIconsPack(sharedPreferences.getString(key, "default"));
-                ich.updateStyles(mStyle);
+
+                ich.loadIconsPack(sharedPreferences.getString(key, IconsHandler.DEFAULT_PACK));
+                //ich.updateStyles(mStyle);
 
                 mQuickRow.repopulate();
             }
