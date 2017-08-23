@@ -463,7 +463,6 @@ public class IconsHandler {
 
         iconsThemes.put(DEFAULT_PACK, builtinThemes.get(DEFAULT_PACK).getPackName());
 
-
         iconsThemes.putAll(getIconsPacks());
 
         for (IconsHandler.BuiltinIconTheme ic: getBuiltinIconThemes()) {
@@ -546,111 +545,6 @@ public class IconsHandler {
     }
 
 
-//    public void updateStyles(Style style) {
-//       // restoreUserColors(iconsPackPackageName);
-//
-//        for (String key: builtinThemes.keySet()) {
-//
-//            if (iconsPackPackageName.equalsIgnoreCase(key)) {
-//
-//                IconsHandler.BuiltinIconTheme theme = builtinThemes.get(iconsPackPackageName);
-//                if (!theme.hasColors()) {
-//                   // style.setDefaultColors();
-//                    return;
-//                }
-//
-//                //saveUserColors(theme.getPackKey());
-//                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-//
-//                try {
-//                    edit.putInt("cattab_background", theme.getColor(Thing.AltBackground));
-//                    edit.putInt("cattabselected_background", theme.getColor(Thing.AltBackground));
-//                    edit.putInt("cattabselected_text", theme.getColor(Thing.AltText));
-//
-//                    edit.putInt("cattabtextcolor", theme.getColor(Thing.Text));
-//                    edit.putInt("cattabtextcolorinv",theme.getColor(Thing.Background));
-//
-//                    edit.putInt("wallpapercolor", theme.getColor(Thing.Background));
-//
-//                    edit.putInt("textcolor", theme.getColor(Thing.Text));
-//                } finally {
-//                    edit.apply();
-//                }
-//                return;
-//            }
-//        }
-//    }
-
-
-//
-//    public void setDefaultColors() {
-//
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-//        SharedPreferences.Editor edit = prefs.edit();
-//
-//        try {
-//            edit.putInt("cattab_background", getResColor(R.color.cattab_background));
-//            edit.putInt("cattabselected_background",  getResColor(R.color.cattabselected_background));
-//            edit.putInt("cattabselected_text",  getResColor(R.color.cattabselected_text));
-//
-//            edit.putInt("cattabtextcolor", getResColor(R.color.textcolor));
-//            edit.putInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
-//
-//            edit.putInt("wallpapercolor", Color.TRANSPARENT);
-//
-//            edit.putInt("textcolor", getResColor(R.color.textcolor));
-//        } finally {
-//            edit.apply();
-//        }
-//    }
-//
-//    public void saveUserColors() {
-//        String themename = iconsPackPackageName;
-//
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-//        SharedPreferences.Editor edit = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE).edit();
-//
-//        try {
-//            edit.putInt("cattab_background" + themename, prefs.getInt("cattab_background", getResColor(R.color.cattab_background)));
-//            edit.putInt("cattabselected_background" + themename, prefs.getInt("cattabselected_background", getResColor(R.color.cattabselected_background)));
-//            edit.putInt("cattabselected_text" + themename, prefs.getInt("cattabselected_text", getResColor(R.color.cattabselected_text)));
-//
-//            edit.putInt("cattabtextcolor" + themename, prefs.getInt("cattabtextcolor", getResColor(R.color.textcolor)));
-//            edit.putInt("cattabtextcolorinv" + themename, prefs.getInt("cattabtextcolorinv", getResColor(R.color.textcolorinv)));
-//
-//            edit.putInt("wallpapercolor" + themename,  prefs.getInt("wallpapercolor", Color.TRANSPARENT));
-//
-//            edit.putInt("textcolor" + themename, prefs.getInt("textcolor", getResColor(R.color.textcolor)));
-//        } finally {
-//            edit.apply();
-//        }
-//    }
-//
-//    public void restoreUserColors() {
-//        String themename = iconsPackPackageName;
-//
-//        SharedPreferences prefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
-//        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-//
-//        try {
-//            edit.putInt("cattab_background", prefs.getInt("cattab_background" + themename, getResColor(R.color.cattab_background)));
-//            edit.putInt("cattabselected_background", prefs.getInt("cattabselected_background" + themename, getResColor(R.color.cattabselected_background)));
-//            edit.putInt("cattabselected_text", prefs.getInt("cattabselected_text" + themename, getResColor(R.color.cattabselected_text)));
-//
-//            edit.putInt("cattabtextcolor", prefs.getInt("cattabtextcolor" + themename, getResColor(R.color.textcolor)));
-//            edit.putInt("cattabtextcolorinv", prefs.getInt("cattabtextcolorinv" + themename, getResColor(R.color.textcolorinv)));
-//
-//            edit.putInt("wallpapercolor",  prefs.getInt("wallpapercolor" + themename, Color.TRANSPARENT));
-//
-//            edit.putInt("textcolor", prefs.getInt("textcolor" + themename, getResColor(R.color.textcolor)));
-//        } finally {
-//            edit.apply();
-//        }
-//    }
-
-
-
-
     private final String [] COLOR_PREFS = {"cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
             "wallpapercolor",  "textcolor"};
 
@@ -664,8 +558,6 @@ public class IconsHandler {
     };
 
 
-
-
     private int getResColor(int res) {
         if (Build.VERSION.SDK_INT >= 23) {
             return ctx.getColor(res);
@@ -673,7 +565,6 @@ public class IconsHandler {
             return ctx.getResources().getColor(res);
         }
     }
-
 
 
     private int getCurrentThemeColor(String pref) {
