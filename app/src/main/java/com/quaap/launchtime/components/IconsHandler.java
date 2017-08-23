@@ -180,15 +180,18 @@ public class IconsHandler {
         cacheClear();
         iconPackres = null;
 
-        restoreUserColors();
+
 
 //        // system icons, nothing to do
 //        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
 //            return;
 //        }
 
+        boolean hasusercolors = restoreUserColors();
+
         // inbuilt theme icons, nothing to do
         if (builtinThemes.keySet().contains(iconsPackPackageName)) {
+            if (!hasusercolors) builtinThemes.get(iconsPackPackageName).applyTheme();
             return;
         }
 
@@ -634,7 +637,7 @@ public class IconsHandler {
     }
 
 
-    private void restoreUserColors() {
+    private boolean restoreUserColors() {
 
         SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
         SharedPreferences.Editor appedit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
@@ -649,6 +652,7 @@ public class IconsHandler {
         } finally {
             appedit.apply();
         }
+        return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
     }
 
 

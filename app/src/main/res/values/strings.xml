@@ -164,8 +164,8 @@
     <string name="widget_alreay">This widget is already in category \"%s\"</string>
 
 
-    <string name="icons_pack_desc">Choose an icon theme</string>
-    <string name="icons_pack_name">Icons theme</string>
+    <string name="icons_pack_desc">Choose a theme or iconpack</string>
+    <string name="icons_pack_name">Choose iconpack/theme</string>
     <string name="icons_pack_default_name">System icons</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>

@@ -42,13 +42,10 @@ import java.util.Map;
 public class SettingsActivity extends PreferenceActivity {
 
 
-    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         getListView().setBackgroundColor(Color.DKGRAY);
         // Display the fragment as the main content.
@@ -79,6 +76,7 @@ public class SettingsActivity extends PreferenceActivity {
                     IconsHandler ich = GlobState.getIconsHandler(getActivity());
                     ich.resetUserColors();
                     Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
                     return true;
                 }
             });
@@ -90,6 +88,13 @@ public class SettingsActivity extends PreferenceActivity {
             super.onResume();
             ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
             setListPreferenceIconsPacksData(iconsPack, this.getActivity());
+            iconsPack.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    getActivity().finish();
+                    return true;
+                }
+            });
         }
     }
 
@@ -117,16 +122,8 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public void onResume() {
         super.onResume();
-      //  prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
-//    @Override
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//
-//        if (key.equalsIgnoreCase("icons-pack")) {
-//            GlobState.getIconsHandler(this).loadIconsPack(sharedPreferences.getString(key, "default"));
-//        }
-//    }
     
     protected static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
         IconsHandler iph = GlobState.getIconsHandler(context);
