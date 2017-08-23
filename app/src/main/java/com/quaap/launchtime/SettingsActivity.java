@@ -8,14 +8,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.quaap.launchtime.components.IconsHandler;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -39,13 +42,10 @@ import java.util.Map;
 public class SettingsActivity extends PreferenceActivity {
 
 
-    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         getListView().setBackgroundColor(Color.DKGRAY);
         // Display the fragment as the main content.
@@ -62,9 +62,6 @@ public class SettingsActivity extends PreferenceActivity {
         return super.isValidFragment(fragmentName);
     }
 
-
-
-
     public static class SettingsFragment extends PreferenceFragment {
 
         @Override
@@ -72,7 +69,17 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-
+            Preference button = findPreference("reset_colors");
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    IconsHandler ich = GlobState.getIconsHandler(getActivity());
+                    ich.resetUserColors();
+                    Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                    return true;
+                }
+            });
 
         }
 
@@ -81,6 +88,13 @@ public class SettingsActivity extends PreferenceActivity {
             super.onResume();
             ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
             setListPreferenceIconsPacksData(iconsPack, this.getActivity());
+            iconsPack.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    getActivity().finish();
+                    return true;
+                }
+            });
         }
     }
 
@@ -108,13 +122,6 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public void onResume() {
         super.onResume();
-      //  prefs.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        finish();
     }
 
 //    @Override
@@ -130,21 +137,20 @@ public class SettingsActivity extends PreferenceActivity {
 
         iph.loadAvailableIconsPacks();
 
-        Map<String, String> iconsPacks = iph.getIconsPacks();
+        Map<String, String> iconsPacks = iph.getAllIconsThemes();
 
-        CharSequence[] entries = new CharSequence[iconsPacks.size()+1];
-        CharSequence[] entryValues = new CharSequence[iconsPacks.size()+1];
+        CharSequence[] entries = new CharSequence[iconsPacks.size()];
+        CharSequence[] entryValues = new CharSequence[iconsPacks.size()];
 
         int i = 0;
-        entries[0] = context.getString(R.string.icons_pack_default_name);
-        entryValues[0] = "default";
         for (String packageIconsPack : iconsPacks.keySet()) {
-            entries[++i] = iconsPacks.get(packageIconsPack);
+            entries[i] = iconsPacks.get(packageIconsPack);
             entryValues[i] = packageIconsPack;
+            i++;
         }
 
         lp.setEntries(entries);
-        lp.setDefaultValue("default");
+        lp.setDefaultValue(IconsHandler.DEFAULT_PACK);
         lp.setEntryValues(entryValues);
     }
 }

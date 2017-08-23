@@ -165,8 +165,8 @@
     <string name="widget_alreay">このウィジェットはすでにカテゴリ \"%s\" にあります</string>
 
 
-    <string name="icons_pack_desc">アイコンテーマを選択する</string>
-    <string name="icons_pack_name">アイコンのテーマ</string>
+    <string name="icons_pack_desc">テーマまたはアイコンパックを選択する</string>
+    <string name="icons_pack_name">アイコンパック/テーマを選択</string>
     <string name="icons_pack_default_name">システムアイコン</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
@@ -330,4 +330,7 @@
             ]]>
     </string>
     <string name="link">ショートカット</string>
+    <string name="reset_colors_title">色をリセットする</string>
+    <string name="reset_color_summ">クリックすると現在のテーマの色がリセットされます</string>
+    <string name="colors_reset_default">Colors have been reset</string>
 </resources>

@@ -26,12 +26,14 @@ public class Style {
     private int cattabTextColorInvert;
     private int cattabBackground;
     private int cattabSelectedBackground;
-
-
     private int cattabSelectedText;
     private int dragoverBackground;
     private int textColor;
+
     private int backgroundDefault = Color.TRANSPARENT;
+
+    private int wallpaperColor = Color.TRANSPARENT;
+
     private boolean leftHandCategories;
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 16;
@@ -51,6 +53,11 @@ public class Style {
         readPrefs();
 
     }
+
+    public int getWallpaperColor() {
+        return wallpaperColor;
+    }
+
 
     public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
 
@@ -163,7 +170,11 @@ public class Style {
         cattabTextColorInvert = mAppPreferences.getInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
 
         textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
+
+        wallpaperColor = mAppPreferences.getInt("wallpapercolor", Color.TRANSPARENT);
     }
+
+
 
     private int getResColor(int res) {
         if (Build.VERSION.SDK_INT >= 23) {

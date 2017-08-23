@@ -167,8 +167,7 @@
     <string name="widget_alreay">Этот виджет уже находится в категории \"%s\"</string>
 
 
-    <string name="icons_pack_desc">Выберите тему значка</string>
-    <string name="icons_pack_name">Тема иконок</string>
+    <string name="icons_pack_name">Выбор значка / темы</string>
     <string name="icons_pack_default_name">Значки системы</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
@@ -325,4 +324,8 @@
             ]]>
     </string>
     <string name="link">Ссылка</string>
+    <string name="reset_colors_title">Сбросить цвета</string>
+    <string name="reset_color_summ">Нажмите, чтобы сбросить текущие цвета темы</string>
+    <string name="colors_reset_default">Colors have been reset</string>
+    <string name="icons_pack_desc">Выберите тему или значок-пакет</string>
 </resources>
