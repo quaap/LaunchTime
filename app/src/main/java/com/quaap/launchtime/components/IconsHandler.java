@@ -106,7 +106,7 @@ public class IconsHandler {
     private void initBuiltinIconThemes() {
         builtinThemes.put(DEFAULT_PACK, new DefaultIconTheme(DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
 
-        BuiltinIconTheme bw = new MonochromeIconTheme("bw", "BlackWhite (sys)")
+        BuiltinIconTheme bw = new MonochromeIconTheme("bw", ctx.getString(R.string.theme_bw))
                 .setColor(Thing.Mask, Color.WHITE)
                 .setColor(Thing.Text, Color.WHITE)
                 .setColor(Thing.AltText, Color.WHITE)
@@ -116,7 +116,7 @@ public class IconsHandler {
         builtinThemes.put(bw.getPackKey(), bw);
 
 
-        BuiltinIconTheme termcap = new MonochromeIconTheme("termcap", "Termcap (sys)")
+        BuiltinIconTheme termcap = new MonochromeIconTheme("termcap", ctx.getString(R.string.theme_termcap))
                 .setColor(Thing.Mask, Color.parseColor("#dd22ff22"))
                 .setColor(Thing.Text, Color.parseColor("#dd22ff22"))
                 .setColor(Thing.AltText, Color.parseColor("#dd22ff22"))
@@ -126,24 +126,32 @@ public class IconsHandler {
         builtinThemes.put(termcap.getPackKey(), termcap);
 
 
-        BuiltinIconTheme coolblue = new MonochromeIconTheme("coolblue", "Coolblue (sys)")
+        BuiltinIconTheme coolblue = new MonochromeIconTheme("coolblue", ctx.getString(R.string.theme_coolblue))
                 .setColor(Thing.Mask, Color.parseColor("#ff1111ff"))
-                .setColor(Thing.Text, Color.parseColor("#ee2222ff"))
-                .setColor(Thing.AltText, Color.parseColor("#ee2222ff"))
-                .setColor(Thing.Background, Color.parseColor("#ff000001"))
-                .setColor(Thing.AltBackground, Color.parseColor("#ff111112"));
+                .setColor(Thing.Text, Color.parseColor("#eeffffff"))
+                .setColor(Thing.AltText, Color.parseColor("#eeffffff"))
+                .setColor(Thing.Background, Color.parseColor("#88000077"))
+                .setColor(Thing.AltBackground, Color.parseColor("#881111ff"));
 
         builtinThemes.put(coolblue.getPackKey(), coolblue);
 
-        BuiltinIconTheme vulcan = new MonochromeIconTheme("vulcan", "Vulcan (sys)")
+        BuiltinIconTheme redplanet = new MonochromeIconTheme("redplanet", ctx.getString(R.string.theme_redplanet))
                 .setColor(Thing.Mask, Color.parseColor("#ffff2222"))
                 .setColor(Thing.Text, Color.parseColor("#eeff2222"))
                 .setColor(Thing.AltText, Color.parseColor("#eeff2222"))
-                .setColor(Thing.Background, Color.parseColor("#ff010000"))
-                .setColor(Thing.AltBackground, Color.parseColor("#ff121111"));
+                .setColor(Thing.Background, Color.parseColor("#99dd3333"))
+                .setColor(Thing.AltBackground, Color.parseColor("#22121111"));
 
-        builtinThemes.put(vulcan.getPackKey(), vulcan);
+        builtinThemes.put(redplanet.getPackKey(), redplanet);
 
+        BuiltinIconTheme ladypink = new MonochromeIconTheme("ladypink", ctx.getString(R.string.theme_ladypink))
+                .setColor(Thing.Mask, Color.parseColor("#ffff1493"))
+                .setColor(Thing.Text, Color.parseColor("#eeffffff"))
+                .setColor(Thing.AltText, Color.parseColor("#eeffc0cb"))
+                .setColor(Thing.Background, Color.parseColor("#ffff69b4"))
+                .setColor(Thing.AltBackground, Color.parseColor("#ffff1493"));
+
+        builtinThemes.put(ladypink.getPackKey(), ladypink);
     }
 
     private Collection<BuiltinIconTheme> getBuiltinIconThemes() {
@@ -470,7 +478,7 @@ public class IconsHandler {
 
         for (IconsHandler.BuiltinIconTheme ic: getBuiltinIconThemes()) {
             if ( !ic.getPackKey().equals(DEFAULT_PACK)) {
-                iconsThemes.put(ic.getPackKey(), ic.getPackName());
+                iconsThemes.put(ic.getPackKey(), ic.getPackName() + " " + "(sys)");
             }
         }
 

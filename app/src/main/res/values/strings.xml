@@ -331,4 +331,9 @@
     <string name="reset_colors_title">Reset colors</string>
     <string name="reset_color_summ">Click to reset the current theme\'s colors</string>
     <string name="colors_reset_default">Colors have been reset</string>
+    <string name="theme_bw">BlackWhite</string>
+    <string name="theme_termcap">Termcap</string>
+    <string name="theme_coolblue">Cool blue</string>
+    <string name="theme_redplanet">Red Planet</string>
+    <string name="theme_ladypink">Lady In Pink</string>
 </resources>

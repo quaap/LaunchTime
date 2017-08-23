@@ -328,4 +328,9 @@
     <string name="reset_color_summ">Нажмите, чтобы сбросить текущие цвета темы</string>
     <string name="colors_reset_default">Colors have been reset</string>
     <string name="icons_pack_desc">Выберите тему или значок-пакет</string>
+    <string name="theme_bw">BlackWhite</string>
+    <string name="theme_termcap">Termcap</string>
+    <string name="theme_coolblue">Cool blue</string>
+    <string name="theme_redplanet">Red Planet</string>
+    <string name="theme_ladypink">Lady In Pink</string>
 </resources>
