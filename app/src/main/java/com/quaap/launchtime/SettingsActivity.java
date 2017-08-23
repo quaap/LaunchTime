@@ -124,14 +124,12 @@ public class SettingsActivity extends PreferenceActivity {
         super.onResume();
     }
 
-//    @Override
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//
-//        if (key.equalsIgnoreCase("icons-pack")) {
-//            GlobState.getIconsHandler(this).loadIconsPack(sharedPreferences.getString(key, "default"));
-//        }
-//    }
-    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
     protected static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
         IconsHandler iph = GlobState.getIconsHandler(context);
 
