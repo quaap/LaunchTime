@@ -1,43 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
+   <!--This text was automatically machine translated. If you see any mistakes please correct them!-->
+   <!--Ce texte était automatiquement la machine il a traduit. Si tu vois n\'importe quels equivocaciones complaisent leur corriger!-->
 
-    <!-- Ce fichier a été automatiquement traduit par machine. N\'hésitez pas à corriger toutes les erreurs de traduction que vous trouvez. -->
+    <!-- Il traduit seulement les "_entrées" de chaînes -->
 
+    
 
     <string-array name="pref_return_home_strings">
-        <item>Aussitôt après</item>
-        <item>de 30 secondes</item>
-        <item>après 1 minute</item>
-        <item>après 5 minutes</item>
-        <item>après 30 minutes</item>
-        <item>après 1 heure</item>
-        <item>après 1 jour</item>
-        <item>jamais</item>
+        <item>Immédiatement</item>
+        <item>Après 30 secondes</item>
+        <item>Après 1 minute</item>
+        <item>Après 5 minutes</item>
+        <item>Après 30 minutes</item>
+        <item>Après 1 heure</item>
+        <item>Après 1 jour</item>
+        <item>Jamais</item>
     </string-array>
 
 
+    
 
     <string-array name="pref_orientation_strings">
         <item>Système</item>
-        <item>Rotate lorsque Force</item>
-        <item>de Portrait de Force</item>
-        <item>précisée Paysage</item>
+        <item>Rotate Lorsque précisé</item>
+        <item>Portrait de force</item>
+        <item>Paysage de force</item>
     </string-array>
 
+
+    
 
     <string-array name="pref_size_strings">
-        <item>Moyen</item>
         <item>Petit</item>
+        <item>Moyen</item>
         <item>Grand</item>
-        <item>X-le droit</item>
+        <item>X-Grand</item>
     </string-array>
 
+    
+    
 
     <string-array name="pref_cat_location_strings">
-        <item>Bien</item>
-        <item>a Laissé</item>
+        <item>Correct</item>
+        <item>À la gauche</item>
     </string-array>
 
+    
 
 
 </resources>

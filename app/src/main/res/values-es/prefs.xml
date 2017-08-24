@@ -1,43 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
+   <!--Este texto era automáticamente la máquina tradujo. Si ves cualesquier equivocaciones complacen corregirles!-->
 
-    <!-- Este archivo fue traducido automáticamente por máquina. No dude en corregir los errores de traducción que encuentre. -->
+    <!-- Traduce sólo las "_entradas" de cadenas -->
 
+    
 
     <string-array name="pref_return_home_strings">
-        <item>inmediatamente</item>
-        <item>después de 30 segundos</item>
-        <item>después de 1 minuto</item>
-        <item>después de 5 minutos</item>
-        <item>después de 30 minutos</item>
-        <item>después de 1 hora</item>
-        <item>después de 1 día</item>
-        <item>nunca</item>
+        <item>Inmediatamente</item>
+        <item>Después de 30 segundos</item>
+        <item>Después de 1 minuto</item>
+        <item>Después de 5 minutos</item>
+        <item>Después de 30 minutos</item>
+        <item>Después de 1 hora</item>
+        <item>Después de 1 día</item>
+        <item>Nunca</item>
     </string-array>
 
 
+    
 
     <string-array name="pref_orientation_strings">
         <item>Sistema</item>
-        <item>Rotate cuando Fuerza</item>
-        <item>de Retrato de Fuerza</item>
-        <item>necesitada Paisaje</item>
+        <item>Rotate Cuando necesitado</item>
+        <item>Retrato de fuerza</item>
+        <item>Paisaje de fuerza</item>
     </string-array>
 
+
+    
 
     <string-array name="pref_size_strings">
-        <item>Medio</item>
         <item>Pequeño</item>
+        <item>Medio</item>
         <item>Grande</item>
-        <item>X-el derecho</item>
+        <item>X-Grande</item>
     </string-array>
 
+    
+    
 
     <string-array name="pref_cat_location_strings">
-        <item>Bien</item>
-        <item>Dejó</item>
+        <item>Correcto</item>
+        <item>A la izquierda</item>
     </string-array>
 
+    
 
 
 </resources>

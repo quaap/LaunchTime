@@ -1,160 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
+   <!--Aquest text era automàticament màquina va traduir. Si veus qualssevol equivocacions si us plau els corregeixen!-->
 
-    <!-- Aquest fitxer es va traduir automàticament a la màquina. Si us plau, no dubteu a corregir els errors de traducció que trobis. -->
+    <!-- Nota: hi ha algun translatable cordes en prefs.xml També -->
 
     <string name="app_name">LaunchTime</string>
 
 
     <string name="remove_launcher">Treu</string>
     <string name="uninstall_app">Uninstall</string>
-    <string name="app_was_uninstalled">l\'Aplicació era uninstalled</string>
-    <string name="uninstall_canceled">Uninstall l\'Aplicació</string>
-    <string name="could_not_uninstall">cancel·lada no podria ser uninstalled</string>
+    <string name="app_was_uninstalled">L\'Aplicació era uninstalled</string>
+    <string name="uninstall_canceled">Uninstall Va cancel·lar</string>
+    <string name="could_not_uninstall">L\'Aplicació no podria ser uninstalled</string>
 
     <string name="category_Search">Recerca</string>
     <string name="category_Talk">Comm.</string>
-    <string name="category_Games">Gràfics</string>
-    <string name="category_Internet">d\'Àudio</string>
-    <string name="category_Media">d\'Internet</string>
-    <string name="category_Graphics">de jocs</string>
+    <string name="category_Games">Jocs</string>
+    <string name="category_Internet">Internet</string>
+    <string name="category_Media">Àudio</string>
+    <string name="category_Graphics">Gràfics</string>
     <string name="category_Utilities">Utilitats</string>
     <string name="category_Other">Altre</string>
     <string name="category_Settings">Settings</string>
-    <string name="category_Hidden">Recerca</string>
+    <string name="category_Hidden">Amagat</string>
 
-    <string name="category_Search_full">Amagada &amp; Jocs</string>
-    <string name="category_Talk_full">de Comunicació</string>
-    <string name="category_Games_full">Recent &amp; Amusements</string>
-    <string name="category_Internet_full">Gràfics</string>
-    <string name="category_Media_full">de Música &amp; d\'Àudio</string>
-    <string name="category_Graphics_full">d\'Internet &amp; Eines</string>
-    <string name="category_Utilities_full">d\'Utilitats &amp; del Vídeo</string>
+    <string name="category_Search_full">La Recerca &amp; Recent</string>
+    <string name="category_Talk_full">Comunicació</string>
+    <string name="category_Games_full">Jocs &amp; Amusements</string>
+    <string name="category_Internet_full">Internet</string>
+    <string name="category_Media_full">Música &amp; d\'àudio</string>
+    <string name="category_Graphics_full">Vídeo &amp; de gràfics</string>
+    <string name="category_Utilities_full">Eines &amp; d\'utilitats</string>
     <string name="category_Other_full">Altre</string>
     <string name="category_Settings_full">Settings &amp; Sistema</string>
-    <string name="category_Hidden_full">Recerca</string>
+    <string name="category_Hidden_full">Amagat</string>
 
 
-    <string name="search_apps">Amagada el vostre Apps</string>
+    <string name="search_apps">Recerca el vostre Apps</string>
     <string name="recent_apps">Recent Apps</string>
 
-    <string name="sort_category">Classe\nCategory</string>
+    <string name="sort_category">Classe\nCategoria</string>
     <string name="add_widgets">Afegeix\nWidgets</string>
-    <string name="add_category">Afegir\nCategory</string>
-    <string name="rename_category">Editar\nCategory</string>
+    <string name="add_category">Afegeix\nCategoria</string>
+    <string name="rename_category">Edita\nCategoria</string>
 
-    <string name="remove">Treure</string>
+    <string name="remove">Treu</string>
     <string name="done">Fet</string>
-    <string name="cancel">Cancel·lar</string>
-    <string name="rename_cat">Rebatejar la Categoria</string>
-    <string name="rename_cat2">Rebateja aquesta categoria</string>
-    <string name="rename_cat3">Rebateja aquesta categoria especial (retindrà la seva funcionalitat anterior)</string>
-    <string name="need_name">has de donar un nom</string>
-    <string name="no_rename">Couldn\'t rebateja la categoria</string>
-    <string name="add_cat">Afegeix la Categoria</string>
-    <string name="add_cat2">Afegeix una categoria</string>
-    <string name="no_add_cat">Couldn\'t afegeix la categoria</string>
+    <string name="cancel">Cancel·la</string>
+    <string name="rename_cat">Rebateja Categoria</string>
+    <string name="rename_cat2">Rebatejar aquesta categoria</string>
+    <string name="rename_cat3">Rebatejar aquesta categoria especial (retindrà la seva funcionalitat anterior)</string>
+    <string name="need_name">Has de donar un nom</string>
+    <string name="no_rename">No podria rebatejar categoria</string>
+    <string name="add_cat">Afegeix Categoria</string>
+    <string name="add_cat2">Afegir una categoria</string>
+    <string name="no_add_cat">No podria afegir categoria</string>
     <string name="delete_cat">Elimina categoria?</string>
     <string name="delete_cat_prompt">T\'és segur vols eliminar aquesta categoria?</string>
     <string name="delete">Elimina</string>
-    <string name="cat_deleted">la Categoria va eliminar. Qualssevol aplicacions van ser mogudes a Categoria %s</string>
-    <string name="no_delete_cat">Couldn\'t elimina categoria</string>
+    <string name="cat_deleted">La Categoria va eliminar. Qualssevol aplicacions van ser mogudes a Categoria %s</string>
+    <string name="no_delete_cat">No podria eliminar categoria</string>
 
-    <string name="short_name">Nom Curt</string>
-    <string name="full_name">Nom Ple (opcional)</string>
-    <string name="is_tiny">És Ajuda</string>
+    <string name="short_name">Nom curt</string>
+    <string name="full_name">Nom ple (opcional)</string>
+    <string name="is_tiny">És Minúscul</string>
 
 
-    <string name="pref_orient">d\'Ajuda</string>
-    <string name="pref_about">d\'Orientació</string>
-    <string name="pref_help_about">Minúscula i sobre</string>
+    <string name="pref_orient">Orientació</string>
+    <string name="pref_about">Ajuda</string>
+    <string name="pref_help_about">Ajuda i aproximadament</string>
 
     <string name="send_info_expl">La informació següent serà enviada al desenvolupador (únic) a
         més ben entendre com usuaris categorize el seu apps. Només la vostra IP és logged.</string>
     <string name="send">Envia</string>
-    <string name="send_comment">Comentari Opcional:</string>
-    <string name="remove_data">Uncheck qualsevol element tu don\'t vol enviar</string>
-    <string name="sent_success">la Dada amb èxit va enviar. Dóna les gràcies a!</string>
+    <string name="send_comment">Comentari opcional:</string>
+    <string name="remove_data">Uncheck Qualsevol element no vols enviar</string>
+    <string name="sent_success">La Dada amb èxit va enviar. Dóna les gràcies a!</string>
     <string name="sent_failed">Dada tranfer va fallar:</string>
-    <string name="backup_and_restore">Backup i Restaurar</string>
+    <string name="backup_and_restore">Backup I Restaurar</string>
     <string name="backup_explain">Si tens tot la manera t\'agrada, o és aproximadament per
         fer alguns canvis grans, agafar un backup! Si us plau nota que aquests backups serà eliminat si tu
         uninstall l\'app, així que utilitza la \"Còpia va seleccionar backup a filesystem\" botó per salvar uns
         vols mantenir.</string>
     <string name="take_new_backup">Agafa nou backup</string>
-    <string name="restore_selected_backup">Restaurar seleccionat backup</string>
-    <string name="delete_selected_backup">Eliminar seleccionat backup</string>
-    <string name="copy_selected_backup">la Còpia va seleccionar backup a filesystem</string>
-    <string name="load_a_backup">Carrega un backup de filesystem</string>
-    <string name="there_was_a_problem">hi havia un problema</string>
-    <string name="add_a_comment">Afegeix un comentari</string>
+    <string name="restore_selected_backup">Restaura seleccionat backup</string>
+    <string name="delete_selected_backup">Elimina seleccionat backup</string>
+    <string name="copy_selected_backup">La Còpia va seleccionar backup a filesystem</string>
+    <string name="load_a_backup">Càrrega un backup de filesystem</string>
+    <string name="there_was_a_problem">Hi havia un problema</string>
+    <string name="add_a_comment">Afegir un comentari</string>
     <string name="send_error_report">Envia Informe d\'Error</string>
     <string name="go_to_settings">Va A Settings</string>
 
-    <string name="show_extfs_opts">Mostra extern backup les opcions…</string>
-    <string name="hide_extfs_opts">Amaguen externes backup opcions…</string>
+    <string name="show_extfs_opts">L\'Espectacle extern backup opcions…</string>
+    <string name="hide_extfs_opts">L\'Amagatall extern backup opcions…</string>
     <string name="no_backup_selected">Cap va seleccionar</string>
-    <string name="opt_name">el nom Opcional</string>
+    <string name="opt_name">Nom opcional</string>
     <string name="new_backup">Nou backup</string>
     <string name="take_backup">Agafa backup</string>
-    <string name="backup_success">Backup exitós!</string>
-    <string name="backup_failed">Backup Fallat</string>
+    <string name="backup_success">Backup Exitós!</string>
+    <string name="backup_failed">Backup Va fallar</string>
     <string name="select_file_restore">Selecciona arxiu per restaurar</string>
     <string name="no_backup">No tal backup \"</string>
     <string name="confirm_restore1">Restaura?</string>
     <string name="confirm_restore2">Si restaures, qualssevol canvis actuals seran perduts.</string>
-    <string name="restore">Restaurar</string>
-    <string name="restore_successful">Restaurar exitós! Ara reprendrà.</string>
+    <string name="restore">Restaura</string>
+    <string name="restore_successful">Restaura exitós! Ara reprendrà.</string>
     <string name="restore_failed_rollback">Restaura fallat. Rodolant endarrere</string>
-    <string name="restore_failed2">Restaurar fallat. La Base de dades estatal desconegut.</string>
+    <string name="restore_failed2">Restaura fallat. La Base de dades estatal desconegut.</string>
     <string name="confirm_delete1">Elimina?</string>
     <string name="confirm_delete2">T\'és segur vols eliminar el darrere cap amunt de \'</string>
-    <string name="delete_success">Eliminar exitós!</string>
-    <string name="delete_failed">Elimina la Còpia</string>
-    <string name="copy_sucess">fallada exitosa!</string>
+    <string name="delete_success">Elimina exitós!</string>
+    <string name="delete_failed">Elimina fallat</string>
+    <string name="copy_sucess">La Còpia exitosa!</string>
     <string name="copy_failed">La Còpia va fallar</string>
-    <string name="select_save_location">Seleccionar ubicació per</string>
-    <string name="perm_granted">salvar Yay! Provar la vostra operació una altra vegada.</string>
+    <string name="select_save_location">Selecciona ubicació per salvar</string>
+    <string name="perm_granted">Yay! Provar la vostra operació una altra vegada.</string>
     <string name="perm_not_granted">Boo</string>
     <string name="app">app</string>
     <string name="config">Config</string>
-    <string name="previously_deleted">Anteriorment Eliminat</string>
-    <string name="pref_senddat">Envia app la dada</string>
+    <string name="previously_deleted">Anteriorment va Eliminar</string>
+    <string name="pref_senddat">Envia app dada</string>
     <string name="pref_senddat_summ">Envia dada sobre quin apps és instal·lat a l\'app
         desenvolupador</string>
-    <string name="pref_backup">Backup i Restaurar</string>
-    <string name="pref_backup_summ">Backup o restaurar LaunchTime\  configuració (Categories,
+    <string name="pref_backup">Backup I Restaurar</string>
+    <string name="pref_backup_summ">Backup O restaurar LaunchTime  configuració (Categories,
         app ordre, recent apps, etc)</string>
     <string name="pref_system">Sistema Settings</string>
-    <string name="pref_system_summ">Mostra el sistema settings</string>
-    <string name="pref_tabsize">mida de tabulador de la Categoria</string>
-    <string name="pref_iconsize">Launcher mida</string>
-    <string name="pref_icontext">Launcher text de Tabulador</string>
-    <string name="pref_tabtext">de color de text color</string>
-    <string name="pref_tabback">de fons de Tabulador de color</string>
-    <string name="pref_tabsel_text">Tabulador Tabulador de color de text</string>
-    <string name="pref_tabsel">seleccionat el color seleccionat</string>
-    <string name="pref_drag">Arrossega sobre el color</string>
-    <string name="choose_your_color">Escull el vostre color</string>
+    <string name="pref_system_summ">Espectacle el sistema settings</string>
+    <string name="pref_tabsize">Mida de tabulador de la categoria</string>
+    <string name="pref_iconsize">Launcher Mida</string>
+    <string name="pref_icontext">Launcher Color de text</string>
+    <string name="pref_tabtext">Color de text del tabulador</string>
+    <string name="pref_tabback">Color de fons del tabulador</string>
+    <string name="pref_tabsel_text">Tabulador color de text seleccionat</string>
+    <string name="pref_tabsel">Tabulador color seleccionat</string>
+    <string name="pref_drag">Arrossegar sobre color</string>
+    <string name="choose_your_color">Escollir el vostre color</string>
     <string name="red">Vermell</string>
     <string name="green">Verd</string>
     <string name="blue">Blau</string>
     <string name="brightness">Brightness</string>
-    <string name="transparency">Color</string>
-    <string name="pref_color_style">de Transparència i Estil</string>
-    <string name="pref_app_system">App i Amagatall</string>
-    <string name="pref_hide_empty_cat">de Sistema Cotxe de categories</string>
-    <string name="prefs_new_apps_cat">buides-categorize nou apps</string>
-    <string name="prefs_empty_cats_hid">les categories Buides seran categories</string>
-    <string name="prefs_empty_cats_show">Buides amagades serà mostrat</string>
-    <string name="prefs_cat_apps">Apps serà categorized</string>
-    <string name="prefs_cat_no">Apps serà col·locat en \"Altres\"</string>
-    <string name="pref_cat_loc_text">Categories d\'Ubicació</string>
-    <string name="pref_cat_loc">de les Categories seran en el %s</string>
-    <string name="pref_cat_sort">la Categoria que ordena</string>
-    <string name="pref_cat_sort_on">les Categories recordaran Categories d\'ordre de classe</string>
-    <string name="pref_cat_sort_off">seleccionades no seran ordenades</string>
-    <string name="pref_todd_lock">Toddler Intent</string>
-    <string name="pref_todd_lock_summ">de Mode per limitar toddler-dany relacionat per tancar amb clau a la
+    <string name="transparency">Transparència</string>
+    <string name="pref_color_style">Color i Estil</string>
+    <string name="pref_app_system">App I Sistema</string>
+    <string name="pref_hide_empty_cat">Amagatall categories buides</string>
+    <string name="prefs_new_apps_cat">Cotxe-categorize nou apps</string>
+    <string name="prefs_empty_cats_hid">Les Categories buides seran amagades</string>
+    <string name="prefs_empty_cats_show">Les Categories buides seran mostrades</string>
+    <string name="prefs_cat_apps">Apps Serà categorized</string>
+    <string name="prefs_cat_no">Apps Serà col·locat en \"Altre\"</string>
+    <string name="pref_cat_loc_text">Ubicació de categories</string>
+    <string name="pref_cat_loc">Les Categories seran en el %s</string>
+    <string name="pref_cat_sort">La Categoria que ordena</string>
+    <string name="pref_cat_sort_on">Les Categories recordaran ordre de classe seleccionada</string>
+    <string name="pref_cat_sort_off">Les Categories no seran ordenades</string>
+    <string name="pref_todd_lock">Toddler Mode</string>
+    <string name="pref_todd_lock_summ">Intent de limitar toddler-dany relacionat per tancar amb clau a la
         categoria actual i impedint arrossegant/movent/eliminant. Sortida per entrar al codi en
         la pantalla.</string>
     <string name="pref_returnhome_summ">Si fora, va al superior-la majoria de categoria: %s.</string>
@@ -165,25 +167,25 @@
 
 
     <string name="icons_pack_desc">Escollir un tema o iconpack</string>
-    <string name="icons_pack_name">Escull iconpack/icones</string>
-    <string name="icons_pack_default_name">de Sistema del tema</string>
+    <string name="icons_pack_name">Escull iconpack/tema</string>
+    <string name="icons_pack_default_name">Icones de sistema</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
-    <string name="sort_prompt_title">categoria de Classe per</string>
+    <string name="sort_prompt_title">Categoria de classe per</string>
     <string name="kid_escape_text">Premsa \'%s\' per sortir</string>
     <string name="reset_db">Reinicialització la base de dades?</string>
     <string name="reset_db_explain">La base de dades serà recreated i tot apps serà
         re-categorized segons el vostre \"cotxe-categorize apps\" posant.</string>
-    <string name="reset">La Reinicialització</string>
-    <string name="clear_recent">Neteja elements recents?</string>
-    <string name="clear">Nom</string>
-    <string name="reset_database">de base de dades de Reinicialització</string>
+    <string name="reset">Reinicialització</string>
+    <string name="clear_recent">Elements recents clars?</string>
+    <string name="clear">Clar</string>
+    <string name="reset_database">Base de dades de reinicialització</string>
 
 
     <string-array name="sort_strings">
-        <item>clar</item>
-        <item>Recentment Utilitzat</item>
+        <item>Nom</item>
+        <item>Recentment va Utilitzar</item>
         <item>Instal·la Data (més nou primer)</item>
         <item>Instal·la Data (més vell primer)</item>
         <item>Paquet</item>
@@ -198,39 +200,39 @@
     <string name="about_app">
         <![CDATA[
 
-          <h1>Ajuda i Sobre</h1>
+          <h1>Ajuda i Aproximadament</h1>
 
            <p>Benvinguda a LaunchTime!</p>
 
-           <p>Aquest fitxer es va traduir automàticament a la màquina. Si us plau, no dubteu a corregir els errors de traducció que trobis.</p>
+           <p>(Aquest text era automàticament màquina va traduir. Si veus qualssevol equivocacions si us plau els corregeixen!)</p>
 
-           <p>LaunchTime És opensource programari. Veure la llicència plena i sourcecode
-            <a href=\"https://github.com/quaap/LaunchTime\">aquí</a>.</p>
+           <p>LaunchTime &Eacute;s opensource programari. Veure la llic&egrave;ncia plena i sourcecode
+            <a href=\"https://github.com/quaap/LaunchTime\">aqu&iacute;</a>.</p>
 
             <p>Informe qualssevol assumptes, feedback, o suggeriments
-            <a href=\"https://github.com/quaap/LaunchTime/issues\">aquí</a>.</p>
+            <a href=\"https://github.com/quaap/LaunchTime/issues\">aqu&iacute;</a>.</p>
 
             <p>Aquest programa va ser escrit per
             <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a></p>
 
-           <p>per veure aquesta pàgina una altra vegada, clic el petit cap amunt de fletxa prop del fons de la pantalla, llavors
+           <p>Per veure aquesta p&agrave;gina una altra vegada, clic el petit cap amunt de fletxa prop del fons de la pantalla, llavors
            el wrench icona, llavors \"Ajuda i Aproximadament\".</p>
 
 
           <h1>Ajuda</h1>
 
-            <p>parts Principals de LaunchTime:</p>
+            <p>Parts principals de LaunchTime:</p>
 
-             <p>* QuickBar: El bar a través del fons que aguanta generalment utilitzat apps. Ell scrolls
+             <p>* QuickBar: El bar a trav&eacute;s del fons que aguanta generalment utilitzat apps. Ell scrolls
              deixat i correcte si cal.</p>
-             <p>* Tabulador de categoria: La carta de costat que llista les categories. Ell scrolls amunt i avall si cal.
+             <p>* Tabulador de categoria: La carta de costat que llista les categories. Ell scrolls amunt i avall si cal..
              </p>
-             <p>* Àrea / d\'Icona de la categoria: La porció principal de la pantalla amb l\'Apps. Ell scrolls amunt i avall
+             <p>* &Agrave;rea / d\'Icona de la categoria: La porci&oacute; principal de la pantalla amb l\'Apps. Ell scrolls amunt i avall
              si cal.</p>
              <p>* Searchbox: Busca Apps de nom.  Trobat en la \"Recerca/categoria Recent.</p>
-             <p>* Recent Apps: Una llista d\'Apps et\'ve va utilitzar recentment.  Trobat en la \"Recerca/categoria
+             <p>* Recent Apps: Una llista d\'Apps has utilitzat recentment.  Trobat en la \"Recerca/categoria
              Recent.</p>
-             <p>* Bar d\'acció: Té botons per ordenar, rebateja, i afegir categories, així com afegir
+             <p>* Bar d\'acci&oacute;: T&eacute; botons per ordenar, rebateja, i afegir categories, aix&iacute; com afegir
              Widgets i accedir el Settings carta. Clic el petit cap amunt de fletxa per sobre del QuickBar per
              mostrar.</p>
 
@@ -239,14 +241,14 @@
             <h2>Movent</h2>
 
             <p>Apps, Widgets, i les Categories poden ser mogudes i re-arranjat per llarg clicking i
-            arrossegant-los a la destinació desitjada.</p>
+            arrossegant-los a la destinaci&oacute; desitjada.</p>
 
             <p>Per moure un App o un Widget a una categoria diferent, arrossegar-lo i deixar-lo caure al
-            tabulador de categoria. L\'App serà tret de la font i col·locat a la categoria
+            tabulador de categoria. L\'App ser&agrave; tret de la font i col&middot;locat a la categoria
             nova.</p>
 
-            <p>Per col·locar un App o un Widget al QuickBar, arrossegar-lo i deixar-lo caure al QuickBar.
-            L\'App quedarà en la categoria original, però també serà accessible en
+            <p>Per col&middot;locar un App o un Widget al QuickBar, arrossegar-lo i deixar-lo caure al QuickBar.
+            L\'App quedar&agrave; en la categoria original, per&ograve; tamb&eacute; ser&agrave; accessible en
             el QuickBar.</p>
 
 
@@ -254,87 +256,87 @@
 
             <h3>Uninstalling</h3>
 
-            <p>A uninstall un App, va a l\'App\  categoria i començar per arrossegar la icona. El \"Uninstall\"
-            la zona apareixerà en la cantonada correcta inferior. Gota l\'App a el
+            <p>A uninstall un App, va a l\'App  categoria i comen&ccedil;ar per arrossegar la icona. El \"Uninstall\"
+            la zona apareixer&agrave; en la cantonada correcta inferior. Gota l\'App a el
             \"Uninstall\" la zona i tu seran incitats a uninstall l\'App.</p>
 
             <h3>Traient</h3>
 
-            <p>Si comences arrossegar un tabulador de Categoria, un QuickBar icona, un Widget, una Drecera (enllaç),
-            o una icona del Recent Apps àrea, un \"Treure\" la zona apareix en comptes d\'això.  Si l\'element
-            és deixat caure en el Treure zona, l\'element serà tret sense un puntual, però l\'App
-            no serà uninstalled.</p>
+            <p>Si comences arrossegar un tabulador de Categoria, un QuickBar icona, un Widget, una Drecera (enlla&ccedil;),
+            o una icona del Recent Apps &agrave;rea, un \"Treure\" la zona apareix en comptes d\'aix&ograve;.  Si l\'element
+            &eacute;s deixat caure en el Treure zona, l\'element ser&agrave; tret sense un puntual, per&ograve; l\'App
+            no ser&agrave; uninstalled.</p>
 
 
             <h3>Amagant Apps</h3>
 
-            <p>per amagar un app, comença arrossegar el, i el \"tabulador\" de categoria Amagat apareixerà en
+            <p>Per amagar un app, comen&ccedil;a arrossegar el, i el \"tabulador\" de categoria Amagat apareixer&agrave; en
             la carta de costat.  Pots necessitar arrossegar l\'App sobre la carta i voltar prop de l\'inferior si
-             és scrolled de la pantalla. Gota l\'app en el \"tabulador\" de categoria Amagat.</p>
+             &eacute;s scrolled de la pantalla. Gota l\'app en el \"tabulador\" de categoria Amagat.</p>
 
-            <p>Per accedir la \"categoria\" Amagada més tard, clicking l\'amunt la fletxa prop del fons mostrarà el tabulador, permetent-te a clic en ell.</p>
+            <p>Per accedir la \"categoria\" Amagada m&eacute;s tard, clicking l\'amunt la fletxa prop del fons mostrar&agrave; el tabulador, permetent-te a clic en ell.</p>
 
 
             <h2>Buscant</h2>
 
-            <p>Va a la \"Recerca/tabulador\" de categoria Recent.  Comença escriure en el Searchbox.  Aparellant
-            Apps serà mostrat sota el Searchbox. Pots utilitzar un període (\".\") Com a wildcard
-            caràcter.  Si només un període és entrat a, tot instal·lat apps serà mostrat.</p>
+            <p>Va a la \"Recerca/tabulador\" de categoria Recent.  Comen&ccedil;a escriure en el Searchbox.  Aparellant
+            Apps ser&agrave; mostrat sota el Searchbox. Pots utilitzar un per&iacute;ode (\".\") Com a wildcard
+            car&agrave;cter.  Si nom&eacute;s un per&iacute;ode &eacute;s entrat a, tot instal&middot;lat apps ser&agrave; mostrat.</p>
 
-            <p>Pots arrossegar apps dels resultats de recerca i col·locar-los a categories.</p>
+            <p>Pots arrossegar apps dels resultats de recerca i col&middot;locar-los a categories.</p>
 
 
             <h2>Settings</h2>
 
-            <p>Clicking El petit cap amunt de fletxa al dret inferior (o el fons va deixar si tu\'ve va configurar
-            una carta de costat esquerre) expandirà una carta d\'accions sobre el QuickBar.  Aquesta carta et permet
+            <p>Clicking El petit cap amunt de fletxa al dret inferior (o el fons va deixar si has configurat
+            una carta de costat esquerre) expandir&agrave; una carta d\'accions sobre el QuickBar.  Aquesta carta et permet
             per Ordenar la categoria actual, Rebatejar la categoria actual, Afegir una categoria nova, Afegir un
-            Widget a la categoria actual, i mostrar el Settings pàgina.</p>
+            Widget a la categoria actual, i mostrar el Settings p&agrave;gina.</p>
 
-            <p>Clicking L\'amunt la fletxa també mostra categoria gaire amagada tabuladors per permetre clicking en
+            <p>Clicking L\'amunt la fletxa tamb&eacute; mostra categoria gaire amagada tabuladors per permetre clicking en
             ells.</p>
 
 
             <h2>Widgets/AppWidgets</h2>
 
             <p>Per afegir un widget a la categoria actual, Clic el petit cap amunt de fletxa prop del fons de la
-            pantalla, llavors el clic \"Afegeix Widget\".  Una carta de sistema apareixerà amb el disponible
+            pantalla, llavors el clic \"Afegeix Widget\".  Una carta de sistema apareixer&agrave; amb el disponible
             widgets.  Seleccionar un.  Pots ser incitat per \"Permetre LaunchTime per accedir el
-            Widget\  dada.  Has d\'acceptar\" per afegir el widget.  Clicking El \"Sempre permetre\"
-            checkbox és recomanat, o seràs incitat cada cop LaunchTime (re)inicis, per
+            Widget  dada.  Has d\'acceptar\" per afegir el widget.  Clicking El \"Sempre permetre\"
+            checkbox &eacute;s recomanat, o ser&agrave;s incitat cada cop LaunchTime (re)inicis, per
             cada widget t\'ha afegit.</p>
 
 
             <h2>Toddler Mode</h2>
 
-            <p>per entrar a \"Toddler Mode\", seleccionar la categoria desitjada, llavors anar al settings pàgina
-            i clic \"Toddler Mode\". Llavors clic endarrere. Una vegada que Toddler el Mode és entrat a, el QuickBar
-            és amagat, els tabuladors de categoria són impossibilitats, i apps no pot ser mogut, va treure, o
+            <p>Per entrar a \"Toddler Mode\", seleccionar la categoria desitjada, llavors anar al settings p&agrave;gina
+            i clic \"Toddler Mode\". Llavors clic endarrere. Una vegada que Toddler el Mode &eacute;s entrat a, el QuickBar
+            &eacute;s amagat, els tabuladors de categoria s&oacute;n impossibilitats, i apps no pot ser mogut, va treure, o
             uninstalled. Per sortir Toddler Mode, tipus el codi donat al fons de la pantalla.</p>
 
-            <p>Això et permet per crear una categoria especial amb toddler-segur apps que el vostre
-            toddler és impedit de sortir.</p>
+            <p>Aix&ograve; et permet per crear una categoria especial amb toddler-segur apps que el vostre
+            toddler &eacute;s impedit de sortir.</p>
 
-            <p><b>Nota que Toddler el Mode no <i>és ximplet-prova</i>.  Per exemple: l\'estat
-            dropdown la carta encara serà disponible, qualssevol botons de maquinari  encara funció, i
-            el llarg-premsa de la \"casa\" (cercle) la clau encara pot portar cap amunt de Google, etc.</b> Si és possible,
-            el faré \"més segur\" en el futur.</p>
+            <p><b>Nota que Toddler el Mode no <i>&eacute;s ximplet-prova</i>.  Per exemple: l\'estat
+            dropdown la carta encara ser&agrave; disponible, qualssevol botons de maquinari  encara funci&oacute;, i
+            el llarg-premsa de la \"casa\" (cercle) la clau encara pot portar cap amunt de Google, etc.</b> Si &eacute;s possible,
+            el far&eacute; \"m&eacute;s segur\" en el futur.</p>
 
 
             <h2>Backups</h2>
 
-            <p>Backups És mantingut intern a l\'app i serà eliminat si tu uninstall. Per
-            salvar un backup, ús el \"extern backup\" botons per copiar-lo al filesystem.</p>
+            <p>Backups &Eacute;s mantingut intern a l\'app i ser&agrave; eliminat si tu uninstall. Per
+            salvar un backup, &uacute;s el \"extern backup\" botons per copiar-lo al filesystem.</p>
 
             ]]>
     </string>
-    <string name="link">Clic</string>
-    <string name="reset_colors_title">de colors de Reinicialització</string>
-    <string name="reset_color_summ">de drecera a reinicialització els colors del tema actual</string>
-    <string name="colors_reset_default">els Colors han estat reinicialització</string>
+    <string name="link">Drecera</string>
+    <string name="reset_colors_title">Colors de reinicialització</string>
+    <string name="reset_color_summ">Clic a reinicialització els colors del tema actual</string>
+    <string name="colors_reset_default">Els Colors han estat reinicialització</string>
     <string name="theme_bw">BlackWhite</string>
     <string name="theme_termcap">Termcap</string>
-    <string name="theme_coolblue">Fresc Senyora</string>
-    <string name="theme_redplanet">de Planeta Vermella</string>
-    <string name="theme_ladypink">blava En Rosa</string>
+    <string name="theme_coolblue">Blau fresc</string>
+    <string name="theme_redplanet">Planeta vermell</string>
+    <string name="theme_ladypink">Senyora En Rosa</string>
 </resources>

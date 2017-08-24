@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+   <!--This text was automatically machine translated. If you see any mistakes please correct them!-->
+   <!--Ĉi tiu teksto estis aŭtomate la maŝino tradukis. Se vi vidas ajnajn erarojn komplezas korekti ilin!-->
+
+    <!-- Noto: estas iu translatable ĉenoj en prefs.xml Ankaŭ -->
+
+    <string name="app_name">LaunchTime</string>
+
+
+    <string name="remove_launcher">Eltiras</string>
+    <string name="uninstall_app">Uninstall</string>
+    <string name="app_was_uninstalled">La Aplicación estis uninstalled</string>
+    <string name="uninstall_canceled">Uninstall Nuligis</string>
+    <string name="could_not_uninstall">La Aplicación ne eblus uninstalled</string>
+
+    <string name="category_Search">Búsqueda</string>
+    <string name="category_Talk">Comm.</string>
+    <string name="category_Games">Ludoj</string>
+    <string name="category_Internet">Internet</string>
+    <string name="category_Media">Audio</string>
+    <string name="category_Graphics">Grafikoj</string>
+    <string name="category_Utilities">Utilecoj</string>
+    <string name="category_Other">Alia</string>
+    <string name="category_Settings">Settings</string>
+    <string name="category_Hidden">Kaŝita</string>
+
+    <string name="category_Search_full">La Búsqueda &amp; Freŝa</string>
+    <string name="category_Talk_full">Konekto</string>
+    <string name="category_Games_full">Ludoj &amp; Amusements</string>
+    <string name="category_Internet_full">Internet</string>
+    <string name="category_Media_full">Muzikistino &amp; Audio</string>
+    <string name="category_Graphics_full">Vídeo &amp; Grafikoj</string>
+    <string name="category_Utilities_full">Iloj &amp; Utilecoj</string>
+    <string name="category_Other_full">Alia</string>
+    <string name="category_Settings_full">Settings &amp; Sistemo</string>
+    <string name="category_Hidden_full">Kaŝita</string>
+
+
+    <string name="search_apps">Búsqueda via Apps</string>
+    <string name="recent_apps">Freŝa Apps</string>
+
+    <string name="sort_category">Klaso\nKategorio</string>
+    <string name="add_widgets">Aldonas\nWidgets</string>
+    <string name="add_category">Aldonas\nKategorio</string>
+    <string name="rename_category">Eldonas\nKategorio</string>
+
+    <string name="remove">Eltiras</string>
+    <string name="done">Fakto</string>
+    <string name="cancel">Kradopordo</string>
+    <string name="rename_cat">Rebautiza Kategorio</string>
+    <string name="rename_cat2">Rebautizar ĉi tiu kategorio</string>
+    <string name="rename_cat3">Rebautizar ĉi tiu speciala kategorio (retendrá lia funcionalidad antaŭa)</string>
+    <string name="need_name">Devas doni la enoficigas</string>
+    <string name="no_rename">Ne povus rebautizar kategorio</string>
+    <string name="add_cat">Aldonas Kategorion</string>
+    <string name="add_cat2">Aldoni kategorio</string>
+    <string name="no_add_cat">Ne povus aldoni kategorion</string>
+    <string name="delete_cat">Eliminas kategorion?</string>
+    <string name="delete_cat_prompt">Cin estas asekuro volas elimini ĉi tiun kategorion?</string>
+    <string name="delete">Eliminas</string>
+    <string name="cat_deleted">La Kategorio eliminis. Ajnaj aplicaciones estis movitaj al Kategorio %s</string>
+    <string name="no_delete_cat">Ne povus elimini kategorion</string>
+
+    <string name="short_name">Enoficigu mallonga</string>
+    <string name="full_name">Enoficigu plena (laŭvola)</string>
+    <string name="is_tiny">Estas Iometa</string>
+
+
+    <string name="pref_orient">Orientiĝo</string>
+    <string name="pref_about">Helpo</string>
+    <string name="pref_help_about">Helpo kaj proksimume</string>
+
+    <string name="send_info_expl">La sekvante la informo estos sendita al la developer (sola) al pli bona
+        kompreni kiel uzantoj categorize lia apps. Nur via IP estas logged.</string>
+    <string name="send">Sendas</string>
+    <string name="send_comment">laŭvola Komento:</string>
+    <string name="remove_data">Uncheck Ajna elemento ne volas sendi</string>
+    <string name="sent_success">La Datumo kun sendita sukceso. Thanks!</string>
+    <string name="sent_failed">Datumo tranfer maltrafis:</string>
+    <string name="backup_and_restore">Backup Kaj Restaŭri</string>
+    <string name="backup_explain">Se vi havas ĉiun manieron vi ŝatas, aŭ estas proksimume por fari
+        iuj grandaj ŝanĝoj, preni la backup! Komplezi noto kiu ĉi tiuj backups estos eliminita se
+        vi uninstall la app, tuj kiam uzi la \"Kopio selektis backup al filesystem\" butono por savi oni
+        volas substeni.</string>
+    <string name="take_new_backup">Prenas nova backup</string>
+    <string name="restore_selected_backup">Restaŭras selektita backup</string>
+    <string name="delete_selected_backup">Eliminas selektita backup</string>
+    <string name="copy_selected_backup">La Kopio selektis backup al filesystem</string>
+    <string name="load_a_backup">Imposto la backup de filesystem</string>
+    <string name="there_was_a_problem">estis problemo</string>
+    <string name="add_a_comment">Aldoni komento</string>
+    <string name="send_error_report">Sendas Informas de Eraro</string>
+    <string name="go_to_settings">Iras Al Settings</string>
+
+    <string name="show_extfs_opts">La ekstera Spektaklo backup opcioj…</string>
+    <string name="hide_extfs_opts">La ekstera Kaŝejo backup opcioj…</string>
+    <string name="no_backup_selected">Neniu selektis</string>
+    <string name="opt_name">Enoficigu laŭvola</string>
+    <string name="new_backup">Nova backup</string>
+    <string name="take_backup">Prenas backup</string>
+    <string name="backup_success">Backup Prosperita!</string>
+    <string name="backup_failed">Backup Maltrafis</string>
+    <string name="select_file_restore">Selektas arkivon por restaŭri</string>
+    <string name="no_backup">Ne tia backup \"</string>
+    <string name="confirm_restore1">Restaŭras?</string>
+    <string name="confirm_restore2">Se vi restaŭras, ajnaj aktualaj ŝanĝoj estos perditaj.</string>
+    <string name="restore">Restaŭras</string>
+    <string name="restore_successful">Restaŭras prosperita! Nun retomará.</string>
+    <string name="restore_failed_rollback">Restaŭras maltrafita. Ruliĝante malantaŭen</string>
+    <string name="restore_failed2">Restaŭras maltrafita. Database Ŝtata unknown.</string>
+    <string name="confirm_delete1">Eliminas?</string>
+    <string name="confirm_delete2">Cin estas asekuro volas elimini la malantaŭen supre de \'</string>
+    <string name="delete_success">Eliminas prosperita!</string>
+    <string name="delete_failed">Eliminas maltrafita</string>
+    <string name="copy_sucess">La prosperita Kopio!</string>
+    <string name="copy_failed">La Kopio maltrafis</string>
+    <string name="select_save_location">Selektas ubicación por savi</string>
+    <string name="perm_granted">Yay! Provi via operacio alia fojo.</string>
+    <string name="perm_not_granted">Boo</string>
+    <string name="app">app</string>
+    <string name="config">Config</string>
+    <string name="previously_deleted">Antaŭe Eliminita</string>
+    <string name="pref_senddat">Sendas app datumo</string>
+    <string name="pref_senddat_summ">Sendas datumon sur kio apps estas instalita al la app
+        developer</string>
+    <string name="pref_backup">Backup Kaj Restaŭri</string>
+    <string name="pref_backup_summ">Backup Aŭ restaŭri LaunchTime configuración (Kategorioj,
+        app ordo, freŝa apps, etc)</string>
+    <string name="pref_system">Sistemo Settings</string>
+    <string name="pref_system_summ">Spektaklo la sistemo settings</string>
+    <string name="pref_tabsize">Kategorio tab mezuro</string>
+    <string name="pref_iconsize">Launcher Mezuro</string>
+    <string name="pref_icontext">Launcher Teksto koloro</string>
+    <string name="pref_tabtext">Tab Teksto koloro</string>
+    <string name="pref_tabback">Tab Fundo koloro</string>
+    <string name="pref_tabsel_text">Tab selektita Teksto koloro</string>
+    <string name="pref_tabsel">Tab Selektis koloron</string>
+    <string name="pref_drag">Trenas sur koloro</string>
+    <string name="choose_your_color">Elekti via koloro</string>
+    <string name="red">Ruĝa</string>
+    <string name="green">Verdo</string>
+    <string name="blue">Lazuro</string>
+    <string name="brightness">Brightness</string>
+    <string name="transparency">Travidebleco</string>
+    <string name="pref_color_style">Koloro Kaj Stilo</string>
+    <string name="pref_app_system">App Kaj Sistemo</string>
+    <string name="pref_hide_empty_cat">Kaŝejo malplenaj kategorioj</string>
+    <string name="prefs_new_apps_cat">Aŭto-categorize nova apps</string>
+    <string name="prefs_empty_cats_hid">La malplenaj Kategorioj estos kaŝitaj</string>
+    <string name="prefs_empty_cats_show">La malplenaj Kategorioj estos montritaj</string>
+    <string name="prefs_cat_apps">Apps Estos categorized</string>
+    <string name="prefs_cat_no">Apps Estos metita en \"Alia\"</string>
+    <string name="pref_cat_loc_text">Ubicación de kategorioj</string>
+    <string name="pref_cat_loc">La Kategorioj estos en la %s</string>
+    <string name="pref_cat_sort">La Kategorio kiu ordigas</string>
+    <string name="pref_cat_sort_on">La Kategorioj memoros ordon de selektita klaso</string>
+    <string name="pref_cat_sort_off">La Kategorioj ne estos ordigitaj</string>
+    <string name="pref_todd_lock">Toddler Modo</string>
+    <string name="pref_todd_lock_summ">Provo de limigi toddler-rilatigita damaĝo por fermi al
+        la aktuala kategorio kaj neebligante trenante/movante/eliminante. Eliro por ŝovi la kodo en
+        la ekrano.</string>
+    <string name="pref_returnhome_summ">Se ekstere, ĝi iras al la supera-la kategorioplimulto: %s.</string>
+    <string name="pref_returnhome">Domo de reveno timeout</string>
+
+    <string name="search_hint">Búsqueda. \".\" Estas la wildcard</string>
+    <string name="widget_alreay">Ĉi tiu widget estas jam en kategorio \"%s\"</string>
+
+
+    <string name="icons_pack_desc">Elekti temo aŭ iconpack</string>
+    <string name="icons_pack_name">Elektas iconpack/temo</string>
+    <string name="icons_pack_default_name">Ikonoj de sistemo</string>
+
+    <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
+
+    <string name="sort_prompt_title">Kategorio de klaso por</string>
+    <string name="kid_escape_text">Premas \'%s\' por eliri</string>
+    <string name="reset_db">Reset La database?</string>
+    <string name="reset_db_explain">La database estos recreated kaj ĉiu apps estos
+        re-categorized laŭ via \"aŭto-categorize apps\" ŝovante.</string>
+    <string name="reset">Reset</string>
+    <string name="clear_recent">freŝaj Elementoj claros?</string>
+    <string name="clear">Certe</string>
+    <string name="reset_database">Reset database</string>
+
+
+    <string-array name="sort_strings">
+        <item>Enoficigu</item>
+        <item>Ĵus Uzita</item>
+        <item>Instalas Daton (pli nova unua)</item>
+        <item>Instalas Daton (pli malnova unua)</item>
+        <item>Pako</item>
+    </string-array>
+
+
+
+
+
+
+
+    <string name="about_app">
+        <![CDATA[
+
+          <h1>Helpo kaj Proksimume</h1>
+
+           <p>Welcome Al LaunchTime!</p>
+
+           <p>(Ĉi tiu teksto estis aŭtomate la maŝino tradukis. Se vi vidas ajnajn erarojn komplezas korekti ilin!)</p>
+
+           <p>LaunchTime Estas opensource programaro. Vidi la plena licenco kaj sourcecode
+            <a href=\"https://github.com/quaap/LaunchTime\">tie</a>.</p>
+
+            <p>Informu ajnajn aferojn, feedback, aŭ sugestoj
+            <a href=\"https://github.com/quaap/LaunchTime/issues\">tie</a>.</p>
+
+            <p>Ĉi tiu programo estis skribita por
+            <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a></p>
+
+           <p>Por vidi ĉi tiu paĝo alia fojo, clic la malgranda supre de sago apude la fundo de la ekrano, tiam
+           la wrench ikono, ĝi \"tiam Helpas kaj Proksimume\".</p>
+
+
+          <h1>Helpo</h1>
+
+            <p>Vi dividas ĉefaj de LaunchTime:</p>
+
+             <p>* QuickBar: La stango across la fundo kiu tenas ĝenerale uzita apps. Li scrolls
+             lasita kaj bone se mizera.</p>
+             <p>* Kategorio tab: La flankoletero kiu printas la kategoriojn. Li scrolls supre kaj sube se
+             mizera.</p>
+             <p>* Areo / de Ikono de la kategorio: La ĉefa porcio de la ekrano kun la Apps. Li scrolls supre
+             kaj sube se mizera.</p>
+             <p>* Searchbox: Ĝi serĉas Apps por enoficigas.  Trovita en la \"B&uacute;squeda/Freŝa kategorio.</p>
+             <p>* Freŝa Apps: La lerta de Apps uzis ĵus.  Trovita en la \"B&uacute;squeda/Freŝa
+             kategorio.</p>
+             <p>* Stango de ago: ĝi Havas butonojn por ordigi, rebautiza, kaj aldoni kategorioj, ankaŭ kiam aldoni
+             Widgets kaj aliri la Settings letero. Clic La malgranda supre de sago super la QuickBar por
+             montri.</p>
+
+
+
+            <h2>Movante</h2>
+
+            <p>Apps, Widgets, Kaj la Kategorioj eblas movitaj kaj re-riparita por longa clicking kaj trenante ilin
+            al la dezirita destino.</p>
+
+            <p>Por movi la App aŭ la Widget al diferenca kategorio, ĝi trenas lin kaj fali ĝin al
+            la kategorio tab. La App estos eltirita de la fonto kaj metita al la nova
+            kategorio.</p>
+
+            <p>Por meti la App aŭ la Widget al la QuickBar, ĝi trenas lin kaj fali ĝin al la QuickBar.
+            La App quedar&aacute; en la originala kategorio, sed ankaŭ estos atingebla en
+            la QuickBar.</p>
+
+
+            <h2>Eltirante kaj Uninstalling<h2>
+
+            <h3>Uninstalling</h3>
+
+            <p>Al uninstall la App, ĝi iras al la App kategorio kaj komenci por treni la ikono. La
+            \"Uninstall\" la zono aperos en la ĝentila angulo malsupera. Guto la App al la
+            \"Uninstall\" la zono kaj vi estos instigitaj al uninstall la App.</p>
+
+            <h3>Eltirante</h3>
+
+            <p>Se vi komencas treni Kategorion tab, la QuickBar ikono, la Widget, la Shortcut (interligo),
+            aŭ ikono de la Freŝa Apps areo, la \"Eltiri\" la zono aperas en ŝanĝo.  Se la elemento
+            estas falita en la Eltiri zono, la elemento estos eltirita sen la akurata, sed la App
+            ne estos uninstalled.</p>
+
+
+            <h3>Kaŝante Apps</h3>
+
+            <p>Por kaŝi la app, ĝi komencas treni lin, kaj la \"Kaŝita\" kategorio tab aperos en
+            la flankoletero.  Vi povas bezoni treni la App sur la letero kaj bari apude la malsupera se
+             estas scrolled de la ekrano. Guto la app en la \"Kaŝita\" kategorio tab.</p>
+
+            <p>Por aliri la \"Kaŝita\" kategorio pli postrestas, clicking la supre de la sago apude la fundo montros la tab, lasante cin al clic en li.</p>
+
+
+            <h2>Serĉante</h2>
+
+            <p>Ĝi iras al la \"B&uacute;squeda/Freŝa kategorio tab.  Ĝi komencas skribi en la Searchbox.  Parigante
+            Apps estos montrita sube la Searchbox. Vi povas uzi periodon (\".\") Kiel wildcard
+            karaktero.  Se nur periodo estas ŝovita, ĉiu instalita apps estos montrita.</p>
+
+            <p>Vi povas treni apps de la rezultoj de b&uacute;squeda kaj meti ilin al kategorioj.</p>
+
+
+            <h2>Settings</h2>
+
+            <p>Clicking La malgranda supre de sago en la dekstra malsupera (aŭ la fundo lasis se vi formis
+            leteron de maldekstra flanko) ekspansiiĝos agoleteron sur la QuickBar.  Ĉi tiu letero cin lasas
+            por Ordigi la aktuala kategorio, Rebautizar la aktuala kategorio, Aldoni nova kategorio, Aldoni la
+            Widget al la aktuala kategorio, kaj montri la Settings paĝo.</p>
+
+            <p>Clicking La supre de la sago ankaŭ montras ajnan kaŝitan kategorion tabs por lasi clicking en
+            ili.</p>
+
+
+            <h2>Widgets/AppWidgets</h2>
+
+            <p>Por aldoni la widget al la aktuala kategorio, Clic la malgranda supre de sago apude la fundo de la
+            ekrano, tiam la clic \"Aldonas Widget\".  Sistemoletero aperos kun la disponebla
+            widgets.  Ĝi selektas oni.  Vi eblas instigita por \"Lasi LaunchTime por aliri la
+            Widget datumo.  Vi devas akcepti\" por aldoni la widget.  Clicking La \"Ĉiam lasi\"
+            checkbox estas rekomendita, aŭ estos instigita ĉiu tempo LaunchTime (re)komencoj, por
+            ĉiu widget cin aldonis.</p>
+
+
+            <h2>Toddler Modo</h2>
+
+            <p>Por ŝovi \"Toddler Modo\", selekti la dezirita kategorio, tiam iri al la settings paĝo
+            kaj clic \"Toddler Modo\". Tiam clic malantaŭen. Fojo Toddler la Modo estas ŝovita, la QuickBar
+            estas kaŝita, la kategorio tabs estas neebligita, kaj apps ne eblas movita, eltirita, aŭ uninstalled.
+            Por eliri Toddler Modo, ĝi skribas la donitan kodon en la fundo de la ekrano.</p>
+
+            <p>Tiu cin lasas por krei speciala kategorio kun toddler-asekuro apps kiu via
+            toddler estas neebligita de eliri.</p>
+
+            <p><b>Noto kiu Toddler la Modo ne <i>estas fool-provas</i>.  Ekzemple: la stato
+            dropdown la letero ankoraŭ estos disponebla, ajnaj aparatarobutonoj  ankoraŭ funkcio, kaj la
+            longa-premas de la \"domo\" (rondo) la ŝlosilo ankoraŭ povas alporti supre de Google, etc.</b> Se
+            ebla, mi faros lin \"pli asekuro\" en la futura.</p>
+
+
+            <h2>Backups</h2>
+
+            <p>Backups Estas substenita interna al la app kaj estos eliminita se vi uninstall. Por savi
+            la backup, ĝi uzas la \"ekstera backup\" butonoj por kopii ĝin al la filesystem.</p>
+
+            ]]>
+    </string>
+    <string name="link">Shortcut</string>
+    <string name="reset_colors_title">Reset colors</string>
+    <string name="reset_color_summ">Clic al reset la aktuala temo colors</string>
+    <string name="colors_reset_default">Colors estis reset</string>
+    <string name="theme_bw">BlackWhite</string>
+    <string name="theme_termcap">Termcap</string>
+    <string name="theme_coolblue">Freŝa lazuro</string>
+    <string name="theme_redplanet">ruĝa Planedo</string>
+    <string name="theme_ladypink">Sinjoro En Rozo</string>
+</resources>

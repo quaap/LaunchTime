@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+   <!--This text was automatically machine translated. If you see any mistakes please correct them!-->
+   <!--Este texto era automaticamente a máquina traduziu. Se vês quaisquer enganos comprazem corrigir-lhes!-->
+
+    <!-- Traduz só as "_entradas" de correntes -->
+
+    
+
+    <string-array name="pref_return_home_strings">
+        <item>Imediatamente</item>
+        <item>Após 30 segundos</item>
+        <item>Após 1 minuto</item>
+        <item>Após 5 minutos</item>
+        <item>Após 30 minutos</item>
+        <item>Após 1 hora</item>
+        <item>Após 1 dia</item>
+        <item>Nunca</item>
+    </string-array>
+
+
+    
+
+    <string-array name="pref_orientation_strings">
+        <item>Sistema</item>
+        <item>Rotate Quando precisado</item>
+        <item>Retrato de força</item>
+        <item>Paisagem de força</item>
+    </string-array>
+
+
+    
+
+    <string-array name="pref_size_strings">
+        <item>Pequeno</item>
+        <item>Médio</item>
+        <item>Grande</item>
+        <item>X-Grande</item>
+    </string-array>
+
+    
+    
+
+    <string-array name="pref_cat_location_strings">
+        <item>Correcto</item>
+        <item>À esquerda</item>
+    </string-array>
+
+    
+
+
+</resources>

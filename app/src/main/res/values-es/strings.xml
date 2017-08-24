@@ -1,15 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
+   <!--Este texto era automáticamente la máquina tradujo. Si ves cualesquier equivocaciones complacen corregirles!-->
 
-    <!-- Este archivo fue traducido automáticamente por máquina. No dude en corregir los errores de traducción que encuentre. -->
+    <!-- Nota: hay algún translatable cadenas en prefs.xml También -->
 
     <string name="app_name">LaunchTime</string>
 
 
     <string name="remove_launcher">Saca</string>
     <string name="uninstall_app">Uninstall</string>
-    <string name="app_was_uninstalled">la Aplicación era uninstalled</string>
-    <string name="uninstall_canceled">Uninstall canceló</string>
-    <string name="could_not_uninstall">la Aplicación no podría ser uninstalled</string>
+    <string name="app_was_uninstalled">La Aplicación era uninstalled</string>
+    <string name="uninstall_canceled">Uninstall Canceló</string>
+    <string name="could_not_uninstall">La Aplicación no podría ser uninstalled</string>
 
     <string name="category_Search">Búsqueda</string>
     <string name="category_Talk">Comm.</string>
@@ -19,142 +21,142 @@
     <string name="category_Graphics">Gráficos</string>
     <string name="category_Utilities">Utilidades</string>
     <string name="category_Other">Otro</string>
-    <string name="category_Settings">Ajustes</string>
-    <string name="category_Hidden">Oculto</string>
+    <string name="category_Settings">Settings</string>
+    <string name="category_Hidden">Escondido</string>
 
-    <string name="category_Search_full">Búsqueda y reciente</string>
+    <string name="category_Search_full">La Búsqueda &amp; Reciente</string>
     <string name="category_Talk_full">Comunicación</string>
-    <string name="category_Games_full">Juegos y Diversiones</string>
+    <string name="category_Games_full">Juegos &amp; Amusements</string>
     <string name="category_Internet_full">Internet</string>
-    <string name="category_Media_full">Música y Audio</string>
-    <string name="category_Graphics_full">Gráficos y Vídeo</string>
-    <string name="category_Utilities_full">Utilidades y Herramientas</string>
+    <string name="category_Media_full">Música &amp; Audio</string>
+    <string name="category_Graphics_full">Vídeo &amp; Gráficos</string>
+    <string name="category_Utilities_full">Herramientas &amp; Utilidades</string>
     <string name="category_Other_full">Otro</string>
-    <string name="category_Settings_full">Settings y Sistema</string>
-    <string name="category_Hidden_full">Oculto</string>
+    <string name="category_Settings_full">Settings &amp; Sistema</string>
+    <string name="category_Hidden_full">Escondido</string>
 
 
-    <string name="search_apps">Buscar tu aplicaciones</string>
+    <string name="search_apps">Búsqueda vuestro Apps</string>
     <string name="recent_apps">Reciente Apps</string>
 
-    <string name="sort_category">Clase\nCategory</string>
+    <string name="sort_category">Clase\nCategoría</string>
     <string name="add_widgets">Añade\nWidgets</string>
-    <string name="add_category">Añadir\nCategory</string>
-    <string name="rename_category">Editar\nCategory</string>
+    <string name="add_category">Añade\nCategoría</string>
+    <string name="rename_category">Edita\nCategoría</string>
 
-    <string name="remove">Sacar</string>
+    <string name="remove">Saca</string>
     <string name="done">Hecho</string>
-    <string name="cancel">Cancelar</string>
-    <string name="rename_cat">Rebautizar la Categoría</string>
-    <string name="rename_cat2">Rebautiza esta categoría</string>
-    <string name="rename_cat3">Rebautiza esta categoría especial (retendrá su funcionalidad anterior)</string>
-    <string name="need_name">tienes que dar un nombre</string>
-    <string name="no_rename">Couldn\'t rebautiza la categoría</string>
-    <string name="add_cat">Añade la Categoría</string>
-    <string name="add_cat2">Añade una categoría</string>
-    <string name="no_add_cat">Couldn\'t añade la categoría</string>
+    <string name="cancel">Cancela</string>
+    <string name="rename_cat">Rebautiza Categoría</string>
+    <string name="rename_cat2">Rebautizar esta categoría</string>
+    <string name="rename_cat3">Rebautizar esta categoría especial (retendrá su funcionalidad anterior)</string>
+    <string name="need_name">Tienes que dar un nombre</string>
+    <string name="no_rename">No podría rebautizar categoría</string>
+    <string name="add_cat">Añade Categoría</string>
+    <string name="add_cat2">Añadir una categoría</string>
+    <string name="no_add_cat">No podría añadir categoría</string>
     <string name="delete_cat">Elimina categoría?</string>
     <string name="delete_cat_prompt">Te es seguro quieres eliminar esta categoría?</string>
     <string name="delete">Elimina</string>
-    <string name="cat_deleted">la Categoría eliminó. Cualesquier aplicaciones fueron movidas a Categoría %s</string>
-    <string name="no_delete_cat">Couldn\'t elimina categoría</string>
+    <string name="cat_deleted">La Categoría eliminó. Cualesquier aplicaciones fueron movidas a Categoría %s</string>
+    <string name="no_delete_cat">No podría eliminar categoría</string>
 
-    <string name="short_name">Nombre Corto</string>
-    <string name="full_name">Nombre Lleno (opcional)</string>
-    <string name="is_tiny">Es Ayuda</string>
+    <string name="short_name">Nombre corto</string>
+    <string name="full_name">Nombre lleno (opcional)</string>
+    <string name="is_tiny">Es Minúsculo</string>
 
 
-    <string name="pref_orient">de Ayuda</string>
-    <string name="pref_about">de Orientación</string>
-    <string name="pref_help_about">Minúscula y sobre</string>
+    <string name="pref_orient">Orientación</string>
+    <string name="pref_about">Ayuda</string>
+    <string name="pref_help_about">Ayuda y aproximadamente</string>
 
     <string name="send_info_expl">El siguiendo la información será enviada al developer (único) a mejor
         entender cómo usuarios categorize su apps. Sólo vuestra IP es logged.</string>
     <string name="send">Envía</string>
-    <string name="send_comment">Comentario Opcional:</string>
-    <string name="remove_data">Uncheck cualquier elemento tú don\'t quiere enviar</string>
-    <string name="sent_success">el Dato con éxito enviado. Thanks!</string>
+    <string name="send_comment">Comentario opcional:</string>
+    <string name="remove_data">Uncheck Cualquier elemento no quieres enviar</string>
+    <string name="sent_success">El Dato con éxito enviado. Thanks!</string>
     <string name="sent_failed">Dato tranfer falló:</string>
-    <string name="backup_and_restore">Backup y Restaurar</string>
+    <string name="backup_and_restore">Backup Y Restaurar</string>
     <string name="backup_explain">Si tienes todo la manera te gusta, o es aproximadamente para hacer
         algunos cambios grandes, tomar un backup! Complacer nota que estos backups será eliminado si
         tú uninstall el app, así que utilizar la \"Copia seleccionó backup a filesystem\" botón para salvar unos
         quieres mantener.</string>
     <string name="take_new_backup">Toma nuevo backup</string>
-    <string name="restore_selected_backup">Restaurar seleccionado backup</string>
-    <string name="delete_selected_backup">Eliminar seleccionado backup</string>
-    <string name="copy_selected_backup">la Copia seleccionó backup a filesystem</string>
+    <string name="restore_selected_backup">Restaura seleccionado backup</string>
+    <string name="delete_selected_backup">Elimina seleccionado backup</string>
+    <string name="copy_selected_backup">La Copia seleccionó backup a filesystem</string>
     <string name="load_a_backup">Carga un backup de filesystem</string>
     <string name="there_was_a_problem">había un problema</string>
-    <string name="add_a_comment">Añade un comentario</string>
+    <string name="add_a_comment">Añadir un comentario</string>
     <string name="send_error_report">Envía Informe de Error</string>
     <string name="go_to_settings">Va A Settings</string>
 
-    <string name="show_extfs_opts">Muestra externo backup las opciones…</string>
-    <string name="hide_extfs_opts">Esconden externas backup opciones…</string>
-    <string name="no_backup_selected">Ninguno el nombre</string>
-    <string name="opt_name">Opcional seleccionado</string>
+    <string name="show_extfs_opts">El Espectáculo externo backup opciones…</string>
+    <string name="hide_extfs_opts">El Escondrijo externo backup opciones…</string>
+    <string name="no_backup_selected">Ninguno seleccionó</string>
+    <string name="opt_name">Nombre opcional</string>
     <string name="new_backup">Nuevo backup</string>
-    <string name="take_backup">Tomar backup</string>
-    <string name="backup_success">Backup exitoso!</string>
+    <string name="take_backup">Toma backup</string>
+    <string name="backup_success">Backup Exitoso!</string>
     <string name="backup_failed">Backup Falló</string>
-    <string name="select_file_restore">Seleccionar archivo para restaurar</string>
+    <string name="select_file_restore">Selecciona archivo para restaurar</string>
     <string name="no_backup">No tal backup \"</string>
     <string name="confirm_restore1">Restaura?</string>
     <string name="confirm_restore2">Si restauras, cualesquier cambios actuales serán perdidos.</string>
-    <string name="restore">Restaurar</string>
-    <string name="restore_successful">Restaurar exitoso! Ahora retomará.</string>
+    <string name="restore">Restaura</string>
+    <string name="restore_successful">Restaura exitoso! Ahora retomará.</string>
     <string name="restore_failed_rollback">Restaura fallado. Rodando atrás</string>
-    <string name="restore_failed2">Restaurar fallado. Database Estatal unknown.</string>
+    <string name="restore_failed2">Restaura fallado. Database Estatal unknown.</string>
     <string name="confirm_delete1">Elimina?</string>
     <string name="confirm_delete2">Te es seguro quieres eliminar el atrás arriba de \'</string>
-    <string name="delete_success">Eliminar exitoso!</string>
-    <string name="delete_failed">Elimina la Copia</string>
-    <string name="copy_sucess">fallada exitosa!</string>
-    <string name="copy_failed">La Copia fallada</string>
-    <string name="select_save_location">Seleccionar ubicación para salvar</string>
+    <string name="delete_success">Elimina exitoso!</string>
+    <string name="delete_failed">Elimina fallado</string>
+    <string name="copy_sucess">La Copia exitosa!</string>
+    <string name="copy_failed">La Copia falló</string>
+    <string name="select_save_location">Selecciona ubicación para salvar</string>
     <string name="perm_granted">Yay! Probar vuestra operación otra vez.</string>
     <string name="perm_not_granted">Boo</string>
     <string name="app">app</string>
     <string name="config">Config</string>
     <string name="previously_deleted">Anteriormente Eliminado</string>
-    <string name="pref_senddat">Enviar app el dato</string>
+    <string name="pref_senddat">Envía app dato</string>
     <string name="pref_senddat_summ">Envía dato sobre qué apps es instalado al app
         developer</string>
-    <string name="pref_backup">Backup y Restaurar</string>
-    <string name="pref_backup_summ">Backup o restaurar LaunchTime\ configuración (Categorías,
+    <string name="pref_backup">Backup Y Restaurar</string>
+    <string name="pref_backup_summ">Backup O restaurar LaunchTime configuración (Categorías,
         app orden, reciente apps, etc)</string>
     <string name="pref_system">Sistema Settings</string>
-    <string name="pref_system_summ">Muestra el sistema settings</string>
+    <string name="pref_system_summ">Espectáculo el sistema settings</string>
     <string name="pref_tabsize">Categoría tab medida</string>
-    <string name="pref_iconsize">Launcher medida</string>
-    <string name="pref_icontext">Launcher texto color</string>
-    <string name="pref_tabtext">Tab texto color</string>
-    <string name="pref_tabback">Tab fondo color</string>
-    <string name="pref_tabsel_text">Tab seleccionó texto color</string>
-    <string name="pref_tabsel">Tab seleccionó color</string>
-    <string name="pref_drag">Arrastrar sobre color</string>
-    <string name="choose_your_color">Escoge vuestro color</string>
+    <string name="pref_iconsize">Launcher Medida</string>
+    <string name="pref_icontext">Launcher Texto color</string>
+    <string name="pref_tabtext">Tab Texto color</string>
+    <string name="pref_tabback">Tab Fondo color</string>
+    <string name="pref_tabsel_text">Tab Texto seleccionado color</string>
+    <string name="pref_tabsel">Tab Seleccionó color</string>
+    <string name="pref_drag">Arrastra sobre color</string>
+    <string name="choose_your_color">Escoger vuestro color</string>
     <string name="red">Rojo</string>
     <string name="green">Verde</string>
     <string name="blue">Azul</string>
-    <string name="brightness">Brillo</string>
+    <string name="brightness">Brightness</string>
     <string name="transparency">Transparencia</string>
-    <string name="pref_color_style">Color y Estilo</string>
-    <string name="pref_app_system">App y el Sistema</string>
-    <string name="pref_hide_empty_cat">Esconde Coche de categorías</string>
-    <string name="prefs_new_apps_cat">vacías-categorize nuevo apps</string>
-    <string name="prefs_empty_cats_hid">las categorías Vacías serán las categorías</string>
-    <string name="prefs_empty_cats_show">Vacías escondidas serán mostradas</string>
-    <string name="prefs_cat_apps">Apps será categorized</string>
-    <string name="prefs_cat_no">Apps será colocado en \"Otras\"</string>
-    <string name="pref_cat_loc_text">Categorías de Ubicación</string>
-    <string name="pref_cat_loc">de las Categorías serán en el %s</string>
-    <string name="pref_cat_sort">la Categoría que ordena</string>
-    <string name="pref_cat_sort_on">las Categorías recordarán Categorías de orden de clase</string>
-    <string name="pref_cat_sort_off">seleccionadas no serán ordenadas</string>
-    <string name="pref_todd_lock">Toddler Intento</string>
-    <string name="pref_todd_lock_summ">de Modo para limitar toddler-daño relacionado por cerrar a la
+    <string name="pref_color_style">Color Y Estilo</string>
+    <string name="pref_app_system">App Y Sistema</string>
+    <string name="pref_hide_empty_cat">Escondrijo categorías vacías</string>
+    <string name="prefs_new_apps_cat">Coche-categorize nuevo apps</string>
+    <string name="prefs_empty_cats_hid">Las Categorías vacías serán escondidas</string>
+    <string name="prefs_empty_cats_show">Las Categorías vacías serán mostradas</string>
+    <string name="prefs_cat_apps">Apps Será categorized</string>
+    <string name="prefs_cat_no">Apps Será colocado en \"Otro\"</string>
+    <string name="pref_cat_loc_text">Ubicación de categorías</string>
+    <string name="pref_cat_loc">Las Categorías serán en el %s</string>
+    <string name="pref_cat_sort">La Categoría que ordena</string>
+    <string name="pref_cat_sort_on">Las Categorías recordarán orden de clase seleccionada</string>
+    <string name="pref_cat_sort_off">Las Categorías no serán ordenadas</string>
+    <string name="pref_todd_lock">Toddler Modo</string>
+    <string name="pref_todd_lock_summ">Intento de limitar toddler-daño relacionado por cerrar a la
         categoría actual e impidiendo arrastrando/moviendo/eliminando. Salida por introducir el código en
         la pantalla.</string>
     <string name="pref_returnhome_summ">Si fuera, va al superior-la mayoría de categoría: %s.</string>
@@ -165,26 +167,26 @@
 
 
     <string name="icons_pack_desc">Escoger un tema o iconpack</string>
-    <string name="icons_pack_name">Escoge iconpack/iconos</string>
-    <string name="icons_pack_default_name">de Sistema del tema</string>
+    <string name="icons_pack_name">Escoge iconpack/tema</string>
+    <string name="icons_pack_default_name">Iconos de sistema</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
-    <string name="sort_prompt_title">categoría de Clase por</string>
+    <string name="sort_prompt_title">Categoría de clase por</string>
     <string name="kid_escape_text">Prensa \'%s\' para salir</string>
-    <string name="reset_db">Reset el database?</string>
+    <string name="reset_db">Reset El database?</string>
     <string name="reset_db_explain">El database será recreated y todo apps será
         re-categorized según vuestro \"coche-categorize apps\" poniendo.</string>
     <string name="reset">Reset</string>
     <string name="clear_recent">Elementos recientes claros?</string>
     <string name="clear">Claro</string>
-    <string name="reset_database">Restablecer basedatos</string>
+    <string name="reset_database">Reset database</string>
 
 
     <string-array name="sort_strings">
-        <item>el Nombre</item>
+        <item>Nombre</item>
         <item>Recientemente Utilizado</item>
-        <item>Instalar Fecha (más nuevo primero)</item>
+        <item>Instala Fecha (más nuevo primero)</item>
         <item>Instala Fecha (más viejo primero)</item>
         <item>Paquete</item>
     </string-array>
@@ -198,55 +200,55 @@
     <string name="about_app">
         <![CDATA[
 
-          <h1>Ayuda y Sobre</h1>
+          <h1>Ayuda y Aproximadamente</h1>
 
-           <p>Welcome a LaunchTime!</p>
+           <p>Welcome A LaunchTime!</p>
 
-           <p>Este archivo fue traducido automáticamente por máquina. No dude en corregir los errores de traducción que encuentre.</p>
+           <p>(Este texto era automáticamente la máquina tradujo. Si ves cualesquier equivocaciones complacen corregirles!)</p>
 
            <p>LaunchTime Es opensource software. Ver la licencia llena y sourcecode
-            <a href=\"https://github.com/quaap/LaunchTime\">aquí</a>.</p>
+            <a href=\"https://github.com/quaap/LaunchTime\">aqu&iacute;</a>.</p>
 
             <p>Informe cualesquier asuntos, feedback, o sugerencias
-            <a href=\"https://github.com/quaap/LaunchTime/issues\">aquí</a>.</p>
+            <a href=\"https://github.com/quaap/LaunchTime/issues\">aqu&iacute;</a>.</p>
 
             <p>Este programa fue escrito por
             <a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'>Tom Kliethermes</a></p>
 
-           <p>para ver esta página otra vez, clic el pequeño arriba de flecha cerca el fondo de la pantalla, entonces
+           <p>Para ver esta p&aacute;gina otra vez, clic el peque&ntilde;o arriba de flecha cerca el fondo de la pantalla, entonces
            el wrench icono, entonces \"Ayuda y Aproximadamente\".</p>
 
 
           <h1>Ayuda</h1>
 
-            <p>partes Principales de LaunchTime:</p>
+            <p>Partes principales de LaunchTime:</p>
 
-             <p>* QuickBar: La barra across el fondo que aguanta generalmente utilizado apps. Él scrolls
+             <p>* QuickBar: La barra across el fondo que aguanta generalmente utilizado apps. &Eacute;l scrolls
              dejado y bien si necesitado.</p>
-             <p>* Categoría tab: La carta de lado que lista las categorías. Él scrolls arriba y abajo si
+             <p>* Categor&iacute;a tab: La carta de lado que lista las categor&iacute;as. &Eacute;l scrolls arriba y abajo si
              necesitado.</p>
-             <p>* Área / de Icono de la categoría: La porción principal de la pantalla con el Apps. Él scrolls arriba
+             <p>* &Aacute;rea / de Icono de la categor&iacute;a: La porci&oacute;n principal de la pantalla con el Apps. &Eacute;l scrolls arriba
              y abajo si necesitado.</p>
-             <p>* Searchbox: Busca Apps por nombre.  Encontrado en la \"Búsqueda/categoría Reciente.</p>
-             <p>* Reciente Apps: Una lista de Apps tú\'ve utilizó recientemente.  Encontrado en la \"Búsqueda/categoría
+             <p>* Searchbox: Busca Apps por nombre.  Encontrado en la \"B&uacute;squeda/categor&iacute;a Reciente.</p>
+             <p>* Reciente Apps: Una lista de Apps has utilizado recientemente.  Encontrado en la \"B&uacute;squeda/categor&iacute;a
              Reciente.</p>
-             <p>* Barra de acción: Tiene botones para ordenar, rebautiza, y añadir categorías, también cuando añadir
-             Widgets y acceder el Settings carta. Clic el pequeño arriba de flecha por encima del QuickBar para
+             <p>* Barra de acci&oacute;n: Tiene botones para ordenar, rebautiza, y a&ntilde;adir categor&iacute;as, tambi&eacute;n cuando a&ntilde;adir
+             Widgets y acceder el Settings carta. Clic el peque&ntilde;o arriba de flecha por encima del QuickBar para
              mostrar.</p>
 
 
 
             <h2>Moviendo</h2>
 
-            <p>Apps, Widgets, y las Categorías pueden ser movidas y re-arreglado por largo clicking y arrastrándoles
+            <p>Apps, Widgets, y las Categor&iacute;as pueden ser movidas y re-arreglado por largo clicking y arrastr&aacute;ndoles
             al destino deseado.</p>
 
-            <p>Para mover un App o un Widget a una categoría diferente, lo arrastra y caerlo a la
-            categoría tab. El App será sacado de la fuente y colocado a la categoría
+            <p>Para mover un App o un Widget a una categor&iacute;a diferente, lo arrastra y caerlo a la
+            categor&iacute;a tab. El App ser&aacute; sacado de la fuente y colocado a la categor&iacute;a
             nueva.</p>
 
             <p>Para colocar un App o un Widget al QuickBar, lo arrastra y caerlo al QuickBar.
-            El App quedará en la categoría original, pero también será accesible en
+            El App quedar&aacute; en la categor&iacute;a original, pero tambi&eacute;n ser&aacute; accesible en
             el QuickBar.</p>
 
 
@@ -254,87 +256,87 @@
 
             <h3>Uninstalling</h3>
 
-            <p>A uninstall un App, va al App\ categoría y empezar para arrastrar el icono. El
-            \"Uninstall\" la zona aparecerá en la esquina correcta inferior. Gota el App al
-            \"Uninstall\" la zona y tú serán incitados a uninstall el App.</p>
+            <p>A uninstall un App, va al App categor&iacute;a y empezar para arrastrar el icono. El
+            \"Uninstall\" la zona aparecer&aacute; en la esquina correcta inferior. Gota el App al
+            \"Uninstall\" la zona y t&uacute; ser&aacute;n incitados a uninstall el App.</p>
 
             <h3>Sacando</h3>
 
-            <p>Si empiezas arrastrar una Categoría tab, un QuickBar icono, un Widget, un Shortcut (vínculo),
-            o un icono del Reciente Apps área, un \"Sacar\" la zona aparece en cambio.  Si el elemento
-            es caído en el Sacar zona, el elemento será sacado sin un puntual, pero el App
-            no será uninstalled.</p>
+            <p>Si empiezas arrastrar una Categor&iacute;a tab, un QuickBar icono, un Widget, un Shortcut (v&iacute;nculo),
+            o un icono del Reciente Apps &aacute;rea, un \"Sacar\" la zona aparece en cambio.  Si el elemento
+            es ca&iacute;do en el Sacar zona, el elemento ser&aacute; sacado sin un puntual, pero el App
+            no ser&aacute; uninstalled.</p>
 
 
             <h3>Escondiendo Apps</h3>
 
-            <p>para esconder un app, empieza arrastrar lo, y la \"categoría\" Escondida tab aparecerá en
+            <p>Para esconder un app, empieza arrastrar lo, y la \"categor&iacute;a\" Escondida tab aparecer&aacute; en
             la carta de lado.  Puedes necesitar arrastrar el App sobre la carta y cercar cerca el inferior si
-             es scrolled de la pantalla. Gota el app en la \"categoría\" Escondida tab.</p>
+             es scrolled de la pantalla. Gota el app en la \"categor&iacute;a\" Escondida tab.</p>
 
-            <p>Para acceder la \"categoría\" Escondida más tarde, clicking el arriba de la flecha cerca el fondo mostrará el tab, dejándote a clic en él.</p>
+            <p>Para acceder la \"categor&iacute;a\" Escondida m&aacute;s tarde, clicking el arriba de la flecha cerca el fondo mostrar&aacute; el tab, dej&aacute;ndote a clic en &eacute;l.</p>
 
 
             <h2>Buscando</h2>
 
-            <p>Va a la \"Búsqueda/categoría Reciente tab.  Empieza escribir en el Searchbox.  Emparejando
-            Apps será mostrado abajo el Searchbox. Puedes utilizar un periodo (\".\") Como wildcard
-            carácter.  Si sólo un periodo es introducido, todo instalado apps será mostrado.</p>
+            <p>Va a la \"B&uacute;squeda/categor&iacute;a Reciente tab.  Empieza escribir en el Searchbox.  Emparejando
+            Apps ser&aacute; mostrado abajo el Searchbox. Puedes utilizar un periodo (\".\") Como wildcard
+            car&aacute;cter.  Si s&oacute;lo un periodo es introducido, todo instalado apps ser&aacute; mostrado.</p>
 
-            <p>Puedes arrastrar apps de los resultados de búsqueda y colocarles a categorías.</p>
+            <p>Puedes arrastrar apps de los resultados de b&uacute;squeda y colocarles a categor&iacute;as.</p>
 
 
             <h2>Settings</h2>
 
-            <p>Clicking El pequeño arriba de flecha en el derecho inferior (o el fondo dejó si tú\'ve configuró
-            una carta de lado izquierdo) expandirá una carta de acciones sobre el QuickBar.  Esta carta te deja
-            para Ordenar la categoría actual, Rebautizar la categoría actual, Añadir una categoría nueva, Añadir un
-            Widget a la categoría actual, y mostrar el Settings página.</p>
+            <p>Clicking El peque&ntilde;o arriba de flecha en el derecho inferior (o el fondo dej&oacute; si has configurado
+            una carta de lado izquierdo) expandir&aacute; una carta de acciones sobre el QuickBar.  Esta carta te deja
+            para Ordenar la categor&iacute;a actual, Rebautizar la categor&iacute;a actual, A&ntilde;adir una categor&iacute;a nueva, A&ntilde;adir un
+            Widget a la categor&iacute;a actual, y mostrar el Settings p&aacute;gina.</p>
 
-            <p>Clicking El arriba de la flecha también muestra cualquier categoría escondida tabs para dejar clicking en
+            <p>Clicking El arriba de la flecha tambi&eacute;n muestra cualquier categor&iacute;a escondida tabs para dejar clicking en
             ellos.</p>
 
 
             <h2>Widgets/AppWidgets</h2>
 
-            <p>Para añadir un widget a la categoría actual, Clic el pequeño arriba de flecha cerca el fondo de la
-            pantalla, entonces el clic \"Añade Widget\".  Una carta de sistema aparecerá con el disponible
+            <p>Para a&ntilde;adir un widget a la categor&iacute;a actual, Clic el peque&ntilde;o arriba de flecha cerca el fondo de la
+            pantalla, entonces el clic \"A&ntilde;ade Widget\".  Una carta de sistema aparecer&aacute; con el disponible
             widgets.  Selecciona uno.  Puedes ser incitado para \"Dejar LaunchTime para acceder el
-            Widget\ dato.  Tienes que aceptar\" para añadir el widget.  Clicking El \"Siempre dejar\"
-            checkbox es recomendado, o serás incitado cada tiempo LaunchTime (re)inicios, para
-            cada cual widget te ha añadido.</p>
+            Widget dato.  Tienes que aceptar\" para a&ntilde;adir el widget.  Clicking El \"Siempre dejar\"
+            checkbox es recomendado, o ser&aacute;s incitado cada tiempo LaunchTime (re)inicios, para
+            cada cual widget te ha a&ntilde;adido.</p>
 
 
             <h2>Toddler Modo</h2>
 
-            <p>para introducir \"Toddler Modo\", seleccionar la categoría deseada, entonces ir al settings página
-            y clic \"Toddler Modo\". Entonces clic atrás. Una vez Toddler el Modo es introducido, el QuickBar
-            es escondido, la categoría tabs es imposibilitado, y apps no puede ser movido, sacado, o uninstalled.
-            Para salir Toddler Modo, escribe el código dado en el fondo de la pantalla.</p>
+            <p>Para introducir \"Toddler Modo\", seleccionar la categor&iacute;a deseada, entonces ir al settings p&aacute;gina
+            y clic \"Toddler Modo\". Entonces clic atr&aacute;s. Una vez Toddler el Modo es introducido, el QuickBar
+            es escondido, la categor&iacute;a tabs es imposibilitado, y apps no puede ser movido, sacado, o uninstalled.
+            Para salir Toddler Modo, escribe el c&oacute;digo dado en el fondo de la pantalla.</p>
 
-            <p>Esto te deja para crear una categoría especial con toddler-seguro apps que vuestro
+            <p>Esto te deja para crear una categor&iacute;a especial con toddler-seguro apps que vuestro
             toddler es impedido de salir.</p>
 
             <p><b>Nota que Toddler el Modo no <i>es fool-prueba</i>.  Por ejemplo: el estado
-            dropdown la carta todavía será disponible, cualesquier botones de hardware  todavía función, y el
-            largo-prensa de la \"casa\" (círculo) la llave todavía puede traer arriba de Google, etc.</b> Si
-            posible, lo haré \"más seguro\" en el futuro.</p>
+            dropdown la carta todav&iacute;a ser&aacute; disponible, cualesquier botones de hardware  todav&iacute;a funci&oacute;n, y el
+            largo-prensa de la \"casa\" (c&iacute;rculo) la llave todav&iacute;a puede traer arriba de Google, etc.</b> Si
+            posible, lo har&eacute; \"m&aacute;s seguro\" en el futuro.</p>
 
 
             <h2>Backups</h2>
 
-            <p>Backups Es mantenido interno al app y será eliminado si tú uninstall. Para salvar
+            <p>Backups Es mantenido interno al app y ser&aacute; eliminado si t&uacute; uninstall. Para salvar
             un backup, utiliza el \"externo backup\" botones para copiarlo al filesystem.</p>
 
             ]]>
     </string>
-    <string name="link">Atajo</string>
-    <string name="reset_colors_title">Restaurar colores</string>
+    <string name="link">Shortcut</string>
+    <string name="reset_colors_title">Reset colors</string>
     <string name="reset_color_summ">Clic a reset el tema actual colors</string>
-    <string name="colors_reset_default">Colors ha sido reset</string>
+    <string name="colors_reset_default">Colors Ha sido reset</string>
     <string name="theme_bw">BlackWhite</string>
     <string name="theme_termcap">Termcap</string>
-    <string name="theme_coolblue">Azul Fresco</string>
-    <string name="theme_redplanet">Planeta Rojo</string>
-    <string name="theme_ladypink">Señora En Rosa</string>
+    <string name="theme_coolblue">Fresco azul</string>
+    <string name="theme_redplanet">Planeta rojo</string>
+    <string name="theme_ladypink">Señor En Rosa</string>
 </resources>

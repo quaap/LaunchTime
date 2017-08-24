@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+   <!--This text was automatically machine translated. If you see any mistakes please correct them!-->
+   <!--Ĉi tiu teksto estis aŭtomate la maŝino tradukis. Se vi vidas ajnajn erarojn komplezas korekti ilin!-->
+
+    <!-- Tradukas nur la "_eniritaj" de ĉenoj -->
+
+    
+
+    <string-array name="pref_return_home_strings">
+        <item>Tuj</item>
+        <item>Poste de 30 duaj</item>
+        <item>Poste de 1 minuto</item>
+        <item>Poste de 5 minutoj</item>
+        <item>Poste de 30 minutoj</item>
+        <item>Poste de 1 horo</item>
+        <item>Poste de 1 tago</item>
+        <item>Neniam</item>
+    </string-array>
+
+
+    
+
+    <string-array name="pref_orientation_strings">
+        <item>Sistemo</item>
+        <item>Rotate Kiam mizera</item>
+        <item>Portreto de forto</item>
+        <item>Pejzaĝo de forto</item>
+    </string-array>
+
+
+    
+
+    <string-array name="pref_size_strings">
+        <item>Malgranda</item>
+        <item>Duona</item>
+        <item>Granda</item>
+        <item>X-Granda</item>
+    </string-array>
+
+    
+    
+
+    <string-array name="pref_cat_location_strings">
+        <item>Ĝentila</item>
+        <item>Al la maldekstra</item>
+    </string-array>
+
+    
+
+
+</resources>

@@ -1,39 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
+   <!--Aquest text era automàticament màquina va traduir. Si veus qualssevol equivocacions si us plau els corregeixen!-->
 
-    <!-- Aquest fitxer es va traduir automàticament a la màquina. Si us plau, no dubteu a corregir els errors de traducció que trobis. -->
+    <!-- Tradueix només les "_entrades" de cordes -->
 
+    
 
     <string-array name="pref_return_home_strings">
-        <item>immediatament</item>
-        <item>després de 30 segons</item>
-        <item>després de 1 minut</item>
-        <item>després de 5 minuts</item>
-        <item>després de 30 minuts</item>
-        <item>després de 1 hora</item>
-        <item>després de 1 dia</item>
-        <item>mai</item>
+        <item>Immediatament</item>
+        <item>Després de 30 segons</item>
+        <item>Després de 1 minut</item>
+        <item>Després de 5 minuts</item>
+        <item>Després de 30 minuts</item>
+        <item>Després de 1 hora</item>
+        <item>Després de 1 dia</item>
+        <item>Mai</item>
     </string-array>
 
+
+    
 
     <string-array name="pref_orientation_strings">
         <item>Sistema</item>
-        <item>Rotate mentre Força</item>
-        <item>de Retrat de Força</item>
-        <item>necessitada Paisatge</item>
+        <item>Rotate Mentre va necessitar</item>
+        <item>Retrat de força</item>
+        <item>Paisatge de força</item>
     </string-array>
 
+
+    
+
     <string-array name="pref_size_strings">
-        <item>Medi</item>
         <item>Petit</item>
+        <item>Medi</item>
         <item>Gran</item>
         <item>X-Gran</item>
     </string-array>
+
+    
+    
 
     <string-array name="pref_cat_location_strings">
         <item>Correcte</item>
         <item>Esquerre</item>
     </string-array>
+
+    
 
 
 </resources>

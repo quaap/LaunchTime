@@ -5,14 +5,14 @@
     <string name="app_name">LaunchTime</string>
 
 
-    <string name="remove_launcher">Remove</string>
-    <string name="uninstall_app">deinstallieren</string>
+    <string name="remove_launcher">Entfernen</string>
+    <string name="uninstall_app">Deinstallieren</string>
     <string name="app_was_uninstalled">Anwendung wurde deinstalliert</string>
     <string name="uninstall_canceled">Deinstallieren abgebrochen</string>
     <string name="could_not_uninstall">Anwendung konnte nicht deinstalliert werden</string>
 
     <string name="category_Search">Suchen</string>
-    <string name="category_Talk">Comm.</string>
+    <string name="category_Talk">Komm.</string>
     <string name="category_Games">Spiele</string>
     <string name="category_Internet">Internet</string>
     <string name="category_Media">Audio</string>
@@ -20,7 +20,7 @@
     <string name="category_Utilities">Dienstprogramme</string>
     <string name="category_Other">Andere</string>
     <string name="category_Settings">Einstellungen</string>
-    <string name="category_Hidden">Hidden</string>
+    <string name="category_Hidden">Versteckt</string>
 
     <string name="category_Search_full">Suchen &amp; Neueste</string>
     <string name="category_Talk_full">Kommunikation</string>
@@ -38,30 +38,30 @@
     <string name="recent_apps">Neueste Apps</string>
 
     <string name="sort_category">Sortieren \nKategorie</string>
-    <string name="add_widgets">Add \nWidgets</string>
-    <string name="add_category">Hinzufügen \nCategory</string>
+    <string name="add_widgets">Fügen Sie\nWidgets</string>
+    <string name="add_category">Hinzufügen \nKategorie</string>
     <string name="rename_category">Bearbeiten \nKategorie</string>
 
-    <string name="remove">Remove</string>
-    <string name="done">Done</string>
+    <string name="remove">Entfernen</string>
+    <string name="done">Fertig</string>
     <string name="cancel">Abbrechen</string>
     <string name="rename_cat">Kategorie umbenennen</string>
     <string name="rename_cat2">diese Kategorie umbenennen</string>
     <string name="rename_cat3">Benennen Sie diese spezielle Kategorie um (behält ihre vorherige Funktionalität)</string>
-    <string name="need_name">Sie müssen einen Namen</string>eingeben
-    <string name="no_rename">kann die Kategorie</string>nicht umbenennen
+    <string name="need_name">Sie müssen einen Namen geben.</string>
+    <string name="no_rename">Kategorie konnte nicht umbenannt werden.</string>
     <string name="add_cat">Kategorie hinzufügen</string>
     <string name="add_cat2">Kategorie hinzufügen</string>
-    <string name="no_add_cat">Couldn \'t Kategorie hinzufügen</string>
+    <string name="no_add_cat">Konnte nicht Kategorie hinzufügen</string>
     <string name="delete_cat">Kategorie löschen</string>
     <string name="delete_cat_prompt">Sind Sie sicher, dass Sie diese Kategorie löschen möchten?</string>
     <string name="delete">löschen</string>
-    <string name="cat_deleted">Kategorie gelöscht. Alle Anwendungen wurden in Kategorie% s</string>verschoben
-    <string name="no_delete_cat">konnte die Kategorie</string>nicht löschen
+    <string name="cat_deleted">Kategorie gelöscht. Alle Anwendungen wurden in Kategorie %s</string>
+    <string name="no_delete_cat">konnte die Kategorie</string>
 
     <string name="short_name">Kurzname</string>
     <string name="full_name">Vollständiger Name (optional)</string>
-    <string name="is_tiny">Ist Tiny</string>
+    <string name="is_tiny">Ist Winzige</string>
 
 
     <string name="pref_orient">Orientierung</string>
@@ -90,15 +90,15 @@
     <string name="send_error_report">Fehlerbericht senden</string>
     <string name="go_to_settings">Gehe zu Einstellungen</string>
 
-    <string name="show_extfs_opts">Externe Backup-Optionen anzeigen ...</string>
-    <string name="hide_extfs_opts">Externe Backup-Optionen ausblenden ...</string>
+    <string name="show_extfs_opts">Externe Backup-Optionen anzeigen …</string>
+    <string name="hide_extfs_opts">Externe Backup-Optionen ausblenden …</string>
     <string name="no_backup_selected">Keine ausgewählt</string>
 <string name="opt_name">optionaler Name</string>
     <string name="new_backup">Neue Sicherung</string>
     <string name="take_backup">Take backup</string>
     <string name="backup_success">Sicherung erfolgreich!</string>
     <string name="backup_failed">Sicherung fehlgeschlagen</string>
-    <string name="select_file_restore">Datei zur Wiederherstellung</string>auswählen
+    <string name="select_file_restore">Wählen Sie Datei wiederherstellen</string>
     <string name="no_backup">Kein solches Backup \'"</string>
     <string name="confirm_restore1">Wiederherstellung?</string>
     <string name="confirm_restore2">Wenn du wiederherstellst, gehen alle aktuellen Änderungen verloren.</string>
@@ -107,7 +107,7 @@
     <string name="restore_failed_rollback">Wiederherstellung fehlgeschlagen. Zurückrollen</string>
     <string name="restore_failed2">Wiederherstellung fehlgeschlagen. Datenbankstatus unbekannt</string>
     <string name="confirm_delete1">löschen?</string>
-    <string name="confirm_delete2">Sind Sie sicher, dass Sie die Sicherung \'</string>löschen möchten
+    <string name="confirm_delete2">Sind Sie sicher, dass die Rückseite oben löschen möchten \'</string>
     <string name="delete_success">erfolgreich löschen</string>
     <string name="delete_failed">Löschen fehlgeschlagen</string>
     <string name="copy_sucess">erfolgreich kopieren</string>
@@ -116,14 +116,14 @@
     <string name="perm_granted">Yay! Versuchen Sie es erneut.</string>
     <string name="perm_not_granted">Boo</string>
     <string name="app">app</string>
-    <string name="config">Config</string>
+    <string name="config">Konfig</string>
     <string name="before_deleted">Bisher gelöscht</string>
     <string name="pref_senddat">App-Daten senden</string>
     <string name="pref_senddat_summ">Senden Sie Daten, welche Apps in der App installiert sind Entwickler</string>
     <string name="pref_backup">Sicherung und Wiederherstellung</string>
     <string name="pref_backup_summ">Sichern oder Wiederherstellen der Konfiguration von LaunchTime (Kategorien, App-Bestellung, aktuelle Apps usw.)</string>
     <string name="pref_system">Systemeinstellungen</string>
-    <string name="pref_system_summ">Zeigt die Systemeinstellungen</string>an
+    <string name="pref_system_summ">Zeigt die Systemeinstellungen</string>
     <string name="pref_tabsize">Kategorie-Registerkarte</string>
     <string name="pref_iconsize">Launchergröße</string>
     <string name="pref_icontext">Launcher Textfarbe</string>
@@ -133,11 +133,11 @@
     <string name="pref_tabsel">Ausgewählte Farbe</string>
     <string name="pref_drag">Drag over color</string>
     <string name="select_your_color">Wähle deine Farbe</string>
-    <string name="red">Red</string>
-    <string name="green">grün</string>
-    <string name="blue">blau</string>
+    <string name="red">Rot</string>
+    <string name="green">Grün</string>
+    <string name="blue">Blau</string>
     <string name="brightness">Helligkeit</string>
-    <string name="transparenz">transparenz</string>
+    <string name="transparenz">Transparenz</string>
     <string name="pref_color_style">Farbe und Stil</string>
     <string name="pref_app_system">App und System</string>
     <string name="pref_hide_empty_cat">Leere Kategorien ausblenden</string>
@@ -145,9 +145,9 @@
     <string name="prefs_empty_cats_hid">Leere Kategorien werden ausgeblendet</string>
     <string name="prefs_empty_cats_show">Leere Kategorien werden angezeigt</string>
     <string name="prefs_cat_apps">Apps werden kategorisiert</string>
-    <string name="prefs_cat_no">Apps werden in "Other"</string>platziert
-    <string name="pref_cat_loc_text">Kategorien Standort</string>
-    <string name="pref_cat_loc">Kategorien werden auf dem% s</string>stehen
+    <string name="prefs_cat_no">Apps werden in \"Andere\"</string>
+    <string name="pref_cat_loc_text">Kategorien Lage</string>
+    <string name="pref_cat_loc">Kategorien werden auf %s</string>
     <string name="pref_cat_sort">Kategorie sortieren</string>
     <string name="pref_cat_sort_on">Kategorien erinnern sich an die ausgewählte Sortierreihenfolge</string>
     <string name="pref_cat_sort_off">Kategorien werden nicht sortiert</string>
@@ -155,11 +155,11 @@
     <string name="pref_todd_lock_summ">Versuch, toddlerbezogene Schäden zu begrenzen, indem du in die
         Aktuelle Kategorie und verhindert das Ziehen / Verschieben / Löschen. Beenden Sie, indem Sie den Code eingeben
         Der Bildschirm.</string>
-    <string name="pref_returnhome_summ">Wenn weg, gehen Sie in die oberste Kategorie:% s.</string>
+    <string name="pref_returnhome_summ">Wenn weg, gehen Sie in die oberste Kategorie: %s.</string>
     <string name="pref_returnhome">Rückgabe home timeout</string>
 
     <string name="search_hint">Suche. \". \" Ist ein Platzhalter</string>
-    <string name="widget_alreay">Dieses Widget befindet sich bereits in der Kategorie \"% s \"</string>
+    <string name="widget_alreay">Dieses Widget befindet sich bereits in der Kategorie \"%s\"</string>
 
 
     <string name="icons_pack_desc">Wähle ein Thema oder Iconpack</string>
@@ -169,13 +169,13 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
 <string name="sort_prompt_title">Kategorie sortieren nach</string>
-    <string name="kid_escape_text">Drücken Sie \'% s \', um</string>zu beenden
+    <string name="kid_escape_text">Drücken Sie \'%s\' zum Beenden</string>
     <string name="reset_db">die Datenbank zurücksetzen</string>
     <string name="reset_db_explain">Die Datenbank wird neu erstellt und alle Apps werden angezeigt
-        Neu kategorisiert nach Ihrer \"auto-categorize apps \" Einstellung.</string>
-    <string name="reset">Reset</string>
+        Neu kategorisiert nach Ihrer \"auto-categorize apps\" Einstellung.</string>
+    <string name="reset">Zurücksetzen</string>
     <string name="clear_recent">Neue Artikel löschen</string>
-    <string name="clear">Clear</string>
+    <string name="clear">Klar</string>
     <string name="reset_database">Datenbank zurücksetzen</string>
 
 
@@ -200,8 +200,7 @@
 
            <p>Willkommen bei LaunchTime!</p>
 
-           <p>Diese Datei wurde automatisch maschinell übersetzt. Bitte fühlen Sie sich frei, alle Fehler zu korrigieren, die Sie finden!</p>
-
+           <p>(Dieser Text wurde automatisch maschinell übersetzt. Siehst du irgendwelche Fehler bitte korrigieren!)</p>
 
            <p>LaunchTime ist opensource Software. Siehe die vollständige Lizenz und Quellcode
             <a href=\"https://github.com/quaap/LaunchTime\">hier</a>.</p>
@@ -298,7 +297,7 @@
             <p>Um ein Widget zur aktuellen Kategorie hinzuzufügen, klicken Sie auf den kleinen Pfeil nach oben
             Der Bildschirm, dann klicken Sie auf "Widget hinzufügen". Ein Systemmenü erscheint mit dem vorhandenen
             Widgets Wähle eins. Sie können aufgefordert werden, "LaunchTime zulassen" zuzugreifen
-            Widget \'s Daten. Sie müssen "akzeptieren", um das Widget hinzuzufügen. Klicken Sie auf die Schaltfläche "Immer zulassen"
+            Widget\'s Daten. Sie müssen "akzeptieren", um das Widget hinzuzufügen. Klicken Sie auf die Schaltfläche "Immer zulassen"
             Checkbox wird empfohlen, oder Sie werden jedes Mal aufgefordert, wenn LaunchTime (re) startet
             Jedes Widget, das du hinzugefügt hast.</p>
 
