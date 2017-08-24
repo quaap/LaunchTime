@@ -117,7 +117,7 @@
     <string name="perm_not_granted">Boo</string>
     <string name="app">app</string>
     <string name="config">Konfig</string>
-    <string name="before_deleted">Bisher gelöscht</string>
+    <string name="previously_deleted">Bisher gelöscht</string>
     <string name="pref_senddat">App-Daten senden</string>
     <string name="pref_senddat_summ">Senden Sie Daten, welche Apps in der App installiert sind Entwickler</string>
     <string name="pref_backup">Sicherung und Wiederherstellung</string>
@@ -132,12 +132,12 @@
     <string name="pref_tabsel_text">Ausgewählte Textfarbe</string>
     <string name="pref_tabsel">Ausgewählte Farbe</string>
     <string name="pref_drag">Drag over color</string>
-    <string name="select_your_color">Wähle deine Farbe</string>
+    <string name="choose_your_color">Wähle deine Farbe</string>
     <string name="red">Rot</string>
     <string name="green">Grün</string>
     <string name="blue">Blau</string>
     <string name="brightness">Helligkeit</string>
-    <string name="transparenz">Transparenz</string>
+    <string name="transparency">Transparenz</string>
     <string name="pref_color_style">Farbe und Stil</string>
     <string name="pref_app_system">App und System</string>
     <string name="pref_hide_empty_cat">Leere Kategorien ausblenden</string>
@@ -329,7 +329,7 @@
     <string name="reset_colors_title">Farben zurücksetzen</string>
     <string name="reset_color_summ">Klicken Sie hier, um die Farben des aktuellen Themas zurückzusetzen</string>
     <string name="colors_reset_default">Farben wurden zurückgesetzt</string>
-    <string name="theme_bw">Schwarz-Weiss</string>
+    <string name="theme_bw">Schwarz-Weiß</string>
     <string name="theme_termcap">Termcap</string>
     <string name="theme_coolblue">Kühles Blau</string>
     <string name="theme_redplanet">Roter Planet</string>
