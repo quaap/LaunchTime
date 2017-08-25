@@ -140,7 +140,7 @@
     <string name="red">Rojo</string>
     <string name="green">Verde</string>
     <string name="blue">Azul</string>
-    <string name="brightness">Brightness</string>
+    <string name="brightness">Brillo</string>
     <string name="transparency">Transparencia</string>
     <string name="pref_color_style">Color Y Estilo</string>
     <string name="pref_app_system">App Y Sistema</string>
@@ -331,12 +331,12 @@
             ]]>
     </string>
     <string name="link">Shortcut</string>
-    <string name="reset_colors_title">Reset colors</string>
+    <string name="reset_colors_title">Restaurar colores</string>
     <string name="reset_color_summ">Clic a reset el tema actual colors</string>
     <string name="colors_reset_default">Colors Ha sido reset</string>
-    <string name="theme_bw">BlackWhite</string>
+    <string name="theme_bw">NegroBlanco</string>
     <string name="theme_termcap">Termcap</string>
     <string name="theme_coolblue">Fresco azul</string>
     <string name="theme_redplanet">Planeta rojo</string>
-    <string name="theme_ladypink">Señor En Rosa</string>
+    <string name="theme_ladypink">Señora En Rosa</string>
 </resources>

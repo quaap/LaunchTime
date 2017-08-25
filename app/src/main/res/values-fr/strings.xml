@@ -138,10 +138,10 @@
     <string name="pref_tabsel">Tab A sélectionné couleur</string>
     <string name="pref_drag">Il traîne sur couleur</string>
     <string name="choose_your_color">Choisir votre couleur</string>
-    <string name="red">Rojo</string>
+    <string name="red">Rouge</string>
     <string name="green">Vert</string>
     <string name="blue">Bleu</string>
-    <string name="brightness">Brightness</string>
+    <string name="brightness">Luminosité</string>
     <string name="transparency">Transparence</string>
     <string name="pref_color_style">Couleur Et Style</string>
     <string name="pref_app_system">App Et Système</string>
@@ -157,7 +157,7 @@
     <string name="pref_cat_sort_on">Les Catégories rappelleront mandat de classe sélectionnée</string>
     <string name="pref_cat_sort_off">Les Catégories ne seront pas rangées</string>
     <string name="pref_todd_lock">Toddler Façon</string>
-    <string name="pref_todd_lock_summ">Tentative de limiter toddler-dommage lié par fermer à la
+    <string name="pref_todd_lock_summ">Tentative de limiter bambin-dommage lié par fermer à la
         catégorie actuelle et en empêchant en traînant/en mouvant/en éliminant. Sortie par introduire le code dans
         l\'écran.</string>
     <string name="pref_returnhome_summ">Si dehors, il va au supérieur-la plupart de catégorie: %s.</string>
@@ -335,9 +335,9 @@
     <string name="reset_colors_title">Reset colors</string>
     <string name="reset_color_summ">Clic à reset le thème actuel colors</string>
     <string name="colors_reset_default">Colors A été reset</string>
-    <string name="theme_bw">BlackWhite</string>
+    <string name="theme_bw">NoirBlanc</string>
     <string name="theme_termcap">Termcap</string>
     <string name="theme_coolblue">Frais bleu</string>
     <string name="theme_redplanet">Planète rouge</string>
-    <string name="theme_ladypink">Monsieur En Rose</string>
+    <string name="theme_ladypink">Dame en rose</string>
 </resources>
