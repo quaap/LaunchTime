@@ -330,6 +330,7 @@
     <string name="link">Shortcut</string>
     <string name="reset_colors_title">Reset colors</string>
     <string name="reset_color_summ">Click to reset the current theme\'s colors</string>
+    <string name="confirm_reset_colors">Do you want to reset the colors for this theme?</string>
     <string name="colors_reset_default">Colors have been reset</string>
     <string name="theme_bw">BlackWhite</string>
     <string name="theme_termcap">Termcap</string>

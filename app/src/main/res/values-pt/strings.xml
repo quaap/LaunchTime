@@ -340,4 +340,5 @@
     <string name="theme_coolblue">Fresco azul</string>
     <string name="theme_redplanet">Planeta vermelho</string>
     <string name="theme_ladypink">Senhora Em Rosa</string>
+    <string name="confirm_reset_colors">Você quer redefinir as cores para este tema?</string>
 </resources>

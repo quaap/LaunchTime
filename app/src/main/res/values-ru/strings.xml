@@ -333,4 +333,5 @@
     <string name="theme_coolblue">Cool blue</string>
     <string name="theme_redplanet">Red Planet</string>
     <string name="theme_ladypink">Lady In Pink</string>
+    <string name="confirm_reset_colors">Вы хотите сбросить цвета для этой темы?</string>
 </resources>

@@ -334,4 +334,5 @@
     <string name="theme_coolblue">Kühles Blau</string>
     <string name="theme_redplanet">Roter Planet</string>
     <string name="theme_ladypink">Dame in rosa</string>
+    <string name="confirm_reset_colors">Möchten Sie die Farben für dieses Thema zurücksetzen?</string>
 </resources>

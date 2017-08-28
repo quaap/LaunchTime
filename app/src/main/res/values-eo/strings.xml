@@ -340,4 +340,5 @@
     <string name="theme_coolblue">Freŝa lazuro</string>
     <string name="theme_redplanet">ruĝa Planedo</string>
     <string name="theme_ladypink">Sinjoro En Rozo</string>
+    <string name="confirm_reset_colors">Ĉu vi volas restarigi la kolorojn por ĉi tiu temo?</string>
 </resources>

@@ -339,4 +339,5 @@
     <string name="theme_coolblue">Blau fresc</string>
     <string name="theme_redplanet">Planeta vermell</string>
     <string name="theme_ladypink">Senyora En Rosa</string>
+    <string name="confirm_reset_colors">Voleu restablir els colors per a aquest tema?</string>
 </resources>

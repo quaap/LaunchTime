@@ -1,6 +1,8 @@
 package com.quaap.launchtime;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
@@ -73,10 +75,31 @@ public class SettingsActivity extends PreferenceActivity {
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    IconsHandler ich = GlobState.getIconsHandler(getActivity());
-                    ich.resetUserColors();
-                    Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+
+                    new AlertDialog.Builder(getActivity())
+
+                            .setTitle(R.string.reset_colors_title)
+                            .setMessage(R.string.confirm_reset_colors)
+
+                            .setPositiveButton(R.string.reset_colors_title, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    IconsHandler ich = GlobState.getIconsHandler(getActivity());
+                                    ich.resetUserColors();
+                                    Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
+                                    getActivity().finish();
+                                    dialog.dismiss();
+                                }
+
+                            })
+                            .setNegativeButton(R.string.cancel,  new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create().show();
+
+
                     return true;
                 }
             });
