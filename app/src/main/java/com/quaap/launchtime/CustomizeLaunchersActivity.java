@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -223,6 +225,10 @@ public class CustomizeLaunchersActivity extends Activity {
                 SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
                 AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
                 mIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                int num = prefs.getInt("icon-update", 0);
+                prefs.edit().putInt("icon-update", num+1).apply();
 
             }
         }

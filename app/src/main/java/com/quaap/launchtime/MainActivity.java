@@ -329,7 +329,7 @@ public class MainActivity extends Activity implements
 
         if (key!=null) {
             //Delete our icon cache so the labels can be regenerated.
-            if (key.equals("textcolor") || key.equals("preference_iconsize") || key.equals("icons-pack")) {
+            if (key.equals("textcolor") || key.equals("preference_iconsize") || key.equals("icons-pack") || key.equals("icon-update")) {
                 mAppLauncherViews.clear();
             }
             if (key.equals("icons-pack")) {
@@ -342,6 +342,8 @@ public class MainActivity extends Activity implements
 
                 mQuickRow.repopulate();
             }
+
+
             checkConfig();
 
             switchCategory(mCategory);
