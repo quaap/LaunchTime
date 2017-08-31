@@ -147,35 +147,10 @@ public class CustomizeLaunchersActivity extends Activity {
     private static final String ACTION_ADW_PICK_ICON="org.adw.launcher.icons.ACTION_PICK_ICON";
 
 
-//    void pickIcon() {
-//
-//        Intent pickerIntent=new Intent(Intent.ACTION_PICK);
-//        pickerIntent.setType("image/*");
-//        startActivityForResult(Intent.createChooser(pickerIntent, "Select icon"), PICK_CUSTOM_ICON);
-//    }
-//
-//    void cropImage() {
-//        //Crop picture
-//        int width;
-//        int height;
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.setType("image/*");
-//        width = height = (int) getResources().getDimension(android.R.dimen.app_icon_size);
-//        intent.putExtra("crop", "true");
-//        intent.putExtra("outputX", width);
-//        intent.putExtra("outputY", height);
-//        intent.putExtra("aspectX", width);
-//        intent.putExtra("aspectY", height);
-//        intent.putExtra("noFaceDetection", true);
-//        intent.putExtra("return-data", true);
-//        startActivityForResult(intent, CROP_PICTURE);
-//    }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
+
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             //DB db = GlobState.getGlobState(this).getDB();
