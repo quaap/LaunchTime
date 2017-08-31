@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -38,6 +39,8 @@ public class CustomizeLaunchersActivity extends Activity {
     private int mIconSize;
 
     private AppLauncher mAppClicked;
+
+    private ImageView mIconView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +96,7 @@ public class CustomizeLaunchersActivity extends Activity {
                                 applayout.setLayoutParams(lp);
                                 applayout.setPadding(18,6,6,6);
 
-                                ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
+                                final ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
                                 Drawable icon = ich.getDefaultAppDrawable(app.getComponentName(), app.getLinkUri(), true);
                                 if (icon == null) {
                                     icon = ich.getDefaultAppDrawable(app.getBaseComponentName(), app.getLinkUri());
@@ -104,6 +107,7 @@ public class CustomizeLaunchersActivity extends Activity {
                                     @Override
                                     public void onClick(View v) {
                                         mAppClicked = app;
+                                        mIconView = iconView;
                                         new IconTypeDialog().createDialog().show();
 
                                     }
@@ -174,14 +178,15 @@ public class CustomizeLaunchersActivity extends Activity {
         if (resultCode == RESULT_OK) {
             //DB db = GlobState.getGlobState(this).getDB();
 
+            Bitmap bitmap = null;
             switch (requestCode) {
                 case PICK_CUSTOM_PICTURE:
-                    Bitmap mBitmap = (Bitmap) data.getParcelableExtra("data");
-                    if (mBitmap != null) {
-                        if (mBitmap.getWidth() > mIconSize) {
-                            mBitmap = Bitmap.createScaledBitmap(mBitmap,mIconSize,mIconSize, false);
+                    bitmap = (Bitmap) data.getParcelableExtra("data");
+                    if (bitmap != null) {
+                        if (bitmap.getWidth() > mIconSize) {
+                            bitmap = Bitmap.createScaledBitmap(bitmap,mIconSize,mIconSize, true);
                         }
-                        SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), mBitmap, SpecialIconStore.IconType.Custom);
+                        bitmap.setHasAlpha(true);
                     }
                     break;
                 case PICK_CUSTOM_ICON:
@@ -190,7 +195,6 @@ public class CustomizeLaunchersActivity extends Activity {
                         InputStream is = getContentResolver().openInputStream(
                                 photoUri);
                         BitmapFactory.Options opts = new BitmapFactory.Options();
-                        Bitmap bitmap;
                         opts.inJustDecodeBounds = true;
                         bitmap = BitmapFactory.decodeStream(is, null, opts);
 
@@ -201,17 +205,24 @@ public class CustomizeLaunchersActivity extends Activity {
                         int scale = (int) (w / width);
                         ops2.inSampleSize = scale;
                         is = getContentResolver().openInputStream(photoUri);
-                        mBitmap = BitmapFactory.decodeStream(is, null, ops2);
-                        if (mBitmap != null) {
-                            if (mBitmap.getWidth() > mIconSize) {
-                                mBitmap = Bitmap.createScaledBitmap(mBitmap,mIconSize,mIconSize, false);
+                        bitmap = BitmapFactory.decodeStream(is, null, ops2);
+                        if (bitmap != null) {
+                            if (bitmap.getWidth() > mIconSize) {
+                                bitmap = Bitmap.createScaledBitmap(bitmap,mIconSize,mIconSize, true);
                             }
-                            SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), mBitmap, SpecialIconStore.IconType.Custom);
+                            bitmap.setHasAlpha(true);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
+
+            }
+
+            if (bitmap!=null) {
+                SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
+                AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
+                mIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
 
             }
         }
