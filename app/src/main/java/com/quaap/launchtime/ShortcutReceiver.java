@@ -12,7 +12,7 @@ import android.util.Log;
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
-import com.quaap.launchtime.components.IconCache;
+import com.quaap.launchtime.components.SpecialIconStore;
 import com.quaap.launchtime.db.DB;
 
 /**
@@ -91,7 +91,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
         db.addApp(appLauncher);
 
         if (bitmap!=null) {
-            IconCache.saveBitmap(context, appLauncher.getActivityName(), bitmap);
+            SpecialIconStore.saveBitmap(context, appLauncher.getComponentName(), bitmap, SpecialIconStore.IconType.Shortcut);
         }
 
     }
@@ -113,7 +113,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
         db.addApp(appLauncher);
 
         if (bitmap!=null) {
-            IconCache.saveBitmap(context, appLauncher.getActivityName(), bitmap);
+            SpecialIconStore.saveBitmap(context, appLauncher.getComponentName(), bitmap, SpecialIconStore.IconType.Shortcut);
         }
 
     }

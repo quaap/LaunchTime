@@ -1,5 +1,6 @@
 package com.quaap.launchtime.components;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +24,7 @@ import java.security.MessageDigest;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
-public class IconCache {
+public class SpecialIconStore {
 
 
     public static String makeSafeName(String name) {
@@ -49,38 +50,56 @@ public class IconCache {
         //return "icon-" + name.replaceAll("(\\.\\.|[\\\\//$&():=#])+", "_");
     }
 
-    public static void saveBitmap(Context context, String name, Bitmap bitmap) {
+    public static void saveBitmap(Context context, ComponentName cname, Bitmap bitmap, IconType iconType) {
 
+        String name = cname.getPackageName() + ":" + cname.getClassName();
         try  {
-            name = makeSafeName(name);
-            FileOutputStream fos = context.openFileOutput(name, Context.MODE_PRIVATE);
+            String fname = makeSafeName(name) + "." + iconType.name();
+            FileOutputStream fos = context.openFileOutput(fname, Context.MODE_PRIVATE);
             bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
             fos.close();
-            Log.d("IconCache", "Saved icon " + name);
+            Log.d("SpecialIconStore", "Saved icon " + fname);
         } catch (IOException e) {
-            Log.e("IconCache", e.getMessage(), e);
+            Log.e("SpecialIconStore", e.getMessage(), e);
         }
     }
 
-    public static  Bitmap loadBitmap(Context context, String name) {
+    public static  Bitmap loadBitmap(Context context, ComponentName cname, IconType iconType) {
+
+        String name = cname.getPackageName() + ":" + cname.getClassName();
+
+
         Bitmap bitmap = null;
-        try  {
+
 //            for (String fn: context.fileList()) {
-//                Log.d("IconCache", " I see file " + fn);
+//                Log.d("SpecialIconStore", " I see file " + fn);
 //            }
-            name = makeSafeName(name);
+        bitmap = loadBitmap(context, makeSafeName(name) + "." + iconType.name());
+        if (bitmap == null) {
+            bitmap = loadBitmap(context, makeSafeName(name));
+        }
+        if (bitmap == null) {
+            bitmap = loadBitmap(context, makeSafeName(cname.getClassName()));
+        }
+
+
+        return bitmap;
+    }
+
+    private static Bitmap loadBitmap(Context context, String name) {
+        Bitmap bitmap = null;
+        try {
             if (fileExists(context, name)) {
                 FileInputStream fis = context.openFileInput(name);
                 bitmap = BitmapFactory.decodeStream(fis);
                 fis.close();
-                //Log.d("IconCache", "Got icon " + name);
             }
-
         } catch (IOException e) {
-            Log.e("IconCache", e.getMessage(), e);
+            Log.e("SpecialIconStore", e.getMessage(), e);
         }
         return bitmap;
     }
+
 
     public static boolean fileExists(Context context, String filename) {
         File file = context.getFileStreamPath(filename);
@@ -89,6 +108,12 @@ public class IconCache {
         }
         return true;
     }
+
+
+    public enum IconType {
+        Cached, Shortcut, Custom
+    }
+
 
 
 }

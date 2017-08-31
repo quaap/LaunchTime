@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 public class DB extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
@@ -58,6 +58,8 @@ public class DB extends SQLiteOpenHelper {
     private static final String CATID = "catID";
     private static final String ISWIDGET = "iswidget";
     private static final String ISUNINSTALLED = "isuninstalled";
+    private static final String CUSTOMLABEL = "customlabel";
+
     private static final String INDEX = "pos";
     private static final String TIME = "time";
     private static final String ISTINY = "tiny";
@@ -67,8 +69,8 @@ public class DB extends SQLiteOpenHelper {
 
     private static final String APP_TABLE_OLD = "apps";
     private static final String APP_TABLE = "apps2";
-    private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID, ISWIDGET, ISUNINSTALLED};
-    private static final String[] appcolumntypes = {"TEXT", "TEXT", "TEXT", "TEXT", "SHORT", "SHORT"};
+    private static final String[] appcolumns = {ACTVNAME, PKGNAME, LABEL, CATID, ISWIDGET, ISUNINSTALLED, CUSTOMLABEL};
+    private static final String[] appcolumntypes = {"TEXT", "TEXT", "TEXT", "TEXT", "SHORT", "SHORT", "TEXT"};
     private static final String APP_TABLE_CREATE = buildCreateTableStmt(APP_TABLE, appcolumns, appcolumntypes);
 
     private static final String[] appcolumnsindex = {ACTVNAME, PKGNAME, CATID, ISUNINSTALLED};
@@ -273,6 +275,11 @@ public class DB extends SQLiteOpenHelper {
             }
         }
 
+        if (oldVersion<6) {
+            sqLiteDatabase.execSQL("alter table " + APP_TABLE + " add column " + CUSTOMLABEL + " TEXT");
+
+        }
+
         //if (oldVersion<=3) {
             buildCatTable(sqLiteDatabase);
         //}
@@ -322,9 +329,10 @@ public class DB extends SQLiteOpenHelper {
                 String label = cursor.getString(2);
                 String catID = cursor.getString(3);
                 boolean widget = cursor.getShort(4) == 1;
+                String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-                appLauncher = AppLauncher.createAppLauncher(actvname, pkgname, label, catID, widget);
+                appLauncher = AppLauncher.createAppLauncher(actvname, pkgname, customlabel==null?label:customlabel, catID, widget);
             }
         } finally {
             cursor.close();
@@ -347,9 +355,10 @@ public class DB extends SQLiteOpenHelper {
                 String label = cursor.getString(2);
                 String catID = cursor.getString(3);
                 boolean widget = cursor.getShort(4) == 1;
+                String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
-                appLaunchers.add(AppLauncher.createAppLauncher(actvname, pkgname, label, catID, widget));
+                appLaunchers.add(AppLauncher.createAppLauncher(actvname, pkgname, customlabel==null?label:customlabel, catID, widget));
             }
         } finally {
             cursor.close();
@@ -424,11 +433,12 @@ public class DB extends SQLiteOpenHelper {
                 String pkgname = cursor.getString(1);
                 String label = cursor.getString(2);
                 boolean widget = cursor.getShort(4) == 1;
+                String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
                 if (widget) {
                     Log.d("db", "Found widget: " + actvname + " " + pkgname);
                 }
-                apps.add(AppLauncher.createAppLauncher(actvname, pkgname, label, catID, widget));
+                apps.add(AppLauncher.createAppLauncher(actvname, pkgname, customlabel==null?label:customlabel, catID, widget));
             }
         } finally {
             cursor.close();
@@ -503,15 +513,23 @@ public class DB extends SQLiteOpenHelper {
         db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
     }
 
+    public void setAppCustomLabel(String actvname, String pkgname, String customlabel) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CUSTOMLABEL, customlabel);
+        db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
+    }
+
+
     public Cursor getAppCursor(String filter) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
         Cursor cursor = db.rawQuery(
-                "select " + ACTVNAME + " _id, " + PKGNAME + " pkg,  app." + LABEL + " label, tab." + LABEL + " category " +
+                "select " + ACTVNAME + " _id, " + PKGNAME + " pkg,  app." + LABEL + " label, tab." + LABEL + " category " + ", app." + CUSTOMLABEL + " customlabel" +
                         " from " + APP_TABLE + " as app " +
                         " inner join " + TAB_ORDER_TABLE + " as tab on app." + CATID + "=tab." + CATID +
-                        " where app." + LABEL + " like ? and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
+                        " where (app." + LABEL + " like ? or app." + CUSTOMLABEL + " like ?) and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
                         " order by 3 ",
                 new String[]{filter});
 

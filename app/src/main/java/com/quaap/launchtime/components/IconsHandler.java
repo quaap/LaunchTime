@@ -287,47 +287,82 @@ public class IconsHandler {
         return null;
     }
 
+    public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
+        return getDefaultAppDrawable(componentName, uristr, false);
+    }
 
-    private Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
+    public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr, boolean nodefault) {
 
         Drawable app_icon = null;
 
-        Intent intent;
-        if (uristr!=null) {
-            if (uristr.equals("")) {
-                intent = new Intent(componentName.getClassName());
-            } else {
-                intent = new Intent(componentName.getClassName(), Uri.parse(uristr));
-            }
-
-        } else {
-            intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClassName(componentName.getPackageName(), componentName.getClassName());
-        }
-
         try {
-            app_icon = pm.getActivityIcon(intent);
-        } catch (Exception | OutOfMemoryError e) {
-            Log.e("IconLookup", "Couldn't get icon for" + componentName.getClassName(), e);
-        }
-
-        if (app_icon==null) {
-            try {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-                    LauncherActivityInfo info = launcher.getActivityList(componentName.getPackageName(), android.os.Process.myUserHandle()).get(0);
-                    app_icon = info.getBadgedIcon(0);
-                } else {
-                    app_icon = pm.getActivityIcon(componentName);
-                }
-            } catch (NameNotFoundException | IndexOutOfBoundsException e) {
-                Log.e(TAG, "Unable to found component " + componentName.toString() + e);
-                return null;
+            Bitmap custombitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Custom);
+            if (custombitmap != null) {
+                app_icon = new BitmapDrawable(ctx.getResources(), custombitmap);
             }
-        }
 
-        if (app_icon == null) {
-            app_icon = pm.getDefaultActivityIcon();
+            if (app_icon == null) {
+
+                Intent intent;
+                if (uristr != null) {
+                    if (uristr.equals("")) {
+                        intent = new Intent(componentName.getClassName());
+                    } else {
+                        intent = new Intent(componentName.getClassName(), Uri.parse(uristr));
+                    }
+
+                } else {
+                    intent = new Intent(Intent.ACTION_MAIN);
+                    intent.setClassName(componentName.getPackageName(), componentName.getClassName());
+                }
+
+                try {
+                    app_icon = pm.getActivityIcon(intent);
+                } catch (Exception | OutOfMemoryError e) {
+                    Log.e("IconLookup", "Couldn't get icon for" + componentName.getClassName(), e);
+                }
+            }
+
+            if (app_icon == null) {
+                try {
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+                        LauncherActivityInfo info = launcher.getActivityList(componentName.getPackageName(), android.os.Process.myUserHandle()).get(0);
+                        app_icon = info.getBadgedIcon(0);
+                    } else {
+                        app_icon = pm.getActivityIcon(componentName);
+                    }
+                } catch (NameNotFoundException | IndexOutOfBoundsException e) {
+                    Log.e(TAG, "Unable to found component " + componentName.toString() + e);
+                    return null;
+                }
+            }
+
+            if (app_icon == null && !nodefault) {
+                app_icon = pm.getDefaultActivityIcon();
+            }
+
+            Bitmap bitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Shortcut);
+
+            if (bitmap != null && app_icon!=null) {
+                Log.d(TAG, "Got special icon for " + componentName.getClassName());
+                try {
+                    Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+                    Canvas canvas = new Canvas(newbm);
+                    canvas.drawBitmap(bitmap, 0, 0, null);
+                    app_icon.setBounds(canvas.getWidth() / 2, 0, canvas.getWidth(), canvas.getHeight() / 2);
+                    app_icon.draw(canvas);
+                    app_icon = new BitmapDrawable(ctx.getResources(), newbm);
+                    //Log.d("loadAppIconAsync", " yo");
+                } catch (Exception | OutOfMemoryError e) {
+                    Log.e("loadAppIconAsync", "couldn't make special icon", e);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception getting app icon for " + componentName , e);
+            if (app_icon == null && !nodefault)  {
+                app_icon = pm.getDefaultActivityIcon();
+            }
         }
 
         return app_icon;

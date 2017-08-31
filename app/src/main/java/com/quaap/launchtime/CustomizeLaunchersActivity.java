@@ -1,0 +1,290 @@
+package com.quaap.launchtime;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.quaap.launchtime.apps.AppLauncher;
+import com.quaap.launchtime.components.IconsHandler;
+import com.quaap.launchtime.components.SpecialIconStore;
+import com.quaap.launchtime.db.DB;
+
+import java.io.InputStream;
+import java.util.List;
+
+public class CustomizeLaunchersActivity extends Activity {
+
+    private LinearLayout list;
+
+    private int mIconSize;
+
+    private AppLauncher mAppClicked;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_customize_launchers);
+
+        mIconSize = (int) getResources().getDimension(android.R.dimen.app_icon_size);
+
+        list = (LinearLayout)findViewById(R.id.custom_launchers_layout);
+
+        final DB db = GlobState.getGlobState(this).getDB();
+
+        final IconsHandler ich = GlobState.getIconsHandler(this);
+
+        final Handler handler = new Handler();
+
+        AsyncTask<Void, Void, Void> loadappstask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                for (final String catID: db.getCategories()) {
+
+                    List<AppLauncher> apps = db.getApps(catID);
+                    if (apps.isEmpty()) continue;
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            TextView cat = new TextView(CustomizeLaunchersActivity.this);
+                            cat.setText(db.getCategoryDisplayFull(catID));
+                            cat.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+                            cat.setBackgroundColor(Color.BLACK);
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            lp.gravity = Gravity.CENTER;
+                            lp.setMargins(12,18,12,12);
+                            cat.setLayoutParams(lp);
+                            cat.setPadding(12,6,6,6);
+                            list.addView(cat);
+                        }
+                    });
+
+
+                    for (final AppLauncher app: apps) {
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                LinearLayout applayout = new LinearLayout(CustomizeLaunchersActivity.this);
+                                applayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                lp.gravity = Gravity.CENTER_VERTICAL;
+                                lp.setMargins(24,12,12,12);
+                                applayout.setLayoutParams(lp);
+                                applayout.setPadding(18,6,6,6);
+
+                                ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
+                                Drawable icon = ich.getDefaultAppDrawable(app.getComponentName(), app.getLinkUri(), true);
+                                if (icon == null) {
+                                    icon = ich.getDefaultAppDrawable(app.getBaseComponentName(), app.getLinkUri());
+                                }
+                                iconView.setImageDrawable(icon);
+
+                                iconView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mAppClicked = app;
+                                        new IconTypeDialog().createDialog().show();
+
+                                    }
+                                });
+
+
+
+                                applayout.addView(iconView);
+
+                                TextView label = new TextView(CustomizeLaunchersActivity.this);
+                                label.setText(app.getLabel());
+                                label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+                                applayout.addView(label);
+
+
+                                list.addView(applayout);
+                            }
+                        });
+
+                    }
+
+
+                }
+
+                return null;
+            }
+        };
+
+        loadappstask.execute();
+    }
+
+    private static final int PICK_CUSTOM_ICON=1;
+    private static final int PICK_CUSTOM_PICTURE=5;
+    private static final int PICK_FROM_ICON_PACK=6;
+    private static final String ACTION_ADW_PICK_ICON="org.adw.launcher.icons.ACTION_PICK_ICON";
+
+
+//    void pickIcon() {
+//
+//        Intent pickerIntent=new Intent(Intent.ACTION_PICK);
+//        pickerIntent.setType("image/*");
+//        startActivityForResult(Intent.createChooser(pickerIntent, "Select icon"), PICK_CUSTOM_ICON);
+//    }
+//
+//    void cropImage() {
+//        //Crop picture
+//        int width;
+//        int height;
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.setType("image/*");
+//        width = height = (int) getResources().getDimension(android.R.dimen.app_icon_size);
+//        intent.putExtra("crop", "true");
+//        intent.putExtra("outputX", width);
+//        intent.putExtra("outputY", height);
+//        intent.putExtra("aspectX", width);
+//        intent.putExtra("aspectY", height);
+//        intent.putExtra("noFaceDetection", true);
+//        intent.putExtra("return-data", true);
+//        startActivityForResult(intent, CROP_PICTURE);
+//    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            //DB db = GlobState.getGlobState(this).getDB();
+
+            switch (requestCode) {
+                case PICK_CUSTOM_PICTURE:
+                    Bitmap mBitmap = (Bitmap) data.getParcelableExtra("data");
+                    if (mBitmap != null) {
+                        if (mBitmap.getWidth() > mIconSize) {
+                            mBitmap = Bitmap.createScaledBitmap(mBitmap,mIconSize,mIconSize, false);
+                        }
+                        SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), mBitmap, SpecialIconStore.IconType.Custom);
+                    }
+                    break;
+                case PICK_CUSTOM_ICON:
+                    Uri photoUri = data.getData();
+                    try {
+                        InputStream is = getContentResolver().openInputStream(
+                                photoUri);
+                        BitmapFactory.Options opts = new BitmapFactory.Options();
+                        Bitmap bitmap;
+                        opts.inJustDecodeBounds = true;
+                        bitmap = BitmapFactory.decodeStream(is, null, opts);
+
+                        BitmapFactory.Options ops2 = new BitmapFactory.Options();
+                        int width = mIconSize;
+                        float w = opts.outWidth;
+                        //int scale = Math.round(w / width);
+                        int scale = (int) (w / width);
+                        ops2.inSampleSize = scale;
+                        is = getContentResolver().openInputStream(photoUri);
+                        mBitmap = BitmapFactory.decodeStream(is, null, ops2);
+                        if (mBitmap != null) {
+                            if (mBitmap.getWidth() > mIconSize) {
+                                mBitmap = Bitmap.createScaledBitmap(mBitmap,mIconSize,mIconSize, false);
+                            }
+                            SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), mBitmap, SpecialIconStore.IconType.Custom);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+            }
+        }
+    }
+
+    protected class IconTypeDialog implements DialogInterface.OnClickListener,
+            DialogInterface.OnCancelListener, DialogInterface.OnDismissListener,
+            DialogInterface.OnShowListener {
+
+        private ArrayAdapter<String> mAdapter;
+
+
+        public  Dialog createDialog() {
+            mAdapter = new ArrayAdapter<String>(CustomizeLaunchersActivity.this, R.layout.add_list_item);
+            mAdapter.add(getString(R.string.shirtcuts_select_picture));
+            mAdapter.add(getString(R.string.shirtcuts_crop_picture));
+            //mAdapter.add(getString(R.string.shirtcuts_icon_packs));
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(CustomizeLaunchersActivity.this);
+            builder.setTitle(getString(R.string.shirtcuts_select_icon_type));
+            builder.setAdapter(mAdapter, this);
+
+            //builder.setInverseBackgroundForced(false);
+
+            AlertDialog dialog = builder.create();
+            dialog.setOnCancelListener(this);
+            dialog.setOnDismissListener(this);
+            dialog.setOnShowListener(this);
+            return dialog;
+        }
+        public void onCancel(DialogInterface dialog) {
+            cleanup();
+        }
+        public void onDismiss(DialogInterface dialog) {
+        }
+        private void cleanup() {
+        }
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                case 0:
+                    //Select icon
+                    Intent pickerIntent=new Intent(Intent.ACTION_PICK);
+                    pickerIntent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(pickerIntent, "Select icon"), PICK_CUSTOM_ICON);
+                    break;
+                case 1:
+                    //Crop picture
+                    int width;
+                    int height;
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    width = height= mIconSize;
+                    intent.putExtra("crop", "true");
+                    intent.putExtra("outputX", width);
+                    intent.putExtra("outputY", height);
+                    intent.putExtra("aspectX", width);
+                    intent.putExtra("aspectY", height);
+                    intent.putExtra("noFaceDetection", true);
+                    intent.putExtra("return-data", true);
+                    startActivityForResult(intent, PICK_CUSTOM_PICTURE);
+                    break;
+                case 2:
+                    //Icon packs
+                    Intent packIntent=new Intent(ACTION_ADW_PICK_ICON);
+                    startActivityForResult(Intent.createChooser(packIntent, getString(R.string.shirtcuts_select_icon_pack)), PICK_FROM_ICON_PACK);
+                    break;
+
+                default:
+                    break;
+            }
+            cleanup();
+        }
+        public void onShow(DialogInterface dialog) {
+        }
+    }
+}

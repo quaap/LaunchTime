@@ -131,13 +131,22 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
         final String activityName;
         final String pkgName;
-        final String label;
+        String origlabel;
+        String customlabel;
         final String category;
+        final String label;
         try {
             activityName = cursor.getString(0);
             pkgName = cursor.getString(1);
-            label = cursor.getString(2);
+            origlabel = cursor.getString(2);
             category = cursor.getString(3);
+            customlabel = cursor.getString(cursor.getColumnIndex("customlabel"));
+            if (customlabel==null) {
+                label = origlabel;
+            } else {
+                label = customlabel + " (" + origlabel + ")";
+            }
+
         } catch (CursorIndexOutOfBoundsException e) {
             Log.e("LaunchTime", "Bad cursor");
             return;

@@ -2,7 +2,6 @@ package com.quaap.launchtime.apps;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.Categories;
-import com.quaap.launchtime.components.IconCache;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -315,51 +313,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
                 app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(getBaseComponentName(), uristr);
 
-//                if (app_icon==null) {
-//                    Intent intent;
-//                    if (isActionLink()) {
-//                        String uristr = getLinkUri();
-//                        if (uristr == null) {
-//                            intent = new Intent(getLinkBaseActivityName());
-//                        } else {
-//                            intent = new Intent(getLinkBaseActivityName(), Uri.parse(uristr));
-//                        }
-//
-//                    } else {
-//                        intent = new Intent(Intent.ACTION_MAIN);
-//                        intent.setClassName(mPackageName, getLinkBaseActivityName());
-//                    }
-//
-//
-//                    try {
-//                        app_icon = pm.getActivityIcon(intent);
-//                    } catch (Exception | OutOfMemoryError e) {
-//                        Log.e("IconLookup", "Couldn't get icon for" + getLinkBaseActivityName(), e);
-//                    }
-//                    if (app_icon == null) {
-//                        app_icon = pm.getDefaultActivityIcon();
-//                    }
-//                }
 
-
-                Bitmap bitmap = IconCache.loadBitmap(context, mActivityName);
-
-
-                if (bitmap!=null) {
-                    Log.d("loadAppIconAsync", "Got special icon for " + mActivityName);
-                    try {
-                        Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
-                        Canvas canvas = new Canvas(newbm);
-                        canvas.drawBitmap(bitmap, 0, 0, null);
-                        app_icon.setBounds(canvas.getWidth() / 2, 0, canvas.getWidth(), canvas.getHeight()/2);
-                        app_icon.draw(canvas);
-                        app_icon = new BitmapDrawable(context.getResources(), newbm);
-                        //Log.d("loadAppIconAsync", " yo");
-                    } catch (Exception | OutOfMemoryError e) {
-                        Log.e("loadAppIconAsync", "couldn't make special icon", e);
-                    }
+                if (app_icon == null) {
+                    app_icon = pm.getDefaultActivityIcon();
                 }
-
                 if (isLink()) {
                     app_icon = drawLinkSymbol(app_icon, context);
                 }
