@@ -93,7 +93,9 @@ public class SpecialIconStore {
             bitmap = loadBitmap(context, makeSafeName(cname.getClassName()));
         }
 
-
+//        if (bitmap != null) {
+//            Log.d("SpecialIconStore", "found icon for " + cname.toString());
+//        }
         return bitmap;
     }
 

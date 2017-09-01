@@ -87,6 +87,12 @@ public class ChooseIconFromPackActivity extends Activity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
 
     private class ImageAdapter extends BaseAdapter {
         private Context mContext;

@@ -181,6 +181,15 @@ public class IconsHandler {
         iconPack = new IconPack(ctx,iconsPackPackageName);
     }
 
+    public Drawable getCustomIcon(ComponentName componentName, String uristr) {
+        Drawable app_icon = null;
+        Bitmap custombitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Custom);
+        if (custombitmap != null) {
+            app_icon = new BitmapDrawable(ctx.getResources(), custombitmap);
+        }
+        return  app_icon;
+    }
+
     public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
         return getDefaultAppDrawable(componentName, uristr, false);
     }
@@ -190,10 +199,7 @@ public class IconsHandler {
         Drawable app_icon = null;
 
         try {
-            Bitmap custombitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Custom);
-            if (custombitmap != null) {
-                app_icon = new BitmapDrawable(ctx.getResources(), custombitmap);
-            }
+            app_icon = getCustomIcon(componentName, uristr);
 
             if (app_icon == null) {
 
@@ -280,7 +286,11 @@ public class IconsHandler {
             }
         }
 
-        Drawable icon = iconPack.get(componentName);
+        Drawable icon = getCustomIcon(componentName, uristr);
+
+        if (icon!=null) return  icon;
+
+        icon = iconPack.get(componentName);
         if (icon!=null) return  icon;
 
         //search first in cache
