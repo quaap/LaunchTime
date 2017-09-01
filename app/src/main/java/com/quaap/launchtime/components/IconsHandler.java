@@ -128,7 +128,7 @@ public class IconsHandler {
                 .setColor(Thing.Mask, Color.parseColor("#ffff2222"))
                 .setColor(Thing.Text, Color.parseColor("#eeff2222"))
                 .setColor(Thing.AltText, Color.parseColor("#eeff2222"))
-                .setColor(Thing.Background, Color.parseColor("#99dd3333"))
+                .setColor(Thing.Background, Color.parseColor("#99aa1111"))
                 .setColor(Thing.AltBackground, Color.parseColor("#22121111"));
 
         builtinThemes.put(redplanet.getPackKey(), redplanet);
@@ -166,8 +166,9 @@ public class IconsHandler {
      */
     public void loadIconsPack(String packageName) {
 
-        iconsPackPackageName = packageName;
         saveUserColors();
+
+        iconsPackPackageName = packageName;
 
         cacheClear();
 
