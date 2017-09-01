@@ -343,4 +343,9 @@
     <string name="confirm_reset_colors">Ĉu vi volas restarigi la kolorojn por ĉi tiu temo?</string>
     <string name="custom_icon_clear_icon">Klara kutima ikono</string>
  <string name="custom_icon_crop_picture">Elektu kaj rikolti bildon</string>
+    <string name="custom_icon_icon_packs">Elektu el ikono pack</string>
+ <string name="custom_icon_select_icon_pack">Elektu ikono pack</string>
+ <string name="custom_icon_select_icon_type">Elektu la ikono-tipon</string>
+ <string name="custom_icon_select_picture">Elektu bildon</string>
+ <string name="custom_icon_text">Fiksita kutimo etikedo</string>
 </resources>

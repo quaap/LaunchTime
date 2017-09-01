@@ -342,4 +342,9 @@
     <string name="confirm_reset_colors">Voleu restablir els colors per a aquest tema?</string>
     <string name="custom_icon_clear_icon">Esborra la icona personalitzada</string>
  <string name="custom_icon_crop_picture">Selecciona i retalla la imatge</string>
+    <string name="custom_icon_icon_packs">Seleccioneu del paquet d\'icones</string>
+ <string name="custom_icon_select_icon_pack">Seleccioneu un paquet d\'icones</string>
+ <string name="custom_icon_select_icon_type">Seleccioneu el tipus d\'icona</string>
+ <string name="custom_icon_select_picture">Selecciona la imatge</string>
+ <string name="custom_icon_text">Estableix l\'etiqueta personalitzada</string>
 </resources>

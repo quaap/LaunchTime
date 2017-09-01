@@ -336,4 +336,9 @@
     <string name="confirm_reset_colors">Вы хотите сбросить цвета для этой темы?</string>
     <string name="custom_icon_clear_icon">Очистить пользовательский значок</string>
     <string name="custom_icon_crop_picture">Выберите и обрезайте картинку</string>
+    <string name="custom_icon_icon_packs">Выбрать из пакета значков</string>
+    <string name="custom_icon_select_icon_pack">Выбрать пакет значков</string>
+    <string name="custom_icon_select_icon_type">Выберите тип значка</string>
+    <string name="custom_icon_select_picture">Выберите изображение</string>
+    <string name="custom_icon_text">Установить пользовательскую метку</string>
 </resources>

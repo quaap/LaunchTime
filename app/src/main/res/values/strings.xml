@@ -338,7 +338,7 @@
 
     <string name="custom_icon_select_picture">Select picture</string>
     <string name="custom_icon_crop_picture">Select and crop picture</string>
-    <string name="custom_icon_icon_packs">Select from Iconpack</string>
+    <string name="custom_icon_icon_packs">Select from iconpack</string>
     <string name="custom_icon_clear_icon">Clear custom icon</string>
     <string name="custom_icon_select_icon_type">Select the icon type</string>
     <string name="custom_icon_select_icon_pack">Select icon pack</string>

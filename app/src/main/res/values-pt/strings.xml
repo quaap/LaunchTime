@@ -343,4 +343,9 @@
     <string name="confirm_reset_colors">Você quer redefinir as cores para este tema?</string>
     <string name="custom_icon_clear_icon">Limpar ícone personalizado</string>
  <string name="custom_icon_crop_picture">Selecione e coloque a imagem</string>
+    <string name="custom_icon_icon_packs">Selecione a partir do pacote de ícones</string>
+ <string name="custom_icon_select_icon_pack">Selecionar pacote de ícones</string>
+ <string name="custom_icon_select_icon_type">Selecione o tipo de ícone</string>
+ <string name="custom_icon_select_picture">Selecione a imagem</string>
+ <string name="custom_icon_text">Definir etiqueta personalizada</string>
 </resources>

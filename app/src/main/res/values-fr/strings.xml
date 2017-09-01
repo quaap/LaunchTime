@@ -343,4 +343,9 @@
     <string name="confirm_reset_colors">Vous voulez réinitialiser les couleurs pour ce thème ?</string>
     <string name="custom_icon_clear_icon">Effacer l\'icône personnalisée</string>
  <string name="custom_icon_crop_picture">Sélectionner et recadrer l\'image</string>
+    <string name="custom_icon_icon_packs">Sélectionnez dans le pack d\'icônes</string>
+ <string name="custom_icon_select_icon_pack">Sélectionner le pack d\'icônes</string>
+ <string name="custom_icon_select_icon_type">Sélectionnez le type d\'icône</string>
+ <string name="custom_icon_select_picture">Sélectionnez l\'image</string>
+ <string name="custom_icon_text">Définir une étiquette personnalisée</string>
 </resources>

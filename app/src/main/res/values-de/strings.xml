@@ -337,4 +337,9 @@
     <string name="confirm_reset_colors">Möchten Sie die Farben für dieses Thema zurücksetzen?</string>
     <string name="custom_icon_clear_icon">Löschen Sie benutzerdefiniertes Symbol</string>
     <string name="custom_icon_crop_picture">Bild auswählen und zuschneiden</string>
+    <string name="custom_icon_icon_packs">Wählen Sie aus dem Icon Pack</string>
+    <string name="custom_icon_select_icon_pack">Wählen Sie icon pack</string>
+    <string name="custom_icon_select_icon_type">Wählen Sie den Symboltyp aus</string>
+    <string name="custom_icon_select_picture">Bild auswählen</string>
+    <string name="custom_icon_text">Set benutzerdefinierte Label</string>
 </resources>
