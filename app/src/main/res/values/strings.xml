@@ -334,15 +334,13 @@
     <string name="theme_ladypink">Lady In Pink</string>
 
 
-    <string name="pref_label_shirtcuts">Custom shortcut</string>
-    <string name="pref_label_activities">Activities</string>
-    <string name="shirtcut_header">Select your desired application activity to launch.\nYou can select a custom icon too.</string>
-    <string name="shirtcut_pick_activity">Pick your activity</string>
-    <string name="shirtcut_label">Label</string>
-    <string name="shirtcuts_select_picture">Select picture</string>
-    <string name="shirtcuts_crop_picture">Select and crop picture</string>
-    <string name="shirtcuts_icon_packs">IconPacks</string>
-    <string name="shirtcuts_select_icon_type">Select the icon type</string>
-    <string name="shirtcuts_select_icon_pack">Select icon pack</string>
+
+
+    <string name="custom_icon_select_picture">Select picture</string>
+    <string name="custom_icon_crop_picture">Select and crop picture</string>
+    <string name="custom_icon_icon_packs">Select from Iconpack</string>
+    <string name="custom_icon_clear_icon">Clear custom icon</string>
+    <string name="custom_icon_select_icon_type">Select the icon type</string>
+    <string name="custom_icon_select_icon_pack">Select icon pack</string>
 
 </resources>

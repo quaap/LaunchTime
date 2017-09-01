@@ -115,7 +115,6 @@ public class ChooseIconFromPackActivity extends Activity {
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
                 imageView = new ImageView(mContext);
-                //imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setPadding(8, 8, 8, 8);
             } else {
@@ -147,7 +146,12 @@ public class ChooseIconFromPackActivity extends Activity {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            TextView v = new TextView(parent.getContext());
+            TextView v;
+            if (convertView == null) {
+                v = new TextView(parent.getContext());
+            } else {
+                v = (TextView)convertView;
+            }
 
             v.setText(mMap.get(mKeys.get(position)).toString());
 

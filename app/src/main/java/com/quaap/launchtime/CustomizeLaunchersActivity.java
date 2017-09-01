@@ -198,16 +198,29 @@ public class CustomizeLaunchersActivity extends Activity {
             }
 
             if (bitmap!=null) {
-                SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
-                AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
-                mIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
-
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                int num = prefs.getInt("icon-update", 0);
-                prefs.edit().putInt("icon-update", num+1).apply();
-
+                updateBitmap(bitmap);
             }
         }
+    }
+
+    private void updateBitmap(Bitmap bitmap) {
+        if (bitmap==null) {
+            SpecialIconStore.deleteBitmap(this, mAppClicked.getComponentName(),SpecialIconStore.IconType.Custom);
+            IconsHandler ich = GlobState.getIconsHandler(this);
+            Drawable icon = ich.getDefaultAppDrawable(mAppClicked.getComponentName(), mAppClicked.getLinkUri(), true);
+            if (icon == null) {
+                icon = ich.getDefaultAppDrawable(mAppClicked.getBaseComponentName(), mAppClicked.getLinkUri());
+            }
+            mIconView.setImageDrawable(icon);
+        } else {
+            SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
+            mIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
+        }
+
+        AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int num = prefs.getInt("icon-update", 0);
+        prefs.edit().putInt("icon-update", num+1).apply();
     }
 
     protected class IconTypeDialog implements DialogInterface.OnClickListener,
@@ -219,12 +232,13 @@ public class CustomizeLaunchersActivity extends Activity {
 
         public  Dialog createDialog() {
             mAdapter = new ArrayAdapter<String>(CustomizeLaunchersActivity.this, R.layout.add_list_item);
-            mAdapter.add(getString(R.string.shirtcuts_select_picture));
-            mAdapter.add(getString(R.string.shirtcuts_crop_picture));
-            mAdapter.add(getString(R.string.shirtcuts_icon_packs));
+            mAdapter.add(getString(R.string.custom_icon_select_picture));
+            mAdapter.add(getString(R.string.custom_icon_crop_picture));
+            mAdapter.add(getString(R.string.custom_icon_icon_packs));
+            mAdapter.add(getString(R.string.custom_icon_clear_icon));
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(CustomizeLaunchersActivity.this);
-            builder.setTitle(getString(R.string.shirtcuts_select_icon_type));
+            builder.setTitle(getString(R.string.custom_icon_select_icon_type));
             builder.setAdapter(mAdapter, this);
 
             //builder.setInverseBackgroundForced(false);
@@ -269,9 +283,11 @@ public class CustomizeLaunchersActivity extends Activity {
                 case 2:
                     //Icon packs
                     Intent packIntent=new Intent(CustomizeLaunchersActivity.this, ChooseIconFromPackActivity.class);
-                    startActivityForResult(Intent.createChooser(packIntent, getString(R.string.shirtcuts_select_icon_pack)), PICK_FROM_ICON_PACK);
+                    startActivityForResult(Intent.createChooser(packIntent, getString(R.string.custom_icon_select_icon_pack)), PICK_FROM_ICON_PACK);
                     break;
-
+                case 3:
+                    updateBitmap(null);
+                    break;
                 default:
                     break;
             }

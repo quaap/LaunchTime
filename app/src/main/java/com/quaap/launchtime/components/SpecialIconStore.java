@@ -50,6 +50,17 @@ public class SpecialIconStore {
         //return "icon-" + name.replaceAll("(\\.\\.|[\\\\//$&():=#])+", "_");
     }
 
+
+    public static void deleteBitmap(Context context, ComponentName cname, IconType iconType) {
+        String name = cname.getPackageName() + ":" + cname.getClassName();
+
+        String fname  = makeSafeName(name) + "." + iconType.name();
+        if (fileExists(context, fname)) {
+            context.deleteFile(fname);
+        }
+
+    }
+
     public static void saveBitmap(Context context, ComponentName cname, Bitmap bitmap, IconType iconType) {
 
         String name = cname.getPackageName() + ":" + cname.getClassName();
