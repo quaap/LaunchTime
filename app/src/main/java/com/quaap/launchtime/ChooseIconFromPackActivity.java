@@ -1,5 +1,20 @@
 package com.quaap.launchtime;
 
+
+/**
+ * Copyright (C) 2017   Tom Kliethermes
+ *
+ * This file is part of LaunchTime and is is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ */
+
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -80,7 +95,7 @@ public class ChooseIconFromPackActivity extends Activity {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bitmap bitmap = (Bitmap)((BitmapDrawable) ((Drawable)adapter.getItem(position))).getBitmap();
+                Bitmap bitmap = ((BitmapDrawable) (adapter.getItem(position))).getBitmap();
                 Intent returndata = new Intent();
                 returndata.putExtra("data", bitmap);
                 setResult(RESULT_OK, returndata);
@@ -127,7 +142,6 @@ public class ChooseIconFromPackActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
             if (convertView == null) {
-                // if it's not recycled, initialize some attributes
                 imageView = new ImageView(mContext);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setLayoutParams(new GridView.LayoutParams(mIconSize, mIconSize));

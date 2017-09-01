@@ -19,6 +19,7 @@ import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.Categories;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -38,7 +39,7 @@ import java.util.Map;
 public class AppLauncher implements Comparable<AppLauncher> {
 
 
-    private static Map<ComponentName,AppLauncher> mAppLaunchers = new HashMap<>();
+    private static Map<ComponentName,AppLauncher> mAppLaunchers = Collections.synchronizedMap(new HashMap<ComponentName,AppLauncher>());
     public static final String LINK_SEP = ":IS_APP_LINK:";
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
 

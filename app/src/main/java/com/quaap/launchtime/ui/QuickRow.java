@@ -99,11 +99,11 @@ public class QuickRow {
 
     public void repopulate() {
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
-        mQuickRow.removeAllViews();
 
         mQuickRow.postDelayed(new Runnable() {
             @Override
             public void run() {
+                mQuickRow.removeAllViews();
                 for (ComponentName actvname : quickRowOrder) {
                     AppLauncher app = db().getApp(actvname);
                     ViewGroup item = mMainActivity.getLauncherView(app, true);
@@ -115,7 +115,7 @@ public class QuickRow {
                 }
 
             }
-        }, 700);
+        }, 800);
 
     }
 

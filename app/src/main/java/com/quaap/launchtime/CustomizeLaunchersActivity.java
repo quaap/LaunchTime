@@ -39,7 +39,15 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * Copyright (C) 2017   Tom Kliethermes
+ *
+ * Some portions of this file are derived from from ADW.Launcher (AnderWeb <anderweb@gmail.com>),
+ * which is under the Apache 2.0 License.
+ *
+ * See also https://github.com/AnderWeb/android_packages_apps_Launcher
+ *
+ * Modified by Tom Kliethermes. 2017
+ *
+ * Rest Copyright (C) 2017   Tom Kliethermes
  *
  * This file is part of LaunchTime and is is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by the
@@ -50,11 +58,6 @@ import java.util.List;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- *
- * Some portions of this file are derived from from ADW.Launcher (AnderWeb <anderweb@gmail.com>),
- * which is under the Apache 2.0 License.
- *
- * See also https://github.com/AnderWeb/android_packages_apps_Launcher
  *
  *
  **/

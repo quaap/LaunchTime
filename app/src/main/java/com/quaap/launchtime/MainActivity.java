@@ -153,7 +153,7 @@ public class MainActivity extends Activity implements
     private SharedPreferences mAppPreferences;
 
     private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
-    public Map<AppLauncher,ViewGroup> mAppLauncherViews = new HashMap<>();
+    public Map<AppLauncher,ViewGroup> mAppLauncherViews = Collections.synchronizedMap(new HashMap<AppLauncher,ViewGroup>());
 
     private boolean mChildLock;
     private boolean mChildLockSetup;
