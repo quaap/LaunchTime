@@ -21,9 +21,11 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /*
  *  Portions of this file are dereived from KISS and is licensed under the GPL v3.
@@ -156,6 +158,21 @@ public class IconPack {
 
         for (String key: packagesDrawables.keySet()) {
             icons.put(key, get(key));
+        }
+
+        return icons;
+    }
+
+    public Set<Drawable> getUniqueIcons() {
+
+        Set<Drawable> icons = new LinkedHashSet<>();
+        Set<String> iconNames = new LinkedHashSet<>();
+
+        for (String key: packagesDrawables.keySet()) {
+            if (!iconNames.contains(packagesDrawables.get(key))) {
+                icons.add(get(key));
+                iconNames.add(packagesDrawables.get(key));
+            }
         }
 
         return icons;

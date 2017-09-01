@@ -26,8 +26,10 @@ import com.quaap.launchtime.components.IconPack;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ChooseIconFromPackActivity extends Activity {
 
@@ -71,7 +73,8 @@ public class ChooseIconFromPackActivity extends Activity {
         IconPack iconPack = new IconPack(this, packname);
         GridView gv = (GridView)findViewById(R.id.icon_pack_icons);
 
-        final ImageAdapter adapter = new ImageAdapter(this, new ArrayList<Drawable>(iconPack.getAllIcons().values()));
+
+        final ImageAdapter adapter = new ImageAdapter(this, new ArrayList<Drawable>(iconPack.getUniqueIcons()));
         gv.setAdapter(adapter);
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,9 +101,14 @@ public class ChooseIconFromPackActivity extends Activity {
         private Context mContext;
         private ArrayList<Drawable> mDrawables;
 
+
+        private int mIconSize;
+
         ImageAdapter(Context c, ArrayList<Drawable> drawables) {
             mContext = c;
             mDrawables = drawables;
+
+            mIconSize = (int)mContext.getResources().getDimension(R.dimen.icon_width);
         }
 
         public int getCount() {
@@ -122,6 +130,7 @@ public class ChooseIconFromPackActivity extends Activity {
                 // if it's not recycled, initialize some attributes
                 imageView = new ImageView(mContext);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setLayoutParams(new GridView.LayoutParams(mIconSize, mIconSize));
                 imageView.setPadding(8, 8, 8, 8);
             } else {
                 imageView = (ImageView) convertView;
