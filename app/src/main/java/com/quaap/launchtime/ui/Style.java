@@ -36,7 +36,7 @@ public class Style {
 
     private boolean leftHandCategories;
     private float categoryTabFontSize = 16;
-    private int categoryTabPaddingHeight = 16;
+    private int categoryTabPaddingHeight = 25;
 
     private int launcherIconSize = 55;
     private int launcherSize = 80;
@@ -66,7 +66,7 @@ public class Style {
 
         switch (catstyle) {
             case Tiny:
-                categoryTab.setPadding(6, categoryTabPaddingHeight/6, 2, categoryTabPaddingHeight/6);
+                categoryTab.setPadding(6, categoryTabPaddingHeight/5, 2, categoryTabPaddingHeight/5);
                 categoryTab.setTextColor(cattabTextColor);
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize-3);
@@ -116,19 +116,19 @@ public class Style {
         int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
         switch (tabsizePref) {
             case 0:  //small
-                categoryTabPaddingHeight = 14;
+                categoryTabPaddingHeight = 16;
                 categoryTabFontSize = 14;
                 break;
             case 1:  //medium
-                categoryTabPaddingHeight = 18;
+                categoryTabPaddingHeight = 20;
                 categoryTabFontSize = 16;
                 break;
             case 2:  //large
-                categoryTabPaddingHeight = 22;
+                categoryTabPaddingHeight = 25;
                 categoryTabFontSize = 18;
                 break;
             case 3: //x-large
-                categoryTabPaddingHeight = 24;
+                categoryTabPaddingHeight = 30;
                 categoryTabFontSize = 20;
                 break;
         }
