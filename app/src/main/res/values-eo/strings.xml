@@ -348,4 +348,5 @@
  <string name="custom_icon_select_icon_type">Elektu la ikono-tipon</string>
  <string name="custom_icon_select_picture">Elektu bildon</string>
  <string name="custom_icon_text">Fiksita kutimo etikedo</string>
+    <string name="custom_instruct">Alklaku la ikonon por ŝanĝi la ikonon. Alklaku la tekston por ŝanĝi la tekston.</string>
 </resources>

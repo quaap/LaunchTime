@@ -347,4 +347,5 @@
  <string name="custom_icon_select_icon_type">Seleccioneu el tipus d\'icona</string>
  <string name="custom_icon_select_picture">Selecciona la imatge</string>
  <string name="custom_icon_text">Estableix l\'etiqueta personalitzada</string>
+    <string name="custom_instruct">Feu clic a la icona per canviar la icona. Feu clic al text per canviar el text.</string>
 </resources>

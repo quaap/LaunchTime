@@ -347,4 +347,5 @@
  <string name="custom_icon_select_icon_type">Seleccione el tipo de icono</string>
  <string name="custom_icon_select_picture">Seleccionar imagen</string>
  <string name="custom_icon_text">Establecer etiqueta personalizada</string>
+    <string name="custom_instruct">Haga clic en el icono para cambiar el icono. Haga clic en el texto para cambiar el texto.</string>
 </resources>

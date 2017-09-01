@@ -87,7 +87,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
         final int iconSize = (int)this.getResources().getDimension(R.dimen.icon_width);
 
-        AsyncTask<Void, Void, Void> loadappstask = new AsyncTask<Void, Void, Void>() {
+        final AsyncTask<Void, Void, Void> loadappstask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 for (final String catID: db.getCategories()) {
@@ -182,9 +182,18 @@ public class CustomizeLaunchersActivity extends Activity {
             }
         };
 
-        loadappstask.execute();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadappstask.execute();
+            }
+        }, 200);
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 
     private void promptForAppLabel() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

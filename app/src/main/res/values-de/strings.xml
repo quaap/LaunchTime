@@ -342,4 +342,5 @@
     <string name="custom_icon_select_icon_type">Wählen Sie den Symboltyp aus</string>
     <string name="custom_icon_select_picture">Bild auswählen</string>
     <string name="custom_icon_text">Set benutzerdefinierte Label</string>
+    <string name="custom_instruct">Klicken Sie auf das Symbol, um das Symbol zu ändern. Klicken Sie auf den Text, um den Text zu ändern.</string>
 </resources>

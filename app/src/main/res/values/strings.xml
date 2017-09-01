@@ -344,5 +344,6 @@
     <string name="custom_icon_select_icon_pack">Select icon pack</string>
 
     <string name="custom_icon_text">Set custom label</string>
+    <string name="custom_instruct">Click on the icon to change the icon. Click on the text to change the text.</string>
 
 </resources>

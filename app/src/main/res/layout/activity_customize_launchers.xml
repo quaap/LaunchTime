@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.quaap.launchtime.CustomizeLaunchersActivity">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:padding="12dp"
+        android:text="@string/custom_instruct"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+
         android:background="#ff222222">
 
         <LinearLayout
             android:id="@+id/custom_launchers_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="false"
-            android:layout_centerHorizontal="false"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical" />
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

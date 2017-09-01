@@ -341,4 +341,5 @@
     <string name="custom_icon_select_icon_type">Выберите тип значка</string>
     <string name="custom_icon_select_picture">Выберите изображение</string>
     <string name="custom_icon_text">Установить пользовательскую метку</string>
+    <string name="custom_instruct">Нажмите на значок, чтобы изменить значок. Нажмите на текст, чтобы изменить текст.</string>
 </resources>
