@@ -343,4 +343,6 @@
     <string name="custom_icon_select_icon_type">Select the icon type</string>
     <string name="custom_icon_select_icon_pack">Select icon pack</string>
 
+    <string name="custom_icon_text">Set custom label</string>
+
 </resources>

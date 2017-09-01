@@ -182,7 +182,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
     private void promptForAppLabel() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
+        builder.setTitle(R.string.custom_icon_text);
 
         final EditText input = new EditText(this);
 
@@ -192,7 +192,7 @@ public class CustomizeLaunchersActivity extends Activity {
         builder.setView(input);
 
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String labeltext = input.getText().toString();
@@ -201,13 +201,13 @@ public class CustomizeLaunchersActivity extends Activity {
                 }
             }
         });
-        builder.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(R.string.clear, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 updateAppLabel(null);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -334,7 +334,7 @@ public class CustomizeLaunchersActivity extends Activity {
             mAdapter.add(getString(R.string.custom_icon_clear_icon));
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(CustomizeLaunchersActivity.this);
-            builder.setTitle(getString(R.string.custom_icon_select_icon_type));
+            builder.setTitle(R.string.custom_icon_select_icon_type);
             builder.setAdapter(mAdapter, this);
 
             //builder.setInverseBackgroundForced(false);
@@ -358,7 +358,7 @@ public class CustomizeLaunchersActivity extends Activity {
                     //Select icon
                     Intent pickerIntent=new Intent(Intent.ACTION_PICK);
                     pickerIntent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(pickerIntent, "Select icon"), PICK_CUSTOM_ICON);
+                    startActivityForResult(Intent.createChooser(pickerIntent, getString(R.string.custom_icon_select_icon_type)), PICK_CUSTOM_ICON);
                     break;
                 case 1:
                     //Crop picture

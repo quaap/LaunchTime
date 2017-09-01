@@ -340,4 +340,6 @@
     <string name="theme_redplanet">Planeta rojo</string>
     <string name="theme_ladypink">Señora En Rosa</string>
     <string name="confirm_reset_colors">¿Desea restablecer los colores para este tema?</string>
+    <string name="custom_icon_clear_icon">Borrar icono personalizado</string>
+ <string name="custom_icon_crop_picture">Seleccionar y recortar imagen</string>
 </resources>

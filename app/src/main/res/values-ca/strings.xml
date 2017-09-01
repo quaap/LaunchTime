@@ -340,4 +340,6 @@
     <string name="theme_redplanet">Planeta vermell</string>
     <string name="theme_ladypink">Senyora En Rosa</string>
     <string name="confirm_reset_colors">Voleu restablir els colors per a aquest tema?</string>
+    <string name="custom_icon_clear_icon">Esborra la icona personalitzada</string>
+ <string name="custom_icon_crop_picture">Selecciona i retalla la imatge</string>
 </resources>

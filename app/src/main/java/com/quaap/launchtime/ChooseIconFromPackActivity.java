@@ -39,7 +39,7 @@ public class ChooseIconFromPackActivity extends Activity {
         Map<String,String> iconpacks = IconPack.listAvailableIconsPacks(this);
 
         LinkedHashMap<String,String> iconpacks2 = new LinkedHashMap<>();
-        iconpacks2.put("", "Select Icon Pack");
+        iconpacks2.put("", getString(R.string.custom_icon_select_icon_pack));
         iconpacks2.putAll(iconpacks);
 
 

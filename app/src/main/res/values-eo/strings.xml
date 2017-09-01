@@ -341,4 +341,6 @@
     <string name="theme_redplanet">ruĝa Planedo</string>
     <string name="theme_ladypink">Sinjoro En Rozo</string>
     <string name="confirm_reset_colors">Ĉu vi volas restarigi la kolorojn por ĉi tiu temo?</string>
+    <string name="custom_icon_clear_icon">Klara kutima ikono</string>
+ <string name="custom_icon_crop_picture">Elektu kaj rikolti bildon</string>
 </resources>

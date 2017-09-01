@@ -341,4 +341,6 @@
     <string name="theme_redplanet">Planète rouge</string>
     <string name="theme_ladypink">Dame en rose</string>
     <string name="confirm_reset_colors">Vous voulez réinitialiser les couleurs pour ce thème ?</string>
+    <string name="custom_icon_clear_icon">Effacer l\'icône personnalisée</string>
+ <string name="custom_icon_crop_picture">Sélectionner et recadrer l\'image</string>
 </resources>

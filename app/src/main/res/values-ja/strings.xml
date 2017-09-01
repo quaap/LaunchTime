@@ -339,4 +339,6 @@
     <string name="theme_redplanet">Red Planet</string>
     <string name="theme_ladypink">Lady In Pink</string>
     <string name="confirm_reset_colors">このテーマの色をリセットしますか。</string>
+    <string name="custom_icon_clear_icon">カスタムアイコンをクリア</string>
+    <string name="custom_icon_crop_picture">写真を選択して切り抜く</string>
 </resources>
