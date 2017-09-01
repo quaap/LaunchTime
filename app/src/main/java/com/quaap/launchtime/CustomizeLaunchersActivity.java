@@ -136,6 +136,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
                                 final ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
 
+                                iconView.setPadding(12,12,12,12);
                                 LinearLayout.LayoutParams ilp = new LinearLayout.LayoutParams(iconSize, iconSize);
                                 ilp.setMargins(12,12,24,12);
                                 iconView.setLayoutParams(ilp);
