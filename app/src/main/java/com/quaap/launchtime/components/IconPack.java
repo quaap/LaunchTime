@@ -25,8 +25,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/*
+ *  Portions of this file are dereived from KISS and is licensed under the GPL v3.
+ *  https://github.com/Neamar/KISS
+ *
+ *  Modified by Tom Kliethermes. 2017
+ */
+
+/*
+ * Inspired from http://stackoverflow.com/questions/31490630/how-to-load-icon-from-icon-pack
+ */
+
 /**
- * Created by tom on 8/31/17.
+ *
+ * This file is part of LaunchTime and is is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  */
 
 public class IconPack {

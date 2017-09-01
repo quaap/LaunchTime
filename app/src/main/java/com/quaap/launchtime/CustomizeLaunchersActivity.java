@@ -3,7 +3,6 @@ package com.quaap.launchtime;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,11 +16,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +35,27 @@ import com.quaap.launchtime.db.DB;
 import java.io.InputStream;
 import java.util.List;
 
+/**
+ * Copyright (C) 2017   Tom Kliethermes
+ *
+ * This file is part of LaunchTime and is is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ *
+ * Some portions of this file are derived from from ADW.Launcher (AnderWeb <anderweb@gmail.com>),
+ * which is under the Apache 2.0 License.
+ *
+ * See also https://github.com/AnderWeb/android_packages_apps_Launcher
+ *
+ *
+ **/
+
 public class CustomizeLaunchersActivity extends Activity {
 
     private LinearLayout list;
@@ -42,7 +64,8 @@ public class CustomizeLaunchersActivity extends Activity {
 
     private AppLauncher mAppClicked;
 
-    private ImageView mIconView;
+    private ImageView mClickedIconView;
+    private TextView mClickedTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +112,7 @@ public class CustomizeLaunchersActivity extends Activity {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                LinearLayout applayout = new LinearLayout(CustomizeLaunchersActivity.this);
+                                final LinearLayout applayout = new LinearLayout(CustomizeLaunchersActivity.this);
                                 applayout.setOrientation(LinearLayout.HORIZONTAL);
 
                                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -99,29 +122,38 @@ public class CustomizeLaunchersActivity extends Activity {
                                 applayout.setPadding(18,6,6,6);
 
                                 final ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
-                                Drawable icon = ich.getDefaultAppDrawable(app.getComponentName(), app.getLinkUri(), true);
+
+                                Drawable icon = ich.getCustomIcon(app.getComponentName(), app.getLinkUri());
+
                                 if (icon == null) {
-                                    icon = ich.getDefaultAppDrawable(app.getBaseComponentName(), app.getLinkUri());
+                                    icon = ich.getDefaultAppDrawable(app.isLink() ? app.getBaseComponentName() : app.getComponentName(), app.getLinkUri());
                                 }
+
                                 iconView.setImageDrawable(icon);
 
                                 iconView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         mAppClicked = app;
-                                        mIconView = iconView;
+                                        mClickedIconView = iconView;
                                         new IconTypeDialog().createDialog().show();
 
                                     }
                                 });
-
-
-
                                 applayout.addView(iconView);
 
-                                TextView label = new TextView(CustomizeLaunchersActivity.this);
+                                final TextView label = new TextView(CustomizeLaunchersActivity.this);
                                 label.setText(app.getLabel());
                                 label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+
+                                label.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mAppClicked = app;
+                                        mClickedTextView = label;
+                                        promptForAppLabel();
+                                    }
+                                });
                                 applayout.addView(label);
 
 
@@ -141,12 +173,49 @@ public class CustomizeLaunchersActivity extends Activity {
         loadappstask.execute();
     }
 
+
+    private void promptForAppLabel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Title");
+
+        final EditText input = new EditText(this);
+
+        input.setHint(mAppClicked.getLabel());
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final DB db = GlobState.getGlobState(CustomizeLaunchersActivity.this).getDB();
+                String labeltext = input.getText().toString();
+                if (!labeltext.isEmpty()) {
+                    AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
+                    db.setAppCustomLabel(mAppClicked.getActivityName(), mAppClicked.getPackageName(), labeltext);
+
+                    mClickedTextView.setText(labeltext);
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    int num = prefs.getInt("icon-update", 0);
+                    prefs.edit().putInt("icon-update", num+1).apply();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+
+
     private static final int PICK_CUSTOM_ICON=1;
     private static final int PICK_CUSTOM_PICTURE=5;
     private static final int PICK_FROM_ICON_PACK=6;
-    private static final String ACTION_ADW_PICK_ICON="org.adw.launcher.icons.ACTION_PICK_ICON";
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -206,15 +275,14 @@ public class CustomizeLaunchersActivity extends Activity {
     private void updateBitmap(Bitmap bitmap) {
         if (bitmap==null) {
             SpecialIconStore.deleteBitmap(this, mAppClicked.getComponentName(),SpecialIconStore.IconType.Custom);
+
             IconsHandler ich = GlobState.getIconsHandler(this);
-            Drawable icon = ich.getDefaultAppDrawable(mAppClicked.getComponentName(), mAppClicked.getLinkUri(), true);
-            if (icon == null) {
-                icon = ich.getDefaultAppDrawable(mAppClicked.getBaseComponentName(), mAppClicked.getLinkUri());
-            }
-            mIconView.setImageDrawable(icon);
+            Drawable icon = ich.getDefaultAppDrawable(mAppClicked.isLink() ? mAppClicked.getBaseComponentName() : mAppClicked.getComponentName(), mAppClicked.getLinkUri());
+
+            mClickedIconView.setImageDrawable(icon);
         } else {
             SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
-            mIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
+            mClickedIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
         }
 
         AppLauncher.removeAppLauncher(mAppClicked.getComponentName());

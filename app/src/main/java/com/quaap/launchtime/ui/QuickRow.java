@@ -115,7 +115,7 @@ public class QuickRow {
                 }
 
             }
-        }, 500);
+        }, 700);
 
     }
 

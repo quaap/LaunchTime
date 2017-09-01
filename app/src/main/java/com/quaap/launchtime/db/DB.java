@@ -426,7 +426,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=? and ("+ISUNINSTALLED+"=0)", new String[]{catID}, null, null, LABEL);
+        Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=? and ("+ISUNINSTALLED+"=0)", new String[]{catID}, null, null, CUSTOMLABEL + " ," + LABEL);
         try {
             while (cursor.moveToNext()) {
                 String actvname = cursor.getString(0);
@@ -498,6 +498,7 @@ public class DB extends SQLiteOpenHelper {
                 db.insert(APP_TABLE, null, values);
                // Log.i("LaunchDB", "inserted " + actvname + " " + pkgname);
             }
+            AppLauncher.removeAppLauncher(actvname,pkgname);
 
             return true;
         } catch (Exception e) {
@@ -511,6 +512,7 @@ public class DB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(LABEL, label);
         db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
+        AppLauncher.removeAppLauncher(actvname,pkgname);
     }
 
     public void setAppCustomLabel(String actvname, String pkgname, String customlabel) {
@@ -518,6 +520,8 @@ public class DB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(CUSTOMLABEL, customlabel);
         db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
+        AppLauncher.removeAppLauncher(actvname,pkgname);
+
     }
 
 
@@ -564,6 +568,8 @@ public class DB extends SQLiteOpenHelper {
                 SQLiteDatabase db = this.getWritableDatabase();
 
                 db.delete(APP_TABLE, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
+                AppLauncher.removeAppLauncher(actvname,pkgname);
+
                 return true;
             }
         } catch (Exception e) {
@@ -603,6 +609,7 @@ public class DB extends SQLiteOpenHelper {
 
                 db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
             }
+            AppLauncher.removeAppLauncher(actvname,pkgname);
 
             //db.delete(APP_TABLE, (isPackagename?PKGNAME:ACTVNAME) + "=?", new String[]{actvorpkgname});
         } catch (Exception e) {

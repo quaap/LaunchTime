@@ -331,6 +331,7 @@ public class MainActivity extends Activity implements
             //Delete our icon cache so the labels can be regenerated.
             if (key.equals("textcolor") || key.equals("preference_iconsize") || key.equals("icons-pack") || key.equals("icon-update")) {
                 mAppLauncherViews.clear();
+                mQuickRow.repopulate();
             }
             if (key.equals("icons-pack")) {
                 AppLauncher.clearIcons();

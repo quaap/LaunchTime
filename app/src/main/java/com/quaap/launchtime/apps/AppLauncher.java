@@ -104,6 +104,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return mAppLaunchers.remove(activityName);
     }
 
+    public static AppLauncher removeAppLauncher(String activityName, String packageName) {
+        return mAppLaunchers.remove(new ComponentName(packageName,activityName));
+    }
+
     public static void clearIcons() {
         for (AppLauncher app: mAppLaunchers.values()) {
             app.clearDrawable();

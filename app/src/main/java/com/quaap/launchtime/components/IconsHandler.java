@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 /*
- *  This file is part of KISS and is licensed under the GPL v3.
+ *  Portions of this file are dereived from KISS and is licensed under the GPL v3.
  *  https://github.com/Neamar/KISS
  *
  *  Modified by Tom Kliethermes. 2017
@@ -219,7 +219,7 @@ public class IconsHandler {
                 try {
                     app_icon = pm.getActivityIcon(intent);
                 } catch (Exception | OutOfMemoryError e) {
-                    Log.e("IconLookup", "Couldn't get icon for" + componentName.getClassName(), e);
+                    Log.e("IconLookup", "Couldn't get icon for " + componentName.getClassName(), e);
                 }
             }
 
