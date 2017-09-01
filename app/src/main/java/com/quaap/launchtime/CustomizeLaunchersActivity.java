@@ -122,15 +122,23 @@ public class CustomizeLaunchersActivity extends Activity {
                                 final LinearLayout applayout = new LinearLayout(CustomizeLaunchersActivity.this);
                                 applayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                 lp.gravity = Gravity.CENTER_VERTICAL;
                                 lp.setMargins(24,12,12,12);
                                 applayout.setLayoutParams(lp);
                                 applayout.setPadding(18,6,6,6);
+                                boolean hasCustIcon = SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, app.getComponentName(), SpecialIconStore.IconType.Custom);
+                                boolean hasCustLabel = db.appHasCustomLabel(app.getComponentName());
+
+                                if (hasCustIcon || hasCustLabel) {
+                                    applayout.setBackgroundColor(Color.DKGRAY);
+                                }
 
                                 final ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
 
-                                iconView.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize));
+                                LinearLayout.LayoutParams ilp = new LinearLayout.LayoutParams(iconSize, iconSize);
+                                ilp.setMargins(12,12,24,12);
+                                iconView.setLayoutParams(ilp);
 
                                 Drawable icon = ich.getCustomIcon(app.getComponentName(), app.getLinkUri());
 
@@ -140,6 +148,9 @@ public class CustomizeLaunchersActivity extends Activity {
 
                                 iconView.setImageDrawable(icon);
 
+                                if (hasCustIcon) {
+                                    iconView.setBackgroundColor(Color.parseColor("#99339933"));
+                                }
 
 
                                 iconView.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +167,15 @@ public class CustomizeLaunchersActivity extends Activity {
                                 final TextView label = new TextView(CustomizeLaunchersActivity.this);
                                 label.setText(app.getLabel());
                                 label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-                                label.setPadding(18,6,6,6);
+                                label.setPadding(18,6,18,6);
+                                label.setTextColor(Color.WHITE);
+                                LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                llp.setMargins(24,12,24,12);
+                                label.setLayoutParams(llp);
+
+                                if (hasCustLabel) {
+                                    label.setBackgroundColor(Color.parseColor("#99339933"));
+                                }
 
                                 label.setOnClickListener(new View.OnClickListener() {
                                     @Override

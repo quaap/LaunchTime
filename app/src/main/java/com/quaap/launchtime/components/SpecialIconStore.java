@@ -27,7 +27,67 @@ import java.security.MessageDigest;
 public class SpecialIconStore {
 
 
-    public static String makeSafeName(String name) {
+
+    public static void deleteBitmap(Context context, ComponentName cname, IconType iconType) {
+
+        String fname  = makeSafeName(cname, iconType);
+        if (fileExists(context, fname)) {
+            context.deleteFile(fname);
+        }
+
+    }
+
+    public static void saveBitmap(Context context, ComponentName cname, Bitmap bitmap, IconType iconType) {
+
+        try  {
+            String fname = makeSafeName(cname, iconType);
+            FileOutputStream fos = context.openFileOutput(fname, Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
+            fos.close();
+            Log.d("SpecialIconStore", "Saved icon " + fname);
+        } catch (IOException e) {
+            Log.e("SpecialIconStore", e.getMessage(), e);
+        }
+    }
+
+    public static boolean hasBitmap(Context context, ComponentName cname, IconType iconType) {
+
+        return fileExists(context, makeSafeName(cname, iconType));
+    }
+
+    public static  Bitmap loadBitmap(Context context, ComponentName cname, IconType iconType) {
+
+        Bitmap bitmap = null;
+
+//            for (String fn: context.fileList()) {
+//                Log.d("SpecialIconStore", " I see file " + fn);
+//            }
+        bitmap = loadBitmap(context,makeSafeName(cname, iconType));
+        if (bitmap == null) {
+            bitmap = loadBitmap(context, makeSafeName(cname, null));
+        }
+        if (bitmap == null) {
+            bitmap = loadBitmap(context, makeSafeName(cname.getClassName()));
+        }
+
+//        if (bitmap != null) {
+//            Log.d("SpecialIconStore", "found icon for " + cname.toString());
+//        }
+        return bitmap;
+    }
+
+
+    private static String makeSafeName(ComponentName cname, IconType iconType) {
+        String name = cname.getPackageName() + ":" + cname.getClassName();
+
+        String fname = makeSafeName(name);
+        if (iconType!=null) fname += "." + iconType.name();
+
+        return fname;
+    }
+
+
+    private static String makeSafeName(String name) {
 
         try {
             byte[] inbytes = name.getBytes("UTF-8");
@@ -51,59 +111,11 @@ public class SpecialIconStore {
     }
 
 
-    public static void deleteBitmap(Context context, ComponentName cname, IconType iconType) {
-        String name = cname.getPackageName() + ":" + cname.getClassName();
-
-        String fname  = makeSafeName(name) + "." + iconType.name();
-        if (fileExists(context, fname)) {
-            context.deleteFile(fname);
-        }
-
-    }
-
-    public static void saveBitmap(Context context, ComponentName cname, Bitmap bitmap, IconType iconType) {
-
-        String name = cname.getPackageName() + ":" + cname.getClassName();
-        try  {
-            String fname = makeSafeName(name) + "." + iconType.name();
-            FileOutputStream fos = context.openFileOutput(fname, Context.MODE_PRIVATE);
-            bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
-            fos.close();
-            Log.d("SpecialIconStore", "Saved icon " + fname);
-        } catch (IOException e) {
-            Log.e("SpecialIconStore", e.getMessage(), e);
-        }
-    }
-
-    public static  Bitmap loadBitmap(Context context, ComponentName cname, IconType iconType) {
-
-        String name = cname.getPackageName() + ":" + cname.getClassName();
-
-
-        Bitmap bitmap = null;
-
-//            for (String fn: context.fileList()) {
-//                Log.d("SpecialIconStore", " I see file " + fn);
-//            }
-        bitmap = loadBitmap(context, makeSafeName(name) + "." + iconType.name());
-        if (bitmap == null) {
-            bitmap = loadBitmap(context, makeSafeName(name));
-        }
-        if (bitmap == null) {
-            bitmap = loadBitmap(context, makeSafeName(cname.getClassName()));
-        }
-
-//        if (bitmap != null) {
-//            Log.d("SpecialIconStore", "found icon for " + cname.toString());
-//        }
-        return bitmap;
-    }
-
-    private static Bitmap loadBitmap(Context context, String name) {
+    private static Bitmap loadBitmap(Context context, String filename) {
         Bitmap bitmap = null;
         try {
-            if (fileExists(context, name)) {
-                FileInputStream fis = context.openFileInput(name);
+            if (fileExists(context, filename)) {
+                FileInputStream fis = context.openFileInput(filename);
                 bitmap = BitmapFactory.decodeStream(fis);
                 fis.close();
             }
@@ -114,7 +126,7 @@ public class SpecialIconStore {
     }
 
 
-    public static boolean fileExists(Context context, String filename) {
+    private static boolean fileExists(Context context, String filename) {
         File file = context.getFileStreamPath(filename);
         if(file == null || !file.exists()) {
             return false;

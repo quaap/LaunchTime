@@ -340,6 +340,25 @@ public class DB extends SQLiteOpenHelper {
         return appLauncher;
     }
 
+    public boolean appHasCustomLabel(ComponentName appname) {
+        String actvname = appname.getClassName();
+        String pkgname =  appname.getPackageName();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(APP_TABLE, new String [] {CUSTOMLABEL}, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname}, null, null, null);
+        try {
+            if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
+                String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
+                if (customlabel!=null && !customlabel.isEmpty()) {
+                    return true;
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+        return false;
+    }
+
     public List<AppLauncher> getAppsForPackage(String pkgname) {
 
 
