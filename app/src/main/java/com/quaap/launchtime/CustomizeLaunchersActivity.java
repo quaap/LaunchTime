@@ -85,6 +85,8 @@ public class CustomizeLaunchersActivity extends Activity {
 
         final Handler handler = new Handler();
 
+        final int iconSize = (int)this.getResources().getDimension(R.dimen.icon_width);
+
         AsyncTask<Void, Void, Void> loadappstask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -128,6 +130,8 @@ public class CustomizeLaunchersActivity extends Activity {
 
                                 final ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
 
+                                iconView.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize));
+
                                 Drawable icon = ich.getCustomIcon(app.getComponentName(), app.getLinkUri());
 
                                 if (icon == null) {
@@ -135,6 +139,8 @@ public class CustomizeLaunchersActivity extends Activity {
                                 }
 
                                 iconView.setImageDrawable(icon);
+
+
 
                                 iconView.setOnClickListener(new View.OnClickListener() {
                                     @Override
