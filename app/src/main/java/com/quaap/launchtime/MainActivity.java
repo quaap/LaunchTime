@@ -79,6 +79,7 @@ import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconsHandler;
+import com.quaap.launchtime.components.MsgBox;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.ui.QuickRow;
 import com.quaap.launchtime.ui.SearchBox;
@@ -220,6 +221,8 @@ public class MainActivity extends Activity implements
 
         // get all the apps installed and process them
         loadApplications();
+
+
 
     }
 
@@ -697,6 +700,25 @@ public class MainActivity extends Activity implements
                     startActivity(help);
                 }
             }, 5000);
+        } else {
+
+            int news = mPrefs.getInt("seennews", 0);
+            if (news<60) {
+                mCategoriesScroller.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MsgBox.show(MainActivity.this,"What's new in version 0.6.x!",
+                                        " * Icon packs.\n" +
+                                        " * Customize icons and labels.\n" +
+                                        " * Built-in themes.\n" +
+                                        " * Android 7.1 shortcut actions.\n" +
+                                        " * Machine translations for German, French, Spanish, and others (expert translations wanted!).\n\n" +
+                                        "Go to Settings->Help for links to submit feature requests, bugs, and pull requests."
+                        );
+                    }
+                }, 3000);
+                mPrefs.edit().putInt("seennews", 62).apply();
+            }
         }
     }
 
