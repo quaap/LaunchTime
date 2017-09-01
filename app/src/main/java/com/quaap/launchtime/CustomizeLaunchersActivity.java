@@ -157,6 +157,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
             Bitmap bitmap = null;
             switch (requestCode) {
+                case PICK_FROM_ICON_PACK:
                 case PICK_CUSTOM_PICTURE:
                     bitmap = (Bitmap) data.getParcelableExtra("data");
                     if (bitmap != null) {
@@ -220,7 +221,7 @@ public class CustomizeLaunchersActivity extends Activity {
             mAdapter = new ArrayAdapter<String>(CustomizeLaunchersActivity.this, R.layout.add_list_item);
             mAdapter.add(getString(R.string.shirtcuts_select_picture));
             mAdapter.add(getString(R.string.shirtcuts_crop_picture));
-            //mAdapter.add(getString(R.string.shirtcuts_icon_packs));
+            mAdapter.add(getString(R.string.shirtcuts_icon_packs));
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(CustomizeLaunchersActivity.this);
             builder.setTitle(getString(R.string.shirtcuts_select_icon_type));
@@ -267,7 +268,7 @@ public class CustomizeLaunchersActivity extends Activity {
                     break;
                 case 2:
                     //Icon packs
-                    Intent packIntent=new Intent(ACTION_ADW_PICK_ICON);
+                    Intent packIntent=new Intent(CustomizeLaunchersActivity.this, ChooseIconFromPackActivity.class);
                     startActivityForResult(Intent.createChooser(packIntent, getString(R.string.shirtcuts_select_icon_pack)), PICK_FROM_ICON_PACK);
                     break;
 

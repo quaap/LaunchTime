@@ -9,7 +9,7 @@
         android:name="android.permission.BIND_APPWIDGET"
         tools:ignore="ProtectedPermissions" />
 
-    <!--     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" /> -->
+    <!-- <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -74,7 +74,8 @@
             android:name=".CrashReportActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".BackupActivity" />
-        <activity android:name=".CustomizeLaunchersActivity"></activity>
+        <activity android:name=".CustomizeLaunchersActivity" />
+        <activity android:name=".ChooseIconFromPackActivity"></activity>
     </application>
 
 </manifest>

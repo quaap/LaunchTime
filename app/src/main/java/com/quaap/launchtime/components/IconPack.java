@@ -20,6 +20,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -32,7 +33,7 @@ public class IconPack {
 
     private static final String TAG = "IconPack";
 
-    private Map<String, String> packagesDrawables = new HashMap<>();
+    private Map<String, String> packagesDrawables = new LinkedHashMap<>();
     // instance of a resource object of an icon pack
     private Resources iconPackres;
     // package name of the icons pack
@@ -130,9 +131,23 @@ public class IconPack {
 
     }
 
+    public Map<String, Drawable> getAllIcons() {
+
+        Map<String, Drawable> icons = new LinkedHashMap<>();
+
+        for (String key: packagesDrawables.keySet()) {
+            icons.put(key, get(key));
+        }
+
+        return icons;
+    }
 
     public Drawable get(ComponentName componentName) {
-        String drawable = packagesDrawables.get(componentName.toString());
+        return get(componentName.toString());
+    }
+
+    public Drawable get(String componentName) {
+        String drawable = packagesDrawables.get(componentName);
         if (drawable != null) { //there is a custom icon
             int id = iconPackres.getIdentifier(drawable, "drawable", iconsPackPackageName);
             if (id > 0) {
