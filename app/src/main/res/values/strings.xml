@@ -345,5 +345,7 @@
 
     <string name="custom_icon_text">Set custom label</string>
     <string name="custom_instruct">Click on the icon to change the icon. Click on the text to change the text.</string>
+    <string name="pref_customize">Customize app launchers</string>
+    <string name="pref_customize_desc">Change individual icons and labels</string>
 
 </resources>

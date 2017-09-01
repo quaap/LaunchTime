@@ -347,4 +347,6 @@
     <string name="custom_icon_select_picture">画像を選択</string>
     <string name="custom_icon_text">カスタムラベルを設定する</string>
     <string name="custom_instruct">アイコンをクリックするとアイコンが変わります。 テキストをクリックしてテキストを変更します。</string>
+    <string name="pref_customize">アプリランチャーのカスタマイズ</string>
+    <string name="pref_customize_desc">個々のアイコンとラベルを変更する</string>
 </resources>

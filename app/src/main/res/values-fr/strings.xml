@@ -349,4 +349,6 @@
  <string name="custom_icon_select_picture">Sélectionnez l\'image</string>
  <string name="custom_icon_text">Définir une étiquette personnalisée</string>
     <string name="custom_instruct">Cliquez sur l\'icône pour changer l\'icône. Cliquez sur le texte pour changer le texte.</string>
+ <string name="pref_customize">Personnaliser les lanceurs d\'applications</string>
+ <string name="pref_customize_desc">Changer les icônes et les étiquettes individuelles</string>
 </resources>

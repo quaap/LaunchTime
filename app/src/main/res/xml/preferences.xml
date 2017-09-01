@@ -108,12 +108,6 @@
             android:summary="%s" />
 
 
-        <ListPreference
-            android:defaultValue="@string/pref_iconpack_def"
-            android:key="icons-pack"
-            android:summary="%s"
-            android:title="@string/icons_pack_name" />
-
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icontext"
             android:key="textcolor"
@@ -148,11 +142,18 @@
             android:key="reset_colors"
             android:summary="@string/reset_color_summ"/>
 
+        <ListPreference
+            android:defaultValue="@string/pref_iconpack_def"
+            android:key="icons-pack"
+            android:summary="%s"
+            android:title="@string/icons_pack_name" />
+
+
     </PreferenceCategory>
 
     <PreferenceScreen
-        android:title="Customize launchers"
-        android:summary="Change individual icons and text">
+        android:title="@string/pref_customize"
+        android:summary="@string/pref_customize_desc">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="com.quaap.launchtime"

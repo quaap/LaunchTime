@@ -348,4 +348,6 @@
  <string name="custom_icon_select_picture">Selecciona la imatge</string>
  <string name="custom_icon_text">Estableix l\'etiqueta personalitzada</string>
     <string name="custom_instruct">Feu clic a la icona per canviar la icona. Feu clic al text per canviar el text.</string>
+ <string name="pref_customize">Personalitza els llançadors d\'aplicacions</string>
+ <string name="pref_customize_desc">Canvieu icones i etiquetes individuals</string>
 </resources>

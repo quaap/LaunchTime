@@ -343,4 +343,6 @@
     <string name="custom_icon_select_picture">Bild auswählen</string>
     <string name="custom_icon_text">Set benutzerdefinierte Label</string>
     <string name="custom_instruct">Klicken Sie auf das Symbol, um das Symbol zu ändern. Klicken Sie auf den Text, um den Text zu ändern.</string>
+    <string name="pref_customize">Anpassen der App-Trägerraketen</string>
+    <string name="pref_customize_desc">Ändern Sie einzelne Symbole und Etiketten</string>
 </resources>
