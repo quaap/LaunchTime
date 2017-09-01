@@ -518,7 +518,11 @@ public class DB extends SQLiteOpenHelper {
     public void setAppCustomLabel(String actvname, String pkgname, String customlabel) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(CUSTOMLABEL, customlabel);
+        if (customlabel==null) {
+            values.putNull(CUSTOMLABEL);
+        } else {
+            values.put(CUSTOMLABEL, customlabel);
+        }
         db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
         AppLauncher.removeAppLauncher(actvname,pkgname);
 

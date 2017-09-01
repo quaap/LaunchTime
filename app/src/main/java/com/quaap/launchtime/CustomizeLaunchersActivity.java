@@ -3,6 +3,7 @@ package com.quaap.launchtime;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,8 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -109,6 +112,8 @@ public class CustomizeLaunchersActivity extends Activity {
 
                     for (final AppLauncher app: apps) {
 
+                        if (!app.isNormalApp()) continue;
+
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -126,7 +131,7 @@ public class CustomizeLaunchersActivity extends Activity {
                                 Drawable icon = ich.getCustomIcon(app.getComponentName(), app.getLinkUri());
 
                                 if (icon == null) {
-                                    icon = ich.getDefaultAppDrawable(app.isLink() ? app.getBaseComponentName() : app.getComponentName(), app.getLinkUri());
+                                    icon = ich.getDrawableIconForPackage( app.getBaseComponentName(), app.getLinkUri());
                                 }
 
                                 iconView.setImageDrawable(icon);
@@ -145,6 +150,7 @@ public class CustomizeLaunchersActivity extends Activity {
                                 final TextView label = new TextView(CustomizeLaunchersActivity.this);
                                 label.setText(app.getLabel());
                                 label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+                                label.setPadding(18,6,6,6);
 
                                 label.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -184,21 +190,21 @@ public class CustomizeLaunchersActivity extends Activity {
 
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         builder.setView(input);
+
+
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                final DB db = GlobState.getGlobState(CustomizeLaunchersActivity.this).getDB();
                 String labeltext = input.getText().toString();
                 if (!labeltext.isEmpty()) {
-                    AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
-                    db.setAppCustomLabel(mAppClicked.getActivityName(), mAppClicked.getPackageName(), labeltext);
-
-                    mClickedTextView.setText(labeltext);
-
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    int num = prefs.getInt("icon-update", 0);
-                    prefs.edit().putInt("icon-update", num+1).apply();
+                    updateAppLabel(labeltext);
                 }
+            }
+        });
+        builder.setNeutralButton("Clear", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                updateAppLabel(null);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -208,8 +214,29 @@ public class CustomizeLaunchersActivity extends Activity {
             }
         });
 
-        builder.show();
+        AlertDialog dialog = builder.show();
+
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+
     }
+
+    private void updateAppLabel(String labeltext) {
+        DB db = GlobState.getGlobState(CustomizeLaunchersActivity.this).getDB();
+        AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
+        db.setAppCustomLabel(mAppClicked.getActivityName(), mAppClicked.getPackageName(), labeltext);
+        AppLauncher app = db.getApp(mAppClicked.getComponentName());
+
+        mClickedTextView.setText(app.getLabel());
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int num = prefs.getInt("icon-update", 0);
+        prefs.edit().putInt("icon-update", num+1).apply();
+    }
+
+
 
 
 
@@ -277,7 +304,8 @@ public class CustomizeLaunchersActivity extends Activity {
             SpecialIconStore.deleteBitmap(this, mAppClicked.getComponentName(),SpecialIconStore.IconType.Custom);
 
             IconsHandler ich = GlobState.getIconsHandler(this);
-            Drawable icon = ich.getDefaultAppDrawable(mAppClicked.isLink() ? mAppClicked.getBaseComponentName() : mAppClicked.getComponentName(), mAppClicked.getLinkUri());
+
+            Drawable icon = ich.getDrawableIconForPackage( mAppClicked.getBaseComponentName(), mAppClicked.getLinkUri());
 
             mClickedIconView.setImageDrawable(icon);
         } else {
