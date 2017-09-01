@@ -479,7 +479,7 @@ public class MainActivity extends Activity implements
 
        // Log.d(TAG, keyCode + "");
         if (!mChildLock &&keyCode == KeyEvent.KEYCODE_MENU) {
-            openSettings();
+            openSettings(this);
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -2409,18 +2409,18 @@ public class MainActivity extends Activity implements
         mOpenPrefsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openSettings();
+                openSettings(MainActivity.this);
                 showButtonBar(false, true);
             }
         });
 
     }
 
-    public void openSettings() {
-        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+    public static void openSettings(Activity activity) {
+        Intent settingsIntent = new Intent(activity, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        startActivity(settingsIntent);
+        activity.startActivity(settingsIntent);
     }
 
     private void toggleButtonBar() {

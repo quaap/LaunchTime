@@ -216,6 +216,7 @@ public class CustomizeLaunchersActivity extends Activity {
     @Override
     public void onBackPressed() {
         finish();
+        MainActivity.openSettings(this);
     }
 
     private void promptForAppLabel() {

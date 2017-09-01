@@ -74,8 +74,8 @@
             android:name=".CrashReportActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".BackupActivity" />
-        <activity android:name=".CustomizeLaunchersActivity" />
-        <activity android:name=".ChooseIconFromPackActivity"></activity>
+        <activity android:name=".CustomizeLaunchersActivity"/>
+        <activity android:name=".ChooseIconFromPackActivity"/>
     </application>
 
 </manifest>
