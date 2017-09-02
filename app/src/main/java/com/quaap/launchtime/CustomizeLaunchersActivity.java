@@ -153,7 +153,7 @@ public class CustomizeLaunchersActivity extends Activity {
                                 iconView.setImageDrawable(icon);
 
                                 if (hasCustIcon) {
-                                    iconView.setBackgroundColor(Color.parseColor("#99339933"));
+                                    setItemModified(iconView, true);
                                 }
 
 
@@ -178,7 +178,7 @@ public class CustomizeLaunchersActivity extends Activity {
                                 label.setLayoutParams(llp);
 
                                 if (hasCustLabel) {
-                                    label.setBackgroundColor(Color.parseColor("#99339933"));
+                                    setItemModified(label, true);
                                 }
 
                                 label.setOnClickListener(new View.OnClickListener() {
@@ -270,6 +270,8 @@ public class CustomizeLaunchersActivity extends Activity {
 
         mClickedTextView.setText(app.getLabel());
 
+        setItemModified(mClickedTextView, labeltext!=null && !labeltext.isEmpty());
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int num = prefs.getInt("icon-update", 0);
         prefs.edit().putInt("icon-update", num+1).apply();
@@ -338,6 +340,14 @@ public class CustomizeLaunchersActivity extends Activity {
         }
     }
 
+    private void setItemModified(View v, boolean modified) {
+        if (modified) {
+            v.setBackgroundColor(Color.parseColor("#99335533"));
+        } else {
+            v.setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+
     private void updateBitmap(Bitmap bitmap) {
         if (bitmap==null) {
             SpecialIconStore.deleteBitmap(this, mAppClicked.getComponentName(),SpecialIconStore.IconType.Custom);
@@ -347,10 +357,14 @@ public class CustomizeLaunchersActivity extends Activity {
             Drawable icon = ich.getDrawableIconForPackage( mAppClicked.getBaseComponentName(), mAppClicked.getLinkUri());
 
             mClickedIconView.setImageDrawable(icon);
+
+
         } else {
             SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
             mClickedIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
         }
+
+        setItemModified(mClickedIconView, bitmap!=null);
 
         AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
