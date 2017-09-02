@@ -85,7 +85,7 @@ public class SettingsActivity extends PreferenceActivity {
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     IconsHandler ich = GlobState.getIconsHandler(getActivity());
-                                    ich.resetUserColors();
+                                    ich.getTheme().resetUserColors();
                                     Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
                                     getActivity().finish();
                                     dialog.dismiss();
