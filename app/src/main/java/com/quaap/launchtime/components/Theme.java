@@ -96,6 +96,14 @@ public class Theme {
     }
 
 
+    public boolean isBuiltinTheme(String packagename) {
+        return builtinThemes.containsKey(packagename);
+    }
+
+    public BuiltinIconTheme getBuiltinTheme(String packagename) {
+        return builtinThemes.get(packagename);
+    }
+
 
 
     private final String [] COLOR_PREFS = {"cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",

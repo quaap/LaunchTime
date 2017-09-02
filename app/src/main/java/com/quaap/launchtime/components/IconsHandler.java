@@ -103,8 +103,8 @@ public class IconsHandler {
         boolean hasusercolors = theme.restoreUserColors();
 
         // inbuilt theme icons, nothing to do
-        if (theme.getBuiltinIconThemes().keySet().contains(iconsPackPackageName)) {
-            if (!hasusercolors) theme.getBuiltinIconThemes().get(iconsPackPackageName).applyTheme();
+        if (theme.isBuiltinTheme(iconsPackPackageName)) {
+            if (!hasusercolors) theme.getBuiltinTheme(iconsPackPackageName).applyTheme();
             return;
         }
         iconPack = new IconPack(ctx,iconsPackPackageName);
@@ -211,7 +211,7 @@ public class IconsHandler {
         for (String key: theme.getBuiltinIconThemes().keySet()) {
 
             if (iconsPackPackageName.equalsIgnoreCase(key)) {
-                return theme.getBuiltinIconThemes().get(key).getDrawable(componentName, uristr);
+                return theme.getBuiltinTheme(key).getDrawable(componentName, uristr);
             }
         }
 
@@ -265,7 +265,7 @@ public class IconsHandler {
     public Map<String, String> getAllIconsThemes() {
         Map<String, String> iconsThemes = new LinkedHashMap<>();
 
-        iconsThemes.put(DEFAULT_PACK, theme.getBuiltinIconThemes().get(DEFAULT_PACK).getPackName());
+        iconsThemes.put(DEFAULT_PACK, theme.getBuiltinTheme(DEFAULT_PACK).getPackName());
 
         iconsThemes.putAll(getIconsPacks());
 
