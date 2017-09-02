@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -215,8 +216,24 @@ public class CustomizeLaunchersActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        pickingIcon = false;
         finish();
         MainActivity.openSettings(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (!pickingIcon) {
+            finish();
+            Log.d("Customizer", "finishing in onpause");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pickingIcon = false;
     }
 
     private void promptForAppLabel() {
@@ -278,7 +295,7 @@ public class CustomizeLaunchersActivity extends Activity {
     }
 
 
-
+    public boolean pickingIcon;
 
 
     private static final int PICK_CUSTOM_ICON=1;
@@ -289,6 +306,9 @@ public class CustomizeLaunchersActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+
+        pickingIcon = false;
+
         if (resultCode == RESULT_OK) {
             //DB db = GlobState.getGlobState(this).getDB();
 
@@ -406,6 +426,7 @@ public class CustomizeLaunchersActivity extends Activity {
         private void cleanup() {
         }
         public void onClick(DialogInterface dialog, int which) {
+            pickingIcon = true;
             switch (which) {
                 case 0:
                     //Select icon
