@@ -40,10 +40,12 @@ public class Theme {
 
 
 
+    //TODO: load these from a file / other package
+
     private void initBuiltinIconThemes() {
         builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultIconTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
 
-        BuiltinIconTheme bw = new MonochromeIconTheme("bw", ctx.getString(R.string.theme_bw))
+        BuiltinIconTheme bw = new DefaultIconTheme("bw", "BW")
                 .setColor(Thing.Mask, Color.WHITE)
                 .setColor(Thing.Text, Color.WHITE)
                 .setColor(Thing.AltText, Color.WHITE)
@@ -51,6 +53,14 @@ public class Theme {
                 .setColor(Thing.AltBackground, Color.parseColor("#ff222222"));
 
         builtinThemes.put(bw.getPackKey(), bw);
+
+        BuiltinIconTheme bwicon = new MonochromeIconTheme("bwicon", ctx.getString(R.string.theme_bw))
+                .setColor(Thing.Text, Color.WHITE)
+                .setColor(Thing.AltText, Color.WHITE)
+                .setColor(Thing.Background, Color.BLACK)
+                .setColor(Thing.AltBackground, Color.parseColor("#ff222222"));
+
+        builtinThemes.put(bwicon.getPackKey(), bwicon);
 
 
         BuiltinIconTheme termcap = new MonochromeIconTheme("termcap", ctx.getString(R.string.theme_termcap))
@@ -291,18 +301,21 @@ public class Theme {
 
     private class DefaultIconTheme extends BuiltinIconTheme {
 
-
         DefaultIconTheme(String key, String name) {
             super(key, name);
         }
 
+        public DefaultIconTheme(String key, String name, Map<Thing, Integer> colors) {
+            super(key, name, colors);
+        }
         @Override
         public Drawable getDrawable(ComponentName componentName, String uristr) {
             return iconsHandler.getDefaultAppDrawable(componentName, uristr);
         }
 
-
     }
+
+
 
     private class MonochromeIconTheme extends BuiltinIconTheme {
         MonochromeIconTheme(String key, String name) {
