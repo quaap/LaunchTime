@@ -269,7 +269,7 @@ public class IconsHandler {
 
         iconsThemes.putAll(getIconsPacks());
 
-        for (Theme.BuiltinIconTheme ic: theme.getBuiltinIconThemes().values()) {
+        for (Theme.BuiltinTheme ic: theme.getBuiltinIconThemes().values()) {
             if ( !ic.getPackKey().equals(DEFAULT_PACK)) {
                 iconsThemes.put(ic.getPackKey(), ic.getPackName() + " " + "(sys)");
             }
