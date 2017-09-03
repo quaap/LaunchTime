@@ -20,7 +20,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by tom on 9/2/17.
+ * Copyright (C) 2017   Tom Kliethermes
+ *
+ * This file is part of LaunchTime and is is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  */
 
 public class Theme {
@@ -46,7 +55,6 @@ public class Theme {
         builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultIconTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
 
         BuiltinIconTheme bw = new DefaultIconTheme("bw", "BW")
-                .setColor(Thing.Mask, Color.WHITE)
                 .setColor(Thing.Text, Color.WHITE)
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.BLACK)
@@ -55,6 +63,7 @@ public class Theme {
         builtinThemes.put(bw.getPackKey(), bw);
 
         BuiltinIconTheme bwicon = new MonochromeIconTheme("bwicon", ctx.getString(R.string.theme_bw))
+                .setColor(Thing.Mask, Color.WHITE)
                 .setColor(Thing.Text, Color.WHITE)
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.BLACK)
