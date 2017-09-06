@@ -76,9 +76,9 @@ public class Theme {
             BuiltinTheme u = new MonochromeTheme("user" + i, "User theme " + i)
                     .setColor(Thing.Mask, Color.TRANSPARENT)
                     .setColor(Thing.Text, Color.WHITE)
-                    .setColor(Thing.AltText, Color.GRAY)
-                    .setColor(Thing.Background, Color.BLACK)
-                    .setColor(Thing.AltBackground, Color.DKGRAY);
+                    .setColor(Thing.AltText, Color.LTGRAY)
+                    .setColor(Thing.Background, Color.TRANSPARENT)
+                    .setColor(Thing.AltBackground, Color.BLUE);
 
             builtinThemes.put(u.getPackKey(), u);
         }
