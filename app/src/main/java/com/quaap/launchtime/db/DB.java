@@ -455,7 +455,7 @@ public class DB extends SQLiteOpenHelper {
                 String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
                 if (widget) {
-                    Log.d("db", "Found widget: " + actvname + " " + pkgname);
+                   // Log.d("db", "Found widget: " + actvname + " " + pkgname);
                 }
                 apps.add(AppLauncher.createAppLauncher(actvname, pkgname, customlabel==null?label:customlabel, catID, widget));
             }

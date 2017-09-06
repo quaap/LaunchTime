@@ -82,7 +82,7 @@ public class IconsHandler {
      */
     private void loadIconsPack() {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
         loadIconsPack(prefs.getString("icons-pack", DEFAULT_PACK));
 
     }

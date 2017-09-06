@@ -326,38 +326,69 @@ public class MainActivity extends Activity implements
         return category;
     }
 
+    //private List<String> prefsChanging = Collections.synchronizedList(new ArrayList<String>());
+
+    private final Object prefsChanging = new Object();
+
+    private int prefsUpdate;
+
+    int pc = 0;
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(TAG, "A preference has been changed: " +  key);
 
-        if (key!=null) {
-            //Delete our icon cache so the labels can be regenerated.
-            if (key.equals("textcolor") || key.equals("preference_iconsize") ||  key.equals("icon-update")) {
-                mAppLauncherViews.clear();
-                mQuickRow.repopulate();
-            }
-            if (key.equals("icons-pack") || key.equals("icon_tint")) {
-                mAppLauncherViews.clear();
+        synchronized (prefsChanging) {
+            Log.d(TAG, "A preference has been changed: " + key);
 
-                AppLauncher.clearIcons();
-                //mIconSheet.removeAllViews();
-                IconsHandler ich = GlobState.getIconsHandler(this);
+            if (key != null) {
 
-                ich.loadIconsPack(sharedPreferences.getString("icons-pack", IconsHandler.DEFAULT_PACK));
-                //ich.updateStyles(mStyle);
+                // when the Theme updates many of these prefs at once, it sends "prefsUpdate" first so that we ignore everything until it is done.
+                if (key.equals("prefsUpdate")) {
+                    prefsUpdate = sharedPreferences.getBoolean(key, false) ? prefsUpdate+1: prefsUpdate-1;
+                }
 
-                mQuickRow.repopulate();
-            }
+                if (prefsUpdate>0) return;
+                Log.d(TAG, "still here " + key);
+
+                if (pc++ > 10) {
+                    Log.d("prefsChanging", "too many: bailing!");
+                    prefsUpdate = 0;
+                    pc = 0;
+                    return;
+                }
+
+                checkConfig();
+
+                //Delete our icon cache so the labels can be regenerated.
+                if (key.equals("textcolor") || key.equals("preference_iconsize") || key.equals("icon-update")) {
+                    mAppLauncherViews.clear();
+                    mQuickRow.repopulate();
+                }
+                if (key.equals("icon_tint") || key.equals("prefsUpdate")) {
+                    AppLauncher.clearIcons();
+                    mAppLauncherViews.clear();
+                    mQuickRow.repopulate();
+                }
+                if (key.equals("icons-pack")) {
+                    AppLauncher.clearIcons();
+                    mAppLauncherViews.clear();
+
+                    //mIconSheet.removeAllViews();
+                    IconsHandler ich = GlobState.getIconsHandler(this);
+
+                    ich.loadIconsPack(sharedPreferences.getString("icons-pack", IconsHandler.DEFAULT_PACK));
+                    //ich.updateStyles(mStyle);
+
+                    mQuickRow.repopulate();
+                }
 
 
-            checkConfig();
+                switchCategory(mCategory);
 
-            switchCategory(mCategory);
-
-            if (key.equals("prefs_toddler_lock")) {
-                mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
-                if (mChildLock) mChildLockSetup = false;
-                checkChildLock();
+                if (key.equals("prefs_toddler_lock")) {
+                    mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
+                    if (mChildLock) mChildLockSetup = false;
+                    checkChildLock();
+                }
             }
         }
     }

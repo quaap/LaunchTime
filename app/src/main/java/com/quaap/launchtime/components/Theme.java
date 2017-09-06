@@ -60,7 +60,7 @@ public class Theme {
 
     public Theme(Context ctx, IconsHandler ich) {
         this.ctx = ctx;
-        prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
         iconsHandler = ich;
         initBuiltinIconThemes();
     }
@@ -191,6 +191,8 @@ public class Theme {
 
 
         SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
+
+        prefs.edit().putBoolean("prefsUpdate", true).apply();
         SharedPreferences.Editor appedit = prefs.edit();
 
         try {
@@ -204,6 +206,7 @@ public class Theme {
 
         } finally {
             appedit.apply();
+            prefs.edit().putBoolean("prefsUpdate", false).apply();
             themeedit.apply();
         }
     }
@@ -228,8 +231,11 @@ public class Theme {
 
 
     public boolean restoreUserColors() {
-
+        Log.d("Theme", "restoreUserColors");
         SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
+
+        prefs.edit().putBoolean("prefsUpdate", true).apply();
+
         SharedPreferences.Editor appedit = prefs.edit();
 
         try {
@@ -238,9 +244,9 @@ public class Theme {
             for (int i=0; i<max; i++) {
                 appedit.putInt(COLOR_PREFS[i],  themeprefs.getInt(getThemePrefName(COLOR_PREFS[i]), getCurrentThemeColor(COLOR_PREFS[i])));
             }
-
         } finally {
             appedit.apply();
+            prefs.edit().putBoolean("prefsUpdate", false).apply();
         }
         return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
     }
@@ -299,8 +305,11 @@ public class Theme {
         void applyTheme() {
 
             //SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
+            Log.d("Theme", "applyTheme");
 
             SharedPreferences appprefs = prefs;
+            prefs.edit().putBoolean("prefsUpdate", true).apply();
+
             SharedPreferences.Editor appedit = appprefs.edit();
             try {
 
@@ -315,6 +324,7 @@ public class Theme {
                 }
             } finally {
                 appedit.apply();
+                prefs.edit().putBoolean("prefsUpdate", false).apply();
             }
 
         }
