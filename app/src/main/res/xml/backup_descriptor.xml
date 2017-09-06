@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- TO DO Remove the following "exclude" elements to make them a part of the auto backup -->
+    <!--<exclude-->
+        <!--domain="database"-->
+        <!--path="db" />-->
+    <!--&lt;!&ndash; Exclude the shared preferences file that contains the GCM registrationId &ndash;&gt;-->
+    <!--<exclude-->
+        <!--domain="sharedpref"-->
+        <!--path="theme.xml" />-->
+    <!--<exclude-->
+        <!--domain="sharedpref"-->
+        <!--path="colors.xml" />-->
+    <!--<exclude-->
+        <!--domain="sharedpref"-->
+        <!--path="default.xml" />-->
+</full-backup-content>
