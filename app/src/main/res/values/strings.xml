@@ -347,5 +347,7 @@
     <string name="custom_instruct">Click on the icon to change the icon. Click on the text to change the text.</string>
     <string name="pref_customize">Customize app launchers</string>
     <string name="pref_customize_desc">Change individual icons and labels</string>
+    <string name="user_theme">User theme %d</string>
+    <string name="pref_icon_tint">Icon tint</string>
 
 </resources>

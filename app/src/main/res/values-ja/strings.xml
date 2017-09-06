@@ -349,4 +349,6 @@
     <string name="custom_instruct">アイコンをクリックするとアイコンが変わります。 テキストをクリックしてテキストを変更します。</string>
     <string name="pref_customize">アプリランチャーのカスタマイズ</string>
     <string name="pref_customize_desc">個々のアイコンとラベルを変更する</string>
+    <string name="pref_icon_tint">アイコンの色合い</string>
+    <string name="user_theme">ユーザーのテーマ %d</string>
 </resources>

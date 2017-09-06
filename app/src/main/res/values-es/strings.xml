@@ -350,4 +350,6 @@
     <string name="custom_instruct">Haga clic en el icono para cambiar el icono. Haga clic en el texto para cambiar el texto.</string>
  <string name="pref_customize">Personalizar los lanzadores de aplicaciones</string>
  <string name="pref_customize_desc">Cambiar iconos y etiquetas individuales</string>
+    <string name="pref_icon_tint">Tinte de icono</string>
+ <string name="user_theme">Tema de usuario %d</string>
 </resources>

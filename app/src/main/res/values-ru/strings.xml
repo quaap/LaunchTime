@@ -344,4 +344,6 @@
     <string name="custom_instruct">Нажмите на значок, чтобы изменить значок. Нажмите на текст, чтобы изменить текст.</string>
     <string name="pref_customize">Настроить пусковые установки приложений</string>
     <string name="pref_customize_desc">Изменение отдельных значков и меток</string>
+    <string name="pref_icon_tint">Икона оттенок</string>
+    <string name="user_theme">Тема %d</string>
 </resources>

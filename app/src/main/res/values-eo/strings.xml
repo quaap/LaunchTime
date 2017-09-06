@@ -351,4 +351,6 @@
     <string name="custom_instruct">Alklaku la ikonon por ŝanĝi la ikonon. Alklaku la tekston por ŝanĝi la tekston.</string>
  <string name="pref_customize">Agordu app-lanzojn</string>
  <string name="pref_customize_desc">Ŝanĝi individuajn ikonojn kaj etikedojn</string>
+    <string name="user_theme">Uzanto-temo %d</string>
+ <string name="pref_icon_tint">Ikono tint</string>
 </resources>

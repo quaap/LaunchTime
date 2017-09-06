@@ -73,7 +73,7 @@ public class Theme {
         builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
 
         for (int i=1; i<=3; i++) {
-            BuiltinTheme u = new MonochromeTheme("user" + i, "User theme " + i)
+            BuiltinTheme u = new MonochromeTheme("user" + i, ctx.getString(R.string.user_theme, i))
                     .setColor(Thing.Mask, Color.TRANSPARENT)
                     .setColor(Thing.Text, Color.WHITE)
                     .setColor(Thing.AltText, Color.LTGRAY)
