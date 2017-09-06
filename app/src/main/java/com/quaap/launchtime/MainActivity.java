@@ -358,15 +358,17 @@ public class MainActivity extends Activity implements
 
                 checkConfig();
 
+                boolean repop = false;
+
                 //Delete our icon cache so the labels can be regenerated.
                 if (key.equals("textcolor") || key.equals("preference_iconsize") || key.equals("icon-update")) {
                     mAppLauncherViews.clear();
-                    mQuickRow.repopulate();
+                    repop = true;
                 }
                 if (key.equals("icon_tint") || key.equals("prefsUpdate")) {
                     AppLauncher.clearIcons();
                     mAppLauncherViews.clear();
-                    mQuickRow.repopulate();
+                    repop = true;
                 }
                 if (key.equals("icons-pack")) {
                     AppLauncher.clearIcons();
@@ -378,16 +380,24 @@ public class MainActivity extends Activity implements
                     ich.loadIconsPack(sharedPreferences.getString("icons-pack", IconsHandler.DEFAULT_PACK));
                     //ich.updateStyles(mStyle);
 
-                    mQuickRow.repopulate();
-                }
+                } else {
+
+                    final boolean repop2 = repop;
+                    mCategoriesScroller.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            switchCategory(mCategory);
+                            if (repop2) mQuickRow.repopulate();
+
+                        }
+                    }, 100);
 
 
-                switchCategory(mCategory);
-
-                if (key.equals("prefs_toddler_lock")) {
-                    mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
-                    if (mChildLock) mChildLockSetup = false;
-                    checkChildLock();
+                    if (key.equals("prefs_toddler_lock")) {
+                        mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
+                        if (mChildLock) mChildLockSetup = false;
+                        checkChildLock();
+                    }
                 }
             }
         }
