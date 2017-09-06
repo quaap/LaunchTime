@@ -748,7 +748,7 @@ public class MainActivity extends Activity implements
                     help.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(help);
                 }
-            }, 5000);
+            }, 3000);
         } else {
 
             MsgBox.showNewsMessage(this, mPrefs);

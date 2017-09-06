@@ -49,6 +49,7 @@ public class MsgBox {
                             " * Icon packs.\n" +
                             " * Customize icons and labels.\n" +
                             " * Built-in themes.\n" +
+                            " * Backups save more customizations.\n" +
                             " * Android 7.1 shortcut actions.\n" +
                             " * Machine translations for German, French, Spanish, and others (expert translations wanted!).\n\n" +
                             "Go to Settings->Help for links to submit feature requests, bugs, and pull requests."
