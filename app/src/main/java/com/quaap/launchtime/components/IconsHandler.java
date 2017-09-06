@@ -110,6 +110,14 @@ public class IconsHandler {
         iconPack = new IconPack(ctx,iconsPackPackageName);
     }
 
+    public boolean isIconTintable() {
+        return theme.isBuiltinThemeIconTintable(iconsPackPackageName);
+    }
+
+    public boolean isIconTintable(String packageName) {
+        return theme.isBuiltinThemeIconTintable(packageName);
+    }
+
     public Drawable getCustomIcon(ComponentName componentName, String uristr) {
         Drawable app_icon = null;
         Bitmap custombitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Custom);

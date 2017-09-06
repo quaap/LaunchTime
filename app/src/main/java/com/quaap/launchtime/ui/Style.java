@@ -34,6 +34,8 @@ public class Style {
 
     private int wallpaperColor = Color.TRANSPARENT;
 
+    private int iconTint = Color.TRANSPARENT;
+
     private boolean leftHandCategories;
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 25;
@@ -172,6 +174,8 @@ public class Style {
         textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
 
         wallpaperColor = mAppPreferences.getInt("wallpapercolor", Color.TRANSPARENT);
+
+        iconTint = mAppPreferences.getInt("icon_tint", Color.TRANSPARENT);
     }
 
 

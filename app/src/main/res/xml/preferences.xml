@@ -136,7 +136,10 @@
             android:title="@string/pref_drag"
             android:key="dragover_background"
             android:defaultValue="@color/dragover_background" />
-
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="Icon tint"
+            android:key="icon_tint"
+            android:defaultValue="@color/icon_tint" />
 
         <Preference android:title="@string/reset_colors_title"
             android:key="reset_colors"

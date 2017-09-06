@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.quaap.launchtime.R;
 
@@ -33,6 +34,21 @@ import java.util.Map;
 
 public class Theme {
 
+
+
+    private final String [] COLOR_PREFS = {"icon_tint", "cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
+            "wallpapercolor",  "textcolor"};
+
+    private Thing [] THING_MAP = {Thing.Mask, Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
+
+
+    private int [] getColorDefaults()  {
+        return new int [] {getResColor(R.color.icon_tint), getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
+                getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
+                Color.TRANSPARENT,  getResColor(R.color.textcolor)};
+    };
+
+
     private Context ctx;
 
 
@@ -40,8 +56,11 @@ public class Theme {
 
     private IconsHandler iconsHandler;
 
+    private SharedPreferences prefs;
+
     public Theme(Context ctx, IconsHandler ich) {
         this.ctx = ctx;
+        prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         iconsHandler = ich;
         initBuiltinIconThemes();
     }
@@ -124,18 +143,10 @@ public class Theme {
     }
 
 
+    public boolean isBuiltinThemeIconTintable(String packagename) {
+        return isBuiltinTheme(packagename) && (builtinThemes.get(packagename) instanceof MonochromeTheme);
+    }
 
-    private final String [] COLOR_PREFS = {"cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
-            "wallpapercolor",  "textcolor"};
-
-    private Thing [] THING_MAP = {Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
-
-
-    private int [] getColorDefaults()  {
-        return new int [] {getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
-                getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
-                Color.TRANSPARENT,  getResColor(R.color.textcolor)};
-    };
 
 
     private int getResColor(int res) {
@@ -178,7 +189,7 @@ public class Theme {
 
 
         SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
-        SharedPreferences.Editor appedit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+        SharedPreferences.Editor appedit = prefs.edit();
 
         try {
 
@@ -198,7 +209,7 @@ public class Theme {
 
     public void saveUserColors() {
 
-        SharedPreferences appprefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences appprefs = prefs;
         SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE).edit();
 
         try {
@@ -217,7 +228,7 @@ public class Theme {
     public boolean restoreUserColors() {
 
         SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
-        SharedPreferences.Editor appedit = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+        SharedPreferences.Editor appedit = prefs.edit();
 
         try {
 
@@ -287,7 +298,7 @@ public class Theme {
 
             //SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
 
-            SharedPreferences appprefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences appprefs = prefs;
             SharedPreferences.Editor appedit = appprefs.edit();
             try {
 
@@ -340,12 +351,15 @@ public class Theme {
         @Override
         public Drawable getDrawable(ComponentName componentName, String uristr) {
 
+
             //Log.d(TAG, "getDrawable called for " + componentName.getPackageName());
 
             Drawable app_icon = iconsHandler.getDefaultAppDrawable(componentName, uristr);
 
 
-            int mask_color = getColor(Thing.Mask);
+            int mask_color = prefs.getInt("icon_tint", getColor(Thing.Mask));
+
+           // Log.d("iconi", mask_color + " mask");
 
             if (mask_color != Color.TRANSPARENT) {
 
@@ -354,7 +368,7 @@ public class Theme {
                     app_icon = convertToGrayscale(app_icon);
                 } else {
                     PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
-                    app_icon.setColorFilter(getColor(Thing.Mask), mode);
+                    app_icon.setColorFilter(mask_color, mode);
                 }
             }
 

@@ -118,6 +118,10 @@ public class SettingsActivity extends PreferenceActivity {
                     return true;
                 }
             });
+
+            IconsHandler iph = GlobState.getIconsHandler(this.getActivity());
+            findPreference("icon_tint").setEnabled(iph.isIconTintable(iconsPack.getValue()));
+
         }
     }
 

@@ -332,16 +332,18 @@ public class MainActivity extends Activity implements
 
         if (key!=null) {
             //Delete our icon cache so the labels can be regenerated.
-            if (key.equals("textcolor") || key.equals("preference_iconsize") || key.equals("icons-pack") || key.equals("icon-update")) {
+            if (key.equals("textcolor") || key.equals("preference_iconsize") ||  key.equals("icon-update")) {
                 mAppLauncherViews.clear();
                 mQuickRow.repopulate();
             }
-            if (key.equals("icons-pack")) {
+            if (key.equals("icons-pack") || key.equals("icon_tint")) {
+                mAppLauncherViews.clear();
+
                 AppLauncher.clearIcons();
                 //mIconSheet.removeAllViews();
                 IconsHandler ich = GlobState.getIconsHandler(this);
 
-                ich.loadIconsPack(sharedPreferences.getString(key, IconsHandler.DEFAULT_PACK));
+                ich.loadIconsPack(sharedPreferences.getString("icons-pack", IconsHandler.DEFAULT_PACK));
                 //ich.updateStyles(mStyle);
 
                 mQuickRow.repopulate();
