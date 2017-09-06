@@ -279,7 +279,7 @@ public class IconsHandler {
 
         for (Theme.BuiltinTheme ic: theme.getBuiltinIconThemes().values()) {
             if ( !ic.getPackKey().equals(DEFAULT_PACK)) {
-                iconsThemes.put(ic.getPackKey(), ic.getPackName() + " " + "(sys)");
+                iconsThemes.put(ic.getPackKey(), ic.getPackName() + " (sys)");
             }
         }
 

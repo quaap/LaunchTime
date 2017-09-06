@@ -567,7 +567,13 @@ public class MainActivity extends Activity implements
 
         //View view = findViewById(R.id.main_layout_view);
         //view.setBackgroundColor(mStyle.getWallpaperColor());
-        getWindow().setBackgroundDrawable(new ColorDrawable(mStyle.getWallpaperColor()));
+        int bgcolor = mStyle.getWallpaperColor();
+        if (Color.alpha(bgcolor)==0) {
+            bgcolor = 0;
+            getWindow().setBackgroundDrawable(null); // needed to clear it
+        }
+        getWindow().setBackgroundDrawable(new ColorDrawable(bgcolor));
+
         //Log.d(TAG,"bg:" + mStyle.getWallpaperColor());
 
         itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
