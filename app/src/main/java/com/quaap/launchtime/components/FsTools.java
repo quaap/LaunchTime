@@ -286,7 +286,9 @@ public class FsTools {
                 while ((zipEntry = zipInputStream.getNextEntry()) !=null) {
                     File destFile = new File(destDir, zipEntry.getName());
 
-                    if (!destFile.getParentFile().exists()) destFile.getParentFile().mkdirs();
+                    if (!destFile.getParentFile().exists()) {
+                        if (!destFile.getParentFile().mkdirs()) continue;
+                    }
                     if (zipEntry.isDirectory()) {
                         continue;
                     }

@@ -273,7 +273,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
         AlertDialog dialog = builder.show();
 
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        if (dialog.getWindow()!=null) dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 //        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 //        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
@@ -317,7 +317,7 @@ public class CustomizeLaunchersActivity extends Activity {
             switch (requestCode) {
                 case PICK_FROM_ICON_PACK:
                 case PICK_CUSTOM_PICTURE:
-                    bitmap = (Bitmap) data.getParcelableExtra("data");
+                    bitmap = data.getParcelableExtra("data");
                     if (bitmap != null) {
                         if (bitmap.getWidth() > mIconSize) {
                             bitmap = Bitmap.createScaledBitmap(bitmap,mIconSize,mIconSize, true);

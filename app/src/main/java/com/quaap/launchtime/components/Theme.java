@@ -46,7 +46,7 @@ public class Theme {
         return new int [] {getResColor(R.color.icon_tint), getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
                 getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
                 Color.TRANSPARENT,  getResColor(R.color.textcolor)};
-    };
+    }
 
 
     private Context ctx;

@@ -34,7 +34,7 @@ public class DefaultApps {
     public static void checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder, View quickRow) {
         if (quickRowOrder.isEmpty()) {
             Map<String, List<String>> defactivities = getDefaultActivities(context);
-            boolean addeddefault = false;
+           // boolean addeddefault = false;
             int max = 1;
             for (List<String> tests : defactivities.values()) {
                 if (tests.size() > max) max = tests.size();
@@ -57,7 +57,7 @@ public class DefaultApps {
                                 Log.d("Using: ", app.getActivityName() + " " + app.getPackageName() + " for " + defactent.getKey());
                                 quickRowOrder.add(app.getComponentName());
                                 defactit.remove(); // remove this group
-                                addeddefault = true;
+                               // addeddefault = true;
                                 break;  //we're using this app for something
                             }
                         }

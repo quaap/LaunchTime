@@ -456,9 +456,9 @@ public class DB extends SQLiteOpenHelper {
                 boolean widget = cursor.getShort(4) == 1;
                 String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
-                if (widget) {
+                //if (widget) {
                    // Log.d("db", "Found widget: " + actvname + " " + pkgname);
-                }
+                //}
                 apps.add(AppLauncher.createAppLauncher(actvname, pkgname, customlabel==null?label:customlabel, catID, widget));
             }
         } finally {
@@ -1223,7 +1223,7 @@ public class DB extends SQLiteOpenHelper {
 
             if (srcFile.getName().toLowerCase().endsWith(".zip")) {
 
-                List<File> files = FsTools.uncompressFiles(srcFile, mContext.getFilesDir());
+                FsTools.uncompressFiles(srcFile, mContext.getFilesDir());
 
 
                 FsTools.loadSharedPreferencesFromFile(mContext.getSharedPreferences("theme", Context.MODE_PRIVATE), mContext.getFileStreamPath("themes.prefs"));

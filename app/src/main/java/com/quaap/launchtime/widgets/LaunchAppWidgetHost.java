@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class LaunchAppWidgetHost extends AppWidgetHost {
 
-    private List<Integer> mAppIds = new ArrayList<>();
+    //private List<Integer> mAppIds = new ArrayList<>();
 
     public LaunchAppWidgetHost(Context context, int hostId) {
         super(context, hostId);
@@ -45,13 +45,13 @@ public class LaunchAppWidgetHost extends AppWidgetHost {
     @Override
     public int allocateAppWidgetId() {
         int appid = super.allocateAppWidgetId();
-        mAppIds.add(appid);
+        //mAppIds.add(appid);
         return appid;
     }
 
     @Override
     public void deleteAppWidgetId(int appWidgetId) {
-        mAppIds.remove((Object)appWidgetId);
+        //mAppIds.remove((Object)appWidgetId);
         super.deleteAppWidgetId(appWidgetId);
     }
 

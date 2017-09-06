@@ -1740,9 +1740,9 @@ public class MainActivity extends Activity implements
                         if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
                         mDragPotential = null;
                         //dismissActionPopup();
-                    } else {
+                    } //else {
                         //Log.d(TAG, event.getActionMasked() + "");
-                    }
+                    //}
 
 
                     return false;
