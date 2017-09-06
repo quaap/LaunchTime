@@ -38,6 +38,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.FsTools;
 import com.quaap.launchtime.db.DB;
 
@@ -64,6 +65,8 @@ public class BackupActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
+
+        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         backupsLayout = (LinearLayout) findViewById(R.id.bakups_list);
 

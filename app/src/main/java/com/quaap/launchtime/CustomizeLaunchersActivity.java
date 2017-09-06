@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.quaap.launchtime.apps.AppLauncher;
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.components.SpecialIconStore;
 import com.quaap.launchtime.db.DB;
@@ -78,6 +79,8 @@ public class CustomizeLaunchersActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize_launchers);
+
+        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         mIconSize = (int) getResources().getDimension(android.R.dimen.app_icon_size);
 

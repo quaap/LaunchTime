@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconPack;
 
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class ChooseIconFromPackActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_icon_from_pack);
+
+        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         Map<String,String> iconpacks = IconPack.listAvailableIconsPacks(this);
 
