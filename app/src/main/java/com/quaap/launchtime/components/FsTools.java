@@ -3,26 +3,39 @@ package com.quaap.launchtime.components;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
 
 import com.quaap.launchtime.R;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes
@@ -172,9 +185,11 @@ public class FsTools {
         return copyFile(srcFile, destFile, true, false);
     }
 
+
     public static File decompressFile(File srcFile, File destFile) {
         return copyFile(srcFile, destFile, false, true);
     }
+
 
 
     public static File copyFile(File srcFile, File destFile, boolean compress, boolean decompress){
@@ -215,6 +230,204 @@ public class FsTools {
             Log.e("DB", "Copy failed", e);
         }
         return null;
+    }
+
+    /**
+     *
+     * @param files first files are source, last file is destination file.
+     * @return
+     */
+    public static File compressFiles(File ... files) {
+
+        if (files.length<2) throw new IllegalArgumentException("Need at least one source file and exactly one destination file.");
+        File destFile = files[files.length-1];
+        if (destFile.exists() && !destFile.isFile()) throw new IllegalArgumentException("Destination must be a normal file");
+
+        try {
+            ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(destFile));
+            try {
+
+                for (int i=0; i< files.length-1; i++) {
+                    InputStream fis = new FileInputStream(files[i]);
+                    try {
+
+                        zout.putNextEntry(new ZipEntry(files[i].getName()));
+
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = fis.read(buffer)) > 0) {
+                            zout.write(buffer, 0, length);
+                        }
+
+
+                        zout.closeEntry();
+
+                    } finally {
+                        try {fis.close();} catch (Exception e) {Log.e("Fs",e.getMessage(),e);}
+                    }
+
+                }
+            } finally {
+                try {zout.close();} catch (Exception e) {Log.e("Fs",e.getMessage(),e);}
+            }
+
+
+        } catch (IOException e) {
+            Log.e("DB", "Copy failed", e);
+        }
+        return destFile;
+    }
+
+
+    public static List<File> uncompressFiles(File srcFile, File destDir) {
+
+        List<File> files = new ArrayList<>();
+
+
+        try {
+            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(srcFile));
+            try {
+                ZipEntry zipEntry;
+                while ((zipEntry = zipInputStream.getNextEntry()) !=null) {
+                    File destFile = new File(destDir, zipEntry.getName());
+
+                    if (!destFile.getParentFile().exists()) destFile.getParentFile().mkdirs();
+                    if (zipEntry.isDirectory()) {
+                        continue;
+                    }
+
+                    files.add(destFile);
+
+                    OutputStream zout = new FileOutputStream(destFile);
+                    try {
+
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = zipInputStream.read(buffer)) > 0) {
+                            zout.write(buffer, 0, length);
+                        }
+
+                    } finally {
+                        try {zout.close();} catch (Exception e) {Log.e("Fs",e.getMessage(),e);}
+                    }
+
+                }
+            } finally {
+                try {zipInputStream.close();} catch (Exception e) {Log.e("Fs",e.getMessage(),e);}
+            }
+
+
+        } catch (IOException e) {
+            Log.e("DB", "Copy failed", e);
+        }
+        return files;
+    }
+
+//
+//    public static File storeSharedPreferences(SharedPreferences prefs, String fname) throws IOException {
+//        File outfile = new File(fname);
+//        Properties props = new Properties();
+//        props.putAll(prefs.getAll());
+//        BufferedWriter out = new BufferedWriter(new FileWriter(outfile));
+//        try {
+//            props.store(out,fname);
+//        } finally {
+//            out.close();
+//        }
+//        return outfile;
+//
+//    }
+//
+//    public static void loadSharedPreferences(SharedPreferences prefs, File prefsFile) throws IOException {
+//        Properties props = new Properties();
+//        FileReader in = new FileReader(prefsFile);
+//        try {
+//            props.load(in);
+//        } finally {
+//            in.close();
+//        }
+//
+//        SharedPreferences.Editor editor = prefs.edit();
+//        try {
+//            for (Map.Entry<?, ?> ent : props.entrySet()) {
+//               // props.
+//            }
+//        } finally {
+//            editor.apply();
+//        }
+//    }
+
+    public static File saveSharedPreferencesToFile(SharedPreferences pref, File destFile) {
+
+        ObjectOutputStream output = null;
+        try {
+            output = new ObjectOutputStream(new FileOutputStream(destFile));
+
+            output.writeObject(pref.getAll());
+
+        } catch (IOException e) {
+            Log.e("FsTools", e.getMessage(), e);
+        } finally {
+            try {
+                if (output != null) {
+                    output.flush();
+                    output.close();
+                }
+            } catch (IOException e) {
+                Log.e("FsTools", e.getMessage(), e);
+            }
+        }
+        return destFile;
+    }
+
+
+    @SuppressWarnings({"unchecked"})
+    public static boolean loadSharedPreferencesFromFile(SharedPreferences pref, File src) {
+        boolean res = false;
+        ObjectInputStream input = null;
+        try {
+            input = new ObjectInputStream(new FileInputStream(src));
+            SharedPreferences.Editor prefEdit = pref.edit();
+            prefEdit.clear();
+
+            Map<String, ?> entries = (Map<String, ?>) input.readObject();
+            for (Map.Entry<String, ?> entry : entries.entrySet()) {
+                Object v = entry.getValue();
+                String key = entry.getKey();
+
+                if (v instanceof Boolean) {
+                    prefEdit.putBoolean(key, (Boolean) v);
+                } else if (v instanceof Float) {
+                    prefEdit.putFloat(key, (Float) v);
+                } else if (v instanceof Integer) {
+                    prefEdit.putInt(key, (Integer) v);
+                } else if (v instanceof Long) {
+                    prefEdit.putLong(key, (Long) v);
+                } else if (v instanceof String) {
+                    prefEdit.putString(key, ((String) v));
+                } else if (v instanceof Set) {
+                    prefEdit.putStringSet(key, ((Set<String>) v));
+                } else {
+                    Log.d("FsTools", "unknown type for '" + key + "': " + v.getClass());
+                }
+
+            }
+            if (prefEdit.commit()) {
+                Log.d("FsTools", "prefs updated");
+            }
+            res = true;
+        } catch (IOException | ClassNotFoundException e) {
+            Log.e("FsTools", e.getMessage(), e);
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException e) {
+                Log.e("FsTools", e.getMessage(), e);
+            }
+        }
+        return res;
     }
 
 }

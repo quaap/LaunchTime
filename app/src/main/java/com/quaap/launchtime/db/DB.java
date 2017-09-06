@@ -4,12 +4,14 @@ package com.quaap.launchtime.db;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import android.database.sqlite.SQLiteStatement;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -1179,10 +1181,20 @@ public class DB extends SQLiteOpenHelper {
 
         File srcFile = mContext.getDatabasePath(DATABASE_NAME);
 
-        File destFile= mContext.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName);
 
-        return FsTools.compressFile(srcFile, destFile);
+        File themePrefs = FsTools.saveSharedPreferencesToFile(mContext.getSharedPreferences("theme", Context.MODE_PRIVATE), mContext.getFileStreamPath("themes.prefs"));
+
+        File defPrefs = FsTools.saveSharedPreferencesToFile(mContext.getSharedPreferences("default", Context.MODE_PRIVATE), mContext.getFileStreamPath("default.prefs"));
+
+        File mainPrefs = FsTools.saveSharedPreferencesToFile(PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext()), mContext.getFileStreamPath("main.prefs"));
+
+
+        File destFile = mContext.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName + ".zip");
+
+        return FsTools.compressFiles(srcFile, mainPrefs, defPrefs, themePrefs, destFile);
     }
+
+
 
     public boolean restoreFullpathBackup( String filePath) {
         File srcFile = new File(filePath);
@@ -1204,17 +1216,40 @@ public class DB extends SQLiteOpenHelper {
 
     private synchronized boolean restore(File srcFile) {
 
-        close();
         boolean ret = false;
         if (srcFile.exists() && srcFile.canRead()) {
+
             File destFile = mContext.getDatabasePath(DATABASE_NAME);
 
-            ret = FsTools.decompressFile(srcFile, destFile)!=null;
+            if (srcFile.getName().toLowerCase().endsWith(".zip")) {
 
+                List<File> files = FsTools.uncompressFiles(srcFile, mContext.getFilesDir());
+
+
+                FsTools.loadSharedPreferencesFromFile(mContext.getSharedPreferences("theme", Context.MODE_PRIVATE), mContext.getFileStreamPath("themes.prefs"));
+                FsTools.loadSharedPreferencesFromFile(mContext.getSharedPreferences("default", Context.MODE_PRIVATE), mContext.getFileStreamPath("default.prefs"));
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
+                prefs.edit().putBoolean("prefsUpdate", true).apply();
+                FsTools.loadSharedPreferencesFromFile(prefs, mContext.getFileStreamPath("main.prefs"));
+                prefs.edit().putBoolean("prefsUpdate", false).apply();
+
+
+                close();
+                FsTools.copyFile(mContext.getFileStreamPath(destFile.getName()), destFile);
+
+                ret = true;
+
+            } else {
+
+                close();
+                ret = FsTools.decompressFile(srcFile, destFile) != null;
+
+            }
             try {
                 getWritableDatabase().close();
             } catch (Exception e) {
-                Log.e("LaunchDB","couldn't load db after restore", e);
+                Log.e("LaunchDB", "couldn't load db after restore", e);
                 return false;
             }
         }
