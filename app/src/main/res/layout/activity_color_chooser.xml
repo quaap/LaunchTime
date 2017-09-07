@@ -25,30 +25,51 @@
             android:text="@string/choose_your_color"
             android:textColor="@color/textcolorinv" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/transparentgridres">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/color_preview"
+            <FrameLayout
+                android:id="@+id/sample_area"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:layout_alignParentStart="true"
+                android:layout_margin="12dp"
+                android:layout_toStartOf="@+id/color_hex"
+                android:background="@drawable/transparentgridres">
+
+                <TextView
+                    android:id="@+id/color_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="28dp"
+                    android:gravity="center"
+                    android:shadowColor="@color/textcolor"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="30"
+                    android:textColor="@color/textcolorinv" />
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/color_hex"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:height="32dp"
-                android:gravity="center"
-                android:shadowColor="@color/textcolor"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="30"
-                android:textColor="@color/textcolorinv"
-                android:textSize="16sp" />
-        </FrameLayout>
+                android:layout_alignParentEnd="true"
+                android:ems="7"
+                android:inputType="none|textNoSuggestions"
+                android:lines="1"
+                android:maxLines="1"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -71,7 +92,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -94,7 +115,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -117,7 +138,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -141,7 +162,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 

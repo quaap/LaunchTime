@@ -4,11 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ProgressBar;
@@ -17,6 +22,9 @@ import android.widget.TextView;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
+
+import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class ColorChooser extends FrameLayout {
 
@@ -30,6 +38,8 @@ public class ColorChooser extends FrameLayout {
     private GridLayout colorPresets;
 
     private TextView colorPreview;
+    private EditText colorHex;
+
     private SharedPreferences prefs;
 
     private ColorSelectedListener colorSelectedListener;
@@ -59,6 +69,7 @@ public class ColorChooser extends FrameLayout {
         colorBlue = (SeekBar) frame.findViewById(R.id.color_blue_seekbar);
         colorAlpha = (SeekBar) frame.findViewById(R.id.color_alpha_seekbar);
         colorBright = (SeekBar) frame.findViewById(R.id.color_bright_seekbar);
+        colorHex = (EditText) frame.findViewById(R.id.color_hex);
 
 
         colorRed.setOnSeekBarChangeListener(colorChange);
@@ -66,6 +77,36 @@ public class ColorChooser extends FrameLayout {
         colorBlue.setOnSeekBarChangeListener(colorChange);
         colorBright.setOnSeekBarChangeListener(colorChange);
         colorAlpha.setOnSeekBarChangeListener(colorChange);
+
+        colorHex.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkEditorColor();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        colorHex.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.d("ColorChooser", "touched " + colorHex.getText());
+                Integer color = checkEditorColor();
+                if (color!=null) {
+                    setColor(color);
+                    return false;
+                }
+                return true;
+            }
+        });
 
         colorPreview = (TextView) frame.findViewById(R.id.color_preview);
         colorPreview.setOnClickListener(new View.OnClickListener() {
@@ -77,12 +118,27 @@ public class ColorChooser extends FrameLayout {
 
         colorPresets = (GridLayout) frame.findViewById(R.id.color_presets);
 
-
         prefs = getContext().getSharedPreferences("colors" + themename, Context.MODE_PRIVATE);
 
         loadPresets();
 
         doPreview();
+    }
+
+    private Integer checkEditorColor() {
+        Integer color;
+        try {
+            String text = colorHex.getText().toString().trim();
+            if (Pattern.matches("(?xi: [0-9a-f]{6} | [0-9a-f]{8} )", text)) {
+                text = "#" + text;
+            }
+            color = Color.parseColor(text);
+            colorHex.setTextColor(Color.GREEN);
+        } catch (Exception e) {
+            colorHex.setTextColor(Color.RED);
+            color = null;
+        }
+        return color;
     }
 
     public void done() {
@@ -103,6 +159,7 @@ public class ColorChooser extends FrameLayout {
 
     private void doPreview() {
         int color = getSelectedColor();
+        colorHex.setText(String.format("#%08X", color));
         colorPreview.setBackgroundColor(color);
         int tcolor = ~color;
         colorPreview.setTextColor(Color.rgb(Color.red(tcolor), Color.green(tcolor), Color.blue(tcolor)));
@@ -111,6 +168,7 @@ public class ColorChooser extends FrameLayout {
 
     public void setColor(int color) {
 
+        colorHex.setText(String.format("#%08X", color));
         if (Build.VERSION.SDK_INT >= 24) {
             colorAlpha.setProgress(255 - Color.alpha(color), true);
             colorBright.setProgress(255, true);
@@ -215,7 +273,7 @@ public class ColorChooser extends FrameLayout {
         }
         edit.putInt("color0", color);
         if (edit.commit()) {
-            Log.d("ColotChooser", "color selected " + color);
+            Log.d("ColorChooser", "color selected " + color);
         }
 
     }
