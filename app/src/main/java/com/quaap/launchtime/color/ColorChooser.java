@@ -98,7 +98,7 @@ public class ColorChooser extends FrameLayout {
         colorHex.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Log.d("ColorChooser", "touched " + colorHex.getText());
+                //Log.d("ColorChooser", " " + colorHex.getText());
                 Integer color = checkEditorColor();
                 if (color!=null) {
                     setColor(color);

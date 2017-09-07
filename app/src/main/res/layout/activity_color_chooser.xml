@@ -26,8 +26,8 @@
             android:textColor="@color/textcolorinv" />
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -56,10 +56,11 @@
             <EditText
                 android:id="@+id/color_hex"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:ems="7"
-                android:inputType="none|textNoSuggestions"
+                android:inputType="text|textNoSuggestions"
                 android:lines="1"
                 android:maxLines="1"
                 android:textSize="12sp" />
