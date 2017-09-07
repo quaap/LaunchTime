@@ -263,7 +263,7 @@ public class ColorChooser extends FrameLayout {
         c.setOnClickListener(setColorListener);
         frame.addView(c);
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        lp.setMargins(24, 16, 20, 16);
+        lp.setMargins(24, 16, 24, 16);
         outframe.setPadding(6,6,6,6);
         outframe.addView(frame);
         colorPresets.addView(outframe, lp);
