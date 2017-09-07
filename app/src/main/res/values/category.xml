@@ -5,6 +5,7 @@
 
     <string-array translatable="false" name="CAT_TALK">
         <item>phone</item>
+        <item>mail</item>
         <item>conv</item>
         <item>call</item>
         <item>dial</item>
@@ -15,7 +16,6 @@
         <item>convers</item>
         <item>contacts</item>
         <item>stk</item>
-        <item>mail</item>
         <item>twitter</item>
         <item>whatsapp</item>
         <item>outlook</item>
@@ -48,7 +48,9 @@
         <item>maps</item>
         <item>dropbox</item>
         <item>chrome</item>
+        <item>mozilla</item>
         <item>drive</item>
+        <item>wiki</item>
     </string-array>
     <string-array translatable="false" name="CAT_MEDIA">
         <item>radio</item>

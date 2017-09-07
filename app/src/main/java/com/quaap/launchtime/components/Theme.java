@@ -373,7 +373,7 @@ public class Theme {
 
            // Log.d("iconi", mask_color + " mask");
 
-            if (mask_color != Color.TRANSPARENT) {
+            if (Color.alpha(mask_color) > 10) {
 
                 app_icon = app_icon.mutate();
                 if (mask_color == Color.WHITE) {

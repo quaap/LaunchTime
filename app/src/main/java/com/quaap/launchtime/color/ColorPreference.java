@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.quaap.launchtime.R;
+
 /**
 * Created by tom on 1/24/17.
 * <p>
@@ -38,8 +40,9 @@ public class ColorPreference extends DialogPreference {
     public ColorPreference(Context ctxt, AttributeSet attrs) {
         super(ctxt, attrs);
 
-        setPositiveButtonText("Set");
-        setNegativeButtonText("Cancel");
+        setPositiveButtonText(ctxt.getText(R.string.done));
+        setNegativeButtonText(ctxt.getText(R.string.cancel));
+        setPersistent(true);
     }
 
     TextView tc;
@@ -77,6 +80,7 @@ public class ColorPreference extends DialogPreference {
 
         if (positiveResult) {
             color=picker.getSelectedColor();
+            picker.done();
             if (tc!=null) {
                 tc.setBackgroundColor(color);
             }

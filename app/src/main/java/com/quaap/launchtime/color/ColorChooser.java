@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 
 public class ColorChooser extends FrameLayout {
@@ -32,22 +34,24 @@ public class ColorChooser extends FrameLayout {
 
     private ColorSelectedListener colorSelectedListener;
 
+
     public ColorChooser(Context context) {
         super(context);
-        init();
+
+        init(GlobState.getIconsHandler(context).getIconsPackPackageName());
     }
 
-    public ColorChooser(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+//    public ColorChooser(Context context, AttributeSet attrs) {
+//        super(context, attrs);
+//        init();
+//    }
+//
+//    public ColorChooser(Context context, AttributeSet attrs, int defStyleAttr) {
+//        super(context, attrs, defStyleAttr);
+//        init();
+//    }
 
-    public ColorChooser(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
+    private void init(String themename) {
         ViewGroup frame = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.activity_color_chooser, this);
 
         colorRed = (SeekBar) frame.findViewById(R.id.color_red_seekbar);
@@ -73,14 +77,15 @@ public class ColorChooser extends FrameLayout {
 
         colorPresets = (GridLayout) frame.findViewById(R.id.color_presets);
 
-        prefs = getContext().getSharedPreferences("colors", Context.MODE_PRIVATE);
+
+        prefs = getContext().getSharedPreferences("colors" + themename, Context.MODE_PRIVATE);
 
         loadPresets();
 
         doPreview();
     }
 
-    private void done() {
+    public void done() {
         int color = getSelectedColor();
         addPreset(color);
 
@@ -186,7 +191,7 @@ public class ColorChooser extends FrameLayout {
         }
     };
 
-    int numpresets = 12;
+    int numpresets = 64;
 
     private void addPreset(int color) {
         SharedPreferences.Editor edit = prefs.edit();
@@ -209,14 +214,16 @@ public class ColorChooser extends FrameLayout {
 
         }
         edit.putInt("color0", color);
-        edit.apply();
+        if (edit.commit()) {
+            Log.d("ColotChooser", "color selected " + color);
+        }
 
     }
 
     private void loadPresets() {
 
-        int[] colors = {Color.BLACK, Color.WHITE, Color.DKGRAY,
-                Color.GRAY, Color.LTGRAY, Color.RED,
+        int[] colors = {Color.TRANSPARENT, Color.BLACK, Color.WHITE, Color.DKGRAY,
+                Color.LTGRAY, Color.RED,
                 Color.rgb(255, 127, 0), Color.YELLOW, Color.GREEN,
                 Color.BLUE, Color.rgb(127, 0, 255), Color.rgb(255, 0, 255)};
 
@@ -236,16 +243,30 @@ public class ColorChooser extends FrameLayout {
     }
 
     private void makeColorPresetButton(int color) {
+        FrameLayout outframe = new FrameLayout(getContext());
+        outframe.setBackgroundColor(Color.BLACK);
+        outframe.setPadding(6,6,6,6);
+
+        FrameLayout frame = new FrameLayout(getContext());
+        //frame.setBackgroundColor(Color.BLACK);
+        frame.setBackgroundResource(R.drawable.transparentgrid);
+
         TextView c = new TextView(getContext());
         c.setText("   ");
-        c.setTextSize(28);
+        c.setTextSize(22);
         c.setBackgroundColor(color);
+//        if (color==Color.TRANSPARENT) {
+//            c.setBackgroundResource(R.drawable.transparentgrid);
+//        }
         c.setTag(color);
         c.setClickable(true);
         c.setOnClickListener(setColorListener);
+        frame.addView(c);
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        lp.setMargins(16, 16, 16, 16);
-        colorPresets.addView(c, lp);
+        lp.setMargins(24, 16, 20, 16);
+        outframe.setPadding(6,6,6,6);
+        outframe.addView(frame);
+        colorPresets.addView(outframe, lp);
     }
 
     interface ColorSelectedListener {

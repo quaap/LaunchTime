@@ -56,13 +56,22 @@ public class ChooseIconFromPackActivity extends Activity {
         Map<String,String> iconpacks = IconPack.listAvailableIconsPacks(this);
 
         LinkedHashMap<String,String> iconpacks2 = new LinkedHashMap<>();
-        iconpacks2.put("", getString(R.string.custom_icon_select_icon_pack));
-        iconpacks2.putAll(iconpacks);
+
+        if (iconpacks.size()>0) {
+
+            iconpacks2.put("", getString(R.string.custom_icon_select_icon_pack));
+            iconpacks2.putAll(iconpacks);
+        } else {
+            iconpacks2.put("", "No icon packs installed");
+        }
 
 
         final Spinner iconpackSpinner = (Spinner) findViewById(R.id.icon_pack_spinner);
         final MapAdapter<String,String> adapter = new MapAdapter<>(this, android.R.layout.simple_spinner_item, iconpacks2);
         iconpackSpinner.setAdapter(adapter);
+
+        iconpackSpinner.setSelection(0);
+
 
         iconpackSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
