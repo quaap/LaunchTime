@@ -243,7 +243,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
         final EditText input = new EditText(this);
 
-        input.setHint(mAppClicked.getLabel());
+        input.setText(mAppClicked.getLabel());
 
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         builder.setView(input);
