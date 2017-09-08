@@ -207,8 +207,9 @@ public class Theme {
             }
 
         } finally {
-            appedit.apply();
-            prefs.edit().putBoolean("prefsUpdate", false).apply();
+            if (appedit.commit()) {
+                prefs.edit().putBoolean("prefsUpdate", false).apply();
+            }
             themeedit.apply();
         }
     }
@@ -247,8 +248,9 @@ public class Theme {
                 appedit.putInt(COLOR_PREFS[i],  themeprefs.getInt(getThemePrefName(COLOR_PREFS[i]), getCurrentThemeColor(COLOR_PREFS[i])));
             }
         } finally {
-            appedit.apply();
-            prefs.edit().putBoolean("prefsUpdate", false).apply();
+            if (appedit.commit()) {
+                prefs.edit().putBoolean("prefsUpdate", false).apply();
+            }
         }
         return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
     }
@@ -337,8 +339,9 @@ public class Theme {
                     }
                 }
             } finally {
-                appedit.apply();
-                prefs.edit().putBoolean("prefsUpdate", false).apply();
+                if (appedit.commit()) {
+                    prefs.edit().putBoolean("prefsUpdate", false).apply();
+                }
             }
 
         }
