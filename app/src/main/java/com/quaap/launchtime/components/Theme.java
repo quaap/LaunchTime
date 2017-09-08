@@ -87,7 +87,7 @@ public class Theme {
 
         BuiltinTheme bwicon = new MonochromeTheme("bwicon", ctx.getString(R.string.theme_bw))
                 .setColor(Thing.Mask, Color.WHITE)
-                .setColor(Thing.Text, Color.WHITE)
+                .setColor(Thing.Text, Color.argb(255,200,200,200))
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.BLACK)
                 .setColor(Thing.AltBackground, Color.parseColor("#ff222222"));
