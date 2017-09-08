@@ -1153,7 +1153,7 @@ public class MainActivity extends Activity implements
 
             if (!smallIcon) {
 
-                setLayoutSize(item, mStyle.getLauncherSize(), mStyle.getLauncherSize());
+                setLayoutSize(item, mStyle.getLauncherSize(), ViewGroup.LayoutParams.WRAP_CONTENT);
 
                 TextView iconLabel = (TextView) item.findViewById(R.id.launcher_text);
                 iconLabel.setTextColor(mStyle.getTextColor());
@@ -1162,7 +1162,7 @@ public class MainActivity extends Activity implements
                 setLayoutSize(iconImage, mStyle.getLauncherIconSize(), mStyle.getLauncherIconSize());
 
                 iconLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, mStyle.getLauncherFontSize());
-                setLayoutSize(iconLabel, mStyle.getLauncherSize(), ViewGroup.LayoutParams.WRAP_CONTENT);
+                setLayoutSize(iconLabel, mStyle.getLauncherSize(), mStyle.getLauncherSize()/2.4);
 
             }
             app.setIconImage(iconImage);

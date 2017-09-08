@@ -152,11 +152,11 @@ public class Style {
                 break;
             case 2:  //large
                 launcherIconSize = (int)(iconsize*1.3);
-                launcherFontSize = (int)(iconfontsize*1.2);
+                launcherFontSize = (int)(iconfontsize*1.3);
                 break;
             case 3: //x-large
-                launcherIconSize = (int)(iconsize*1.6);
-                launcherFontSize = (int)(iconfontsize*1.3);
+                launcherIconSize = (int)(iconsize*1.8);
+                launcherFontSize = (int)(iconfontsize*1.7);
                 break;
         }
         //Log.d("style", "launcherFontSize = " + launcherFontSize);

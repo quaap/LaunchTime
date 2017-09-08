@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="@dimen/launcher_width"
-    android:layout_height="@dimen/launcher_height"
+    android:layout_height="match_parent"
     android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="4dp"
     android:paddingEnd="@dimen/launcher_padding_side"
     android:paddingStart="@dimen/launcher_padding_side"
-    android:paddingBottom="4dp"
     android:paddingTop="8dp">
 
     <TextView
@@ -16,21 +16,21 @@
         android:visibility="gone" />
 
     <ImageView
+        android:id="@+id/launcher_icon"
         android:layout_width="@dimen/icon_width"
         android:layout_height="@dimen/icon_width"
-        android:id="@+id/launcher_icon"
-        android:contentDescription="@string/app"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/app" />
 
     <TextView
-        android:layout_width="@dimen/icon_label_width"
-        android:layout_height="wrap_content"
         android:id="@+id/launcher_text"
-        android:gravity="center_horizontal"
+        android:layout_width="@dimen/icon_label_width"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/launcher_fontsize"
-        android:maxLines="2"
         android:height="@dimen/icont_label_height"
-        android:textStyle="bold"
-        android:textColor="@color/textcolor" />
+        android:gravity="center_horizontal"
+        android:maxLines="2"
+        android:textColor="@color/textcolor"
+        android:textSize="@dimen/launcher_fontsize"
+        android:textStyle="bold" />
 </LinearLayout>
