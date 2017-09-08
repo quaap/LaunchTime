@@ -89,6 +89,7 @@ public class FeedbackActivity extends Activity {
                     @Override
                     protected void onPostExecute(String message) {
                         Toast.makeText(FeedbackActivity.this, message, Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 };
                 sendItAsync.execute();
@@ -174,6 +175,18 @@ public class FeedbackActivity extends Activity {
             scrubbednames.put(name, name);
             includes.put(name, true);
         }
+
+        try {
+            for (Map.Entry<String, String> ent : GlobState.getIconsHandler(this).getTheme().getUserSetts().entrySet()) {
+                String name = "set." + ent.getKey() + "." + ent.getValue();
+                scrubbednames.put(name, name);
+                includes.put(name, true);
+            }
+        } catch (Exception e) {
+            Log.e("Feedback", e.getMessage(), e);
+        }
+
+
         ListView itemsList = (ListView)findViewById(R.id.info_data_items);
 
         itemsList.setAdapter(new PackageAdapter(this, new ArrayList<>(scrubbednames.keySet())));

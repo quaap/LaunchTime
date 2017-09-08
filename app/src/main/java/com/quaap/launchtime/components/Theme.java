@@ -118,7 +118,7 @@ public class Theme {
                 .setColor(Thing.Mask, Color.parseColor("#ffff2222"))
                 .setColor(Thing.Text, Color.parseColor("#eeff2222"))
                 .setColor(Thing.AltText, Color.parseColor("#eeff2222"))
-                .setColor(Thing.Background, Color.parseColor("#99aa1111"))
+                .setColor(Thing.Background, Color.parseColor("#77550000"))
                 .setColor(Thing.AltBackground, Color.parseColor("#22121111"));
 
         builtinThemes.put(redplanet.getPackKey(), redplanet);
@@ -251,6 +251,18 @@ public class Theme {
             prefs.edit().putBoolean("prefsUpdate", false).apply();
         }
         return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
+    }
+
+
+
+    public Map<String,String> getUserSetts() {
+
+        Map<String,String> setts = new LinkedHashMap<>();
+
+        for (Map.Entry<String,?> ent : prefs.getAll().entrySet()) {
+            setts.put(ent.getKey(), ent.getValue()==null?"":ent.getValue().toString());
+        }
+        return setts;
     }
 
 
