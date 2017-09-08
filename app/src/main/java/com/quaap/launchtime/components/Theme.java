@@ -77,8 +77,8 @@ public class Theme {
         for (int i=1; i<=3; i++) {
             BuiltinTheme u = new MonochromeTheme("user" + i, ctx.getString(R.string.user_theme, i))
                     .setColor(Thing.Mask, Color.TRANSPARENT)
-                    .setColor(Thing.Text, Color.WHITE)
-                    .setColor(Thing.AltText, Color.LTGRAY)
+                    .setColor(Thing.Text, Color.argb(255,200,200,200))
+                    .setColor(Thing.AltText, Color.WHITE)
                     .setColor(Thing.Background, ubcolors[i-1])
                     .setColor(Thing.AltBackground, ucolors[i-1]);
 
