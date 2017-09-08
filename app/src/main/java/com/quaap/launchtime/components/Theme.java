@@ -72,13 +72,15 @@ public class Theme {
     private void initBuiltinIconThemes() {
         builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
 
+        int [] ucolors = {Color.argb(127,50,50,50), Color.argb(127,10,10,160), Color.argb(127,170,10,10)};
+        int [] ubcolors = {Color.BLACK, Color.argb(127,0,0,60), Color.argb(127,60,0,6)};
         for (int i=1; i<=3; i++) {
             BuiltinTheme u = new MonochromeTheme("user" + i, ctx.getString(R.string.user_theme, i))
                     .setColor(Thing.Mask, Color.TRANSPARENT)
                     .setColor(Thing.Text, Color.WHITE)
                     .setColor(Thing.AltText, Color.LTGRAY)
-                    .setColor(Thing.Background, Color.TRANSPARENT)
-                    .setColor(Thing.AltBackground, Color.BLUE);
+                    .setColor(Thing.Background, ubcolors[i-1])
+                    .setColor(Thing.AltBackground, ucolors[i-1]);
 
             builtinThemes.put(u.getPackKey(), u);
         }
