@@ -1288,7 +1288,7 @@ public class MainActivity extends Activity implements
         }
         styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default, category);
         lp.gravity = Gravity.CENTER;
-        lp.setMargins(2, 7, 2, 3);
+        lp.setMargins(2, 4, 2, 3);
 
         categoryTab.setLayoutParams(lp);
 
