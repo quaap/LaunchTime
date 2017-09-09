@@ -84,7 +84,7 @@
             <ImageView
                 android:id="@+id/settings_button"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
