@@ -15,11 +15,13 @@ package com.quaap.launchtime;
 
 import android.app.Application;
 import android.content.Context;
+import android.preference.PreferenceManager;
 
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.db.DB;
+import com.quaap.launchtime.ui.Style;
 
 
 public class GlobState extends Application implements  DB.DBClosedListener {
@@ -28,6 +30,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
     private IconsHandler mIconsHandler;
 
+    private Style mStyle;
 
     public static GlobState getGlobState(Context context) {
         return (GlobState) context.getApplicationContext();
@@ -44,7 +47,11 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         //this.deleteDatabase(DB.DATABASE_NAME);
         mIconsHandler = new IconsHandler(this);
 
+        mStyle = new Style(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+    }
 
+    public static Style getStyle(Context context) {
+        return ((GlobState) context.getApplicationContext()).mStyle;
     }
 
     public static IconsHandler getIconsHandler(Context context) {

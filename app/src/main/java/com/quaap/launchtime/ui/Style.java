@@ -231,5 +231,7 @@ public class Style {
         return categoryTabPaddingHeight;
     }
 
-
+    public int getIconTint() {
+        return iconTint;
+    }
 }

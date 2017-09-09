@@ -214,7 +214,7 @@ public class MainActivity extends Activity implements
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
         mCategory = mPrefs.getString("category", getTopCategory());
 
-        mStyle = new Style(this, mAppPreferences);
+        mStyle = GlobState.getStyle(this);
 
         readPrefs();
 

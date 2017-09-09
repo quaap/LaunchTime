@@ -6,11 +6,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
@@ -361,6 +364,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 link = context.getResources().getDrawable(R.drawable.link);
             }
             if (link!=null) {
+                int tint = GlobState.getStyle(context).getIconTint();
+                if (Color.alpha(tint)>10) {
+                    link.setColorFilter(tint, PorterDuff.Mode.MULTIPLY);
+                }
                 link.setBounds(canvas.getWidth() * 2 / 3, canvas.getHeight() * 2 / 3, canvas.getWidth(), canvas.getHeight());
                 link.draw(canvas);
             }
