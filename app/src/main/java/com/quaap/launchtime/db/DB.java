@@ -560,7 +560,7 @@ public class DB extends SQLiteOpenHelper {
                         " from " + APP_TABLE + " as app " +
                         " inner join " + TAB_ORDER_TABLE + " as tab on app." + CATID + "=tab." + CATID +
                         " where (app." + LABEL + " like ? or app." + CUSTOMLABEL + " like ?) and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
-                        " order by 3 ",
+                        " order by LOWER(case when customlabel is null then app.label else customlabel end) ",
                 new String[]{filter, filter});
 
         return cursor;
