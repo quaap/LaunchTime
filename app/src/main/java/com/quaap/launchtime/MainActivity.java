@@ -124,11 +124,11 @@ public class MainActivity extends Activity implements
     private ImageView mShowButtons;
 
 
-    private View mSortCategoryButton;
-    private View mAddCategoryButton;
-    private View mRenameCategoryButton;
-    private View mEditWidgetsButton;
-    private View mOpenPrefsButton;
+    private TextView mSortCategoryButton;
+    private TextView mAddCategoryButton;
+    private TextView mRenameCategoryButton;
+    private TextView mEditWidgetsButton;
+    private ImageView mOpenPrefsButton;
 
 
     private LinearLayout mCategoriesLayout;
@@ -637,9 +637,24 @@ public class MainActivity extends Activity implements
             }
 
             mShowButtons.setBackgroundColor(mStyle.getCattabBackground());
+            mShowButtons.setColorFilter(mStyle.getCattabTextColor());
             mShowButtons.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
             //mShowButtons.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, categoryTabPaddingHeight*3));
             //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
+            mSortCategoryButton.setBackgroundColor(mStyle.getCattabBackground());
+            mAddCategoryButton.setBackgroundColor(mStyle.getCattabBackground());
+            mRenameCategoryButton.setBackgroundColor(mStyle.getCattabBackground());
+            mEditWidgetsButton.setBackgroundColor(mStyle.getCattabBackground());
+            mOpenPrefsButton.setBackgroundColor(mStyle.getCattabBackground());
+
+            mSortCategoryButton.setTextColor(mStyle.getCattabTextColor());
+            mAddCategoryButton.setTextColor(mStyle.getCattabTextColor());
+            mRenameCategoryButton.setTextColor(mStyle.getCattabTextColor());
+            mEditWidgetsButton.setTextColor(mStyle.getCattabTextColor());
+            mOpenPrefsButton.setColorFilter(mStyle.getCattabTextColor());
+
+            int c = mStyle.getWallpaperColor();
+            mIconSheetBottomFrame.setBackgroundColor(Color.argb(255, Color.red(c), Color.green(c), Color.blue(c)));
 
 
             //Switch the menu left/right
@@ -2401,12 +2416,12 @@ public class MainActivity extends Activity implements
             }
         });
 
-        mSortCategoryButton = findViewById(R.id.btn_sort_cat);
-        mAddCategoryButton = findViewById(R.id.btn_add_cat);
-        mRenameCategoryButton = findViewById(R.id.btn_rename_cat);
+        mSortCategoryButton = (TextView)findViewById(R.id.btn_sort_cat);
+        mAddCategoryButton = (TextView)findViewById(R.id.btn_add_cat);
+        mRenameCategoryButton = (TextView)findViewById(R.id.btn_rename_cat);
 
-        mEditWidgetsButton = findViewById(R.id.btn_widgets);
-        mOpenPrefsButton = findViewById(R.id.btn_prefs);
+        mEditWidgetsButton = (TextView)findViewById(R.id.btn_widgets);
+        mOpenPrefsButton = (ImageView)findViewById(R.id.btn_prefs);
 
 
         mSortCategoryButton.setOnClickListener(new View.OnClickListener() {
