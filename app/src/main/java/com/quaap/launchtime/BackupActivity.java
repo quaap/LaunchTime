@@ -162,14 +162,14 @@ public class BackupActivity extends Activity {
     public void onPause() {
         super.onPause();
         Log.d("Backup", "onpause");
-        setResult(RESULT_OK);
-        finish();
+        //setResult(RESULT_OK);
+        //finish();
     }
 
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
+        setResult(RESULT_CANCELED);
         finish();
     }
     @Override
