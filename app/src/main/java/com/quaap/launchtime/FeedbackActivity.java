@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Base64;
@@ -182,6 +183,15 @@ public class FeedbackActivity extends Activity {
                 scrubbednames.put(name, name);
                 includes.put(name, true);
             }
+
+            String sdk = "SDK." + Build.VERSION.SDK_INT;
+            scrubbednames.put(sdk, sdk);
+            includes.put(sdk, true);
+
+            String rel = "RELEASE." + Build.VERSION.RELEASE;
+            scrubbednames.put(rel, rel);
+            includes.put(rel, true);
+
         } catch (Exception e) {
             Log.e("Feedback", e.getMessage(), e);
         }
