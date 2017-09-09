@@ -332,9 +332,9 @@ public class MainActivity extends Activity implements
 
     private final Object prefsChanging = new Object();
 
-    private int prefsUpdate;
+    private volatile int prefsUpdate;
 
-    int pc = 0;
+    //int pc = 0;
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
@@ -345,18 +345,18 @@ public class MainActivity extends Activity implements
 
                 // when the Theme updates many of these prefs at once, it sends "prefsUpdate" first so that we ignore everything until it is done.
                 if (key.equals("prefsUpdate")) {
-                    prefsUpdate = sharedPreferences.getBoolean(key, false) ? prefsUpdate+1: prefsUpdate-1;
+                    prefsUpdate = sharedPreferences.getBoolean(key, false) ? prefsUpdate+1 : prefsUpdate-1;
                 }
 
                 if (prefsUpdate>0) return;
                 Log.d(TAG, "still here " + key);
 
-                if (pc++ > 10) {
-                    Log.d("prefsChanging", "too many: bailing!");
-                    prefsUpdate = 0;
-                    pc = 0;
-                    return;
-                }
+//                if (pc++ > 10) {
+//                    Log.d("prefsChanging", "too many: bailing!");
+//                    prefsUpdate--;
+//                    pc--;
+//                    return;
+//                }
 
                 checkConfig();
 
