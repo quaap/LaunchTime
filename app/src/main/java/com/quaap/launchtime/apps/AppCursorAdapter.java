@@ -136,10 +136,11 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
         final String category;
         final String label;
         try {
-            activityName = cursor.getString(0);
-            pkgName = cursor.getString(1);
-            origlabel = cursor.getString(2);
-            category = cursor.getString(3);
+            // "select " + ACTVNAME + " _id, " + PKGNAME + " pkg,  app." + LABEL + " label, tab." + LABEL + " category " + ", app." + CUSTOMLABEL + " customlabel" +
+            activityName = cursor.getString(cursor.getColumnIndex("_id"));
+            pkgName = cursor.getString(cursor.getColumnIndex("pkg"));
+            origlabel = cursor.getString(cursor.getColumnIndex("label"));
+            category = cursor.getString(cursor.getColumnIndex("category"));
             customlabel = cursor.getString(cursor.getColumnIndex("customlabel"));
             if (customlabel==null) {
                 label = origlabel;
@@ -209,8 +210,8 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     @Override
     public void onItemClick(Object item, View itemView, int position, long id) {
         Cursor cursor = (Cursor) item;
-        String activityName = cursor.getString(0);
-        String pkgName = cursor.getString(1);
+        String activityName = cursor.getString(cursor.getColumnIndex("_id"));
+        String pkgName = cursor.getString(cursor.getColumnIndex("pkg"));
         //String label = cursor.getString(1);
 
        // mTextHolder.setText(label);

@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  */
 public class DB extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "db";
+    private static final String DATABASE_NAME = "db";
     private static final int DATABASE_VERSION = 6;
 
     private static final String ACTVNAME = "actvname";
@@ -254,8 +254,8 @@ public class DB extends SQLiteOpenHelper {
             Cursor cursor = sqLiteDatabase.query(APP_TABLE, new String[]{ACTVNAME, PKGNAME}, null, null, null, null, ACTVNAME);
             try {
                 while (cursor.moveToNext()) {
-                    String actv = cursor.getString(0);
-                    String pkg = cursor.getString(1);
+                    String actv = cursor.getString(cursor.getColumnIndex(ACTVNAME));
+                    String pkg = cursor.getString(cursor.getColumnIndex(PKGNAME));
 
                     ContentValues values = new ContentValues();
                     values.put(PKGNAME, pkg);
@@ -302,8 +302,8 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(APP_TABLE, new String[]{ACTVNAME, PKGNAME}, ISUNINSTALLED+"=0", null, null, null, LABEL);
         try {
             while (cursor.moveToNext()) {
-                String actv = cursor.getString(0);
-                String pkg = cursor.getString(1);
+                String actv = cursor.getString(cursor.getColumnIndex(ACTVNAME));
+                String pkg = cursor.getString(cursor.getColumnIndex(PKGNAME));
                 try {
                     ComponentName cn = new ComponentName(pkg, actv);
                     actvnames.add(cn);
@@ -329,9 +329,9 @@ public class DB extends SQLiteOpenHelper {
         try {
             if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
                 //pkgname = cursor.getString(1);
-                String label = cursor.getString(2);
-                String catID = cursor.getString(3);
-                boolean widget = cursor.getShort(4) == 1;
+                String label = cursor.getString(cursor.getColumnIndex(LABEL));
+                String catID = cursor.getString(cursor.getColumnIndex(CATID));
+                boolean widget = cursor.getShort(cursor.getColumnIndex(ISWIDGET)) == 1;
                 String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
@@ -372,11 +372,11 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(APP_TABLE, appcolumns, PKGNAME + "=?", new String[]{pkgname}, null, null, null);
         try {
             while (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
-                String actvname = cursor.getString(0);
+                String actvname = cursor.getString(cursor.getColumnIndex(ACTVNAME));
                 //pkgname = cursor.getString(1);
-                String label = cursor.getString(2);
-                String catID = cursor.getString(3);
-                boolean widget = cursor.getShort(4) == 1;
+                String label = cursor.getString(cursor.getColumnIndex(LABEL));
+                String catID = cursor.getString(cursor.getColumnIndex(CATID));
+                boolean widget = cursor.getShort(cursor.getColumnIndex(ISWIDGET)) == 1;
                 String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
                 // Log.d("LaunchDB", "getApp " + pkgname + " " + catID);
@@ -400,7 +400,7 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname}, null, null, null);
         try {
             if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
-                catID = cursor.getString(0);
+                catID = cursor.getString(cursor.getColumnIndex(CATID));
             }
         } finally {
             cursor.close();
@@ -418,7 +418,7 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(APP_TABLE, new String[]{ISUNINSTALLED}, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname}, null, null, null);
         try {
             if (cursor.moveToNext()) { //ACTVNAME, PKGNAME, LABEL, CATID
-                installed = cursor.getShort(0) != 1;
+                installed = cursor.getShort(cursor.getColumnIndex(ISUNINSTALLED)) != 1;
             }
         } finally {
             cursor.close();
@@ -451,16 +451,16 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(APP_TABLE, appcolumns, CATID + "=? and ("+ISUNINSTALLED+"=0)", new String[]{catID}, null, null, CUSTOMLABEL + " ," + LABEL);
         try {
             while (cursor.moveToNext()) {
-                String actvname = cursor.getString(0);
-                String pkgname = cursor.getString(1);
-                String label = cursor.getString(2);
-                boolean widget = cursor.getShort(4) == 1;
+                String actv = cursor.getString(cursor.getColumnIndex(ACTVNAME));
+                String pkg = cursor.getString(cursor.getColumnIndex(PKGNAME));
+                String label = cursor.getString(cursor.getColumnIndex(LABEL));
+                boolean widget = cursor.getShort(cursor.getColumnIndex(ISWIDGET)) == 1;
                 String customlabel = cursor.getString(cursor.getColumnIndex(CUSTOMLABEL));
 
                 //if (widget) {
                    // Log.d("db", "Found widget: " + actvname + " " + pkgname);
                 //}
-                apps.add(AppLauncher.createAppLauncher(actvname, pkgname, customlabel==null?label:customlabel, catID, widget));
+                apps.add(AppLauncher.createAppLauncher(actv, pkg, customlabel==null?label:customlabel, catID, widget));
             }
         } finally {
             cursor.close();
@@ -749,7 +749,7 @@ public class DB extends SQLiteOpenHelper {
             //Log.d("DB", "getting catagories");
             while (cursor.moveToNext()) {
 
-                categories.add(cursor.getString(0));
+                categories.add(cursor.getString(cursor.getColumnIndex(CATID)));
                 //          Log.d("DB", "got catID " + cursor.getString(0));
             }
         } finally {
@@ -766,7 +766,7 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABEL}, CATID + "=?", new String[]{catID}, null, null, null, null);
         try {
             if (cursor.moveToNext()) {
-                display = cursor.getString(0);
+                display = cursor.getString(cursor.getColumnIndex(LABEL));
             }
         } finally {
             cursor.close();
@@ -781,7 +781,7 @@ public class DB extends SQLiteOpenHelper {
         Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABELFULL}, CATID + "=?", new String[]{catID}, null, null, null, null);
         try {
             if (cursor.moveToNext()) {
-                display = cursor.getString(0);
+                display = cursor.getString(cursor.getColumnIndex(LABELFULL));
             }
         } finally {
             cursor.close();
@@ -797,7 +797,7 @@ public class DB extends SQLiteOpenHelper {
         boolean tiny = false;
         try {
             if (cursor.moveToNext()) {
-                tiny = cursor.getShort(0) == 1;
+                tiny = cursor.getShort(cursor.getColumnIndex(ISTINY)) == 1;
             }
         } catch (Exception e) {
             Log.e("LaunchDB", "tiny error.", e);
@@ -921,7 +921,7 @@ public class DB extends SQLiteOpenHelper {
            // int i=0;
             while (cursor.moveToNext()) {
                 try {
-                    actvnames.add(new ComponentName(cursor.getString(1), cursor.getString(0)));
+                    actvnames.add(new ComponentName(cursor.getString(cursor.getColumnIndex(PKGNAME)), cursor.getString(cursor.getColumnIndex(ACTVNAME))));
                 } catch (Exception e) {
                     Log.e("LaunchDB", e.getMessage(), e);
                 }
@@ -990,7 +990,7 @@ public class DB extends SQLiteOpenHelper {
         try {
             while (cursor.moveToNext()) {
                 if (!cursor.isNull(0) && !cursor.isNull(1) ) {
-                    activitynames.add(new ComponentName(cursor.getString(1), cursor.getString(0)));
+                    activitynames.add(new ComponentName(cursor.getString(cursor.getColumnIndex(PKGNAME)), cursor.getString(cursor.getColumnIndex(ACTVNAME))));
                 }
             }
         } finally {
@@ -1038,7 +1038,7 @@ public class DB extends SQLiteOpenHelper {
         String catid = null;
         try {
             if (cursor.moveToNext()) {
-                catid = cursor.getString(0);
+                catid = cursor.getString(cursor.getColumnIndex(CATID));
             }
         } finally {
             cursor.close();
@@ -1059,7 +1059,7 @@ public class DB extends SQLiteOpenHelper {
         String catid = null;
         try {
             if (cursor.moveToNext()) {
-                catid = cursor.getString(0);
+                catid = cursor.getString(cursor.getColumnIndex(CATID));
             }
         } finally {
             cursor.close();
