@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.apps.AppLauncher;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -302,7 +303,7 @@ public class Theme {
             return mName;
         }
 
-        public abstract Drawable getDrawable(ComponentName componentName, String uristr);
+        public abstract Drawable getDrawable(AppLauncher app);
 
         boolean hasColors() {
             return mColors.size()>0;
@@ -363,8 +364,8 @@ public class Theme {
             super(key, name, colors);
         }
         @Override
-        public Drawable getDrawable(ComponentName componentName, String uristr) {
-            return iconsHandler.getDefaultAppDrawable(componentName, uristr);
+        public Drawable getDrawable(AppLauncher app) {
+            return iconsHandler.getDefaultAppDrawable(app);
         }
 
     }
@@ -381,12 +382,12 @@ public class Theme {
         }
 
         @Override
-        public Drawable getDrawable(ComponentName componentName, String uristr) {
+        public Drawable getDrawable(AppLauncher app) {
 
 
             //Log.d(TAG, "getDrawable called for " + componentName.getPackageName());
 
-            Drawable app_icon = iconsHandler.getDefaultAppDrawable(componentName, uristr);
+            Drawable app_icon = iconsHandler.getDefaultAppDrawable(app);
 
 
             int mask_color = prefs.getInt("icon_tint", getColor(Thing.Mask));
@@ -422,18 +423,18 @@ public class Theme {
         }
 
         @Override
-        public Drawable getDrawable(ComponentName componentName, String uristr) {
+        public Drawable getDrawable(AppLauncher app) {
 
             //Log.d(TAG, "getDrawable called for " + componentName.getPackageName());
 
-            Drawable app_icon = iconsHandler.getDefaultAppDrawable(componentName, uristr);
+            Drawable app_icon = iconsHandler.getDefaultAppDrawable(app);
 
             app_icon = app_icon.mutate();
 
 
             PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
 
-            int color = Math.abs(componentName.getPackageName().hashCode()) % mFGColors.length;
+            int color = Math.abs(app.getComponentName().getPackageName().hashCode()) % mFGColors.length;
             app_icon.setColorFilter(mFGColors[color], mode);
 
             return app_icon;

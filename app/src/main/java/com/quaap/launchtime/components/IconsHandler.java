@@ -19,6 +19,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.quaap.launchtime.apps.AppLauncher;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -118,7 +120,7 @@ public class IconsHandler {
         return theme.isBuiltinThemeIconTintable(packageName);
     }
 
-    public Drawable getCustomIcon(ComponentName componentName, String uristr) {
+    public Drawable getCustomIcon(ComponentName componentName) {
         Drawable app_icon = null;
         Bitmap custombitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Custom);
         if (custombitmap != null) {
@@ -127,36 +129,39 @@ public class IconsHandler {
         return  app_icon;
     }
 
-    public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr) {
-        return getDefaultAppDrawable(componentName, uristr, false);
+    public Drawable getDefaultAppDrawable(AppLauncher app) {
+        return getDefaultAppDrawable(app, false);
     }
 
-    public Drawable getDefaultAppDrawable(ComponentName componentName, String uristr, boolean nodefault) {
+    public Drawable getDefaultAppDrawable(AppLauncher app, boolean nodefault) {
 
         Drawable app_icon = null;
 
         try {
-            app_icon = getCustomIcon(componentName, uristr);
+            app_icon = getCustomIcon(app.getComponentName());
+
+            ComponentName baseComponentName = app.getBaseComponentName();
+
 
             if (app_icon == null) {
-
+                String uristr = app.getLinkUri();
                 Intent intent;
                 if (uristr != null) {
                     if (uristr.equals("")) {
-                        intent = new Intent(componentName.getClassName());
+                        intent = new Intent(baseComponentName.getClassName());
                     } else {
-                        intent = new Intent(componentName.getClassName(), Uri.parse(uristr));
+                        intent = new Intent(baseComponentName.getClassName(), Uri.parse(uristr));
                     }
 
                 } else {
                     intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setClassName(componentName.getPackageName(), componentName.getClassName());
+                    intent.setClassName(baseComponentName.getPackageName(), baseComponentName.getClassName());
                 }
 
                 try {
                     app_icon = pm.getActivityIcon(intent);
                 } catch (Exception | OutOfMemoryError e) {
-                    Log.e("IconLookup", "Couldn't get icon for " + componentName.getClassName(), e);
+                    Log.e("IconLookup", "Couldn't get icon for " + baseComponentName.getClassName(), e);
                 }
             }
 
@@ -164,13 +169,13 @@ public class IconsHandler {
                 try {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-                        LauncherActivityInfo info = launcher.getActivityList(componentName.getPackageName(), android.os.Process.myUserHandle()).get(0);
+                        LauncherActivityInfo info = launcher.getActivityList(baseComponentName.getPackageName(), android.os.Process.myUserHandle()).get(0);
                         app_icon = info.getBadgedIcon(0);
                     } else {
-                        app_icon = pm.getActivityIcon(componentName);
+                        app_icon = pm.getActivityIcon(baseComponentName);
                     }
                 } catch (NameNotFoundException | IndexOutOfBoundsException e) {
-                    Log.e(TAG, "Unable to found component " + componentName.toString() + e);
+                    Log.e(TAG, "Unable to found component " + baseComponentName.toString() + e);
                     return null;
                 }
             }
@@ -179,10 +184,10 @@ public class IconsHandler {
                 app_icon = pm.getDefaultActivityIcon();
             }
 
-            Bitmap bitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Shortcut);
+            Bitmap bitmap = SpecialIconStore.loadBitmap(ctx, app.getComponentName(), SpecialIconStore.IconType.Shortcut);
 
             if (bitmap != null && app_icon!=null) {
-                Log.d(TAG, "Got special icon for " + componentName.getClassName());
+                Log.d(TAG, "Got special icon for " + app.getComponentName().getClassName());
                 try {
                     Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
                     Canvas canvas = new Canvas(newbm);
@@ -196,7 +201,7 @@ public class IconsHandler {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "Exception getting app icon for " + componentName , e);
+            Log.e(TAG, "Exception getting app icon for " + app.getComponentName() , e);
             if (app_icon == null && !nodefault)  {
                 app_icon = pm.getDefaultActivityIcon();
             }
@@ -209,21 +214,18 @@ public class IconsHandler {
     /**
      * Get or generate icon for an app
      */
-    public Drawable getDrawableIconForPackage(ComponentName componentName, String uristr) {
-//        // system icons, nothing to do
-//        if (iconsPackPackageName.equalsIgnoreCase(DEFAULT_PACK)) {
-//           // Log.d(TAG, "getDrawableIconForPackage called for " + componentName);
-//            return getDefaultAppDrawable(componentName, uristr);
-//        }
+    public Drawable getDrawableIconForPackage(AppLauncher app) {
 
         for (String key: theme.getBuiltinIconThemes().keySet()) {
 
             if (iconsPackPackageName.equalsIgnoreCase(key)) {
-                return theme.getBuiltinTheme(key).getDrawable(componentName, uristr);
+                return theme.getBuiltinTheme(key).getDrawable(app);
             }
         }
 
-        Drawable icon = getCustomIcon(componentName, uristr);
+        ComponentName componentName = app.getComponentName();
+
+        Drawable icon = getCustomIcon(componentName);
 
         if (icon!=null) return  icon;
 
@@ -235,7 +237,7 @@ public class IconsHandler {
         if (systemIcon != null)
             return systemIcon;
 
-        systemIcon = this.getDefaultAppDrawable(componentName, uristr);
+        systemIcon = this.getDefaultAppDrawable(app);
         if (systemIcon instanceof BitmapDrawable) {
             Drawable generated = iconPack.generateBitmap(systemIcon);
             cacheStoreDrawable(componentName.toString(), generated);

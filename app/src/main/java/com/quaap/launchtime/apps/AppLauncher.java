@@ -319,7 +319,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
                     if (uristr == null) uristr = "";
                 }
 
-                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(getBaseComponentName(), uristr);
+                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(AppLauncher.this);
 
 
                 if (app_icon == null) {

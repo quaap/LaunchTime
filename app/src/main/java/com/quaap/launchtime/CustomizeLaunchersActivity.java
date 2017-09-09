@@ -120,7 +120,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
                     for (final AppLauncher app: apps) {
 
-                        if (!app.isNormalApp()) continue;
+                        if (app.isWidget()) continue;
 
                         handler.post(new Runnable() {
                             @Override
@@ -147,10 +147,10 @@ public class CustomizeLaunchersActivity extends Activity {
                                 ilp.setMargins(12,12,24,12);
                                 iconView.setLayoutParams(ilp);
 
-                                Drawable icon = ich.getCustomIcon(app.getComponentName(), app.getLinkUri());
+                                Drawable icon = ich.getCustomIcon(app.getComponentName());
 
                                 if (icon == null) {
-                                    icon = ich.getDrawableIconForPackage( app.getBaseComponentName(), app.getLinkUri());
+                                    icon = ich.getDrawableIconForPackage(app);
                                 }
 
                                 iconView.setImageDrawable(icon);
@@ -378,7 +378,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
             IconsHandler ich = GlobState.getIconsHandler(this);
 
-            Drawable icon = ich.getDrawableIconForPackage( mAppClicked.getBaseComponentName(), mAppClicked.getLinkUri());
+            Drawable icon = ich.getDrawableIconForPackage(mAppClicked);
 
             mClickedIconView.setImageDrawable(icon);
 
