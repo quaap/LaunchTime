@@ -1,5 +1,6 @@
 package com.quaap.launchtime;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -280,6 +281,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
     }
 
+    @SuppressLint("ApplySharedPref")
     private void updateAppLabel(String labeltext) {
         DB db = GlobState.getGlobState(CustomizeLaunchersActivity.this).getDB();
         AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
@@ -292,7 +294,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int num = prefs.getInt("icon-update", 0);
-        prefs.edit().putInt("icon-update", num+1).apply();
+        prefs.edit().putInt("icon-update", num+1).commit();
     }
 
 
@@ -369,6 +371,7 @@ public class CustomizeLaunchersActivity extends Activity {
         }
     }
 
+    @SuppressLint("ApplySharedPref")
     private void updateBitmap(Bitmap bitmap) {
         if (bitmap==null) {
             SpecialIconStore.deleteBitmap(this, mAppClicked.getComponentName(),SpecialIconStore.IconType.Custom);
@@ -390,7 +393,7 @@ public class CustomizeLaunchersActivity extends Activity {
         AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int num = prefs.getInt("icon-update", 0);
-        prefs.edit().putInt("icon-update", num+1).apply();
+        prefs.edit().putInt("icon-update", num+1).commit();
     }
 
     protected class IconTypeDialog implements DialogInterface.OnClickListener,

@@ -13,6 +13,7 @@ package com.quaap.launchtime;
  * See the GNU General Public License for more details.
  */
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -251,6 +252,7 @@ public class MainActivity extends Activity implements
 
     private long mPauseTime = 0;
 
+    @SuppressLint("ApplySharedPref")
     @Override
     protected void onPause() {
         Log.d(TAG, "onPause");
@@ -262,7 +264,7 @@ public class MainActivity extends Activity implements
                 .putInt("scrollpos" + mCategory, mIconSheetScroller.getScrollY())
                 .putString("category", mCategory)
                 .putLong("pausetime", System.currentTimeMillis())
-                .apply();
+                .commit();
 
         //close our search cursor, if needed
         mSearchBox.closeSeachAdapter();
@@ -390,7 +392,7 @@ public class MainActivity extends Activity implements
                             if (repop2) mQuickRow.repopulate();
 
                         }
-                    }, 100);
+                    }, 200);
 
 
                     if (key.equals("prefs_toddler_lock")) {
@@ -2503,9 +2505,10 @@ public class MainActivity extends Activity implements
         }
     };
 
+    @SuppressLint("ApplySharedPref")
     private void deactivateChildLock() {
         mChildLock = false;
-        mAppPreferences.edit().putBoolean("prefs_toddler_lock", false).apply();
+        mAppPreferences.edit().putBoolean("prefs_toddler_lock", false).commit();
         kidaccumecode = "";
         checkChildLock();
     }

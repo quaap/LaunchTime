@@ -1,6 +1,7 @@
 package com.quaap.launchtime.db;
 
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
@@ -1214,6 +1215,7 @@ public class DB extends SQLiteOpenHelper {
         return restore(srcFile);
     }
 
+    @SuppressLint("ApplySharedPref")
     private synchronized boolean restore(File srcFile) {
 
         boolean ret = false;
@@ -1230,9 +1232,9 @@ public class DB extends SQLiteOpenHelper {
                 FsTools.loadSharedPreferencesFromFile(mContext.getSharedPreferences("default", Context.MODE_PRIVATE), mContext.getFileStreamPath("default.prefs"));
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-                prefs.edit().putBoolean("prefsUpdate", true).apply();
+                prefs.edit().putBoolean("prefsUpdate", true).commit();
                 FsTools.loadSharedPreferencesFromFile(prefs, mContext.getFileStreamPath("main.prefs"));
-                prefs.edit().putBoolean("prefsUpdate", false).apply();
+                prefs.edit().putBoolean("prefsUpdate", false).commit();
 
 
                 close();

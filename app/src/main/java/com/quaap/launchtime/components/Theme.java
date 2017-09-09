@@ -1,5 +1,6 @@
 package com.quaap.launchtime.components;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,6 +33,7 @@ import java.util.Map;
  * See the GNU General Public License for more details.
  */
 
+@SuppressLint("ApplySharedPref")
 public class Theme {
 
 
@@ -189,12 +191,13 @@ public class Theme {
     }
 
 
+
     public void resetUserColors() {
 
 
         SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
 
-        prefs.edit().putBoolean("prefsUpdate", true).apply();
+        prefs.edit().putBoolean("prefsUpdate", true).commit();
         SharedPreferences.Editor appedit = prefs.edit();
 
         try {
@@ -208,9 +211,9 @@ public class Theme {
 
         } finally {
             if (appedit.commit()) {
-                prefs.edit().putBoolean("prefsUpdate", false).apply();
+                prefs.edit().putBoolean("prefsUpdate", false).commit();
             }
-            themeedit.apply();
+            themeedit.commit();
         }
     }
 
@@ -228,7 +231,7 @@ public class Theme {
             }
 
         } finally {
-            themeedit.apply();
+            themeedit.commit();
         }
     }
 
@@ -237,7 +240,7 @@ public class Theme {
         Log.d("Theme", "restoreUserColors");
         SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
 
-        prefs.edit().putBoolean("prefsUpdate", true).apply();
+        prefs.edit().putBoolean("prefsUpdate", true).commit();
 
         SharedPreferences.Editor appedit = prefs.edit();
 
@@ -249,7 +252,7 @@ public class Theme {
             }
         } finally {
             if (appedit.commit()) {
-                prefs.edit().putBoolean("prefsUpdate", false).apply();
+                prefs.edit().putBoolean("prefsUpdate", false).commit();
             }
         }
         return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
@@ -324,7 +327,7 @@ public class Theme {
             Log.d("Theme", "applyTheme");
 
             SharedPreferences appprefs = prefs;
-            prefs.edit().putBoolean("prefsUpdate", true).apply();
+            prefs.edit().putBoolean("prefsUpdate", true).commit();
 
             SharedPreferences.Editor appedit = appprefs.edit();
             try {
@@ -340,7 +343,7 @@ public class Theme {
                 }
             } finally {
                 if (appedit.commit()) {
-                    prefs.edit().putBoolean("prefsUpdate", false).apply();
+                    prefs.edit().putBoolean("prefsUpdate", false).commit();
                 }
             }
 
