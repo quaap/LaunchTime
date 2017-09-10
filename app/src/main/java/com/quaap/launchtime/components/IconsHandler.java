@@ -139,30 +139,29 @@ public class IconsHandler {
 
         try {
             app_icon = getCustomIcon(app.getComponentName());
+            if (app_icon!=null) return app_icon;
 
             ComponentName baseComponentName = app.getBaseComponentName();
 
 
-            if (app_icon == null) {
-                String uristr = app.getLinkUri();
-                Intent intent;
-                if (uristr != null) {
-                    if (uristr.equals("")) {
-                        intent = new Intent(baseComponentName.getClassName());
-                    } else {
-                        intent = new Intent(baseComponentName.getClassName(), Uri.parse(uristr));
-                    }
-
+            String uristr = app.getLinkUri();
+            Intent intent;
+            if (uristr != null) {
+                if (uristr.equals("")) {
+                    intent = new Intent(baseComponentName.getClassName());
                 } else {
-                    intent = new Intent(Intent.ACTION_MAIN);
-                    intent.setClassName(baseComponentName.getPackageName(), baseComponentName.getClassName());
+                    intent = new Intent(baseComponentName.getClassName(), Uri.parse(uristr));
                 }
 
-                try {
-                    app_icon = pm.getActivityIcon(intent);
-                } catch (Exception | OutOfMemoryError e) {
-                    Log.e("IconLookup", "Couldn't get icon for " + baseComponentName.getClassName(), e);
-                }
+            } else {
+                intent = new Intent(Intent.ACTION_MAIN);
+                intent.setClassName(baseComponentName.getPackageName(), baseComponentName.getClassName());
+            }
+
+            try {
+                app_icon = pm.getActivityIcon(intent);
+            } catch (Exception | OutOfMemoryError e) {
+                Log.e("IconLookup", "Couldn't get icon for " + baseComponentName.getClassName(), e);
             }
 
             if (app_icon == null) {
