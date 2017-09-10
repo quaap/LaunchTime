@@ -20,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.quaap.launchtime.apps.AppLauncher;
+import com.quaap.launchtime.apps.LaunchApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -143,22 +144,8 @@ public class IconsHandler {
 
             ComponentName baseComponentName = app.getBaseComponentName();
 
-
-            String uristr = app.getLinkUri();
-            Intent intent;
-            if (uristr != null) {
-                if (uristr.equals("")) {
-                    intent = new Intent(baseComponentName.getClassName());
-                } else {
-                    intent = new Intent(baseComponentName.getClassName(), Uri.parse(uristr));
-                }
-
-            } else {
-                intent = new Intent(Intent.ACTION_MAIN);
-                intent.setClassName(baseComponentName.getPackageName(), baseComponentName.getClassName());
-            }
-
             try {
+                Intent intent = LaunchApp.getAppIntent(app);
                 app_icon = pm.getActivityIcon(intent);
             } catch (Exception | OutOfMemoryError e) {
                 Log.e("IconLookup", "Couldn't get icon for " + baseComponentName.getClassName(), e);
@@ -186,7 +173,7 @@ public class IconsHandler {
             Bitmap bitmap = SpecialIconStore.loadBitmap(ctx, app.getComponentName(), SpecialIconStore.IconType.Shortcut);
 
             if (bitmap != null && app_icon!=null) {
-                Log.d(TAG, "Got special icon for " + app.getComponentName().getClassName());
+                //Log.d(TAG, "Got special icon for " + app.getComponentName().getClassName());
                 try {
                     Bitmap newbm = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
                     Canvas canvas = new Canvas(newbm);

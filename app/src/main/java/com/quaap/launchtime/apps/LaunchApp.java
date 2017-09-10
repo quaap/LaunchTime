@@ -78,43 +78,40 @@ public class LaunchApp {
         //showButtonBar(false, true);
     }
 
-    public Intent getAppIntent(final AppLauncher app) {
+    public static Intent getAppIntent(final AppLauncher app) {
         String activityname = app.getLinkBaseActivityName();
         String packagename = app.getPackageName();
-        String uristr = null;
+
+        String uristr = app.getLinkUri();
         Uri uri = null;
-
-        if (app.isLink()) {
-            uristr = app.getLinkUri();
-            if (uristr!=null) {
-                uri = Uri.parse(uristr);
-                if (app.isAppLink()) {
-                    uri = null;
-                }
-            }
-
-        }
-        // Log.d(TAG, app.getActivityName() + " " + app.getPackageName() + " " + uristr);
         Intent intent;
-        // is Link is a shortcut?
+        if (uristr != null && !uristr.equals("")) {
+            uri = Uri.parse(uristr);
+        }
+
         if (app.isActionLink()) {
             //Change "CALL" to "DIAL" so we can avoid needing the
             // android.permission.CALL_PHONE permission
             if (activityname.startsWith("android.intent.action.CALL")) {
                 activityname = "android.intent.action.DIAL";
             }
-            //build an activity-specific intent with the uri
-            intent = new Intent(activityname, uri);
-        } else {
-            //regualt activity, start with MAIN
-            if (uristr == null) {
-                intent = new Intent(Intent.ACTION_MAIN);
-            } else {
-                intent = new Intent(Intent.ACTION_MAIN, uri);
-            }
-            intent.setClassName(packagename, activityname);
-        }
 
+            if (uri==null) {
+                intent = new Intent(activityname);
+            } else {
+                intent = new Intent(activityname, uri);
+            }
+        } else {
+            intent = new Intent();
+            intent.setClassName(packagename, activityname);
+            if (uri!=null) {
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setData(uri);
+            } else {
+                intent.setAction(Intent.ACTION_MAIN);
+            }
+        }
+       // Log.d("launch", activityname + "  " + uristr);
         //needed to place in the open apps list
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
