@@ -232,17 +232,16 @@ public class FsTools {
      * @param files first files are source, last file is destination file.
      * @return
      */
-    public static File compressFiles(File ... files) {
+    public static File compressFiles(File destFile, File ... files) {
 
-        if (files.length<2) throw new IllegalArgumentException("Need at least one source file and exactly one destination file.");
-        File destFile = files[files.length-1];
+        if (files.length<1) throw new IllegalArgumentException("Need at least one source file and exactly one destination file.");
         if (destFile.exists() && !destFile.isFile()) throw new IllegalArgumentException("Destination must be a normal file");
 
         try {
             ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(destFile));
             try {
 
-                for (int i=0; i< files.length-1; i++) {
+                for (int i=0; i< files.length; i++) {
                     InputStream fis = new FileInputStream(files[i]);
                     try {
 

@@ -11,6 +11,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes
@@ -67,7 +69,7 @@ public class SpecialIconStore {
             bitmap = loadBitmap(context, makeSafeName(cname, null));
         }
         if (bitmap == null) {
-            bitmap = loadBitmap(context, makeSafeName(cname.getClassName()));
+            bitmap = loadBitmap(context, makeSafeName(cname.getClassName()) + ".png");
         }
 
 //        if (bitmap != null) {
@@ -77,11 +79,24 @@ public class SpecialIconStore {
     }
 
 
+    public static List<File> getAllIcons(Context context) {
+        List<File> files = new ArrayList<>();
+        for (String fn: context.fileList()) {
+            if (fn.endsWith(".png")) {
+                Log.d("SpecialIconStore", " I see file " + fn);
+                files.add(new File(context.getFilesDir(), fn));
+            }
+        }
+        return files;
+    }
+
     private static String makeSafeName(ComponentName cname, IconType iconType) {
         String name = cname.getPackageName() + ":" + cname.getClassName();
 
         String fname = makeSafeName(name);
         if (iconType!=null) fname += "." + iconType.name();
+
+        fname +=  ".png";
 
         return fname;
     }
@@ -103,7 +118,7 @@ public class SpecialIconStore {
             }
 
             //Log.d("Icon", "name " + name + " => " + hexString);
-            return hexString.toString() + ".png";
+            return hexString.toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -20,6 +20,7 @@ import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.FsTools;
+import com.quaap.launchtime.components.SpecialIconStore;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -1180,19 +1181,20 @@ public class DB extends SQLiteOpenHelper {
             optionalName = "";
         }
 
-        File srcFile = mContext.getDatabasePath(DATABASE_NAME);
+        List<File> files = SpecialIconStore.getAllIcons(mContext);
 
+        files.add(mContext.getDatabasePath(DATABASE_NAME));
 
-        File themePrefs = FsTools.saveSharedPreferencesToFile(mContext.getSharedPreferences("theme", Context.MODE_PRIVATE), mContext.getFileStreamPath("themes.prefs"));
+        files.add(FsTools.saveSharedPreferencesToFile(mContext.getSharedPreferences("theme", Context.MODE_PRIVATE), mContext.getFileStreamPath("themes.prefs")));
 
-        File defPrefs = FsTools.saveSharedPreferencesToFile(mContext.getSharedPreferences("default", Context.MODE_PRIVATE), mContext.getFileStreamPath("default.prefs"));
+        files.add(FsTools.saveSharedPreferencesToFile(mContext.getSharedPreferences("default", Context.MODE_PRIVATE), mContext.getFileStreamPath("default.prefs")));
 
-        File mainPrefs = FsTools.saveSharedPreferencesToFile(PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext()), mContext.getFileStreamPath("main.prefs"));
+        files.add(FsTools.saveSharedPreferencesToFile(PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext()), mContext.getFileStreamPath("main.prefs")));
 
 
         File destFile = mContext.getFileStreamPath(BK_PRE + (new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault()).format(new Date())) + optionalName + ".zip");
 
-        return FsTools.compressFiles(srcFile, mainPrefs, defPrefs, themePrefs, destFile);
+        return FsTools.compressFiles(destFile, files.toArray(new File[0]));
     }
 
 
@@ -1225,7 +1227,7 @@ public class DB extends SQLiteOpenHelper {
 
             if (srcFile.getName().toLowerCase().endsWith(".zip")) {
 
-                FsTools.uncompressFiles(srcFile, mContext.getFilesDir());
+                List<File> files = FsTools.uncompressFiles(srcFile, mContext.getFilesDir());
 
 
                 FsTools.loadSharedPreferencesFromFile(mContext.getSharedPreferences("theme", Context.MODE_PRIVATE), mContext.getFileStreamPath("themes.prefs"));

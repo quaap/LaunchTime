@@ -87,6 +87,7 @@ import com.quaap.launchtime.ui.SearchBox;
 import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
