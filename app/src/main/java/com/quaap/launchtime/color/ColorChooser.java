@@ -75,6 +75,8 @@ public class ColorChooser extends FrameLayout {
         colorBright.setOnSeekBarChangeListener(colorChange);
         colorAlpha.setOnSeekBarChangeListener(colorChange);
 
+
+        colorHex.setCursorVisible(false);
         colorHex.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -99,9 +101,16 @@ public class ColorChooser extends FrameLayout {
                 Integer color = checkEditorColor();
                 if (color!=null) {
                     setColor(color);
+                    colorHex.setCursorVisible(false);
                     return false;
                 }
                 return true;
+            }
+        });
+        colorHex.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                colorHex.setCursorVisible(true);
             }
         });
 
@@ -165,19 +174,16 @@ public class ColorChooser extends FrameLayout {
 
     public void setColor(int color) {
 
-        colorHex.setText(String.format("#%08X", color));
-
         int red = Color.red(color);
         int green = Color.green(color);
         int blue = Color.blue(color);
         int bright = 255;
 
-        int top = 255 - Math.max(Math.max(red,green), blue);
-
-        bright -= top;
-        red += top;
-        green += top;
-        blue += top;
+//        int top = bright - Math.max(Math.max(red,green), blue);
+//        bright -= top/3;
+//        red += top*red/255.0;
+//        green += top*green/255.0;
+//        blue += top*blue/255.0;
 
         if (Build.VERSION.SDK_INT >= 24) {
             colorAlpha.setProgress(255 - Color.alpha(color), true);
@@ -242,7 +248,7 @@ public class ColorChooser extends FrameLayout {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
+            colorHex.setCursorVisible(false);
         }
 
         @Override
