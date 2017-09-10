@@ -79,7 +79,7 @@ public class Theme {
         for (int i=1; i<=3; i++) {
             BuiltinTheme u = new MonochromeTheme("user" + i, ctx.getString(R.string.user_theme, i))
                     .setColor(Thing.Mask, Color.TRANSPARENT)
-                    .setColor(Thing.Text, Color.argb(255,200,200,200))
+                    .setColor(Thing.Text, Color.argb(255,220,220,220))
                     .setColor(Thing.AltText, Color.WHITE)
                     .setColor(Thing.Background, ubcolors[i-1])
                     .setColor(Thing.AltBackground, ucolors[i-1]);
@@ -89,7 +89,7 @@ public class Theme {
 
         BuiltinTheme bwicon = new MonochromeTheme("bwicon", ctx.getString(R.string.theme_bw))
                 .setColor(Thing.Mask, Color.WHITE)
-                .setColor(Thing.Text, Color.argb(255,200,200,200))
+                .setColor(Thing.Text, Color.argb(255,220,220,220))
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.BLACK)
                 .setColor(Thing.AltBackground, Color.parseColor("#ff222222"));
