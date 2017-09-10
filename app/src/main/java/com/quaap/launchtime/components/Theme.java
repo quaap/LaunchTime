@@ -211,7 +211,7 @@ public class Theme {
 
         } finally {
             if (appedit.commit()) {
-                prefs.edit().putBoolean("prefsUpdate", false).commit();
+                prefs.edit().remove("prefsUpdate").commit();
             }
             themeedit.commit();
         }
@@ -252,7 +252,7 @@ public class Theme {
             }
         } finally {
             if (appedit.commit()) {
-                prefs.edit().putBoolean("prefsUpdate", false).commit();
+                prefs.edit().remove("prefsUpdate").commit();
             }
         }
         return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
@@ -343,7 +343,7 @@ public class Theme {
                 }
             } finally {
                 if (appedit.commit()) {
-                    prefs.edit().putBoolean("prefsUpdate", false).commit();
+                    prefs.edit().remove("prefsUpdate").commit();
                 }
             }
 

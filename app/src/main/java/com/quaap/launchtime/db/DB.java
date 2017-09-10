@@ -1234,7 +1234,7 @@ public class DB extends SQLiteOpenHelper {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
                 prefs.edit().putBoolean("prefsUpdate", true).commit();
                 FsTools.loadSharedPreferencesFromFile(prefs, mContext.getFileStreamPath("main.prefs"));
-                prefs.edit().putBoolean("prefsUpdate", false).commit();
+                prefs.edit().remove("prefsUpdate").commit();
 
 
                 close();
