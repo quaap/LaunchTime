@@ -6,11 +6,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class ColorChooser extends FrameLayout {

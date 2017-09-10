@@ -1,7 +1,6 @@
 package com.quaap.launchtime.components;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -443,8 +442,7 @@ public class Theme {
 
     }
 
-    private Drawable convertToGrayscale(Drawable drawable)
-    {
+    private Drawable convertToGrayscale(Drawable drawable) {
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
 

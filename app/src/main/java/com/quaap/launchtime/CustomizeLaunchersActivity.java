@@ -122,6 +122,9 @@ public class CustomizeLaunchersActivity extends Activity {
 
                         if (app.isWidget()) continue;
 
+                        final boolean hasCustIcon = SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, app.getComponentName(), SpecialIconStore.IconType.Custom);
+                        final boolean hasCustLabel = db.appHasCustomLabel(app.getComponentName());
+
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -133,8 +136,6 @@ public class CustomizeLaunchersActivity extends Activity {
                                 lp.setMargins(24,12,12,12);
                                 applayout.setLayoutParams(lp);
                                 applayout.setPadding(18,6,6,6);
-                                boolean hasCustIcon = SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, app.getComponentName(), SpecialIconStore.IconType.Custom);
-                                boolean hasCustLabel = db.appHasCustomLabel(app.getComponentName());
 
                                 if (hasCustIcon || hasCustLabel) {
                                     applayout.setBackgroundColor(Color.DKGRAY);
@@ -200,6 +201,7 @@ public class CustomizeLaunchersActivity extends Activity {
                         });
 
                     }
+                    list.postInvalidate();
 
 
                 }
@@ -208,12 +210,7 @@ public class CustomizeLaunchersActivity extends Activity {
             }
         };
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadappstask.execute();
-            }
-        }, 200);
+        loadappstask.execute();
     }
 
     @Override

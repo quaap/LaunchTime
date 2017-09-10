@@ -5,9 +5,6 @@ import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by tom on 1/14/17.
  * <p>
