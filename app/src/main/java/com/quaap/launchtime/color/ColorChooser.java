@@ -166,21 +166,34 @@ public class ColorChooser extends FrameLayout {
     public void setColor(int color) {
 
         colorHex.setText(String.format("#%08X", color));
+
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        int bright = 255;
+
+        int top = 255 - Math.max(Math.max(red,green), blue);
+
+        bright -= top;
+        red += top;
+        green += top;
+        blue += top;
+
         if (Build.VERSION.SDK_INT >= 24) {
             colorAlpha.setProgress(255 - Color.alpha(color), true);
-            colorBright.setProgress(255, true);
+            colorBright.setProgress(bright, true);
 
-            colorRed.setProgress(Color.red(color), true);
-            colorGreen.setProgress(Color.green(color), true);
-            colorBlue.setProgress(Color.blue(color), true);
+            colorRed.setProgress(red, true);
+            colorGreen.setProgress(green, true);
+            colorBlue.setProgress(blue, true);
         } else {
 
             animateProgress(colorAlpha, 255 - Color.alpha(color));
-            animateProgress(colorBright, 255);
+            animateProgress(colorBright, bright);
 
-            animateProgress(colorRed, Color.red(color));
-            animateProgress(colorGreen, Color.green(color));
-            animateProgress(colorBlue, Color.blue(color));
+            animateProgress(colorRed, red);
+            animateProgress(colorGreen, green);
+            animateProgress(colorBlue, blue);
 
         }
     }
