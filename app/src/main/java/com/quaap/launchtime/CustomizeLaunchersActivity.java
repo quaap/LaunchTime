@@ -201,7 +201,7 @@ public class CustomizeLaunchersActivity extends Activity {
                         });
 
                     }
-                    list.postInvalidate();
+                    //list.postInvalidate();
 
 
                 }
@@ -256,12 +256,14 @@ public class CustomizeLaunchersActivity extends Activity {
                 }
             }
         });
-        builder.setNeutralButton(R.string.clear, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                updateAppLabel(null);
-            }
-        });
+        if (GlobState.getGlobState(this).getDB().appHasCustomLabel(mAppClicked.getComponentName())) {
+            builder.setNeutralButton(R.string.clear, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    updateAppLabel(null);
+                }
+            });
+        }
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -271,7 +273,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
         AlertDialog dialog = builder.show();
 
-        if (dialog.getWindow()!=null) dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        //if (dialog.getWindow()!=null) dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 //        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 //        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
@@ -281,11 +283,13 @@ public class CustomizeLaunchersActivity extends Activity {
     @SuppressLint("ApplySharedPref")
     private void updateAppLabel(String labeltext) {
         DB db = GlobState.getGlobState(CustomizeLaunchersActivity.this).getDB();
+        mAppClicked.setLabel(labeltext);
         AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
         db.setAppCustomLabel(mAppClicked.getActivityName(), mAppClicked.getPackageName(), labeltext);
-        AppLauncher app = db.getApp(mAppClicked.getComponentName());
+        mAppClicked = db.getApp(mAppClicked.getComponentName());
 
-        mClickedTextView.setText(app.getLabel());
+
+        mClickedTextView.setText(mAppClicked.getLabel());
 
         setItemModified(mClickedTextView, labeltext!=null && !labeltext.isEmpty());
 
@@ -405,7 +409,9 @@ public class CustomizeLaunchersActivity extends Activity {
             mAdapter.add(getString(R.string.custom_icon_select_picture));
             mAdapter.add(getString(R.string.custom_icon_crop_picture));
             mAdapter.add(getString(R.string.custom_icon_icon_packs));
-            mAdapter.add(getString(R.string.custom_icon_clear_icon));
+            if (SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, mAppClicked.getComponentName(), SpecialIconStore.IconType.Custom)) {
+                mAdapter.add(getString(R.string.custom_icon_clear_icon));
+            }
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(CustomizeLaunchersActivity.this);
             builder.setTitle(R.string.custom_icon_select_icon_type);

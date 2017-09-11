@@ -67,7 +67,7 @@ public class ChooseIconFromPackActivity extends Activity {
 
 
         final Spinner iconpackSpinner = (Spinner) findViewById(R.id.icon_pack_spinner);
-        final MapAdapter<String,String> adapter = new MapAdapter<>(this, android.R.layout.simple_spinner_item, iconpacks2);
+        final MapAdapter<String,String> adapter = new MapAdapter<>(this, android.R.layout.simple_list_item_1, iconpacks2);
         iconpackSpinner.setAdapter(adapter);
 
         iconpackSpinner.setSelection(0);
