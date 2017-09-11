@@ -58,7 +58,7 @@ public class MsgBox {
                     );
 
                 }
-            }, 3000);
+            }, 3500);
             prefs.edit().putInt("seennews", newsnum).apply();
         }
 

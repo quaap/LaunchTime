@@ -768,10 +768,10 @@ public class MainActivity extends Activity implements
                     startActivity(help);
                 }
             }, 3000);
-        } else {
-
-            MsgBox.showNewsMessage(this, mPrefs);
         }
+
+        MsgBox.showNewsMessage(this, mPrefs);
+
     }
 
 
