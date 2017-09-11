@@ -24,10 +24,21 @@ Features
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
 
+New features in v0.7
+-----------
+* Customize icons and labels.
+* Built-in themes.
+* Icon tinting.
+* Backups save customization.
+* Better app shortcuts.
+* Better color selector.
+* Machine translations for German, French, Spanish, and others (expert translations wanted!).
+
 New features in v0.6
 -----------
 * Beta support for Android 7.1 [shortcut actions](https://developer.android.com/guide/topics/ui/shortcuts.html)
 * Beta support for adw/nova/apex iconpacks
+* Customize icon sizes.
 
 
 Categorization
