@@ -104,11 +104,18 @@ public class ChooseIconFromPackActivity extends Activity {
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bitmap bitmap = ((BitmapDrawable) (adapter.getItem(position))).getBitmap();
-                Intent returndata = new Intent();
-                returndata.putExtra("data", bitmap);
-                setResult(RESULT_OK, returndata);
-                finish();
+                try {
+                    BitmapDrawable bmdraw = (BitmapDrawable) (adapter.getItem(position));
+                    if (bmdraw != null) {
+                        Bitmap bitmap = bmdraw.getBitmap();
+                        Intent returndata = new Intent();
+                        returndata.putExtra("data", bitmap);
+                        setResult(RESULT_OK, returndata);
+                        finish();
+                    }
+                } catch (Exception e) {
+                    Log.e("ChooseIconPack", e.getMessage(), e);
+                }
             }
         });
 
