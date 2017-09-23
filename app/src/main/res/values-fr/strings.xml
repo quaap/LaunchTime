@@ -189,7 +189,7 @@
     <string name="reset_database">Reset database</string>
     <string name="link">Raccourcit</string>
     
-    <string name="theme_bw">Noir & Blanc</string>
+    <string name="theme_bw">Noir &amp; Blanc</string>
     <string name="theme_termcap">Termcap</string>
     <string name="theme_coolblue">Bleu Frais</string>
     <string name="theme_redplanet">Planète rouge</string>
