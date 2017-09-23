@@ -6,198 +6,221 @@
     <!-- Note: il y a quelque translatable chaînes en prefs.xml Aussi -->
 
     <string name="app_name">LaunchTime</string>
-
-
-    <string name="remove_launcher">Il enlève</string>
-    <string name="uninstall_app">Uninstall</string>
-    <string name="app_was_uninstalled">L\'Application était uninstalled</string>
-    <string name="uninstall_canceled">Uninstall A annulé</string>
-    <string name="could_not_uninstall">L\'Application ne pourrait pas être uninstalled</string>
-
-    <string name="category_Search">Recherche</string>
+     <!-- Action sur les application -->
+    <string name="remove_launcher">Enlever l\'application</string>
+    <string name="uninstall_app">Désinstaller</string>
+    <string name="app_was_uninstalled">L\'Application a été désinstallée/string>
+    <string name="uninstall_canceled">Désinstallation annulée/string>
+    <string name="could_not_uninstall">L\'Application n\'as pas pu être désintallée</string>
+   <!-- Nom des catégories -->
+    <string name="category_Search">Rechercher</string>
     <string name="category_Talk">Comm.</string>
     <string name="category_Games">Jeux</string>
     <string name="category_Internet">Internet</string>
-    <string name="category_Media">Audio</string>
+    <string name="category_Media">Média</string>
     <string name="category_Graphics">Graphiques</string>
-    <string name="category_Utilities">Utilités</string>
-    <string name="category_Other">Autrui</string>
-    <string name="category_Settings">Settings</string>
+    <string name="category_Utilities">Outils</string>
+    <string name="category_Other">Autres</string>
+    <string name="category_Settings">Config.</string>
     <string name="category_Hidden">Caché</string>
-
-    <string name="category_Search_full">La Recherche &amp; Récente</string>
+   <!-- Nom complet des catégories -->
+    <string name="category_Search_full">Rechercher &amp; Récents</string>
     <string name="category_Talk_full">Communication</string>
-    <string name="category_Games_full">Jeux &amp; Amusements</string>
+    <string name="category_Games_full">Jeux &amp; Divertissements</string>
     <string name="category_Internet_full">Internet</string>
-    <string name="category_Media_full">Musique &amp; Audio</string>
+    <string name="category_Media_full">Média &amp; Audio</string>
     <string name="category_Graphics_full">Vidéo &amp; Graphiques</string>
-    <string name="category_Utilities_full">Outils &amp; Utilités</string>
-    <string name="category_Other_full">Autrui</string>
-    <string name="category_Settings_full">Settings &amp; Système</string>
+    <string name="category_Utilities_full">Outils</string>
+    <string name="category_Other_full">Autres</string>
+    <string name="category_Settings_full">Configuration &amp; Système</string>
     <string name="category_Hidden_full">Caché</string>
-
-
-    <string name="search_apps">Recherche votre Apps</string>
-    <string name="recent_apps">Récent Apps</string>
-
-    <string name="sort_category">Classe\nCatégorie</string>
-    <string name="add_widgets">Il ajoute\nWidgets</string>
-    <string name="add_category">Il ajoute\nCatégorie</string>
-    <string name="rename_category">Il édite\nCatégorie</string>
-
-    <string name="remove">Il enlève</string>
-    <string name="done">Fait</string>
-    <string name="cancel">Il annule</string>
-    <string name="rename_cat">Il rebaptise Catégorie</string>
-    <string name="rename_cat2">Rebaptiser cette catégorie</string>
-    <string name="rename_cat3">Rebaptiser cette catégorie spéciale (il retiendra sa fonctionnalité antérieure)</string>
-    <string name="need_name">Tu dois donner un nom</string>
-    <string name="no_rename">il ne pourrait pas rebaptiser catégorie</string>
-    <string name="add_cat">Il ajoute Catégorie</string>
+   <!-- Texte de la catégorie rechercher-->
+    <string name="search_apps">Rechercher une application</string>
+    <string name="recent_apps">Applications récentes</string>
+    <string name="search_hint">Recherche./string>
+    <string name="widget_alreay">Ce widget est déjà en catégorie \"%s\"</string>
+   <!-- Gestion des catégories -->
+    <string name="sort_category">Classer\nCatégorie</string>
+    <string name="add_widgets">Ajouter\nWidgets</string>
+    <string name="add_category">Ajouter\nCatégorie</string>
+    <string name="rename_category">Renommer\nCatégorie</string>
+   <!-- sous menus de la gestion des catégories -->
+    <string name="sort_prompt_title">Classer les catégories par</string>
+    <string name="remove">Supprimer</string>
+    <string name="done">Valider</string>
+    <string name="cancel">Annuler</string>
+    <string name="rename_cat">Renommer catégorie</string>
+    <string name="rename_cat2">Renommer cette catégorie</string>
+    <string name="rename_cat3">Renommer cette catégorie spéciale (il retiendra sa fonctionnalité antérieure)</string>
+    <string name="need_name">Il faut donner un nom à la catégorie</string>
+    <string name="no_rename">Impossible de renommer cette catégorie</string>
+    <string name="add_cat">Ajouter une catégorie</string>
     <string name="add_cat2">Ajouter une catégorie</string>
-    <string name="no_add_cat">il ne pourrait pas ajouter catégorie</string>
-    <string name="delete_cat">Il élimine catégorie?</string>
-    <string name="delete_cat_prompt">Il t\'est sûr tu veux éliminer cette catégorie?</string>
-    <string name="delete">Il élimine</string>
-    <string name="cat_deleted">La Catégorie a éliminé. N\'importe quelles applications ont été mues à Catégorie %s</string>
-    <string name="no_delete_cat">il ne pourrait pas éliminer catégorie</string>
-
+    <string name="no_add_cat">Impossible d'ajouter cette catégorie</string>
+    <string name="delete_cat">Supprimer cette catégorie?</string>
+    <string name="delete_cat_prompt">Êtes vous sûr de vouloir supprimer cette catégorie?</string>
+    <string name="delete">Supprimer</string>
+    <string name="cat_deleted">La catégorie a été supprimée. Les applications qu'elle contenait ont été déplacer dans la catégorie %s</string>
+    <string name="no_delete_cat">Impossible de supprimer cette catégorie</string>
+   <!-- sous-menu de création ou édition d'une catégorie -->
     <string name="short_name">Nom court</string>
-    <string name="full_name">Nom plein (optionnel)</string>
-    <string name="is_tiny">Il est Minuscule</string>
-
-
+    <string name="full_name">Nom complet (optionnel)</string>
+    <string name="is_tiny">En minuscule</string>
+       
+    <!-- a propos --> <!--  -->
+    <string name="pref_about">A propos</string>
+    <string name="pref_help_about">A propos de LauchTIme</string>
+    
+    <!-- MODE-->
+    <string name="pref_todd_lock">Bloquer le menu</string>
+    <string name="pref_todd_lock_summ">Figer le menu pour éviter la suppression ou le déplacement des catégories.</string>
     <string name="pref_orient">Orientation</string>
-    <string name="pref_about">Ayuda</string>
-    <string name="pref_help_about">Ayuda et environ</string>
-
-    <string name="send_info_expl">L\'en suivant l\'information sera envoyée au developer (unique) à mieux
-        comprendre comment utilisateurs categorize son apps. Seulement à vous IP est logged.</string>
-    <string name="send">Il envoie</string>
-    <string name="send_comment">Commentaire optionnel:</string>
-    <string name="remove_data">Uncheck N\'importe quel élément ne veux pas envoyer</string>
-    <string name="sent_success">La Donnée avec succès envoyé. Thanks!</string>
-    <string name="sent_failed">Donnée tranfer a failli:</string>
-    <string name="backup_and_restore">Backup Et Restaurer</string>
-    <string name="backup_explain">Si tu as tout la façon il te plaît, ou il est environ pour faire
-        quelques changements grands, prendre un backup! Complaire note que ces backups sera éliminé si
-        tu uninstall l\'app, donc utiliser la \"Copie il a sélectionné backup à filesystem\" bouton pour sauver uns
-        veux maintenir.</string>
-    <string name="take_new_backup">Il prend nouveau backup</string>
-    <string name="restore_selected_backup">Il restaure sélectionné backup</string>
-    <string name="delete_selected_backup">Il élimine sélectionné backup</string>
-    <string name="copy_selected_backup">La Copie a sélectionné backup à filesystem</string>
-    <string name="load_a_backup">Il charge un backup de filesystem</string>
-    <string name="there_was_a_problem">Il y avait un problème</string>
+    
+    <!-- APPLICATIONS ET SYSTEME-->
+    <string name="pref_app_system">Applications et système</string>
+    <string name="pref_hide_empty_cat">Ne pas afficher les catégories vides</string>
+    <string name="prefs_new_apps_cat">Catégorisation des nouvelles applications</string>
+    <string name="prefs_empty_cats_hid">Les Catégories vides seront cachées</string>
+    <string name="prefs_empty_cats_show">Les Catégories vides seront affichée</string>
+    <string name="prefs_cat_apps">Les applications seront automatiquement catégorisés</string>
+    <string name="prefs_cat_no">Les nouvelles application seront placée dans \"Autres\"</string>
+    <string name="pref_returnhome_summ">Temps de retour à la catégorie principale : %s.</string>
+    <string name="pref_returnhome">Temps de retour à la catégorie principale/string>
+       
+    <!-- envoie de données -->
+    <string name="pref_senddat">Envoyer données application installée</string>
+    <string name="pref_senddat_summ">Envoyer les informations concernant l'emplacement des applications dans chaque
+       catégorie afin d'aider le développeur</string>
+    <string name="send_info_expl">Vous pouvez envoyer les informations concernant l'emplacement des applications dans chaque
+       catégorie afin d'aider le développeur. L'information est envoyée une seule fois et seule l'IP est enregistrée.</string>
+    <string name="send">Envoyer</string>
+    <string name="send_comment">Commentaire optionnel :</string>
+    <string name="remove_data">Décoche les éléments que vous ne voulez pas envoyer</string>
+    <string name="sent_success">Les données ont été envoyée avec succès, merci!</string>
+    <string name="sent_failed">Le transfert de donnée a échoué</string>
+    <!-- Sauvegarde et restauration -->
+    <string name="backup_and_restore">Sauvegarde et restauration</string>
+    <string name="pref_backup">Sauvegarde et restauration</string>
+    <string name="pref_backup_summ">Sauvegarder ou restaurer la configuration de LaunchTime(Catégories,
+        applications récentes, etc)</string>
+    <string name="backup_explain">Si ta configuration te plait mais que tu veux faire de grand changement, fait une sauvegarde !
+       Il faut cependant noter que la sauvegarde sera supprimée si l'installation est désinstallée. 
+       Utilisez la fonction "enregistrer la sauvegarde sur le disque pour conserver les sauvegardes en cas de désinstallation de l'application.</string>
+    <string name="take_new_backup">Faire une nouvelle sauvegarde</string>
+    <string name="restore_selected_backup">Restaurer une ancienne sauvegarde/string>
+    <string name="delete_selected_backup">Supprimer une ancienne sauvegarde</string>
+    <string name="copy_selected_backup">Enregistrer une copie de la sauvegarde sur le disque</string>
+    <string name="load_a_backup">Charger une sauvegarde depuis le disque/string>
+    <string name="there_was_a_problem">Il y a eu un problème/string>
     <string name="add_a_comment">Ajouter un commentaire</string>
-    <string name="send_error_report">Il envoie Rapport d\'Erreur</string>
-    <string name="go_to_settings">Il va À Settings</string>
-
-    <string name="show_extfs_opts">Le Spectacle externe backup options…</string>
-    <string name="hide_extfs_opts">L\'Escondrijo externe backup options…</string>
-    <string name="no_backup_selected">Aucun a sélectionné</string>
+    <string name="send_error_report">Envoyer un rapport d\'erreur</string>
+    <string name="go_to_settings">Se rendre à la configuration</string>
+    <string name="show_extfs_opts">Afficher les options de sauvegarde sur le disque...</string>
+    <string name="hide_extfs_opts">Masquer les options de sauvegarde sur le disque...</string>
+    <string name="no_backup_selected">Aucune sauvegarde sélectionnée</string>
     <string name="opt_name">Nom optionnel</string>
-    <string name="new_backup">Nouveau backup</string>
-    <string name="take_backup">Prise backup</string>
-    <string name="backup_success">Backup Réussi!</string>
-    <string name="backup_failed">Backup A failli</string>
-    <string name="select_file_restore">Il sélectionne des archives pour restaurer</string>
-    <string name="no_backup">Ne tel backup \"</string>
-    <string name="confirm_restore1">Il restaure?</string>
-    <string name="confirm_restore2">Si tu restaures, n\'importe quels changements actuels seront perdus.</string>
-    <string name="restore">Il restaure</string>
-    <string name="restore_successful">Il restaure réussi! il maintenant reprendra.</string>
-    <string name="restore_failed_rollback">Il restaure failli. En roulant derrière</string>
-    <string name="restore_failed2">Il restaure failli. Database De l\'État unknown.</string>
-    <string name="confirm_delete1">Il élimine?</string>
-    <string name="confirm_delete2">Il t\'est sûr tu veux éliminer le derrière en dessus de \'</string>
-    <string name="delete_success">Il élimine réussi!</string>
-    <string name="delete_failed">Il élimine failli</string>
-    <string name="copy_sucess">La Copie réussie!</string>
-    <string name="copy_failed">La Copie a failli</string>
-    <string name="select_save_location">Il sélectionne emplacement pour sauver</string>
+    <string name="new_backup">Nouvelle sauvegarde</string>
+    <string name="take_backup">Sauvegarder</string>
+    <string name="backup_success">Sauvegarde réussie!</string>
+    <string name="backup_failed">La sauvegarde a échouée</string>
+    <string name="select_file_restore">Sélectionne le fichier à restaurer</string>
+    <string name="no_backup">Il n'y a pas de sauvegarde"</string>
+    <string name="confirm_restore1">Confirmer la restauration ?</string>
+    <string name="confirm_restore2">La restauration de cette sauvegarde va faire perdre tous les changements récents.</string>
+    <string name="restore">Restaurer</string>
+    <string name="restore_successful">Restauration réussie.</string>
+    <string name="restore_failed_rollback">Échec de la restauration, les anciens paramètres sont conservés</string>
+    <string name="restore_failed2">Échec de la restauration,.</string>
+    <string name="confirm_delete1">Supprimer ?</string>
+    <string name="confirm_delete2">Êtes vous sûr de vouloir supprimer la sauvegarde \'</string>
+    <string name="delete_success">Suppression réussie</string>
+    <string name="delete_failed">Echec de la suppression</string>
+    <string name="copy_sucess">Copie réussie!</string>
+    <string name="copy_failed">Echec de la copie</string>
+    <string name="select_save_location">Sélectionner l\'emplacement de sauvegarde</string>
     <string name="perm_granted">Yay! Essayer votre opération une autre fois.</string>
-    <string name="perm_not_granted">Boo</string>
+    <string name="perm_not_granted">Permission d'enregistrer sur le disque refusée</string>
+       
     <string name="app">app</string>
     <string name="config">Config</string>
-    <string name="previously_deleted">Antérieurement Éliminé</string>
-    <string name="pref_senddat">Il envoie app donnée</string>
-    <string name="pref_senddat_summ">Il envoie donnée sur quelle apps est installé à l\'app
-        developer</string>
-    <string name="pref_backup">Backup Et Restaurer</string>
-    <string name="pref_backup_summ">Backup Ou restaurer LaunchTime configuration (Catégories,
-        app mandat, récent apps, etc)</string>
-    <string name="pref_system">Système Settings</string>
-    <string name="pref_system_summ">Spectacle le système settings</string>
-    <string name="pref_tabsize">Catégorie tab mesure</string>
-    <string name="pref_iconsize">Launcher Mesure</string>
-    <string name="pref_icontext">Launcher Texte couleur</string>
-    <string name="pref_tabtext">Tab Texte couleur</string>
-    <string name="pref_tabback">Tab Fond couleur</string>
-    <string name="pref_tabsel_text">Tab Texte sélectionné couleur</string>
-    <string name="pref_tabsel">Tab A sélectionné couleur</string>
-    <string name="pref_drag">Il traîne sur couleur</string>
-    <string name="choose_your_color">Choisir votre couleur</string>
+    <string name="previously_deleted">Anciennement supprimé</string>
+    <!-- Préférences système -->
+    <string name="pref_system">Préférences systèmes/string>
+    <string name="pref_system_summ">Voir les préférences système</string>
+       
+    <!-- COULEURS ET STYLES -->
+    <string name="pref_color_style">Couleurs et styles</string>
+    <string name="pref_cat_loc_text">Emplacement du menu</string>
+    <string name="pref_cat_loc">Les Catégories seront %s</string>
+    
+    <string name="pref_tabsize">Taille des catégories</string>
+    <string name="pref_iconsize">Taille du menu</string>
+    <string name="pref_icontext">Couleur du texte des applications</string>
+    <string name="pref_tabtext">Couleur du texte des catégories</string>
+    <string name="pref_tabback">Couleur de fond des catégories</string>
+    <string name="pref_tabsel_text">Couleur du texte de la catégorie actuelle</string>
+    <string name="pref_tabsel">Couleur de fond de la catégorie actuelle</string>
+    <string name="pref_drag">Couleur de fond de la catégorie sélectionnée</string>
+    <!-- sous-menu couleurs -->
+    <string name="choose_your_color">Choisissez votre couleur</string>
     <string name="red">Rouge</string>
     <string name="green">Vert</string>
     <string name="blue">Bleu</string>
     <string name="brightness">Luminosité</string>
     <string name="transparency">Transparence</string>
-    <string name="pref_color_style">Couleur Et Style</string>
-    <string name="pref_app_system">App Et Système</string>
-    <string name="pref_hide_empty_cat">Escondrijo Catégories vides</string>
-    <string name="prefs_new_apps_cat">Voiture-categorize nouveau apps</string>
-    <string name="prefs_empty_cats_hid">Les Catégories vides seront cachées</string>
-    <string name="prefs_empty_cats_show">Les Catégories vides seront montrées</string>
-    <string name="prefs_cat_apps">Apps Sera categorized</string>
-    <string name="prefs_cat_no">Apps Sera placé en \"Autrui\"</string>
-    <string name="pref_cat_loc_text">Emplacement de catégories</string>
-    <string name="pref_cat_loc">Les Catégories seront dans le %s</string>
+    
+    <string name="reset_colors_title">Remise à zéro des couleurs</string>
+    <string name="reset_color_summ">Cliquez pour remmettre les couleur du thème actuel</string>
+    <string name="colors_reset_default">Les couleurs ont étées remisent à zéro.</string>
+
+    <string name="icons_pack_desc">Choisir un thème ou un pack d'icône</string>
+    <string name="icons_pack_name">Choisir un thème ou un pack d'icône/string>
+    <string name="icons_pack_default_name">Icônes système</string>
+
+    <string name="letters">ABCDFGHJKLMNPQRSTVWXZ</string>
+
+    <string name="kid_escape_text">Appuyez sur \'%s\' pour quitter</string>
+    <string name="reset_db">Reset la base de donnée ?</string>
+    <string name="reset_db_explain">La base de donnée sera recréer et toutes les applications seront
+        réorganisée selon votre choix de \"catégorisation automatique des applications\".</string>
+    <string name="reset">Reset</string>
+    <string name="clear_recent">Éffacer les éléments récents ?</string>
+    <string name="clear">Éffacer</string>
+    <string name="reset_database">Reset database</string>
+    <string name="link">Raccourcit</string>
+    
+    <string name="theme_bw">Noir & Blanc</string>
+    <string name="theme_termcap">Termcap</string>
+    <string name="theme_coolblue">Bleu Frais</string>
+    <string name="theme_redplanet">Planète rouge</string>
+    <string name="theme_ladypink">Dame en rose</string>
+    <string name="confirm_reset_colors">Vous voulez réinitialiser les couleurs pour ce thème ?</string>
+       
+    <string name="custom_icon_clear_icon">Effacer l\'icône personnalisée</string>
+    <string name="custom_icon_crop_picture">Sélectionner et recadrer l\'image</string>
+    <string name="custom_icon_icon_packs">Sélectionnez dans le pack d\'icônes</string>
+    <string name="custom_icon_select_icon_pack">Sélectionner le pack d\'icônes</string>
+    <string name="custom_icon_select_icon_type">Sélectionnez le type d\'icône</string>
+    <string name="custom_icon_select_picture">Sélectionnez l\'image</string>
+    <string name="custom_icon_text">Définir une étiquette personnalisée</string>
+    <string name="custom_instruct">Cliquez sur l\'icône pour changer l\'icône. Cliquez sur le texte pour changer le texte.</string>
+    <string name="pref_customize">Personnaliser les lanceurs d\'applications</string>
+    <string name="pref_customize_desc">Changer les icônes et les étiquettes individuelles</string>
+    <string name="pref_icon_tint">Teinte de l’icône</string>
+    <string name="user_theme">Thème de l’utilisateur %d</string>
+      
     <string name="pref_cat_sort">La Catégorie qui ordonne</string>
     <string name="pref_cat_sort_on">Les Catégories rappelleront mandat de classe sélectionnée</string>
     <string name="pref_cat_sort_off">Les Catégories ne seront pas rangées</string>
-    <string name="pref_todd_lock">Toddler Façon</string>
-    <string name="pref_todd_lock_summ">Tentative de limiter bambin-dommage lié par fermer à la
-        catégorie actuelle et en empêchant en traînant/en mouvant/en éliminant. Sortie par introduire le code dans
-        l\'écran.</string>
-    <string name="pref_returnhome_summ">Si dehors, il va au supérieur-la plupart de catégorie: %s.</string>
-    <string name="pref_returnhome">Maison de retour timeout</string>
-
-    <string name="search_hint">Recherche. \".\" Il est un wildcard</string>
-    <string name="widget_alreay">Ce widget est déjà en catégorie \"%s\"</string>
-
-
-    <string name="icons_pack_desc">Choisir un thème ou iconpack</string>
-    <string name="icons_pack_name">Il choisit iconpack/thème</string>
-    <string name="icons_pack_default_name">Icônes de système</string>
-
-    <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
-
-    <string name="sort_prompt_title">Catégorie de classe par</string>
-    <string name="kid_escape_text">Il pressure \'%s\' pour sortir</string>
-    <string name="reset_db">Reset Le database?</string>
-    <string name="reset_db_explain">Le database sera recreated et tout apps sera
-        ré-categorized selon votre \"voiture-categorize apps\" en mettant.</string>
-    <string name="reset">Reset</string>
-    <string name="clear_recent">Éléments récents clairières?</string>
-    <string name="clear">Clair</string>
-    <string name="reset_database">Reset database</string>
-
-
+       
     <string-array name="sort_strings">
         <item>Nom</item>
-        <item>Récemment Utilisé</item>
-        <item>Il installe Date (plus nouveau premier)</item>
-        <item>Il installe Date (plus vieux premier)</item>
-        <item>Colis</item>
+        <item>Récemments tilisées</item>
+        <item>Dâte d\'installation (le plus récent en premier)</item>
+        <item>Dâte d\'installation (le plus vieux en premier)</item>
+        <item>Application</item>
     </string-array>
-
-
-
-
-
-
-
+       
     <string name="about_app">
         <![CDATA[
 
@@ -220,9 +243,9 @@
            le wrench ic&ocirc;ne, alors \"Aide et Environ\".</p>
 
 
-          <h1>Ayuda</h1>
+          <h1>À propos</h1>
 
-            <p>Parts principales de LaunchTime:</p>
+            <p>Principales parties de LaunchTime:</p>
 
              <p>* QuickBar: La barre across le fond qui r&eacute;siste g&eacute;n&eacute;ralement utilis&eacute; apps. Il scrolls
              laiss&eacute; et bien si pr&eacute;cis&eacute;.</p>
@@ -331,26 +354,5 @@
 
             ]]>
     </string>
-    <string name="link">Shortcut</string>
-    <string name="reset_colors_title">Reset colors</string>
-    <string name="reset_color_summ">Clic à reset le thème actuel colors</string>
-    <string name="colors_reset_default">Colors A été reset</string>
-    <string name="theme_bw">NoirBlanc</string>
-    <string name="theme_termcap">Termcap</string>
-    <string name="theme_coolblue">Frais bleu</string>
-    <string name="theme_redplanet">Planète rouge</string>
-    <string name="theme_ladypink">Dame en rose</string>
-    <string name="confirm_reset_colors">Vous voulez réinitialiser les couleurs pour ce thème ?</string>
-    <string name="custom_icon_clear_icon">Effacer l\'icône personnalisée</string>
- <string name="custom_icon_crop_picture">Sélectionner et recadrer l\'image</string>
-    <string name="custom_icon_icon_packs">Sélectionnez dans le pack d\'icônes</string>
- <string name="custom_icon_select_icon_pack">Sélectionner le pack d\'icônes</string>
- <string name="custom_icon_select_icon_type">Sélectionnez le type d\'icône</string>
- <string name="custom_icon_select_picture">Sélectionnez l\'image</string>
- <string name="custom_icon_text">Définir une étiquette personnalisée</string>
-    <string name="custom_instruct">Cliquez sur l\'icône pour changer l\'icône. Cliquez sur le texte pour changer le texte.</string>
- <string name="pref_customize">Personnaliser les lanceurs d\'applications</string>
- <string name="pref_customize_desc">Changer les icônes et les étiquettes individuelles</string>
-    <string name="pref_icon_tint">Teinte de l’icône</string>
- <string name="user_theme">Thème de l’utilisateur %d</string>
+
 </resources>

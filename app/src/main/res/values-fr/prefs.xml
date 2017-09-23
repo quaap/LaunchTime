@@ -23,9 +23,9 @@
 
     <string-array name="pref_orientation_strings">
         <item>Système</item>
-        <item>Rotate Lorsque précisé</item>
-        <item>Portrait de force</item>
-        <item>Paysage de force</item>
+        <item>Rotation forcée</item>
+        <item>Portrait forcée</item>
+        <item>Paysage forcée</item>
     </string-array>
 
 
@@ -35,15 +35,15 @@
         <item>Petit</item>
         <item>Moyen</item>
         <item>Grand</item>
-        <item>X-Grand</item>
+        <item>Très Grand</item>
     </string-array>
 
     
     
 
     <string-array name="pref_cat_location_strings">
-        <item>Correct</item>
-        <item>À la gauche</item>
+        <item>À droite</item>
+        <item>À gauche</item>
     </string-array>
 
     
