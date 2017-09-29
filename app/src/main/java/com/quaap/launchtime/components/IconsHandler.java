@@ -159,7 +159,7 @@ public class IconsHandler {
                     } else {
                         app_icon = pm.getActivityIcon(baseComponentName);
                     }
-                } catch (NameNotFoundException | IndexOutOfBoundsException e) {
+                } catch (NameNotFoundException | IndexOutOfBoundsException | OutOfMemoryError e) {
                     Log.e(TAG, "Unable to found component " + baseComponentName.toString() + e);
                     return null;
                 }
@@ -185,7 +185,7 @@ public class IconsHandler {
                     Log.e("loadAppIconAsync", "couldn't make special icon", e);
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception | OutOfMemoryError e) {
             Log.e(TAG, "Exception getting app icon for " + app.getComponentName() , e);
             if (app_icon == null && !nodefault)  {
                 app_icon = pm.getDefaultActivityIcon();
