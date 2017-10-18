@@ -39,13 +39,20 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 70;
+        final int newsnum = 71;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    show(context,"What's new!",
+
+                    String msg =
+                            "In 0.7.1:\n" +
+                            " * Updated French translations.\n" +
+                            " * Fixes for a few rare crashes.";
+
+                    msg += "\n\n" +
+                            "In 0.7.0:\n" +
                             " * Icon packs.\n" +
                             " * Customize icons and labels.\n" +
                             " * Built-in themes.\n" +
@@ -53,9 +60,10 @@ public class MsgBox {
                             " * Better app shortcuts.\n" +
                             " * Better color selector.\n" +
                             " * Android 7.1 shortcut actions.\n" +
-                            " * Machine translations for German, French, Spanish, and others (expert translations wanted!).\n\n" +
-                            "Go to Settings->Help for links to submit feature requests, bugs, and pull requests."
-                    );
+                            " * Machine translations for German, French, Spanish, and others (expert translations wanted!).";
+
+                    msg += "\n\n" + "Go to Settings->Help for links to submit feature requests, bugs, and pull requests.";
+                    show(context, "What's new!", msg);
 
                 }
             }, 3500);
