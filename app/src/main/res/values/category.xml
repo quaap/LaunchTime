@@ -27,9 +27,9 @@
     </string-array>
     <string-array translatable="false" name="CAT_GAMES">
         <item>game</item>
-        <item>play</item>
         <item>puzz</item>
         <item>battle</item>
+        <item>play</item>
         <item>studios</item>
         <item>com.huuuge</item>
         <item>com.ea</item>
@@ -40,17 +40,18 @@
         <item>com.rovio</item>
         <item>com.bitmango</item>
         <item>com.miniclip</item>
-
     </string-array>
     <string-array translatable="false" name="CAT_INTERNET">
         <item>download</item>
-        <item>browser</item>
         <item>maps</item>
         <item>dropbox</item>
         <item>chrome</item>
         <item>mozilla</item>
         <item>drive</item>
+        <item>browser</item>
         <item>wiki</item>
+        <item>weather</item>
+        <item>forcast</item>
     </string-array>
     <string-array translatable="false" name="CAT_MEDIA">
         <item>radio</item>
@@ -61,27 +62,32 @@
         <item>music</item>
         <item>sound</item>
         <item>mp3</item>
+        <item>player</item>
+        <item>guitar</item>
+        <item>drum</item>
+        <item>piano</item>
         <item>record</item>
         <item>sfx</item>
         <item>mic</item>
     </string-array>
     <string-array translatable="false" name="CAT_GRAPHICS">
-        <item>pic</item>
         <item>pix</item>
         <item>gallery</item>
         <item>photo</item>
         <item>foto</item>
-        <item>cam</item>
-        <item>tube</item>
-        <item>vid</item>
-        <item>movie</item>
-        <item>flick</item>
-        <item>flix</item>
         <item>video</item>
         <item>draw</item>
         <item>graph</item>
         <item>gfx</item>
         <item>image</item>
+        <item>cam</item>
+        <item>pic</item>
+        <item>tube</item>
+        <item>vid</item>
+        <item>movie</item>
+        <item>flick</item>
+        <item>flix</item>
+        <item>film</item>
         <item>img</item>
         <item>svg</item>
         <item>png</item>
@@ -90,7 +96,7 @@
         <item>editor</item>
         <item>calc</item>
         <item>calendar</item>
-        <item>organize</item>
+        <item>organiz</item>
         <item>clock</item>
         <item>time</item>
         <item>viewer</item>
@@ -100,6 +106,8 @@
         <item>note</item>
         <item>reader</item>
         <item>office</item>
+        <item>book</item>
+        <item>doc</item>
     </string-array>
     <string-array translatable="false" name="CAT_SETTINGS">
         <item>setting</item>
@@ -110,7 +118,6 @@
         <item>sync</item>
         <item>backup</item>
         <item>prefer</item>
-        <item>prefs</item>
         <item>prefs</item>
         <item>locale</item>
     </string-array>
