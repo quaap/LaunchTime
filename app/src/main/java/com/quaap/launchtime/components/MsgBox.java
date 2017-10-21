@@ -50,7 +50,7 @@ public class MsgBox {
 
                     msg += "" +
                             "In 0.7.2:\n" +
-                            " * Properly restore theme colors on restart.\n" +
+                            " * Properly restore user theme colors on app restart.\n" +
                             "";
 
                     msg += "\n" +
