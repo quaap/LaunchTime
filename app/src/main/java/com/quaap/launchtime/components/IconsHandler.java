@@ -74,6 +74,8 @@ public class IconsHandler {
         this.ctx = ctx;
         this.pm = ctx.getPackageManager();
         theme = new Theme(ctx, this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
+        iconsPackPackageName = prefs.getString("icons-pack", DEFAULT_PACK);
         loadAvailableIconsPacks();
         loadIconsPack();
     }
@@ -84,8 +86,7 @@ public class IconsHandler {
      */
     private void loadIconsPack() {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
-        loadIconsPack(prefs.getString("icons-pack", DEFAULT_PACK));
+        loadIconsPack(iconsPackPackageName);
 
     }
 
