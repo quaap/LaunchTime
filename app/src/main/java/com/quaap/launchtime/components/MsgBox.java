@@ -39,19 +39,26 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 71;
+        final int newsnum = 72;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
 
-                    String msg =
+                    String msg = "";
+
+                    msg += "" +
+                            "In 0.7.2:\n" +
+                            " * Properly restore theme colors on restart.\n" +
+                            "";
+
+                    msg += "\n" +
                             "In 0.7.1:\n" +
                             " * Updated French translations.\n" +
-                            " * Fixes for a few rare crashes.";
+                            " * Fixes for a few rare crashes.\n";
 
-                    msg += "\n\n" +
+                    msg += "\n" +
                             "In 0.7.0:\n" +
                             " * Icon packs.\n" +
                             " * Customize icons and labels.\n" +
