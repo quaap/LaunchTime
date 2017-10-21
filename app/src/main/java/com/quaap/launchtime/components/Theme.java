@@ -197,7 +197,7 @@ public class Theme {
 
         SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
 
-        prefs.edit().putBoolean("prefsUpdate", true).commit();
+        prefs.edit().putBoolean("prefsUpdate", true).apply();
         SharedPreferences.Editor appedit = prefs.edit();
 
         try {
@@ -210,10 +210,9 @@ public class Theme {
             }
 
         } finally {
-            if (appedit.commit()) {
-                prefs.edit().remove("prefsUpdate").commit();
-            }
-            themeedit.commit();
+            appedit.apply();
+            prefs.edit().remove("prefsUpdate").apply();
+            themeedit.apply();
         }
     }
 
@@ -231,7 +230,7 @@ public class Theme {
             }
 
         } finally {
-            themeedit.commit();
+            themeedit.apply();
         }
     }
 
@@ -240,7 +239,7 @@ public class Theme {
         Log.d("Theme", "restoreUserColors");
         SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
 
-        prefs.edit().putBoolean("prefsUpdate", true).commit();
+        prefs.edit().putBoolean("prefsUpdate", true).apply();
 
         SharedPreferences.Editor appedit = prefs.edit();
 
@@ -251,9 +250,8 @@ public class Theme {
                 appedit.putInt(COLOR_PREFS[i],  themeprefs.getInt(getThemePrefName(COLOR_PREFS[i]), getCurrentThemeColor(COLOR_PREFS[i])));
             }
         } finally {
-            if (appedit.commit()) {
-                prefs.edit().remove("prefsUpdate").commit();
-            }
+            appedit.apply();
+            prefs.edit().remove("prefsUpdate").apply();
         }
         return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
     }
@@ -327,7 +325,7 @@ public class Theme {
             Log.d("Theme", "applyTheme");
 
             SharedPreferences appprefs = prefs;
-            prefs.edit().putBoolean("prefsUpdate", true).commit();
+            prefs.edit().putBoolean("prefsUpdate", true).apply();
 
             SharedPreferences.Editor appedit = appprefs.edit();
             try {
@@ -342,13 +340,11 @@ public class Theme {
                     }
                 }
             } finally {
-                if (appedit.commit()) {
-                    prefs.edit().remove("prefsUpdate").commit();
-                }
+                appedit.apply();
+                prefs.edit().remove("prefsUpdate").apply();
             }
 
         }
-
 
     }
 

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -288,9 +287,7 @@ public class ColorChooser extends FrameLayout {
 
         }
         edit.putInt("color0", color);
-        if (edit.commit()) {
-            Log.d("ColorChooser", "color selected " + color);
-        }
+        edit.apply();
 
     }
 
