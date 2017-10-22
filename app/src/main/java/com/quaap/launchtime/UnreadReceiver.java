@@ -36,43 +36,47 @@ public class UnreadReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
 
-        int badgeCount = 0;
-        String badgePackage = null;
-        String badgeActivity = null;
+        try {
+            String action = intent.getAction();
+
+            int badgeCount = 0;
+            String badgePackage = null;
+            String badgeActivity = null;
 
 
-        if (action.equals(DEFAULT_ACTION)) {
-            badgeCount = intent.getIntExtra(DEFAULT_BADGE_COUNT, 0);
-            badgeActivity = intent.getStringExtra(DEFAULT_BADGE_ACTIVITY_NAME);
-            badgePackage = intent.getStringExtra(DEFAULT_BADGE_PACKAGENAME);
+            if (action.equals(DEFAULT_ACTION)) {
+                badgeCount = intent.getIntExtra(DEFAULT_BADGE_COUNT, 0);
+                badgeActivity = intent.getStringExtra(DEFAULT_BADGE_ACTIVITY_NAME);
+                badgePackage = intent.getStringExtra(DEFAULT_BADGE_PACKAGENAME);
 
-        } else if (action.equals(APEX_ACTION)) {
-            badgeCount = intent.getIntExtra(APEX_BADGE_COUNT, 0);
-            badgeActivity = intent.getStringExtra(APEX_BADGE_ACTIVITY_NAME);
-            badgePackage = intent.getStringExtra(APEX_BADGE_PACKAGENAME);
+            } else if (action.equals(APEX_ACTION)) {
+                badgeCount = intent.getIntExtra(APEX_BADGE_COUNT, 0);
+                badgeActivity = intent.getStringExtra(APEX_BADGE_ACTIVITY_NAME);
+                badgePackage = intent.getStringExtra(APEX_BADGE_PACKAGENAME);
 
-        } else if (action.equals(SONY_ACTION)) {
-            if (intent.getBooleanExtra(SONY_BADGE_SHOW, false)) {
-                badgeCount = intent.getIntExtra(SONY_BADGE_COUNT, 0);
+            } else if (action.equals(SONY_ACTION)) {
+                if (intent.getBooleanExtra(SONY_BADGE_SHOW, false)) {
+                    badgeCount = intent.getIntExtra(SONY_BADGE_COUNT, 0);
+                }
+                badgeActivity = intent.getStringExtra(SONY_BADGE_ACTIVITY_NAME);
+                badgePackage = intent.getStringExtra(SONY_BADGE_PACKAGENAME);
+
+            } else {
+                Log.e("UnreadReceiver", "Unknown badge action '" + action + "' " + intent.toString());
             }
-            badgeActivity = intent.getStringExtra(SONY_BADGE_ACTIVITY_NAME);
-            badgePackage = intent.getStringExtra(SONY_BADGE_PACKAGENAME);
 
-        } else {
-            Log.e("UnreadReceiver", "Unknown badge action '" + action + "' " + intent.toString());
+
+            Log.d("BADGE", action + " " + badgeCount + " " + badgeActivity + " " + badgePackage);
+
+            if (badgeActivity != null && badgePackage != null) {
+                GlobState.getBadger(context).setUnreadCount(badgeActivity, badgePackage, badgeCount);
+            }
+
+
+        } catch (Exception e) {
+            Log.e("UnreadReceiver", e.getMessage(),e);
         }
-
-
-        Log.d("BADGE", action + " " + badgeCount + " " + badgeActivity + " " + badgePackage);
-
-        if (badgeActivity!=null && badgePackage!=null) {
-            GlobState.getBadger(context).setUnreadCount(badgeActivity, badgePackage, badgeCount);
-        }
-
-
-
 
 
 //        Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
