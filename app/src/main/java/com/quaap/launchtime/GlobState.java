@@ -51,7 +51,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
         Categories.init(this);
 
-        badger = new Badger();
+        badger = new Badger(this);
 
         //this.deleteDatabase(DB.DATABASE_NAME);
         mIconsHandler = new IconsHandler(this);

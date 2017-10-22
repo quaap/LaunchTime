@@ -2,6 +2,7 @@
 package com.quaap.launchtime;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -33,6 +34,11 @@ public class UnreadReceiver extends BroadcastReceiver{
     private static final String APEX_BADGE_COUNT = "count";
 //
 
+    private String lastCountAction;
+    private String lastCountActivity;
+    private String lastCountPackage;
+    private long lastCountTime;
+    private int lastCount = -1;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -70,7 +76,26 @@ public class UnreadReceiver extends BroadcastReceiver{
             Log.d("BADGE", action + " " + badgeCount + " " + badgeActivity + " " + badgePackage);
 
             if (badgeActivity != null && badgePackage != null) {
-                GlobState.getBadger(context).setUnreadCount(badgeActivity, badgePackage, badgeCount);
+
+                //don't update badge if this app just previously got an update,
+                // in case an app tries multiple broadcast types
+                if (lastCountActivity!=null && badgeActivity.equals(lastCountActivity) &&
+                        lastCountPackage!=null && badgePackage.equals(lastCountPackage) &&
+                        System.currentTimeMillis() - lastCountTime<500 &&
+                        lastCount==badgeCount) {
+                    Log.d("UnreadReceiver", "app " + badgeActivity + " " + badgePackage + " using action " + action + " after using " + lastCountAction);
+
+                } else {
+
+                    GlobState.getBadger(context).setUnreadCount(badgeActivity, badgePackage, badgeCount);
+                }
+
+                lastCountAction = action;
+                lastCountTime = System.currentTimeMillis();
+                lastCountActivity = badgeActivity;
+                lastCountPackage = badgePackage;
+                lastCount = badgeCount;
+
             }
 
 
