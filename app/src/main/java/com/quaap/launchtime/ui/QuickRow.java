@@ -106,11 +106,13 @@ public class QuickRow {
                 mQuickRow.removeAllViews();
                 for (ComponentName actvname : quickRowOrder) {
                     AppLauncher app = db().getApp(actvname);
-                    ViewGroup item = mMainActivity.getLauncherView(app, true);
-                    if (item!=null) {
-                        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-                        lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
-                        mQuickRow.addView(item, lp);
+                    if (!appAlreadyHere(app)) {
+                        ViewGroup item = mMainActivity.getLauncherView(app, true);
+                        if (item != null) {
+                            GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                            lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
+                            mQuickRow.addView(item, lp);
+                        }
                     }
                 }
 

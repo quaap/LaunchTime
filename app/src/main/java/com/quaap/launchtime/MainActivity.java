@@ -1189,14 +1189,9 @@ public class MainActivity extends Activity implements
             app.setIconImage(iconImage);
             app.loadAppIconAsync(this,mPackageMan);
 
-            TextView badge = (TextView)item.findViewById(R.id.launcher_badge);
-            int bcount = GlobState.getBadger(this).getUnreadCount(app.getBaseComponentName());
-            if (bcount<=0) {
-                badge.setVisibility(View.GONE);
-            } else {
-                badge.setVisibility(View.VISIBLE);
-                badge.setText(bcount + "");
-            }
+            ComponentName compName = app.getBaseComponentName();
+            int bcount = GlobState.getBadger(this).getUnreadCount(compName);
+            updateAppBadgeCount(item, bcount);
         }
         item.setTag(app);
         item.setClickable(true);
@@ -1209,11 +1204,29 @@ public class MainActivity extends Activity implements
         return item;
     }
 
+    private void updateAppBadgeCount(ViewGroup item, int bcount) {
+        if (item!=null) {
+            TextView badge = (TextView) item.findViewById(R.id.launcher_badge);
+            if (badge!=null) {
+                if (bcount <= 0) {
+                    badge.setVisibility(View.GONE);
+                } else {
+                    badge.setVisibility(View.VISIBLE);
+                    badge.setText(bcount + "");
+                }
+            }
+        }
+    }
+
     @Override
     public void badgerCountChanged(ComponentName compname, int count) {
         AppLauncher app = AppLauncher.getAppLauncher(compname);
         if (app!=null) {
-            mAppLauncherViews.remove(app);
+            ViewGroup view = mAppLauncherViews.remove(app);
+            if (view!=null) {
+                updateAppBadgeCount(view,count);
+            }
+
             if (mQuickRow.appAlreadyHere(app)) {
                 mQuickRow.repopulate();
             }
