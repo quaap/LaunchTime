@@ -58,6 +58,7 @@ public class LaunchApp {
             //needed to place in the open apps list
             Intent intent = getAppIntent(app);
 
+            Log.d(TAG, "Launching " + app.getComponentName());
             if (isValidActivity(intent)) {
                 // actually start it
                 activity.startActivity(intent);

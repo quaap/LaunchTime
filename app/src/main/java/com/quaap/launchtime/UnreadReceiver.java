@@ -8,7 +8,16 @@ import android.content.Intent;
 import android.util.Log;
 
 /**
- * Created by tom on 8/30/17.
+ * Copyright (C) 2017   Tom Kliethermes
+ *
+ * This file is part of LaunchTime and is is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  */
 
 public class UnreadReceiver extends BroadcastReceiver{
@@ -33,6 +42,12 @@ public class UnreadReceiver extends BroadcastReceiver{
     private static final String APEX_BADGE_ACTIVITY_NAME = "class";
     private static final String APEX_BADGE_COUNT = "count";
 //
+
+    private static final String ADW_ACTION = "org.adw.launcher.counter.SEND";
+    private static final String ADW_BADGE_PACKAGENAME = "PNAME";
+    private static final String ADW_BADGE_ACTIVITY_NAME = "CNAME";
+    private static final String ADW_BADGE_COUNT = "COUNT";
+
 
     private String lastCountAction;
     private String lastCountActivity;
@@ -60,6 +75,11 @@ public class UnreadReceiver extends BroadcastReceiver{
                 badgeCount = intent.getIntExtra(APEX_BADGE_COUNT, 0);
                 badgeActivity = intent.getStringExtra(APEX_BADGE_ACTIVITY_NAME);
                 badgePackage = intent.getStringExtra(APEX_BADGE_PACKAGENAME);
+
+            } else if (action.equals(ADW_ACTION)) {
+                badgeCount = intent.getIntExtra(ADW_BADGE_COUNT, 0);
+                badgeActivity = intent.getStringExtra(ADW_BADGE_ACTIVITY_NAME);
+                badgePackage = intent.getStringExtra(ADW_BADGE_PACKAGENAME);
 
             } else if (action.equals(SONY_ACTION)) {
                 if (intent.getBooleanExtra(SONY_BADGE_SHOW, false)) {
