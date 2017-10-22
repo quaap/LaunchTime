@@ -68,6 +68,17 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".UnreadReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BADGE_COUNT_UPDATE" />
+                <action android:name="com.anddoes.launcher.COUNTER_CHANGED" />
+                <action android:name="com.sonyericsson.home.action.UPDATE_BADGE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".FeedbackActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />

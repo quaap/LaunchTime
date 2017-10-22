@@ -9,18 +9,29 @@
     android:paddingStart="@dimen/launcher_padding_side"
     android:paddingTop="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/launcher_icon"
-        android:layout_width="@dimen/icon_width"
-        android:layout_height="@dimen/icon_width"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/app" />
+        <ImageView
+            android:id="@+id/launcher_icon"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_width"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/app" />
+
+        <TextView
+            android:id="@+id/launcher_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:shadowColor="#ffff2222"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="16"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/launcher_text"

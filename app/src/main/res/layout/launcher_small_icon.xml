@@ -9,12 +9,28 @@
     android:paddingBottom="4dp"
     android:paddingTop="12dp">
 
-    <ImageView
-        android:layout_width="@dimen/icon_sm_width"
-        android:layout_height="@dimen/icon_sm_width"
-        android:id="@+id/launcher_icon"
-        android:contentDescription="@string/app"
-        android:layout_gravity="center_horizontal" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/icon_sm_width"
+            android:layout_height="@dimen/icon_sm_width"
+            android:id="@+id/launcher_icon"
+            android:contentDescription="@string/app"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/launcher_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:shadowColor="#ffff2222"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="16"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <TextView
         android:layout_width="@dimen/launcher_sm_width"

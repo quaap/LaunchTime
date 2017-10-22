@@ -75,6 +75,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.launchtime.apps.AppLauncher;
+import com.quaap.launchtime.apps.Badger;
 import com.quaap.launchtime.apps.LaunchApp;
 import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.components.Categories;
@@ -102,7 +103,8 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class MainActivity extends Activity implements
-        View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener,
+        Badger.BadgerCountChangeListener {
 
     //TODO: everything needs a major refactor.
     // custom views or fragments?
@@ -223,6 +225,7 @@ public class MainActivity extends Activity implements
         // get all the apps installed and process them
         loadApplications();
 
+        GlobState.getBadger(this).setBadgerCountChangeListener(this);
 
 
     }
@@ -1186,6 +1189,14 @@ public class MainActivity extends Activity implements
             app.setIconImage(iconImage);
             app.loadAppIconAsync(this,mPackageMan);
 
+            TextView badge = (TextView)item.findViewById(R.id.launcher_badge);
+            int bcount = GlobState.getBadger(this).getUnreadCount(app.getBaseComponentName());
+            if (bcount<=0) {
+                badge.setVisibility(View.GONE);
+            } else {
+                badge.setVisibility(View.VISIBLE);
+                badge.setText(bcount + "");
+            }
         }
         item.setTag(app);
         item.setClickable(true);
@@ -1197,6 +1208,20 @@ public class MainActivity extends Activity implements
         }
         return item;
     }
+
+    @Override
+    public void badgerCountChanged(ComponentName compname, int count) {
+        AppLauncher app = AppLauncher.getAppLauncher(compname);
+        if (app!=null) {
+            mAppLauncherViews.remove(app);
+            if (mQuickRow.appAlreadyHere(app)) {
+                mQuickRow.repopulate();
+            }
+        }
+
+    }
+
+
 
     private void setLayoutSize(View view, double width, double height) {
         ViewGroup.LayoutParams lp = view.getLayoutParams();
@@ -2625,8 +2650,6 @@ public class MainActivity extends Activity implements
         getWindowManager().getDefaultDisplay().getSize(size);
         return size;
     }
-
-
 
 
 
