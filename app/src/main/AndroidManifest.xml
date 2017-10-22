@@ -76,6 +76,7 @@
                 <action android:name="android.intent.action.BADGE_COUNT_UPDATE" />
                 <action android:name="com.anddoes.launcher.COUNTER_CHANGED" />
                 <action android:name="com.sonyericsson.home.action.UPDATE_BADGE" />
+                <action android:name="org.adw.launcher.counter.SEND" />
             </intent-filter>
         </receiver>
 

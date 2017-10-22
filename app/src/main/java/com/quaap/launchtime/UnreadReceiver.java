@@ -22,26 +22,23 @@ import android.util.Log;
 
 public class UnreadReceiver extends BroadcastReceiver{
 
+    //This works for Google Messages, at least
     private static final String DEFAULT_ACTION = "android.intent.action.BADGE_COUNT_UPDATE";
     private static final String DEFAULT_BADGE_COUNT = "badge_count";
     private static final String DEFAULT_BADGE_PACKAGENAME = "badge_count_package_name";
     private static final String DEFAULT_BADGE_ACTIVITY_NAME = "badge_count_class_name";
 
-
+    //I'm not sure if these below will ever work because of permissions
     private static final String SONY_ACTION = "com.sonyericsson.home.action.UPDATE_BADGE";
     private static final String SONY_BADGE_COUNT = "com.sonyericsson.home.intent.extra.badge.MESSAGE";
     private static final String SONY_BADGE_SHOW = "com.sonyericsson.home.intent.extra.badge.SHOW_MESSAGE";
     private static final String SONY_BADGE_PACKAGENAME = "com.sonyericsson.home.intent.extra.badge.PACKAGE_NAME";
-    private static final String SONY_BADGE_ACTIVITY_NAME = "om.sonyericsson.home.intent.extra.badge.ACTIVITY_NAME";
-
-
-    //"com.anddoes.launcher.UPDATE_COUNTER";
+    private static final String SONY_BADGE_ACTIVITY_NAME = "com.sonyericsson.home.intent.extra.badge.ACTIVITY_NAME";
 
     private static final String APEX_ACTION = "com.anddoes.launcher.COUNTER_CHANGED";
     private static final String APEX_BADGE_PACKAGENAME = "package";
     private static final String APEX_BADGE_ACTIVITY_NAME = "class";
     private static final String APEX_BADGE_COUNT = "count";
-//
 
     private static final String ADW_ACTION = "org.adw.launcher.counter.SEND";
     private static final String ADW_BADGE_PACKAGENAME = "PNAME";
@@ -96,6 +93,7 @@ public class UnreadReceiver extends BroadcastReceiver{
             Log.d("BADGE", action + " " + badgeCount + " " + badgeActivity + " " + badgePackage);
 
             if (badgeActivity != null && badgePackage != null) {
+                if (badgeCount>999) badgeCount = 999;
 
                 //don't update badge if this app just previously got an update,
                 // in case an app tries multiple broadcast types
@@ -122,19 +120,6 @@ public class UnreadReceiver extends BroadcastReceiver{
         } catch (Exception e) {
             Log.e("UnreadReceiver", e.getMessage(),e);
         }
-
-
-//        Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
-//        intent.putExtra("badge_count", count);
-//        intent.putExtra("badge_count_package_name", context.getPackageName());
-//        intent.putExtra("badge_count_class_name", launcherClassName);
-//
-//
-//        intent.setAction("com.sonyericsson.home.action.UPDATE_BADGE");
-//        intent.putExtra("com.sonyericsson.home.intent.extra.badge.ACTIVITY_NAME", launcherClassName);
-//        intent.putExtra("com.sonyericsson.home.intent.extra.badge.SHOW_MESSAGE", true);
-//        intent.putExtra("com.sonyericsson.home.intent.extra.badge.MESSAGE", String.valueOf(count));
-//        intent.putExtra("com.sonyericsson.home.intent.extra.badge.PACKAGE_NAME", context.getPackageName());
 
 
     }
