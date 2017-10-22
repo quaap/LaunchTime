@@ -28,9 +28,9 @@
             android:background="@android:drawable/ic_notification_overlay"
             android:paddingEnd="3dp"
             android:paddingStart="3dp"
-            android:shadowColor="#ff990000"
-            android:shadowDx="1"
-            android:shadowDy="1"
+            android:shadowColor="#ff550000"
+            android:shadowDx="3"
+            android:shadowDy="3"
             android:shadowRadius="16"
             android:textColor="#ffffffff"
             android:visibility="gone" />
