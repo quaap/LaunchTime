@@ -16,6 +16,7 @@ package com.quaap.launchtime;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.preference.PreferenceManager;
 
 import com.quaap.launchtime.apps.Badger;
@@ -57,6 +58,10 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         mIconsHandler = new IconsHandler(this);
 
         mStyle = new Style(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+
+        //Intent notify = new Intent(this, NotificationListener.class);
+        //startService(notify);
+
     }
 
     public static Style getStyle(Context context) {
