@@ -80,7 +80,14 @@ public class UnreadReceiver extends BroadcastReceiver{
 
             } else if (action.equals(SONY_ACTION)) {
                 if (intent.getBooleanExtra(SONY_BADGE_SHOW, false)) {
-                    badgeCount = intent.getIntExtra(SONY_BADGE_COUNT, 0);
+                    String bc = intent.getStringExtra(SONY_BADGE_COUNT);
+                    if (bc!=null) {
+                        try {
+                            badgeCount = Integer.parseInt(bc);
+                        } catch (NumberFormatException e) {
+                            badgeCount = 0;
+                        }
+                    }
                 }
                 badgeActivity = intent.getStringExtra(SONY_BADGE_ACTIVITY_NAME);
                 badgePackage = intent.getStringExtra(SONY_BADGE_PACKAGENAME);
@@ -103,10 +110,10 @@ public class UnreadReceiver extends BroadcastReceiver{
                         lastCount==badgeCount) {
                     Log.d("UnreadReceiver", "app " + badgeActivity + " " + badgePackage + " using action " + action + " after using " + lastCountAction);
 
-                } else {
-
+                } else if (badgeCount>=0) {
                     GlobState.getBadger(context).setUnreadCount(badgeActivity, badgePackage, badgeCount);
                 }
+
 
                 lastCountAction = action;
                 lastCountTime = System.currentTimeMillis();
