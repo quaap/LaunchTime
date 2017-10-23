@@ -33,6 +33,7 @@
             android:shadowDy="3"
             android:shadowRadius="16"
             android:textColor="#ffffffff"
+            android:textSize="12sp"
             android:visibility="gone" />
     </FrameLayout>
 
