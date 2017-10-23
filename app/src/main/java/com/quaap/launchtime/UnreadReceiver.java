@@ -117,7 +117,7 @@ public class UnreadReceiver extends BroadcastReceiver{
             }
 
 
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             Log.e("UnreadReceiver", e.getMessage(),e);
         }
 
