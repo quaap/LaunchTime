@@ -7,7 +7,7 @@ features support for widgets, text search for apps, a QuickBar, links/shortcuts,
 badge/unread counts, recent apps list, app hiding, color selection, themes, and portrait and
 landscape support.
 
-<a href="https://f-droid.org/packages/com.quaap.launchtime/" target="_blank">
+<a href="https://f-droid.org/packages/launchtime_official/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
 <a href="https://play.google.com/store/apps/details?id=com.quaap.launchtime_official" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/></a>

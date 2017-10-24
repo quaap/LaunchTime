@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.quaap.launchtime"
+    package="com.quaap.launchtime_official"
     android:versionCode="72"
     android:versionName="0.7.2">
 
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".GlobState"
+        android:name="com.quaap.launchtime_official.GlobState"
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
         android:label="@string/app_name"
@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme"
         android:fullBackupContent="@xml/backup_descriptor">
         <activity
-            android:name=".MainActivity"
+            android:name="com.quaap.launchtime_official.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden|adjustPan">
@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.quaap.launchtime_official.SettingsActivity"
             android:label="LaunchTime Config">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,11 +44,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AboutActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name="com.quaap.launchtime_official.AboutActivity"
+            android:parentActivityName="com.quaap.launchtime_official.MainActivity" />
 
         <receiver
-            android:name=".LaunchReceiver"
+            android:name="com.quaap.launchtime_official.LaunchReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -59,7 +59,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".ShortcutReceiver"
+            android:name="com.quaap.launchtime_official.ShortcutReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="com.android.launcher.permission.INSTALL_SHORTCUT">
@@ -69,7 +69,7 @@
         </receiver>
 
         <receiver
-            android:name=".UnreadReceiver"
+            android:name="com.quaap.launchtime_official.UnreadReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -81,14 +81,14 @@
         </receiver>
 
         <activity
-            android:name=".FeedbackActivity"
+            android:name="com.quaap.launchtime_official.FeedbackActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name=".CrashReportActivity"
+            android:name="com.quaap.launchtime_official.CrashReportActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".BackupActivity" />
-        <activity android:name=".CustomizeLaunchersActivity"/>
-        <activity android:name=".ChooseIconFromPackActivity"/>
+        <activity android:name="com.quaap.launchtime_official.BackupActivity" />
+        <activity android:name="com.quaap.launchtime_official.CustomizeLaunchersActivity"/>
+        <activity android:name="com.quaap.launchtime_official.ChooseIconFromPackActivity"/>
     </application>
 
 </manifest>

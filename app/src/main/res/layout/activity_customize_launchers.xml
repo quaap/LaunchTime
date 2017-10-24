@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.quaap.launchtime.CustomizeLaunchersActivity">
+    tools:context="com.quaap.launchtime_official.CustomizeLaunchersActivity">
 
     <TextView
         android:id="@+id/textView2"
