@@ -347,4 +347,5 @@
     <string name="pref_customize_desc">Ändern Sie einzelne Symbole und Etiketten</string>
     <string name="pref_icon_tint">Symbol-Tönung</string>
     <string name="user_theme">Benutzer-Thema %d</string>
+    <string name="reset_badge_counts">Zurücksetzen von App ungelesene Zähler</string>
 </resources>

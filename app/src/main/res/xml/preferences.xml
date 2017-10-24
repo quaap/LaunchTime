@@ -28,6 +28,11 @@
             android:entryValues="@array/pref_orientation_values"
             android:key="preference_orientation"
             android:summary="%s" />
+
+        <Preference android:title="Reset app unread counts"
+            android:key="reset_badges"/>
+
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_app_system">
 

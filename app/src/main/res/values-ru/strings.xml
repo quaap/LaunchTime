@@ -346,4 +346,5 @@
     <string name="pref_customize_desc">Изменение отдельных значков и меток</string>
     <string name="pref_icon_tint">Икона оттенок</string>
     <string name="user_theme">Тема %d</string>
+    <string name="reset_badge_counts">Сброс счетчиков непрочитанных приложений</string>
 </resources>

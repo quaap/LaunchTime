@@ -353,4 +353,5 @@
  <string name="pref_customize_desc">Ŝanĝi individuajn ikonojn kaj etikedojn</string>
     <string name="user_theme">Uzanto-temo %d</string>
  <string name="pref_icon_tint">Ikono tint</string>
+    <string name="reset_badge_counts">Restarigu la aplikaĵon de nelegitaj grafoj</string>
 </resources>

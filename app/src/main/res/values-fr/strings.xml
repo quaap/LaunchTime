@@ -354,5 +354,6 @@
 
             ]]>
     </string>
+    <string name="reset_badge_counts">Réinitialisation de l\'application compte non lu</string>
 
 </resources>
