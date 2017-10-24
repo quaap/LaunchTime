@@ -3,8 +3,9 @@ LaunchTime
 
 LaunchTime is an alternative home/homescreen/launcher for Android devices. Its main feature is a
 side menu used to organize your apps into common-sense and configurable categories. It also
-features support for widgets, text search for apps, a QuickBar, links/shortcuts, recent apps list, 
-app hiding, color selcetion, and portrait and landscape support.
+features support for widgets, text search for apps, a QuickBar, links/shortcuts, icon packs,
+badge/unread counts, recent apps list, app hiding, color selection, themes, and portrait and
+landscape support.
 
 <a href="https://f-droid.org/packages/com.quaap.launchtime/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
@@ -23,6 +24,11 @@ Features
 * Supports both portrait and landscape mode.
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
+
+
+New features in v0.7.2
+-----------
+* Beta badge (unread) counts for apps.
 
 New features in v0.7
 -----------
