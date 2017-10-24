@@ -50,8 +50,8 @@ public class MsgBox {
 
                     msg += "" +
                             "In 0.7.2:\n" +
-                            " * Properly restore user theme colors on app restart.\n" +
-                            " * Beta support for \"unread\" badges on certain apps.\n" +
+                            " * Beta \"unread\" badges on certain apps.\n" +
+                            " * Minor fixes.\n" +
                             "";
 
                     msg += "\n" +
