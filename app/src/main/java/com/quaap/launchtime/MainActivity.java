@@ -634,7 +634,19 @@ public class MainActivity extends Activity implements
             float launcherw = mStyle.getLauncherSize();
             float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
 
-            mColumns = (int)((mScreenDim.x - catwidth)/(launcherw + 2));
+            float wr = ( mScreenDim.x - catwidth)/launcherw;
+
+            if (wr<3) mColumns = 2;
+            else if (wr<5) mColumns = 3;
+            else if (wr<6) mColumns = 4;
+            else if (wr<7.4) mColumns = 5;
+            else if (wr<9) mColumns = 6;
+            else if (wr<11) mColumns = 8;
+            else mColumns = 9;
+
+
+            Log.d(TAG, "x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
+
 
             if (mIconSheet.getColumnCount() != mColumns) {
                 changeColumnCount(mIconSheet, mColumns);
@@ -900,7 +912,7 @@ public class MainActivity extends Activity implements
                     wcells = grid.getColumnCount();
                 }
                 if (wcells > 1) start = 0;
-                lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
+                lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.CENTER);
 
 
 
@@ -908,7 +920,7 @@ public class MainActivity extends Activity implements
             }
             int hcells = (int) Math.ceil(h / cellheight);
             if (hcells > 1) {
-                lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
+                lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.CENTER);
             }
 
             final AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
