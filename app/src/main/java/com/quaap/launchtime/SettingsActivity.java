@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import android.preference.ListPreference;
@@ -46,6 +47,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.DKGRAY));
         getListView().setBackgroundColor(Color.DKGRAY);
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
