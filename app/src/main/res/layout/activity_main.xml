@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -136,7 +135,6 @@
                 android:background="#056605">
 
                 <TextView
-                    android:id="@+id/link_dz_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="top|center_horizontal"
@@ -154,7 +152,6 @@
                 android:background="#056605">
 
                 <TextView
-                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
