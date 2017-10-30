@@ -157,7 +157,10 @@ public class IconPack {
         Map<String, Drawable> icons = new LinkedHashMap<>();
 
         for (String key: packagesDrawables.keySet()) {
-            icons.put(key, get(key));
+            Drawable g = get(key);
+            if (g!=null) {
+                icons.put(key, g);
+            }
         }
 
         return icons;
@@ -170,8 +173,11 @@ public class IconPack {
 
         for (String key: packagesDrawables.keySet()) {
             if (!iconNames.contains(packagesDrawables.get(key))) {
-                icons.add(get(key));
-                iconNames.add(packagesDrawables.get(key));
+                Drawable g = get(key);
+                if (g!=null) {
+                    icons.add(get(key));
+                    iconNames.add(packagesDrawables.get(key));
+                }
             }
         }
 
