@@ -146,7 +146,7 @@ public class IconPack {
                     eventType = xpp.next();
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             Log.e(TAG, "Error parsing appfilter.xml " + e);
         }
 
@@ -185,10 +185,14 @@ public class IconPack {
     public Drawable get(String componentName) {
         String drawable = packagesDrawables.get(componentName);
         if (drawable != null) { //there is a custom icon
-            int id = iconPackres.getIdentifier(drawable, "drawable", iconsPackPackageName);
-            if (id > 0) {
-                //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
-                return iconPackres.getDrawable(id);
+            try {
+                int id = iconPackres.getIdentifier(drawable, "drawable", iconsPackPackageName);
+                if (id > 0) {
+                    //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
+                    return iconPackres.getDrawable(id);
+                }
+            } catch (OutOfMemoryError e){
+                Log.e(TAG, e.getMessage(), e);
             }
         }
         return null;
@@ -247,13 +251,17 @@ public class IconPack {
 
 
     private Bitmap loadBitmap(String drawableName) {
-        int id = iconPackres.getIdentifier(drawableName, "drawable", iconsPackPackageName);
-        if (id > 0) {
-            //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
-            Drawable bitmap = iconPackres.getDrawable(id);
-            if (bitmap instanceof BitmapDrawable) {
-                return ((BitmapDrawable) bitmap).getBitmap();
+        try {
+            int id = iconPackres.getIdentifier(drawableName, "drawable", iconsPackPackageName);
+            if (id > 0) {
+                //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
+                Drawable bitmap = iconPackres.getDrawable(id);
+                if (bitmap instanceof BitmapDrawable) {
+                    return ((BitmapDrawable) bitmap).getBitmap();
+                }
             }
+        } catch (OutOfMemoryError e){
+            Log.e(TAG, e.getMessage(), e);
         }
         return null;
     }
