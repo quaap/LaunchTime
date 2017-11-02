@@ -19,6 +19,8 @@ import com.quaap.launchtime.MainActivity;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.db.DB;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Copyright (C) 2017   Tom Kliethermes
  *
@@ -220,5 +222,42 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
     }
 
+
+//    private static class ListLoaderTask extends  AsyncTask<Void,Void,AppLauncher> {
+//        ViewHolder viewholder;
+//        WeakReference<AppCursorAdapter> appadaptref;
+//
+//        ListLoaderTask(AppCursorAdapter appadapt, ViewHolder viewholder) {
+//            appadaptref = new WeakReference<>(appadapt);
+//            this.viewholder = viewholder;
+//        }
+//
+//        @Override
+//        protected AppLauncher doInBackground(Void... voids) {
+//            AppCursorAdapter appadapt = appadaptref.get();
+//            return appadapt.db().getApp(new ComponentName(pkgName,activityName));
+//        }
+//
+//        @Override
+//        protected void onPostExecute(AppLauncher app) {
+//            super.onPostExecute(app);
+//            if (app != null) {
+//                app.loadAppIconAsync(context, context.getPackageManager());
+//                View v = mMain.getLauncherView(app, false, false);
+//
+//                viewholder.appholder.removeAllViews();
+//                if (v!=null) {
+//                    viewholder.appholder.addView(v);
+//                } else {
+//                    viewholder.appholder.addView(new TextView(context));
+//                }
+//            }
+//
+//            viewholder.labelView.setText(label);
+//            viewholder.catagoryView.setText(category);
+//        }
+//
+//
+//    }
 
 }

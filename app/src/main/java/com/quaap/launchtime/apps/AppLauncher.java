@@ -21,6 +21,7 @@ import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.Categories;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -306,52 +307,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     public void loadAppIconAsync(final Context context, final PackageManager pm) {
         if (iconLoaded() || isWidget()) return;
         // Create an async task
-        AsyncTask<Void, Void, Drawable> loadAppIconTask = new AsyncTask<Void, Void, Drawable>() {
-
-            // Keep track of all the exceptions
-            private Exception exception = null;
-
-
-            @Override
-            protected Drawable doInBackground(Void... voids) {
-                // load the icon
-                Drawable app_icon = null;
-
-                String uristr = null;
-                if  (isActionLink()) {
-                    uristr = getLinkUri();
-                    if (uristr == null) uristr = "";
-                }
-
-                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(AppLauncher.this);
-
-
-                if (app_icon == null) {
-                    app_icon = pm.getDefaultActivityIcon();
-                }
-                if (isLink()) {
-                    app_icon = drawLinkSymbol(app_icon, context);
-                }
-
-
-                return app_icon;
-            }
-
-            @Override
-            protected void onPostExecute(Drawable app_icon) {
-                if (exception == null) {
-                    mIconDrawable = app_icon;
-                    if (mIconImage != null) {
-                        mIconImage.setImageDrawable(mIconDrawable);
-                    }
-                } else {
-                    Log.d("loadAppIconAsync", "ERROR Could not load app icon.");
-
-                }
-            }
-        };
-
-        loadAppIconTask.execute();
+        new IconLoaderTask(this, context, pm).execute();
     }
 
     private Drawable drawLinkSymbol(Drawable app_icon, Context context) {
@@ -384,4 +340,63 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return app_icon;
     }
 
+    private static class IconLoaderTask extends AsyncTask<Void, Void, Drawable> {
+
+        // Keep track of all the exceptions
+        private Exception exception = null;
+
+        private WeakReference<AppLauncher> instref;
+        private WeakReference<Context> context;
+        private PackageManager pm;
+
+        IconLoaderTask(AppLauncher inst, Context context, PackageManager pm) {
+            super();
+            instref = new WeakReference<>(inst);
+            this.context = new WeakReference<>(context);
+            this.pm = pm;
+        }
+        @Override
+        protected Drawable doInBackground(Void... voids) {
+
+            AppLauncher inst = instref.get();
+            if (inst==null) return null;
+
+            // load the icon
+            Drawable app_icon = null;
+
+            String uristr = null;
+            if  (inst.isActionLink()) {
+                uristr = inst.getLinkUri();
+                if (uristr == null) uristr = "";
+            }
+
+            app_icon = GlobState.getIconsHandler(context.get()).getDrawableIconForPackage(inst);
+
+
+            if (app_icon == null) {
+                app_icon = pm.getDefaultActivityIcon();
+            }
+            if (inst.isLink()) {
+                app_icon = inst.drawLinkSymbol(app_icon, context.get());
+            }
+
+
+            return app_icon;
+        }
+
+        @Override
+        protected void onPostExecute(Drawable app_icon) {
+            if (exception == null) {
+                AppLauncher inst = instref.get();
+                if (inst==null) return;
+                inst.mIconDrawable = app_icon;
+                if (inst.mIconImage != null) {
+                    inst.mIconImage.setImageDrawable(inst.mIconDrawable);
+                }
+            } else {
+                Log.d("loadAppIconAsync", "ERROR Could not load app icon.");
+
+            }
+        }
+    };
 }

@@ -40,6 +40,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -88,6 +90,7 @@ import com.quaap.launchtime.ui.SearchBox;
 import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -172,6 +175,9 @@ public class MainActivity extends Activity implements
 
     private Style mStyle;
 
+    private AddIconHandler iconHandler;
+    private static final int ADD_ICON = 1;
+
     private static String TAG = "LaunchTime";
 
     @Override
@@ -221,6 +227,8 @@ public class MainActivity extends Activity implements
         readPrefs();
 
         mLaunchApp = new LaunchApp(this);
+
+        iconHandler = new AddIconHandler(this);
 
         // get all the apps installed and process them
         loadApplications();
@@ -734,26 +742,7 @@ public class MainActivity extends Activity implements
         //Look for new apps
         //final List<AppLauncher> launchers = processActivities();
 
-        AsyncTask<Void, Void, List<AppLauncher>> task = new AsyncTask<Void, Void, List<AppLauncher>>() {
-            @Override
-            protected List<AppLauncher> doInBackground(Void... params) {
-                return processActivities();
-            }
-
-            @Override
-            protected void onPostExecute(List<AppLauncher> appLauncherss) {
-                mQuickRow.processQuickApps(appLauncherss, mPackageMan);
-                db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow.getGridLayout()), mQuickRow.getGridLayout());
-                firstRunPostApps();
-                if (mCategory.equals(Categories.CAT_SEARCH)) {
-                    populateRecentApps();
-                } else {
-                    repopulateIconSheet(mCategory);
-                }
-            }
-        };
-
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadAppsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         //loads the quickrow or adds default apps if it is empty
        // processQuickApps(launchers);
@@ -761,6 +750,43 @@ public class MainActivity extends Activity implements
 
     }
 
+
+    private static class LoadAppsAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private WeakReference<MainActivity> instref;
+
+        LoadAppsAsyncTask(MainActivity inst) {
+            super();
+            instref = new WeakReference<>(inst);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            MainActivity inst = instref.get();
+            if (inst!=null) {
+
+                List<AppLauncher> appLauncherss = inst.processActivities();
+                inst.mQuickRow.processQuickApps(appLauncherss, inst.mPackageMan);
+                inst.db().setAppCategoryOrder(inst.mRevCategoryMap.get(inst.mQuickRow.getGridLayout()), inst.mQuickRow.getGridLayout());
+
+                if (inst.mCategory.equals(Categories.CAT_SEARCH)) {
+                    inst.populateRecentApps();
+                } else {
+                    inst.repopulateIconSheet(inst.mCategory);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            MainActivity inst = instref.get();
+            if (inst!=null) {
+                inst.firstRunPostApps();
+            }
+
+        }
+    };
 
     private void firstRunPostApps() {
         if (db().isFirstRun()) {
@@ -817,7 +843,7 @@ public class MainActivity extends Activity implements
                 AppLauncher app = db().getApp(actvname);
                 //Log.d("Recent", "Trying " + actvname + " " + app);
 
-                addAppToIconSheet(iconSheet, app, false);
+                addAppToIconSheet(Categories.CAT_SEARCH, app, false);
                 i++;
                 if (i >= 45) break;
             }
@@ -837,14 +863,14 @@ public class MainActivity extends Activity implements
             for (Iterator<AppLauncher> it = apps.iterator(); it.hasNext(); ) {
                 AppLauncher app = it.next();
                 if (actvname.equals(app.getComponentName())) {
-                    addAppToIconSheet(iconSheet, app, true);
+                    addAppToIconSheet(category, app, true);
                     it.remove();
                 }
             }
         }
 
         for (AppLauncher app : apps) {
-            addAppToIconSheet(iconSheet, app, true);
+            addAppToIconSheet(category, app, true);
            // Log.d(TAG, app.getActivityName());
         }
 
@@ -853,11 +879,40 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private boolean addAppToIconSheet(GridLayout iconSheet, AppLauncher app, boolean reuse) {
-        return addAppToIconSheet(iconSheet, app, -1, reuse);
+    private void addAppToIconSheet(String category, AppLauncher app, boolean reuse) {
+        addAppToIconSheetSend(category, app, -1, reuse);
     }
 
-    private boolean addAppToIconSheet(GridLayout iconSheet, AppLauncher app, int pos, boolean reuse) {
+
+
+    private void addAppToIconSheetSend(String category, AppLauncher app, int pos, boolean reuse) {
+        Message msg = new Message();
+        msg.arg1 = ADD_ICON;
+        Bundle data = new Bundle();
+        data.putString("category", category);
+        data.putParcelable("componentName", app.getComponentName());
+        data.putInt("pos", pos);
+        data.putBoolean("reuse", reuse);
+        msg.setData(data);
+        iconHandler.sendMessage(msg);
+    }
+
+    private void addAppToIconSheetRecv(Message msg) {
+        Bundle data = msg.getData();
+        String category = data.getString("category");
+        ComponentName compName = (ComponentName)data.getParcelable("componentName");
+        AppLauncher app = AppLauncher.getAppLauncher(compName);
+        if (app==null) {
+            app = db().getApp(compName);
+            if (app==null) return;
+        }
+        int pos = data.getInt("pos");
+        boolean reuse = data.getBoolean("reuse");
+
+        addAppToIconSheet(mIconSheets.get(category), app, pos, reuse);
+    }
+
+    private void addAppToIconSheet(GridLayout iconSheet, AppLauncher app, int pos, boolean reuse) {
         if (app != null) {
             try {
                 if ((app.isWidget() && isAppInstalled(app.getPackageName())) || mLaunchApp.isValidActivity(app)) {
@@ -870,7 +925,7 @@ public class MainActivity extends Activity implements
                         if (parent != null) parent.removeView(item);
                         GridLayout.LayoutParams lp = getAppLauncherLayoutParams(iconSheet, app);
                         iconSheet.addView(item, pos, lp);
-                        return true;
+                        return;
                     }
                 } else {
                     db().deleteApp(app.getComponentName());
@@ -883,7 +938,7 @@ public class MainActivity extends Activity implements
         } else {
             Log.d(TAG, "Not showing recent: Null.");
         }
-        return false;
+
     }
 
     @NonNull
@@ -2676,6 +2731,24 @@ public class MainActivity extends Activity implements
         return size;
     }
 
+
+    private static class AddIconHandler extends Handler {
+        private WeakReference<MainActivity> instref;
+        AddIconHandler(MainActivity inst) {
+            super();
+            instref = new WeakReference<>(inst);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity inst = instref.get();
+            if (inst!=null) {
+                if (msg.arg1==ADD_ICON) {
+                   inst.addAppToIconSheetRecv(msg);
+                }
+            }
+        }
+    }
 
 
     interface CategoryChangerListener {
