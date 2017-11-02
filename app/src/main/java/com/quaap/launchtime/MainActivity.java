@@ -911,7 +911,7 @@ public class MainActivity extends Activity implements
                 if (wcells > grid.getColumnCount()) {
                     wcells = grid.getColumnCount();
                 }
-                if (wcells > 1) start = 0;
+               // if (wcells > 1) start = 0;
                 lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
 
                 //Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
