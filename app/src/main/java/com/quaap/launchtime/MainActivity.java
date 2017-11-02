@@ -1793,6 +1793,7 @@ public class MainActivity extends Activity implements
                 float oX = -1;
                 float oY = -1;
 
+                @SuppressLint("ClickableViewAccessibility")
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {

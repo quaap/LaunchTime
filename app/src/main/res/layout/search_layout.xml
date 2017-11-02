@@ -50,7 +50,8 @@
             android:shadowRadius="8"
             android:shadowDx="2"
             android:shadowDy="2"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:focusable="true" />
 
     </LinearLayout>
 
@@ -92,7 +93,8 @@
             android:shadowRadius="8"
             android:shadowDx="2"
             android:shadowDy="2"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:focusable="true" />
 
     </LinearLayout>
 
