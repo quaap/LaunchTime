@@ -177,6 +177,7 @@ public class MainActivity extends Activity implements
 
     private AddIconHandler iconHandler;
     private static final int ADD_ICON = 1;
+    private static final int REMOVE_ALL_ICONS = 2;
 
     private static String TAG = "LaunchTime";
 
@@ -762,12 +763,18 @@ public class MainActivity extends Activity implements
 
         @Override
         protected Void doInBackground(Void... params) {
-            MainActivity inst = instref.get();
+            final MainActivity inst = instref.get();
             if (inst!=null) {
 
-                List<AppLauncher> appLauncherss = inst.processActivities();
-                inst.mQuickRow.processQuickApps(appLauncherss, inst.mPackageMan);
-                inst.db().setAppCategoryOrder(inst.mRevCategoryMap.get(inst.mQuickRow.getGridLayout()), inst.mQuickRow.getGridLayout());
+                final List<AppLauncher> appLauncherss = inst.processActivities();
+
+                inst.mQuickRow.getScroller().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        inst.mQuickRow.processQuickApps(appLauncherss, inst.mPackageMan);
+                        inst.db().setAppCategoryOrder(inst.mRevCategoryMap.get(inst.mQuickRow.getGridLayout()), inst.mQuickRow.getGridLayout());
+                    }
+                });
 
                 if (inst.mCategory.equals(Categories.CAT_SEARCH)) {
                     inst.populateRecentApps();
@@ -833,9 +840,10 @@ public class MainActivity extends Activity implements
 
     public void populateRecentApps() {
 
-        GridLayout iconSheet = mIconSheets.get(Categories.CAT_SEARCH);
+        //GridLayout iconSheet = mIconSheets.get(Categories.CAT_SEARCH);
 
-        iconSheet.removeAllViews();
+        removeIconSheetSend(Categories.CAT_SEARCH);
+        //iconSheet.removeAllViews();
 
         int i=0;
         for (ComponentName actvname : db().getAppLaunchedList()) {
@@ -853,7 +861,8 @@ public class MainActivity extends Activity implements
     private void repopulateIconSheet(String category) {
         GridLayout iconSheet = mIconSheets.get(category);
 
-        iconSheet.removeAllViews();
+        removeIconSheetSend(category);
+        //iconSheet.removeAllViews();
 
         final List<ComponentName> apporder = db().getAppCategoryOrder(category);
         List<AppLauncher> apps = db().getApps(category);
@@ -910,6 +919,25 @@ public class MainActivity extends Activity implements
         boolean reuse = data.getBoolean("reuse");
 
         addAppToIconSheet(mIconSheets.get(category), app, pos, reuse);
+    }
+
+
+    private void removeIconSheetRecv(Message msg) {
+        Bundle data = msg.getData();
+        String category = data.getString("category");
+        GridLayout iconSheet = mIconSheets.get(category);
+        if (iconSheet!=null) {
+            iconSheet.removeAllViews();
+        }
+    }
+
+    private void removeIconSheetSend(String category) {
+        Message msg = new Message();
+        msg.arg1 = REMOVE_ALL_ICONS;
+        Bundle data = new Bundle();
+        data.putString("category", category);
+        msg.setData(data);
+        iconHandler.sendMessage(msg);
     }
 
     private void addAppToIconSheet(GridLayout iconSheet, AppLauncher app, int pos, boolean reuse) {
@@ -2748,8 +2776,12 @@ public class MainActivity extends Activity implements
         public void handleMessage(Message msg) {
             MainActivity inst = instref.get();
             if (inst!=null) {
-                if (msg.arg1==ADD_ICON) {
-                   inst.addAppToIconSheetRecv(msg);
+                switch (msg.arg1) {
+                    case ADD_ICON:
+                        inst.addAppToIconSheetRecv(msg);
+                        break;
+                    case REMOVE_ALL_ICONS:
+                        inst.removeIconSheetRecv(msg);
                 }
             }
         }
