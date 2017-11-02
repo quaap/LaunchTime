@@ -168,36 +168,12 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             view.setTag(holder);
         }
 
-        final ViewHolder viewholder = holder;
-        new AsyncTask<Void,Void,AppLauncher>() {
 
-            @Override
-            protected AppLauncher doInBackground(Void... voids) {
+        holder.appholder.removeAllViews();
+        holder.labelView.setText(label);
+        holder.catagoryView.setText(category);
 
-                return db().getApp(new ComponentName(pkgName,activityName));
-            }
-
-            @Override
-            protected void onPostExecute(AppLauncher app) {
-                super.onPostExecute(app);
-                if (app != null) {
-                    app.loadAppIconAsync(context, context.getPackageManager());
-                    View v = mMain.getLauncherView(app, false, false);
-
-                    viewholder.appholder.removeAllViews();
-                    if (v!=null) {
-                        viewholder.appholder.addView(v);
-                    } else {
-                        viewholder.appholder.addView(new TextView(context));
-                    }
-                }
-
-                viewholder.labelView.setText(label);
-                viewholder.catagoryView.setText(category);
-            }
-        }.execute();
-
-
+        new ListLoaderTask(this, holder, context).execute(pkgName, activityName);
 
     }
 
@@ -223,41 +199,39 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     }
 
 
-//    private static class ListLoaderTask extends  AsyncTask<Void,Void,AppLauncher> {
-//        ViewHolder viewholder;
-//        WeakReference<AppCursorAdapter> appadaptref;
-//
-//        ListLoaderTask(AppCursorAdapter appadapt, ViewHolder viewholder) {
-//            appadaptref = new WeakReference<>(appadapt);
-//            this.viewholder = viewholder;
-//        }
-//
-//        @Override
-//        protected AppLauncher doInBackground(Void... voids) {
-//            AppCursorAdapter appadapt = appadaptref.get();
-//            return appadapt.db().getApp(new ComponentName(pkgName,activityName));
-//        }
-//
-//        @Override
-//        protected void onPostExecute(AppLauncher app) {
-//            super.onPostExecute(app);
-//            if (app != null) {
-//                app.loadAppIconAsync(context, context.getPackageManager());
-//                View v = mMain.getLauncherView(app, false, false);
-//
-//                viewholder.appholder.removeAllViews();
-//                if (v!=null) {
-//                    viewholder.appholder.addView(v);
-//                } else {
-//                    viewholder.appholder.addView(new TextView(context));
-//                }
-//            }
-//
-//            viewholder.labelView.setText(label);
-//            viewholder.catagoryView.setText(category);
-//        }
-//
-//
-//    }
+    private static class ListLoaderTask extends  AsyncTask<String,Void,AppLauncher> {
+        ViewHolder viewholder;
+        WeakReference<AppCursorAdapter> appadaptref;
+        WeakReference<Context> contextref;
+
+        ListLoaderTask(AppCursorAdapter appadapt, ViewHolder viewholder, Context context) {
+            appadaptref = new WeakReference<>(appadapt);
+            contextref = new WeakReference<>(context);
+            this.viewholder = viewholder;
+        }
+
+        @Override
+        protected AppLauncher doInBackground(String... names) {
+
+            return appadaptref.get().db().getApp(new ComponentName(names[0],names[1]));
+        }
+
+        @Override
+        protected void onPostExecute(AppLauncher app) {
+            if (app != null) {
+                Context context = contextref.get();
+                AppCursorAdapter appadapt = appadaptref.get();
+                app.loadAppIconAsync(context, context.getPackageManager());
+                View v = appadapt.mMain.getLauncherView(app, false, false);
+
+                if (v!=null) {
+                    viewholder.appholder.addView(v);
+                } else {
+                    viewholder.appholder.addView(new TextView(context));
+                }
+            }
+
+        }
+    }
 
 }
