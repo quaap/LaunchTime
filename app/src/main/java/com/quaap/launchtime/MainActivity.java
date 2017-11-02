@@ -901,7 +901,7 @@ public class MainActivity extends Activity implements
 
             //int width = (int)(sw + 20) * mColumns;
 
-            float cellwidth = sw;
+            float cellwidth = sw * 1f;
             float cellheight = cellwidth + 5;  // ~square cells
 
 
@@ -912,30 +912,34 @@ public class MainActivity extends Activity implements
                     wcells = grid.getColumnCount();
                 }
                 if (wcells > 1) start = 0;
-                lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.CENTER);
-
-
+                lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
 
                 //Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+            } else {
+                lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
+
             int hcells = (int) Math.ceil(h / cellheight);
             if (hcells > 1) {
-                lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.CENTER);
+                lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
+            } else {
+                lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
 
             final AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
 
             if (appwid != null) {
 
-
-
                 //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
+
+                //magic numbers to properly expand widgets...
                 final int wDp = pxToDip(cellwidth*wcells);
-                final int hDp = pxToDip(cellheight*hcells);
-                lp.width = (int)(cellwidth*wcells);
-                lp.height = (int)(cellheight*hcells);
+                final int hDp = pxToDip(cellheight*hcells*4/3);
+                lp.width = (int)(cellwidth*wcells*1.1);
+                lp.height = (int)(cellheight*hcells*4/3);
 
                 //Log.d("widcol2", "w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+                //Log.d("widcol2", "h=" + w + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
                 appwid.postDelayed(new Runnable() {
                     @Override
                     public void run() {
