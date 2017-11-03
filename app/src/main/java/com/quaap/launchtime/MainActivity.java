@@ -654,7 +654,7 @@ public class MainActivity extends Activity implements
             else mColumns = 9;
 
 
-            Log.d(TAG, "x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
+            //Log.d(TAG, "x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
 
 
             if (mIconSheet.getColumnCount() != mColumns) {
@@ -1955,6 +1955,7 @@ public class MainActivity extends Activity implements
 
 
             final LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
+            if (launcherApps==null) return false;
             List<ShortcutInfo> shortcutInfos = null;
             if (launcherApps.hasShortcutHostPermission()) {
                 try {
