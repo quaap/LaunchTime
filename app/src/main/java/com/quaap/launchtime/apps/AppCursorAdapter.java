@@ -162,9 +162,9 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
         if (holder==null) {
             holder = new ViewHolder();
 
-            holder.appholder = (ViewGroup) view.findViewById(R.id.icontarget);
-            holder.labelView = (TextView) view.findViewById(R.id.label);
-            holder.catagoryView = (TextView) view.findViewById(R.id.catagory);
+            holder.appholder = view.findViewById(R.id.icontarget);
+            holder.labelView = view.findViewById(R.id.label);
+            holder.catagoryView = view.findViewById(R.id.catagory);
             view.setTag(holder);
         }
 

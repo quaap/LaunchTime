@@ -66,7 +66,7 @@ public class ChooseIconFromPackActivity extends Activity {
         }
 
 
-        final Spinner iconpackSpinner = (Spinner) findViewById(R.id.icon_pack_spinner);
+        final Spinner iconpackSpinner = findViewById(R.id.icon_pack_spinner);
         final MapAdapter<String,String> adapter = new MapAdapter<>(this, android.R.layout.simple_list_item_1, iconpacks2);
         iconpackSpinner.setAdapter(adapter);
 
@@ -95,7 +95,7 @@ public class ChooseIconFromPackActivity extends Activity {
 
     private void displayIcons( String packname) {
         IconPack iconPack = new IconPack(this, packname);
-        GridView gv = (GridView)findViewById(R.id.icon_pack_icons);
+        GridView gv = findViewById(R.id.icon_pack_icons);
 
 
         final ImageAdapter adapter = new ImageAdapter(this, new ArrayList<Drawable>(iconPack.getUniqueIcons()));

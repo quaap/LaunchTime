@@ -683,7 +683,7 @@ public class MainActivity extends Activity implements
 
 
             //Switch the menu left/right
-            ViewGroup wrap = (ViewGroup)findViewById(R.id.icon_and_cat_wrap);
+            ViewGroup wrap = findViewById(R.id.icon_and_cat_wrap);
             View cats = findViewById(R.id.category_tabs_wrap);
             boolean isleft = wrap.getChildAt(0) == cats;
             if (mStyle.isLeftHandCategories()) {
@@ -909,7 +909,7 @@ public class MainActivity extends Activity implements
     private void addAppToIconSheetRecv(Message msg) {
         Bundle data = msg.getData();
         String category = data.getString("category");
-        ComponentName compName = (ComponentName)data.getParcelable("componentName");
+        ComponentName compName = data.getParcelable("componentName");
         AppLauncher app = AppLauncher.getAppLauncher(compName);
         if (app==null) {
             app = db().getApp(compName);
@@ -1256,7 +1256,7 @@ public class MainActivity extends Activity implements
         } else {
 
 
-            item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon ? R.layout.launcher_small_icon : R.layout.launcher_icon, (ViewGroup) null);
+            item = (ViewGroup) LayoutInflater.from(this).inflate(smallIcon ? R.layout.launcher_small_icon : R.layout.launcher_icon, null);
 
 
 
@@ -1269,13 +1269,13 @@ public class MainActivity extends Activity implements
                 }
             });
 
-            ImageView iconImage = (ImageView) item.findViewById(R.id.launcher_icon);
+            ImageView iconImage = item.findViewById(R.id.launcher_icon);
 
             if (!smallIcon) {
 
                 setLayoutSize(item, mStyle.getLauncherSize(), ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                TextView iconLabel = (TextView) item.findViewById(R.id.launcher_text);
+                TextView iconLabel = item.findViewById(R.id.launcher_text);
                 iconLabel.setTextColor(mStyle.getTextColor());
                 iconLabel.setText(app.getLabel());
 
@@ -1305,7 +1305,7 @@ public class MainActivity extends Activity implements
 
     private void updateAppBadgeCount(ViewGroup item, int bcount) {
         if (item!=null) {
-            TextView badge = (TextView) item.findViewById(R.id.launcher_badge);
+            TextView badge = item.findViewById(R.id.launcher_badge);
             if (badge!=null) {
                 if (bcount <= 0) {
                     badge.setVisibility(View.GONE);
@@ -2238,16 +2238,16 @@ public class MainActivity extends Activity implements
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
 
-        ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.category_name, (ViewGroup) null);
+        ViewGroup view = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.category_name, null);
 
-        TextView messageView = (TextView) view.findViewById(R.id.message_txt);
+        TextView messageView = view.findViewById(R.id.message_txt);
 
-        final TextView catDeletedLabel = (TextView) view.findViewById(R.id.cat_deleted_label);
-        final Spinner catDeletedSpinner = (Spinner) view.findViewById(R.id.cat_deleted_spinner);
+        final TextView catDeletedLabel = view.findViewById(R.id.cat_deleted_label);
+        final Spinner catDeletedSpinner = view.findViewById(R.id.cat_deleted_spinner);
 
-        final EditText shortname = (EditText) view.findViewById(R.id.shortname);
-        final EditText fullname = (EditText) view.findViewById(R.id.fullname);
-        final CheckBox isTiny = (CheckBox) view.findViewById(R.id.istiny_checkbox);
+        final EditText shortname = view.findViewById(R.id.shortname);
+        final EditText fullname = view.findViewById(R.id.fullname);
+        final CheckBox isTiny = view.findViewById(R.id.istiny_checkbox);
 
         int vis = View.GONE;
         if (category.length()==0 && populateDeletedCategorySpinner(catDeletedSpinner, shortname, fullname)) {
@@ -2515,28 +2515,28 @@ public class MainActivity extends Activity implements
 
     private void initUI() {
         //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
-        mCategoriesLayout = (LinearLayout) findViewById(R.id.layout_categories);
+        mCategoriesLayout = findViewById(R.id.layout_categories);
 
-        mIconSheetTopFrame = (FrameLayout) findViewById(R.id.layout_icons_topframe);
-        mIconSheetScroller = (InteractiveScrollView) findViewById(R.id.layout_icons_scroller);
+        mIconSheetTopFrame = findViewById(R.id.layout_icons_topframe);
+        mIconSheetScroller = findViewById(R.id.layout_icons_scroller);
 
-        mIconSheetHolder = (ViewGroup) findViewById(R.id.icon_sheet_holder);
+        mIconSheetHolder = findViewById(R.id.icon_sheet_holder);
 
-        mIconSheetBottomFrame = (ViewGroup) findViewById(R.id.layout_icons_bottomframe);
+        mIconSheetBottomFrame = findViewById(R.id.layout_icons_bottomframe);
 
-        mRemoveDropzone = (FrameLayout) findViewById(R.id.remove_dropzone);
+        mRemoveDropzone = findViewById(R.id.remove_dropzone);
         mRemoveDropzone.setOnDragListener(mMainDragListener);
-        mRemoveAppText = (TextView) findViewById(R.id.remove_dz_txt);
+        mRemoveAppText = findViewById(R.id.remove_dz_txt);
 
-        mLinkDropzone = (FrameLayout) findViewById(R.id.link_dropzone);
+        mLinkDropzone = findViewById(R.id.link_dropzone);
         mLinkDropzone.setOnDragListener(mMainDragListener);
 
-        mLinkDropzonePeek = (FrameLayout) findViewById(R.id.link_dropzone_peek);
+        mLinkDropzonePeek = findViewById(R.id.link_dropzone_peek);
 
         //((TextView) findViewById(R.id.link_dz_text)).setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.linkicon);
 
 
-        mCategoriesScroller = (ScrollView)findViewById(R.id.layout_categories_scroller);
+        mCategoriesScroller = findViewById(R.id.layout_categories_scroller);
 
 
 
@@ -2547,7 +2547,7 @@ public class MainActivity extends Activity implements
         mRevCategoryMap = new HashMap<>();
         mRevCategoryMap.put(mQuickRow.getGridLayout(), QuickRow.QUICK_ROW_CAT);
 
-        mShowButtons = (ImageView) findViewById(R.id.settings_button);
+        mShowButtons = findViewById(R.id.settings_button);
 
         mShowButtons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2556,12 +2556,12 @@ public class MainActivity extends Activity implements
             }
         });
 
-        mSortCategoryButton = (TextView)findViewById(R.id.btn_sort_cat);
-        mAddCategoryButton = (TextView)findViewById(R.id.btn_add_cat);
-        mRenameCategoryButton = (TextView)findViewById(R.id.btn_rename_cat);
+        mSortCategoryButton = findViewById(R.id.btn_sort_cat);
+        mAddCategoryButton = findViewById(R.id.btn_add_cat);
+        mRenameCategoryButton = findViewById(R.id.btn_rename_cat);
 
-        mEditWidgetsButton = (TextView)findViewById(R.id.btn_widgets);
-        mOpenPrefsButton = (ImageView)findViewById(R.id.btn_prefs);
+        mEditWidgetsButton = findViewById(R.id.btn_widgets);
+        mOpenPrefsButton = findViewById(R.id.btn_prefs);
 
 
         mSortCategoryButton.setOnClickListener(new View.OnClickListener() {
@@ -2688,13 +2688,13 @@ public class MainActivity extends Activity implements
                 mShowButtons.setVisibility(View.GONE);
                 kid_escape_area.setVisibility(View.VISIBLE);
 
-                TextView kid_code_txt = (TextView) findViewById(R.id.kid_code_txt);
+                TextView kid_code_txt = findViewById(R.id.kid_code_txt);
 
                 TextView[] b = new TextView[4];
-                b[0] = (TextView) findViewById(R.id.btn_kid1);
-                b[1] = (TextView) findViewById(R.id.btn_kid2);
-                b[2] = (TextView) findViewById(R.id.btn_kid3);
-                b[3] = (TextView) findViewById(R.id.btn_kid4);
+                b[0] = findViewById(R.id.btn_kid1);
+                b[1] = findViewById(R.id.btn_kid2);
+                b[2] = findViewById(R.id.btn_kid3);
+                b[3] = findViewById(R.id.btn_kid4);
 
                 List<String> letters = Arrays.asList(getString(R.string.letters).split("(?!^)"));
                 Collections.shuffle(letters);

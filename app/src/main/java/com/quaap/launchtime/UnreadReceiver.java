@@ -2,7 +2,6 @@
 package com.quaap.launchtime;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;

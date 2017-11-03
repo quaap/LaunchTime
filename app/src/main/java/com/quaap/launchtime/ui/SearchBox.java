@@ -44,12 +44,12 @@ public class SearchBox {
         mMainActivity = mainActivity;
         mIconSheetScroller = iconSheetScroller;
 
-        mSearchView = (ViewGroup) LayoutInflater.from(mainActivity).inflate(R.layout.search_layout, (ViewGroup) null);
+        mSearchView = (ViewGroup) LayoutInflater.from(mainActivity).inflate(R.layout.search_layout, null);
 
-        mSearchbox = (EditText) mSearchView.findViewById(R.id.search_box);
+        mSearchbox = mSearchView.findViewById(R.id.search_box);
 
         mSearchAdapter = new AppCursorAdapter(mainActivity, mSearchbox, R.layout.search_item, 0);
-        StaticListView list = (StaticListView) mSearchView.findViewById(R.id.search_dropdownarea);
+        StaticListView list = mSearchView.findViewById(R.id.search_dropdownarea);
 
         list.setAdapter(mSearchAdapter);
         list.setOnItemClickListener(mSearchAdapter);

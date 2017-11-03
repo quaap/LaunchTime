@@ -36,14 +36,14 @@ public class AboutActivity extends Activity {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
 
-            TextView txtappname = (TextView) findViewById(R.id.txtappname);
+            TextView txtappname = findViewById(R.id.txtappname);
             txtappname.setText(getString(R.string.app_name) + " " + version);
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
-        TextView txtAbout = (TextView) findViewById(R.id.txtAbout);
+        TextView txtAbout = findViewById(R.id.txtAbout);
         txtAbout.setMovementMethod(LinkMovementMethod.getInstance());
         if (Build.VERSION.SDK_INT >= 24) {
             txtAbout.setText(Html.fromHtml(getString(R.string.about_app), 0));

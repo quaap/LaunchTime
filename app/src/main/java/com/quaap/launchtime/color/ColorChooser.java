@@ -60,12 +60,12 @@ public class ColorChooser extends FrameLayout {
     private void init(String themename) {
         ViewGroup frame = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.activity_color_chooser, this);
 
-        colorRed = (SeekBar) frame.findViewById(R.id.color_red_seekbar);
-        colorGreen = (SeekBar) frame.findViewById(R.id.color_green_seekbar);
-        colorBlue = (SeekBar) frame.findViewById(R.id.color_blue_seekbar);
-        colorAlpha = (SeekBar) frame.findViewById(R.id.color_alpha_seekbar);
-        colorBright = (SeekBar) frame.findViewById(R.id.color_bright_seekbar);
-        colorHex = (EditText) frame.findViewById(R.id.color_hex);
+        colorRed = frame.findViewById(R.id.color_red_seekbar);
+        colorGreen = frame.findViewById(R.id.color_green_seekbar);
+        colorBlue = frame.findViewById(R.id.color_blue_seekbar);
+        colorAlpha = frame.findViewById(R.id.color_alpha_seekbar);
+        colorBright = frame.findViewById(R.id.color_bright_seekbar);
+        colorHex = frame.findViewById(R.id.color_hex);
 
 
         colorRed.setOnSeekBarChangeListener(colorChange);
@@ -113,7 +113,7 @@ public class ColorChooser extends FrameLayout {
             }
         });
 
-        colorPreview = (TextView) frame.findViewById(R.id.color_preview);
+        colorPreview = frame.findViewById(R.id.color_preview);
         colorPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,7 +121,7 @@ public class ColorChooser extends FrameLayout {
             }
         });
 
-        colorPresets = (GridLayout) frame.findViewById(R.id.color_presets);
+        colorPresets = frame.findViewById(R.id.color_presets);
 
         prefs = getContext().getSharedPreferences("colors" + themename, Context.MODE_PRIVATE);
 

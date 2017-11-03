@@ -43,9 +43,9 @@ public class QuickRow {
 
         mMainActivity = mainActivity;
 
-        mQuickRow = (GridLayout) mMainActivity.findViewById(R.id.layout_quickrow);
+        mQuickRow = mMainActivity.findViewById(R.id.layout_quickrow);
 
-        mQuickRowScroller = (HorizontalScrollView) mMainActivity.findViewById(R.id.layout_quickrow_scroll);
+        mQuickRowScroller = mMainActivity.findViewById(R.id.layout_quickrow_scroll);
 
         mQuickRow.setOnDragListener(dragListener);
         mQuickRowScroller.setOnDragListener(new View.OnDragListener() {

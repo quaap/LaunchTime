@@ -43,7 +43,7 @@ public class CrashReportActivity extends Activity {
 
         appname = getString(R.string.app_name);
 
-        TextView errText = (TextView)findViewById(R.id.err_report_text);
+        TextView errText = findViewById(R.id.err_report_text);
 
         error = getIntent().getStringExtra("error");
 
@@ -60,7 +60,7 @@ public class CrashReportActivity extends Activity {
 
         errText.setText(error);
 
-        final Button sendIt =(Button)findViewById(R.id.err_report_btn);
+        final Button sendIt = findViewById(R.id.err_report_btn);
 
         sendIt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +85,7 @@ public class CrashReportActivity extends Activity {
             }
         });
 
-        Button cancelIt =(Button)findViewById(R.id.err_cancel_btn);
+        Button cancelIt = findViewById(R.id.err_cancel_btn);
         cancelIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +106,7 @@ public class CrashReportActivity extends Activity {
     }
 
     private void endItAll() {
-        final Button sendIt =(Button)findViewById(R.id.err_report_btn);
+        final Button sendIt = findViewById(R.id.err_report_btn);
         sendIt.postDelayed(new Runnable() {
             @Override
             public void run() {

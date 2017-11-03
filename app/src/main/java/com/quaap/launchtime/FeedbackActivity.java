@@ -75,7 +75,7 @@ public class FeedbackActivity extends Activity {
             e.printStackTrace();
         }
 
-        Button sendIt =(Button)findViewById(R.id.info_send);
+        Button sendIt = findViewById(R.id.info_send);
 
         sendIt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,10 +125,10 @@ public class FeedbackActivity extends Activity {
     private void loadData() throws PackageManager.NameNotFoundException {
 
 
-        TextView txtappname = (TextView) findViewById(R.id.info_app_name);
+        TextView txtappname = findViewById(R.id.info_app_name);
         txtappname.setText(appname);
 
-        TextView txtappver = (TextView) findViewById(R.id.info_app_version);
+        TextView txtappver = findViewById(R.id.info_app_version);
         txtappver.setText(version);
 
 
@@ -197,7 +197,7 @@ public class FeedbackActivity extends Activity {
         }
 
 
-        ListView itemsList = (ListView)findViewById(R.id.info_data_items);
+        ListView itemsList = findViewById(R.id.info_data_items);
 
         itemsList.setAdapter(new PackageAdapter(this, new ArrayList<>(scrubbednames.keySet())));
 
@@ -278,9 +278,9 @@ public class FeedbackActivity extends Activity {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.line_item, parent, false);
             }
 
-            CheckBox includeit = (CheckBox)convertView.findViewById(R.id.info_include);
-            TextView pcknameview = (TextView)convertView.findViewById(R.id.item_text);
-            TextView catnameview = (TextView)convertView.findViewById(R.id.item_cat);
+            CheckBox includeit = convertView.findViewById(R.id.info_include);
+            TextView pcknameview = convertView.findViewById(R.id.item_text);
+            TextView catnameview = convertView.findViewById(R.id.item_cat);
             final AppLauncher app = appMap.get(activityname);
             if (app!=null) {
                 catnameview.setText(app.getCategory());

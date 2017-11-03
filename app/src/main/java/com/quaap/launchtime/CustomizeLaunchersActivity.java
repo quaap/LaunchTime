@@ -81,7 +81,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
         mIconSize = (int) getResources().getDimension(android.R.dimen.app_icon_size);
 
-        list = (LinearLayout)findViewById(R.id.custom_launchers_layout);
+        list = findViewById(R.id.custom_launchers_layout);
 
         final DB db = GlobState.getGlobState(this).getDB();
 

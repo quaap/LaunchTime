@@ -68,18 +68,18 @@ public class BackupActivity extends Activity {
 
         if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
-        backupsLayout = (LinearLayout) findViewById(R.id.bakups_list);
+        backupsLayout = findViewById(R.id.bakups_list);
 
-        newbk = (Button)findViewById(R.id.btn_newbak);
-        restorebk = (Button)findViewById(R.id.btn_restorebak);
-        delbk = (Button)findViewById(R.id.btn_deletebak);
-        savebk = (Button)findViewById(R.id.btn_savebak);
-        loadbk = (Button)findViewById(R.id.btn_loadbak);
-        resetdb = (Button)findViewById(R.id.btn_resetdb);
+        newbk = findViewById(R.id.btn_newbak);
+        restorebk = findViewById(R.id.btn_restorebak);
+        delbk = findViewById(R.id.btn_deletebak);
+        savebk = findViewById(R.id.btn_savebak);
+        loadbk = findViewById(R.id.btn_loadbak);
+        resetdb = findViewById(R.id.btn_resetdb);
 
         btnbar = findViewById(R.id.bak_ext_btns);
 
-        showExt = (TextView)findViewById(R.id.bak_show_ext_btns);
+        showExt = findViewById(R.id.bak_show_ext_btns);
         showExt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
