@@ -111,6 +111,13 @@ public class DB extends SQLiteOpenHelper {
 
     private static final String[] appcatmapcolumnsindex = {"ACTVNAME, LEVEL", "PKGNAME, LEVEL"};
 
+
+    private static final String APP_CURSOR_SQL = "select " + ACTVNAME + " _id, " + PKGNAME + " pkg,  app." + LABEL + " label, tab." + LABEL + " category " + ", app." + CUSTOMLABEL + " customlabel" +
+            " from " + APP_TABLE + " as app " +
+            " inner join " + TAB_ORDER_TABLE + " as tab on app." + CATID + "=tab." + CATID +
+            " where (app." + LABEL + " like ? or app." + CUSTOMLABEL + " like ?) and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
+            " order by LOWER(case when customlabel is null then app.label else customlabel end) ";
+
     private boolean firstRun;
 
     private Context mContext;
@@ -557,11 +564,7 @@ public class DB extends SQLiteOpenHelper {
 
         //Cursor cursor = db.query(APP_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
         Cursor cursor = db.rawQuery(
-                "select " + ACTVNAME + " _id, " + PKGNAME + " pkg,  app." + LABEL + " label, tab." + LABEL + " category " + ", app." + CUSTOMLABEL + " customlabel" +
-                        " from " + APP_TABLE + " as app " +
-                        " inner join " + TAB_ORDER_TABLE + " as tab on app." + CATID + "=tab." + CATID +
-                        " where (app." + LABEL + " like ? or app." + CUSTOMLABEL + " like ?) and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
-                        " order by LOWER(case when customlabel is null then app.label else customlabel end) ",
+                APP_CURSOR_SQL,
                 new String[]{filter, filter});
 
         return cursor;
