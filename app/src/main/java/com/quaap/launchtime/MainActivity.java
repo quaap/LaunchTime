@@ -101,6 +101,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -279,6 +280,10 @@ public class MainActivity extends Activity implements
         if (dir<0) dir = -1;
 
         List<String> categories = db().getCategories();
+        for (ListIterator<String> it = categories.listIterator(); it.hasNext();) {
+            String cat = it.next();
+            if (Categories.isHiddenCategory(cat)) it.remove();
+        }
         int last = categories.size() -1;
         for (int i=0; i<categories.size(); i++) {
             if (categories.get(i).equals(category)) {
