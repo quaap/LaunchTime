@@ -266,11 +266,13 @@ public class MainActivity extends Activity implements
 
         @Override
         public void onLeftSwipe(float absDist) {
+            if (mChildLock) return;
             switchCategory(getNextCategory(mCategory, -1));
         }
 
         @Override
         public void onRightSwipe(float absDist) {
+            if (mChildLock) return;
             switchCategory(getNextCategory(mCategory, 1));
         }
     };
