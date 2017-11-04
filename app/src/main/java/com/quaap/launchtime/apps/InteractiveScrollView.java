@@ -20,30 +20,119 @@ package com.quaap.launchtime.apps;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.ScrollView;
 
 
 
 public class InteractiveScrollView extends ScrollView {
     OnPositionChangedListener mListener;
+    OnSwipeHorizontalListener mHSwipeListener;
 
     public InteractiveScrollView(Context context, AttributeSet attrs,
                                  int defStyle) {
         super(context, attrs, defStyle);
+        init(context);
     }
 
     public InteractiveScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
 
     public InteractiveScrollView(Context context) {
         super(context);
-
+        init(context);
     }
 
+    private static final String TAG = "SV";
+
+    private void init(Context context) {
+        swipelen = ViewConfiguration.get(context).getScaledPagingTouchSlop()*context.getResources().getDisplayMetrics().density;
+        clickSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        //Log.d(TAG, "swipelen=" + swipelen );
+    }
+
+    private float x, y;
+    private long startTime;
+
+    private float swipelen = 150;
+    private float clickSlop = 10;
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        //Log.d(TAG, "onInterceptTouchEvent");
+        boolean isLRSwipe = shouldSwipe(motionEvent);
+
+        return isLRSwipe || super.onInterceptTouchEvent(motionEvent);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        //Log.d(TAG, "onTouchEvent");
+
+        boolean isLRSwipe = shouldSwipe(motionEvent);
+
+        return isLRSwipe || super.onTouchEvent(motionEvent);
+    }
+
+    private boolean shouldSwipe(MotionEvent motionEvent) {
+        if (mHSwipeListener!=null) {
+            int action = motionEvent.getActionMasked();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    x = motionEvent.getX();
+                    y = motionEvent.getY();
+                    startTime = System.currentTimeMillis();
+                    //Log.d(TAG, "ACTION_DOWN=" + x);
+                    break;
+
+
+                case MotionEvent.ACTION_MOVE:
+                    //Log.d(TAG, "ACTION_MOVE=" + motionEvent.getX());
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    //Log.d(TAG, "ACTION_UP=" + motionEvent.getX() + " " + x);
+                    if (System.currentTimeMillis() - startTime < 200) {
+                        float xdiff = motionEvent.getX() - x;
+                        float ydiff = motionEvent.getY() - y;
+                        //Log.d(TAG, " xdiff==" + xdiff + " " + ydiff);
+                        if (Math.abs(xdiff)>Math.abs(ydiff)) {
+                            if (xdiff > swipelen) {
+                               // Log.d(TAG, "xdiff=" + xdiff);
+                                mHSwipeListener.onLeftSwipe(xdiff);
+                                return true;
+                            } else if (xdiff < -swipelen) {
+                               // Log.d(TAG, "xdiff=" + xdiff);
+                                mHSwipeListener.onRightSwipe(xdiff);
+                                return true;
+                            }
+                        }
+                        if (Math.abs(xdiff) <= clickSlop && Math.abs(xdiff) <= clickSlop) {
+                            performClick();
+                        }
+                    }
+
+            }
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
@@ -60,14 +149,6 @@ public class InteractiveScrollView extends ScrollView {
             float percentUp = (bottom - getScrollY()) / bottom;
 
             mListener.onPositionChanged(percentUp, percentDown, getScrollY(), diff);
-            //
-            //        if (diff <40 && mListener != null) {
-            //            mListener.onPositionChanged(InteractiveScrollViewPosition.Bottom);
-            //        } else if (getScrollY()<40) {
-            //            mListener.onPositionChanged(InteractiveScrollViewPosition.Top);
-            //        } else {
-            //            mListener.onPositionChanged(InteractiveScrollViewPosition.Body);
-            //        }
 
         }
 
@@ -85,6 +166,14 @@ public class InteractiveScrollView extends ScrollView {
     }
 
 
+    public OnSwipeHorizontalListener getHSwipeListener() {
+        return mHSwipeListener;
+    }
+
+    public void setHSwipeListener(OnSwipeHorizontalListener mHSwipeListener) {
+        this.mHSwipeListener = mHSwipeListener;
+    }
+
     // public enum InteractiveScrollViewPosition {Top, Body, Bottom}
 
     /**
@@ -94,4 +183,9 @@ public class InteractiveScrollView extends ScrollView {
         void onPositionChanged(float percentUp, float percentDown, int distFromTop, int distFromBottom);
     }
 
+    public interface OnSwipeHorizontalListener {
+        void onLeftSwipe(float absDist);
+        void onRightSwipe(float absDist);
+
+    }
 }

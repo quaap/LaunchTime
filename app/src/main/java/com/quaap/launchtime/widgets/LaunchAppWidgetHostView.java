@@ -45,7 +45,7 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        switch (MotionEventCompat.getActionMasked(ev)) {
+        switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 mLongClickStarted = System.currentTimeMillis();
                 break;

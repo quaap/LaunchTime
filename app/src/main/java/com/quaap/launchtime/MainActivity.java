@@ -122,7 +122,7 @@ public class MainActivity extends Activity implements
 
     private GridLayout mIconSheet;
 
-    private ScrollView mCategoriesScroller;
+    private InteractiveScrollView mCategoriesScroller;
     private Map<String, TextView> mCategoryTabs;
     private Map<View, String> mRevCategoryMap;
     private volatile String mCategory;
@@ -237,6 +237,13 @@ public class MainActivity extends Activity implements
         GlobState.getBadger(this).setBadgerCountChangeListener(this);
 
 
+//        for (int i=0; i<100; i++) {
+//            ComponentName cn = db().getAppNames().get(1);
+//            AppLauncher app = db().getApp(cn);
+//            AppLauncher applauncher = app.makeAppLink();
+//            //applauncher.setCategory(mCategory);
+//            db().addApp(applauncher);
+//        }
     }
 
 
@@ -253,6 +260,35 @@ public class MainActivity extends Activity implements
             return mMainDragListener.onDrag(mIconSheet, dragEvent);
         }
     };
+
+    private InteractiveScrollView.OnSwipeHorizontalListener mHSwipeListener = new InteractiveScrollView.OnSwipeHorizontalListener() {
+
+        @Override
+        public void onLeftSwipe(float absDist) {
+            switchCategory(getNextCategory(mCategory, -1));
+        }
+
+        @Override
+        public void onRightSwipe(float absDist) {
+            switchCategory(getNextCategory(mCategory, 1));
+        }
+    };
+
+    private String getNextCategory(String category, int dir) {
+        if (dir>0) dir = 1;
+        if (dir<0) dir = -1;
+
+        List<String> categories = db().getCategories();
+        int last = categories.size() -1;
+        for (int i=0; i<categories.size(); i++) {
+            if (categories.get(i).equals(category)) {
+                if (i==0 && dir==-1) return categories.get(last);
+                if (i==last && dir==1) return categories.get(0);
+                return categories.get(i+dir);
+            }
+        }
+        return null;
+    }
 
     //screen rotation, etc.
     @Override
@@ -2514,7 +2550,7 @@ public class MainActivity extends Activity implements
     }
 
     private void initUI() {
-        //mCategoriesScroller = (ScrollView) findViewById(R.id.layout_categories_scroller);
+
         mCategoriesLayout = findViewById(R.id.layout_categories);
 
         mIconSheetTopFrame = findViewById(R.id.layout_icons_topframe);
@@ -2538,9 +2574,8 @@ public class MainActivity extends Activity implements
 
         mCategoriesScroller = findViewById(R.id.layout_categories_scroller);
 
-
-
-
+        mIconSheetScroller.setHSwipeListener(mHSwipeListener);
+        mCategoriesScroller.setHSwipeListener(mHSwipeListener);
 
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
