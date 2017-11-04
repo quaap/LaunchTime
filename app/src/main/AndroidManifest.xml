@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.quaap.launchtime"
-    android:versionCode="72"
-    android:versionName="0.7.2">
+    android:versionCode="73"
+    android:versionName="0.7.3">
 
     <uses-permission
         android:name="android.permission.BIND_APPWIDGET"

@@ -39,7 +39,7 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 72;
+        final int newsnum = 73;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
@@ -47,7 +47,13 @@ public class MsgBox {
                 public void run() {
 
                     String msg = "";
-
+                    msg += "" +
+                            "In 0.7.3:\n" +
+                            " * Show widgets better.\n" +
+                            " * Swipe left and right switches categories.\n" +
+                            " * Better support for large screens/tablets.\n" +
+                            " * Fixes and speedups.\n" +
+                            "";
                     msg += "" +
                             "In 0.7.2:\n" +
                             " * Beta \"unread\" badges on certain apps.\n" +
