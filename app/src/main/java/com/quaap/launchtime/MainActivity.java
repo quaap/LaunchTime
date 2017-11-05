@@ -1362,7 +1362,22 @@ public class MainActivity extends Activity implements
 
     @Override
     public void badgerCountChanged(String packagename, int count) {
+        List<AppLauncher> apps = db().getAppsForPackage(packagename);
+        //Log.d("badgerCountChanged", packagename + " " + count + " apps=" + apps.size());
+        boolean needsrepop = false;
+        for (AppLauncher app: apps) {
+           // Log.d("badgerCountChanged", "app=" + app.getComponentName());
+            ViewGroup view = mAppLauncherViews.remove(app);
+            if (view != null) {
+                updateAppBadgeCount(view, count);
+                //Log.d("badgerCountChanged", "has view app=" + app.getComponentName());
+            }
 
+            if (mQuickRow.appAlreadyHere(app)) {
+                needsrepop = true;
+            }
+        }
+        if (needsrepop) mQuickRow.repopulate();
     }
 
     @Override

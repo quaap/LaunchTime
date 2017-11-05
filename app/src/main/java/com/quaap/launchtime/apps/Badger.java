@@ -25,6 +25,7 @@ import java.util.Set;
 
 public class Badger {
 
+    public static final String ANY_ACT = "ANY";
     private BadgerCountChangeListener badgerCountChangeListener;
 
     private Map<ComponentName,Integer> unreadCount = new HashMap<>();
@@ -43,7 +44,7 @@ public class Badger {
 
     public void setUnreadCount(String activityName, String packageName, int count) {
         if (activityName==null) {
-            activityName="ANY";
+            activityName= ANY_ACT;
         }
         ComponentName compName = new ComponentName(packageName, activityName);
         setUnreadCount(compName,count);
@@ -57,15 +58,31 @@ public class Badger {
             prefs.edit().putInt(compName.flattenToString(), count).apply();
         }
         if (badgerCountChangeListener!=null) {
-            badgerCountChangeListener.badgerCountChanged(compName, count);
-            Log.d("count", compName.toString() + " " + count);
+            if (compName.getClassName().equals(ANY_ACT)) {
+                if (!containsFullName(compName.getPackageName())) {
+                    badgerCountChangeListener.badgerCountChanged(compName.getPackageName(), count);
+                }
+            } else {
+                badgerCountChangeListener.badgerCountChanged(compName, count);
+            }
+
+            Log.d("unread count", compName.toString() + " " + count);
         }
+    }
+
+    public boolean containsFullName(String packageName) {
+        for (ComponentName cn: unreadCount.keySet()) {
+            if (cn.getPackageName().equals(packageName) && !cn.getClassName().equals(ANY_ACT)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getUnreadCount(ComponentName compname) {
         Integer count = unreadCount.get(compname);
         if (count==null) {
-            count = unreadCount.get(new ComponentName(compname.getPackageName(),"ANY"));
+            count = unreadCount.get(new ComponentName(compname.getPackageName(), ANY_ACT));
             if (count==null) {
                 return 0;
             }
