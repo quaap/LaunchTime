@@ -3,6 +3,7 @@ package com.quaap.launchtime.apps;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,8 +37,14 @@ public class Badger {
             unreadCount.put(ComponentName.unflattenFromString(cname), (prefs.getInt(cname, 0)));
         }
     }
+    public void setUnreadCount(String packageName, int count) {
+        setUnreadCount(null, packageName, count);
+    }
 
     public void setUnreadCount(String activityName, String packageName, int count) {
+        if (activityName==null) {
+            activityName="ANY";
+        }
         ComponentName compName = new ComponentName(packageName, activityName);
         setUnreadCount(compName,count);
     }
@@ -49,16 +56,20 @@ public class Badger {
         } else {
             prefs.edit().putInt(compName.flattenToString(), count).apply();
         }
-        if (badgerCountChangeListener!=null) badgerCountChangeListener.badgerCountChanged(compName, count);
-    }
-
-    public int getUnreadCount(String activityName, String packageName) {
-        return getUnreadCount(new ComponentName(packageName,activityName));
+        if (badgerCountChangeListener!=null) {
+            badgerCountChangeListener.badgerCountChanged(compName, count);
+            Log.d("count", compName.toString() + " " + count);
+        }
     }
 
     public int getUnreadCount(ComponentName compname) {
         Integer count = unreadCount.get(compname);
-        if (count==null) return 0;
+        if (count==null) {
+            count = unreadCount.get(new ComponentName(compname.getPackageName(),"ANY"));
+            if (count==null) {
+                return 0;
+            }
+        }
         return count;
     }
 
@@ -77,5 +88,6 @@ public class Badger {
 
     public interface BadgerCountChangeListener {
         void badgerCountChanged(ComponentName compname, int count);
+        void badgerCountChanged(String packagename, int count);
     }
 }

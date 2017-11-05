@@ -1361,6 +1361,11 @@ public class MainActivity extends Activity implements
     }
 
     @Override
+    public void badgerCountChanged(String packagename, int count) {
+
+    }
+
+    @Override
     public void badgerCountChanged(ComponentName compname, int count) {
         AppLauncher app = AppLauncher.getAppLauncher(compname);
         if (app!=null) {
