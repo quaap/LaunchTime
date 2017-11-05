@@ -51,10 +51,11 @@ public class Badger {
     }
 
     public void setUnreadCount(ComponentName compName, int count) {
-        unreadCount.put(compName, count);
         if (count==0) {
+            unreadCount.remove(compName);
             prefs.edit().remove(compName.flattenToString()).apply();
         } else {
+            unreadCount.put(compName, count);
             prefs.edit().putInt(compName.flattenToString(), count).apply();
         }
         if (badgerCountChangeListener!=null) {
