@@ -13,6 +13,7 @@ package com.quaap.launchtime;
  * See the GNU General Public License for more details.
  */
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -237,6 +238,9 @@ public class MainActivity extends Activity implements
 
         GlobState.getBadger(this).setBadgerCountChangeListener(this);
 
+        Log.d(TAG, "Notify perm: "  + (checkCallingOrSelfPermission(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE) ==  PackageManager.PERMISSION_DENIED));
+
+        //this.enforceCallingOrSelfPermission(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE, "Grant Notification access");
 
 //        for (int i=0; i<100; i++) {
 //            ComponentName cn = db().getAppNames().get(1);
