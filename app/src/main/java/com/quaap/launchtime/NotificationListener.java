@@ -1,6 +1,5 @@
 package com.quaap.launchtime;
 
-import android.app.Notification;
 import android.os.Build;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -12,16 +11,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by tom on 10/23/17.
+ * Copyright (C) 2017   Tom Kliethermes
+ *
+ * This file is part of LaunchTime and is is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  */
 
 public class NotificationListener extends NotificationListenerService {
 
-    //private Map<String,Integer> counts = new HashMap<>();
     @Override
     public void onCreate() {
         super.onCreate();
-
         Log.d("Msg","Notification service started");
     }
 
@@ -30,11 +36,6 @@ public class NotificationListener extends NotificationListenerService {
     public void onListenerConnected() {
         super.onListenerConnected();
         Log.d("Msg","onListenerConnected");
-//
-//        for (StatusBarNotification sbn: getActiveNotifications()) {
-//            setCount(sbn, true);
-//            Log.d("Msg","Notification Posted: " +sbn.getPackageName() + " " + sbn.getNotification().number);
-//        }
         pollNotifyCounts();
     }
 
@@ -43,61 +44,49 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     private void pollNotifyCounts(StatusBarNotification del) {
-        Map<String,Integer> counts = new HashMap<>();
+        try {
+            Map<String, Integer> counts = new HashMap<>();
 
-        if (del!=null) {
-            counts.put(del.getPackageName(), 0);
-        }
-
-        for (StatusBarNotification sbn: getActiveNotifications()) {
-            Integer count;
-
-            if (Build.VERSION.SDK_INT >= 26) {
-                count = sbn.getNotification().number;
-            } else {
-                count = counts.get(sbn.getPackageName());
-                if (count == null) count = 0;
-                count++;
+            if (del != null) {
+                counts.put(del.getPackageName(), 0);
             }
-            counts.put(sbn.getPackageName(), count);
-        }
 
-        if (counts.size()>0) {
-            Badger badger = GlobState.getBadger(this);
-            for (String packageName : counts.keySet()) {
-                badger.setUnreadCount(packageName, counts.get(packageName));
+            for (StatusBarNotification sbn : getActiveNotifications()) {
+                Integer count;
+
+                int number = sbn.getNotification().number;
+                if (Build.VERSION.SDK_INT >= 26 || number > 0) {
+                    count = number;
+                } else {
+                    count = counts.get(sbn.getPackageName());
+                    if (count == null) count = 0;
+                    count++;
+                }
+                counts.put(sbn.getPackageName(), count);
             }
+
+            if (counts.size() > 0) {
+                Badger badger = GlobState.getBadger(this);
+                for (String packageName : counts.keySet()) {
+                    badger.setUnreadCount(packageName, counts.get(packageName));
+                }
+            }
+        } catch (Exception | Error e) {
+            Log.d("NotifyListener", e.getMessage(),e);
         }
     }
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         Log.d("Msg","Notification Posted: " +sbn.getPackageName() + " " + sbn.getNotification().number);
-        //setCount(sbn, true);
         pollNotifyCounts();
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         Log.d("Msg","Notification Removed: " + sbn.getPackageName() + " " + sbn.getNotification().number);
-        //setCount(sbn,false);
         pollNotifyCounts(sbn);
     }
-
-//    private void setCount(StatusBarNotification sbn, boolean add) {
-//        Integer count;
-//
-//        if (Build.VERSION.SDK_INT>=26) {
-//            count = sbn.getNotification().number;
-//        } else {
-//            count = counts.get(sbn.getPackageName());
-//            if (count==null) count=0;
-//            count = add ? count+1 : count-1;
-//            counts.put(sbn.getPackageName(), count);
-//        }
-//        if (count<0) count=0;
-//        GlobState.getBadger(this).setUnreadCount(sbn.getPackageName(), count);
-//    }
 
 
 }
