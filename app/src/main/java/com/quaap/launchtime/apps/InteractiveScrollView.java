@@ -56,9 +56,11 @@ public class InteractiveScrollView extends ScrollView {
     private static final String TAG = "SV";
 
     private void init(Context context) {
-        swipelen = ViewConfiguration.get(context).getScaledPagingTouchSlop()*context.getResources().getDisplayMetrics().density;
-        clickSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        //Log.d(TAG, "swipelen=" + swipelen );
+        float density = context.getResources().getDisplayMetrics().density;
+        swipelen = ViewConfiguration.get(context).getScaledPagingTouchSlop()*density;
+        clickSlop = ViewConfiguration.get(context).getScaledTouchSlop()*density;
+        Log.d(TAG, "swipelen=" + swipelen );
+        Log.d(TAG, "clickSlop=" + clickSlop );
     }
 
     private float x, y;
