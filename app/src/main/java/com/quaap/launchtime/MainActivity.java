@@ -268,14 +268,20 @@ public class MainActivity extends Activity implements
         public void onLeftSwipe(float absDist) {
             if (mChildLock) return;
             switchCategory(getNextCategory(mCategory, -1));
+            scrollToCategoryTab();
         }
 
         @Override
         public void onRightSwipe(float absDist) {
             if (mChildLock) return;
             switchCategory(getNextCategory(mCategory, 1));
+            scrollToCategoryTab();
         }
     };
+
+    private void scrollToCategoryTab() {
+        mCategoriesScroller.smoothScrollTo(0, mCategoryTabs.get(mCategory).getTop()-20);
+    }
 
     private String getNextCategory(String category, int dir) {
         if (dir>0) dir = 1;
@@ -359,6 +365,7 @@ public class MainActivity extends Activity implements
                 @Override
                 public void run() {
                     mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
+                    scrollToCategoryTab();
 
                 }
             }, 100);
