@@ -245,6 +245,7 @@ public class DB extends SQLiteOpenHelper {
             boolean first = true;
             String cols = "";
             for (String col : appcolumns) {
+               // if (oldVersion<6 && col.equals(CUSTOMLABEL)) continue;
                 if (first) first = false;
                 else cols += ", ";
                 cols += col;
@@ -288,7 +289,6 @@ public class DB extends SQLiteOpenHelper {
 
         if (oldVersion<6) {
             sqLiteDatabase.execSQL("alter table " + APP_TABLE + " add column " + CUSTOMLABEL + " TEXT");
-
         }
 
         if (oldVersion<7) {
