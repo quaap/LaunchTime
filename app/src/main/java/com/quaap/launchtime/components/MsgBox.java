@@ -49,12 +49,13 @@ public class MsgBox {
                     String msg = "";
                     msg += "" +
                             "In 0.7.3:\n" +
-                            " * Show widgets better.\n" +
-                            " * Swipe left and right switches categories.\n" +
-                            " * Better support for large screens/tablets.\n" +
+                            " * Better widgets support.\n" +
+                            " * Swipe left and right to switch categories.\n" +
+                            " * Better large screen/tablet support.\n" +
                             " * Fixes and speedups.\n" +
                             "";
-                    msg += "" +
+
+                    msg += "\n" +
                             "In 0.7.2:\n" +
                             " * Beta \"unread\" badges on certain apps.\n" +
                             " * Minor fixes.\n" +
