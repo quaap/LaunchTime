@@ -109,7 +109,7 @@ public class InteractiveScrollView extends ScrollView {
                         float xdiff = motionEvent.getX() - x;
                         float ydiff = motionEvent.getY() - y;
                         //Log.d(TAG, " xdiff==" + xdiff + " " + ydiff);
-                        if (Math.abs(xdiff)>Math.abs(ydiff)) {
+                        if (Math.abs(xdiff)>Math.abs(ydiff*3/2)) {
                             if (xdiff > swipelen) {
                                // Log.d(TAG, "xdiff=" + xdiff);
                                 mHSwipeListener.onLeftSwipe(xdiff);
