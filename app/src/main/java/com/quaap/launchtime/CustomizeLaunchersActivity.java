@@ -92,9 +92,8 @@ public class CustomizeLaunchersActivity extends Activity {
 
         final int iconSize = (int)this.getResources().getDimension(R.dimen.icon_width);
 
-        final AsyncTask<Void, Void, Void> loadappstask = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
+
+
                 for (final String catID: db.getCategories()) {
 
                     List<AppLauncher> apps = db.getApps(catID);
@@ -205,11 +204,6 @@ public class CustomizeLaunchersActivity extends Activity {
 
                 }
 
-                return null;
-            }
-        };
-
-        loadappstask.execute();
     }
 
     @Override
@@ -456,4 +450,6 @@ public class CustomizeLaunchersActivity extends Activity {
         public void onShow(DialogInterface dialog) {
         }
     }
+
+
 }
