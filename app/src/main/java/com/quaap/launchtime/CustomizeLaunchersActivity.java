@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -300,7 +301,6 @@ public class CustomizeLaunchersActivity extends Activity {
 
 
     private static final int PICK_CUSTOM_ICON=1;
-    private static final int PICK_CUSTOM_PICTURE=5;
     private static final int PICK_FROM_ICON_PACK=6;
 
     @Override
@@ -316,7 +316,6 @@ public class CustomizeLaunchersActivity extends Activity {
             Bitmap bitmap = null;
             switch (requestCode) {
                 case PICK_FROM_ICON_PACK:
-                case PICK_CUSTOM_PICTURE:
                     bitmap = data.getParcelableExtra("data");
                     if (bitmap != null) {
                         if (bitmap.getWidth() > mIconSize) {
@@ -355,8 +354,10 @@ public class CustomizeLaunchersActivity extends Activity {
 
             }
 
-            if (bitmap!=null) {
+            if (bitmap!=null && mAppClicked!=null) {
                 updateBitmap(bitmap);
+            } else {
+                Log.d("custLaunch", "NULL1!!" + bitmap + " " + mAppClicked);
             }
         }
     }
@@ -370,27 +371,31 @@ public class CustomizeLaunchersActivity extends Activity {
     }
 
     private void updateBitmap(Bitmap bitmap) {
-        if (bitmap==null) {
-            SpecialIconStore.deleteBitmap(this, mAppClicked.getComponentName(),SpecialIconStore.IconType.Custom);
+        if (mAppClicked!=null && mClickedIconView!=null) {
+            if (bitmap == null) {
+                SpecialIconStore.deleteBitmap(this, mAppClicked.getComponentName(), SpecialIconStore.IconType.Custom);
 
-            IconsHandler ich = GlobState.getIconsHandler(this);
+                IconsHandler ich = GlobState.getIconsHandler(this);
 
-            Drawable icon = ich.getDrawableIconForPackage(mAppClicked);
+                Drawable icon = ich.getDrawableIconForPackage(mAppClicked);
 
-            mClickedIconView.setImageDrawable(icon);
+                mClickedIconView.setImageDrawable(icon);
 
 
+            } else {
+                SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
+                mClickedIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
+            }
+
+            setItemModified(mClickedIconView, bitmap != null);
+
+            AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            int num = prefs.getInt("icon-update", 0);
+            prefs.edit().putInt("icon-update", num + 1).apply();
         } else {
-            SpecialIconStore.saveBitmap(this, mAppClicked.getComponentName(), bitmap, SpecialIconStore.IconType.Custom);
-            mClickedIconView.setImageDrawable(new BitmapDrawable(this.getResources(), bitmap));
+            Log.d("custLaunch", "NULL!!");
         }
-
-        setItemModified(mClickedIconView, bitmap!=null);
-
-        AppLauncher.removeAppLauncher(mAppClicked.getComponentName());
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        int num = prefs.getInt("icon-update", 0);
-        prefs.edit().putInt("icon-update", num+1).apply();
     }
 
     protected class IconTypeDialog implements DialogInterface.OnClickListener,
@@ -403,7 +408,6 @@ public class CustomizeLaunchersActivity extends Activity {
         public  Dialog createDialog() {
             mAdapter = new ArrayAdapter<String>(CustomizeLaunchersActivity.this, R.layout.add_list_item);
             mAdapter.add(getString(R.string.custom_icon_select_picture));
-            mAdapter.add(getString(R.string.custom_icon_crop_picture));
             mAdapter.add(getString(R.string.custom_icon_icon_packs));
             if (SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, mAppClicked.getComponentName(), SpecialIconStore.IconType.Custom)) {
                 mAdapter.add(getString(R.string.custom_icon_clear_icon));
@@ -438,27 +442,10 @@ public class CustomizeLaunchersActivity extends Activity {
                     startActivityForResult(Intent.createChooser(pickerIntent, getString(R.string.custom_icon_select_icon_type)), PICK_CUSTOM_ICON);
                     break;
                 case 1:
-                    //Crop picture
-                    int width;
-                    int height;
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    intent.setType("image/*");
-                    width = height= mIconSize;
-                    intent.putExtra("crop", "true");
-                    intent.putExtra("outputX", width);
-                    intent.putExtra("outputY", height);
-                    intent.putExtra("aspectX", width);
-                    intent.putExtra("aspectY", height);
-                    intent.putExtra("noFaceDetection", true);
-                    intent.putExtra("return-data", true);
-                    startActivityForResult(intent, PICK_CUSTOM_PICTURE);
-                    break;
-                case 2:
-                    //Icon packs
                     Intent packIntent=new Intent(CustomizeLaunchersActivity.this, ChooseIconFromPackActivity.class);
                     startActivityForResult(Intent.createChooser(packIntent, getString(R.string.custom_icon_select_icon_pack)), PICK_FROM_ICON_PACK);
                     break;
-                case 3:
+                case 2:
                     updateBitmap(null);
                     break;
                 default:
