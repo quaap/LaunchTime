@@ -228,42 +228,46 @@ public class CustomizeLaunchersActivity extends Activity {
     }
 
     private void promptForAppLabel() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.custom_icon_text);
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.custom_icon_text);
 
-        final EditText input = new EditText(this);
+            final EditText input = new EditText(this);
 
-        input.setText(mAppClicked.getLabel());
+            input.setText(mAppClicked.getLabel());
 
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        builder.setView(input);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+            builder.setView(input);
 
 
-        builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String labeltext = input.getText().toString();
-                if (!labeltext.isEmpty()) {
-                    updateAppLabel(labeltext);
-                }
-            }
-        });
-        if (GlobState.getGlobState(this).getDB().appHasCustomLabel(mAppClicked.getComponentName())) {
-            builder.setNeutralButton(R.string.clear, new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    updateAppLabel(null);
+                    String labeltext = input.getText().toString();
+                    if (!labeltext.isEmpty()) {
+                        updateAppLabel(labeltext);
+                    }
                 }
             });
-        }
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            if (GlobState.getGlobState(this).getDB().appHasCustomLabel(mAppClicked.getComponentName())) {
+                builder.setNeutralButton(R.string.clear, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        updateAppLabel(null);
+                    }
+                });
             }
-        });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
 
-        AlertDialog dialog = builder.show();
+            builder.show();
+        } catch (Exception|Error e) {
+            Log.e("custLaunch", e.getMessage(), e);
+        }
 
         //if (dialog.getWindow()!=null) dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
