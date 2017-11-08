@@ -93,116 +93,115 @@ public class CustomizeLaunchersActivity extends Activity {
         final int iconSize = (int)this.getResources().getDimension(R.dimen.icon_width);
 
 
+        for (final String catID: db.getCategories()) {
 
-                for (final String catID: db.getCategories()) {
+            List<AppLauncher> apps = db.getApps(catID);
+            if (apps.isEmpty()) continue;
 
-                    List<AppLauncher> apps = db.getApps(catID);
-                    if (apps.isEmpty()) continue;
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    TextView cat = new TextView(CustomizeLaunchersActivity.this);
+                    cat.setText(db.getCategoryDisplayFull(catID));
+                    cat.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+                    cat.setBackgroundColor(Color.BLACK);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    lp.gravity = Gravity.CENTER;
+                    lp.setMargins(12,18,12,12);
+                    cat.setLayoutParams(lp);
+                    cat.setPadding(12,6,6,6);
+                    list.addView(cat);
+                }
+            });
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            TextView cat = new TextView(CustomizeLaunchersActivity.this);
-                            cat.setText(db.getCategoryDisplayFull(catID));
-                            cat.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
-                            cat.setBackgroundColor(Color.BLACK);
-                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                            lp.gravity = Gravity.CENTER;
-                            lp.setMargins(12,18,12,12);
-                            cat.setLayoutParams(lp);
-                            cat.setPadding(12,6,6,6);
-                            list.addView(cat);
+
+            for (final AppLauncher app: apps) {
+
+                if (app.isWidget()) continue;
+
+                final boolean hasCustIcon = SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, app.getComponentName(), SpecialIconStore.IconType.Custom);
+                final boolean hasCustLabel = db.appHasCustomLabel(app.getComponentName());
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        final LinearLayout applayout = new LinearLayout(CustomizeLaunchersActivity.this);
+                        applayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp.gravity = Gravity.CENTER_VERTICAL;
+                        lp.setMargins(24,12,12,12);
+                        applayout.setLayoutParams(lp);
+                        applayout.setPadding(18,6,6,6);
+
+                        if (hasCustIcon || hasCustLabel) {
+                            applayout.setBackgroundColor(Color.DKGRAY);
                         }
-                    });
+
+                        final ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
+
+                        iconView.setPadding(12,12,12,12);
+                        LinearLayout.LayoutParams ilp = new LinearLayout.LayoutParams(iconSize, iconSize);
+                        ilp.setMargins(12,12,24,12);
+                        iconView.setLayoutParams(ilp);
+
+                        Drawable icon = ich.getCustomIcon(app.getComponentName());
+
+                        if (icon == null) {
+                            icon = ich.getDrawableIconForPackage(app);
+                        }
+
+                        iconView.setImageDrawable(icon);
+
+                        if (hasCustIcon) {
+                            setItemModified(iconView, true);
+                        }
 
 
-                    for (final AppLauncher app: apps) {
-
-                        if (app.isWidget()) continue;
-
-                        final boolean hasCustIcon = SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, app.getComponentName(), SpecialIconStore.IconType.Custom);
-                        final boolean hasCustLabel = db.appHasCustomLabel(app.getComponentName());
-
-                        handler.post(new Runnable() {
+                        iconView.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void run() {
-                                final LinearLayout applayout = new LinearLayout(CustomizeLaunchersActivity.this);
-                                applayout.setOrientation(LinearLayout.HORIZONTAL);
+                            public void onClick(View v) {
+                                mAppClicked = app;
+                                mClickedIconView = iconView;
+                                new IconTypeDialog().createDialog().show();
 
-                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                lp.gravity = Gravity.CENTER_VERTICAL;
-                                lp.setMargins(24,12,12,12);
-                                applayout.setLayoutParams(lp);
-                                applayout.setPadding(18,6,6,6);
-
-                                if (hasCustIcon || hasCustLabel) {
-                                    applayout.setBackgroundColor(Color.DKGRAY);
-                                }
-
-                                final ImageView iconView = new ImageView(CustomizeLaunchersActivity.this);
-
-                                iconView.setPadding(12,12,12,12);
-                                LinearLayout.LayoutParams ilp = new LinearLayout.LayoutParams(iconSize, iconSize);
-                                ilp.setMargins(12,12,24,12);
-                                iconView.setLayoutParams(ilp);
-
-                                Drawable icon = ich.getCustomIcon(app.getComponentName());
-
-                                if (icon == null) {
-                                    icon = ich.getDrawableIconForPackage(app);
-                                }
-
-                                iconView.setImageDrawable(icon);
-
-                                if (hasCustIcon) {
-                                    setItemModified(iconView, true);
-                                }
-
-
-                                iconView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mAppClicked = app;
-                                        mClickedIconView = iconView;
-                                        new IconTypeDialog().createDialog().show();
-
-                                    }
-                                });
-                                applayout.addView(iconView);
-
-                                final TextView label = new TextView(CustomizeLaunchersActivity.this);
-                                label.setText(app.getLabel());
-                                label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-                                label.setPadding(18,6,18,6);
-                                label.setTextColor(Color.WHITE);
-                                LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                llp.setMargins(24,12,24,12);
-                                label.setLayoutParams(llp);
-
-                                if (hasCustLabel) {
-                                    setItemModified(label, true);
-                                }
-
-                                label.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mAppClicked = app;
-                                        mClickedTextView = label;
-                                        promptForAppLabel();
-                                    }
-                                });
-                                applayout.addView(label);
-
-
-                                list.addView(applayout);
                             }
                         });
+                        applayout.addView(iconView);
 
+                        final TextView label = new TextView(CustomizeLaunchersActivity.this);
+                        label.setText(app.getLabel());
+                        label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+                        label.setPadding(18,6,18,6);
+                        label.setTextColor(Color.WHITE);
+                        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        llp.setMargins(24,12,24,12);
+                        label.setLayoutParams(llp);
+
+                        if (hasCustLabel) {
+                            setItemModified(label, true);
+                        }
+
+                        label.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mAppClicked = app;
+                                mClickedTextView = label;
+                                promptForAppLabel();
+                            }
+                        });
+                        applayout.addView(label);
+
+
+                        list.addView(applayout);
                     }
-                    //list.postInvalidate();
+                });
+
+            }
+            //list.postInvalidate();
 
 
-                }
+        }
 
     }
 
