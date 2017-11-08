@@ -173,7 +173,7 @@ public class Style {
 
         textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
 
-        wallpaperColor = mAppPreferences.getInt("wallpapercolor", Color.TRANSPARENT);
+        wallpaperColor = mAppPreferences.getInt("wallpapercolor", getResColor(R.color.wallpaper_color));
 
         iconTint = mAppPreferences.getInt("icon_tint", Color.TRANSPARENT);
     }

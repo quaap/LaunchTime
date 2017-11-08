@@ -120,7 +120,7 @@
         <com.quaap.launchtime.color.ColorPreference
             android:title="Background color"
             android:key="wallpapercolor"
-            android:defaultValue="@color/textcolor"/>
+            android:defaultValue="@color/wallpaper_color"/>
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabtext"
             android:key="cattabtextcolor"

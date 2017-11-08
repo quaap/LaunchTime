@@ -10,6 +10,8 @@
 
     <color name="dragover_background">#775555ee</color>
 
+    <color name="wallpaper_color">#44006A00</color>
+
     <color name="icon_tint">#00000000</color>
 
 </resources>
