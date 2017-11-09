@@ -1,10 +1,60 @@
+#!/usr/bin/perl
 
 # this script makes the git branch and moves/renames the package name for the playstore
 # "Clean Project" and test!
+use warnings;
+use strict;
+use File::Basename;
+
 
 my $gitbranch = "playstore73";
 
-#Check if there are changes
+my $from_pack = "com.quaap.launchtime";
+my $to_pack   = "com.quaap.launchtime_official";
+
+my $basedir = ".";
+
+if (@ARGV>0) {
+
+    if (@ARGV!=1 || @ARGV!=3 || @ARGV!=4) {
+        die "Usage: $0 [gitbranch [from_package to_package [directory]]]";
+    }
+
+    if (@ARGV>=1) {
+        $gitbranch = $ARGV[0];
+    }
+
+    if (@ARGV>=3) {
+        $from_pack = $ARGV[1];
+        $to_pack   = $ARGV[2];
+    }
+
+    if (@ARGV==4) {
+        $basedir =   $ARGV[3];
+        chdir $basedir;
+    }
+}
+
+my @java_paths = (
+ "app/src/main/java",
+ "app/src/androidTest/java",
+ "app/src/test/java"
+);
+
+my @skip = (
+   basename($0),
+   "build",
+   "assets",
+   "captures",
+   ".git",
+   ".idea",
+   "README.md",
+   "app/src/main/res/raw"
+);
+
+
+
+#Check if there are tracked changes
 my @out = `git status -uno -s`;
 
 die "git changes found!\n@out\n" if @out>0;
@@ -23,30 +73,6 @@ die "git changes found!\n@out\n" if @out>0;
 # * See the GNU General Public License for more details.
 # */
 
-use warnings;
-use strict;
-use File::Basename;
-
-
-my $from_pack = "com.quaap.launchtime";
-my $to_pack   = "com.quaap.launchtime_official";
-
-my $basedir = ".";
-
-my @skip = (
-   basename($0),
-
-   "build",
-   "assets",
-   "captures",
-   ".git",
-   ".idea",
-   "README.md",
-   "packages1.txt",
-   "packages2.txt",
-   "submitted_activities.txt",
-   "submitted_packages.txt"
-);
 
 
 sub look_dir {
@@ -99,12 +125,6 @@ my $to_pack_dir = $to_pack;
 
 $from_pack_dir =~ s{\.}{/}g;
 $to_pack_dir =~ s{\.}{/}g;
-
-my @java_paths = (
- "app/src/main/java",
- "app/src/androidTest/java",
- "app/src/test/java"
-);
 
 
 if (system("git branch $gitbranch")!=0) {
