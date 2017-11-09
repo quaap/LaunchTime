@@ -89,10 +89,11 @@ sub look_dir {
       
       my $ffile = "$ldir/$file";
 
-      my $repath = $ffile;
-      $repath=~s{^\Q$basedir\E/?}{};
-      if ( grep( /^\Q$file\E|\Q$repath\E$/, @skip ) ) { next; }
-      
+      #my $repath = $ffile;
+      #$repath=~s{^\Q$basedir\E/?}{};
+      #if ( grep( /^\Q$file\E|\Q$repath\E$/, @skip ) ) { next; }
+      if ( grep( /^\Q$file\E$/, @skip ) ) { next; }
+
       if (-d $ffile and $file ne "." and $file ne "..") {
          
          look_dir($ffile);
