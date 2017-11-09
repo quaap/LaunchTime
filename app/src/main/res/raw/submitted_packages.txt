@@ -900,6 +900,7 @@ com.py.learn=Utilities
 com.quaap.computationaldemonology=Games
 com.quaap.fishberserker=Games
 com.quaap.launchtime=Settings
+com.quaap.launchtime_official=Settings
 com.quaap.primary=Games
 com.quickturtle.SeominMonsters_en=Games
 com.quoord.tapatalkpro.activity=Communicate

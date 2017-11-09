@@ -1,5 +1,6 @@
 
-# this file git moves/renames the package name for the playstore
+# this script makes the git branch and moves/renames the package name for the playstore
+# "Clean Project" and test!
 
 my $gitbranch = "playstore73";
 
@@ -24,7 +25,7 @@ die "git changes found! Try 'git status -uno -s'" if @out>0;
 
 use warnings;
 use strict;
-
+use File::Basename;
 
 
 my $from_pack = "com.quaap.launchtime";
@@ -33,13 +34,18 @@ my $to_pack   = "com.quaap.launchtime_official";
 my $basedir = ".";
 
 my @skip = (
+   basename($0),
+
    "build",
    "assets",
-   $0,
    "captures",
    ".git",
    ".idea",
-   "README.md"
+   "README.md",
+   "packages1.txt",
+   "packages2.txt",
+   "submitted_activities.txt",
+   "submitted_packages.txt"
 );
 
 
@@ -51,9 +57,10 @@ sub look_dir {
    
    for my $file (@subs) {
       
-      if ( grep( /^$file$/, @skip ) ) { next; }
-      
       my $ffile = "$ldir/$file";
+
+      if ( grep( /^\Q$file\E|\Q$ffile\E$/, @skip ) ) { next; }
+      
       if (-d $ffile and $file ne "." and $file ne "..") {
          
          look_dir($ffile);
@@ -66,7 +73,7 @@ sub look_dir {
          
          my $mod = 0; 
          for (@lines) {
-            if (s/\b$from_pack\b/$to_pack/g) {
+            if (s/\b\Q$from_pack\E\b/$to_pack/g) {
                $mod = 1;
             }
          }
@@ -98,14 +105,21 @@ my @java_paths = (
 );
 
 
-system "git branch $gitbranch";
+if (system("git branch $gitbranch")!=0) {
+    die "Couldn't make branch $gitbranch";
+}
+if (system("git checkout $gitbranch")!=0) {
+    die "Couldn't checkout branch $gitbranch";
+}
 
 for my $jpath (@java_paths) {
    my $dir = "$basedir/$jpath";
    
    my $cmd = qq(git mv "$dir/$from_pack_dir" "$dir/$to_pack_dir");
    print "$cmd\n";
-   system $cmd;
+   if (system($cmd)!=0) {
+      die "Couldn't $cmd";
+   }
    #print("move \"$dir/$from_pack_dir\",\"$dir/$to_pack_dir\"\n");
    #move("$dir/$from_pack_dir","$dir/$to_pack_dir");
    #system qq(git mv "$dir/$from_pack_dir" "$dir/$to_pack_dir");
