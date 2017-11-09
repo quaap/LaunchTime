@@ -7,7 +7,7 @@ my $gitbranch = "playstore73";
 #Check if there are changes
 my @out = `git status -uno -s`;
 
-die "git changes found! Try 'git status -uno -s'" if @out>0;
+die "git changes found!\n@out\n" if @out>0;
 
 
 #/**
@@ -108,6 +108,8 @@ my @java_paths = (
 if (system("git branch $gitbranch")!=0) {
     die "Couldn't make branch $gitbranch";
 }
+print "created branch $gitbranch\n";
+
 if (system("git checkout $gitbranch")!=0) {
     die "Couldn't checkout branch $gitbranch";
 }
