@@ -43,13 +43,17 @@ my @java_paths = (
 
 my @skip = (
    basename($0),
+
    "build",
    "assets",
    "captures",
    ".git",
    ".idea",
    "README.md",
-   "app/src/main/res/raw"
+   "packages1.txt",
+   "packages2.txt",
+   "submitted_activities.txt",
+   "submitted_packages.txt"
 );
 
 
