@@ -59,7 +59,9 @@ sub look_dir {
       
       my $ffile = "$ldir/$file";
 
-      if ( grep( /^\Q$file\E|\Q$ffile\E$/, @skip ) ) { next; }
+      my $repath = $ffile;
+      $repath=~s{^\Q$basedir\E/?}{};
+      if ( grep( /^\Q$file\E|\Q$repath\E$/, @skip ) ) { next; }
       
       if (-d $ffile and $file ne "." and $file ne "..") {
          
