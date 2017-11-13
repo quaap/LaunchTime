@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.quaap.launchtime.ChooseIconFromPackActivity">
+    tools:context="com.quaap.launchtime_official.ChooseIconFromPackActivity">
 
     <Spinner
         android:id="@+id/icon_pack_spinner"
