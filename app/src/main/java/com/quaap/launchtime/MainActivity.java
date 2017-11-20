@@ -1179,7 +1179,7 @@ public class MainActivity extends Activity implements
         try {
             activities = mPackageMan.queryIntentActivities(intent, PackageManager.GET_META_DATA);
         } catch (Exception e) {
-            Toast.makeText(this, "Problem getting app list: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Problem getting app list: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             return launchers;
         }
 
