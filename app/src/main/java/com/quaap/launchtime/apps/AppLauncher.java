@@ -363,23 +363,29 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
             // load the icon
             Drawable app_icon = null;
+            try {
 
-            String uristr = null;
-            if  (inst.isActionLink()) {
-                uristr = inst.getLinkUri();
-                if (uristr == null) uristr = "";
+                String uristr = null;
+                if (inst.isActionLink()) {
+                    uristr = inst.getLinkUri();
+                    if (uristr == null) uristr = "";
+                }
+
+                app_icon = GlobState.getIconsHandler(context.get()).getDrawableIconForPackage(inst);
+
+                if (app_icon == null) {
+                    app_icon = pm.getDefaultActivityIcon();
+                }
+                if (inst.isLink()) {
+                    app_icon = inst.drawLinkSymbol(app_icon, context.get());
+                }
+
+            } catch (Exception | Error e) {
+                Log.d("loadAppIconAsync", e.getMessage(), e);
+                if (app_icon == null) {
+                    app_icon = pm.getDefaultActivityIcon();
+                }
             }
-
-            app_icon = GlobState.getIconsHandler(context.get()).getDrawableIconForPackage(inst);
-
-
-            if (app_icon == null) {
-                app_icon = pm.getDefaultActivityIcon();
-            }
-            if (inst.isLink()) {
-                app_icon = inst.drawLinkSymbol(app_icon, context.get());
-            }
-
 
             return app_icon;
         }

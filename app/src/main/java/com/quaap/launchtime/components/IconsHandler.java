@@ -188,9 +188,9 @@ public class IconsHandler {
             }
         } catch (Exception | OutOfMemoryError e) {
             Log.e(TAG, "Exception getting app icon for " + app.getComponentName() , e);
-            if (app_icon == null && !nodefault)  {
-                app_icon = pm.getDefaultActivityIcon();
-            }
+        }
+        if (app_icon == null && !nodefault)  {
+            app_icon = pm.getDefaultActivityIcon();
         }
 
         return app_icon;
