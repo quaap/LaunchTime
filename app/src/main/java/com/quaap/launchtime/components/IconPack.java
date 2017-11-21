@@ -197,7 +197,7 @@ public class IconPack {
                     //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
                     return iconPackres.getDrawable(id);
                 }
-            } catch (OutOfMemoryError e){
+            } catch (Exception | Error e){
                 Log.e(TAG, e.getMessage(), e);
             }
         }
