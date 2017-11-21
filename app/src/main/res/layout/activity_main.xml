@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context="com.quaap.launchtime.MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/icon_and_cat_wrap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,9 +19,7 @@
             android:id="@+id/iconarea_wrap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/category_tabs_wrap"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <com.quaap.launchtime.apps.InteractiveScrollView
@@ -64,8 +62,6 @@
             android:id="@+id/category_tabs_wrap"
             android:layout_width="@dimen/cattabbar_width"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
             android:orientation="vertical">
 
             <com.quaap.launchtime.apps.InteractiveScrollView
@@ -100,7 +96,7 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
