@@ -307,7 +307,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     public void loadAppIconAsync(final Context context, final PackageManager pm) {
         if (iconLoaded() || isWidget()) return;
         // Create an async task
-        new IconLoaderTask(this, context, pm).execute();
+        new IconLoaderTask(this, pm).execute(context);
     }
 
     private Drawable drawLinkSymbol(Drawable app_icon, Context context) {
@@ -340,23 +340,23 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return app_icon;
     }
 
-    private static class IconLoaderTask extends AsyncTask<Void, Void, Drawable> {
+    private static class IconLoaderTask extends AsyncTask<Context, Void, Drawable> {
 
         // Keep track of all the exceptions
         private Exception exception = null;
 
         private WeakReference<AppLauncher> instref;
-        private WeakReference<Context> context;
+
         private PackageManager pm;
 
-        IconLoaderTask(AppLauncher inst, Context context, PackageManager pm) {
+        IconLoaderTask(AppLauncher inst, PackageManager pm) {
             super();
             instref = new WeakReference<>(inst);
-            this.context = new WeakReference<>(context);
+
             this.pm = pm;
         }
         @Override
-        protected Drawable doInBackground(Void... voids) {
+        protected Drawable doInBackground(Context... contexts) {
 
             AppLauncher inst = instref.get();
             if (inst==null) return null;
@@ -371,13 +371,18 @@ public class AppLauncher implements Comparable<AppLauncher> {
                     if (uristr == null) uristr = "";
                 }
 
-                app_icon = GlobState.getIconsHandler(context.get()).getDrawableIconForPackage(inst);
-
-                if (app_icon == null) {
+                if (contexts.length==0 || contexts[0]==null) {
                     app_icon = pm.getDefaultActivityIcon();
-                }
-                if (inst.isLink()) {
-                    app_icon = inst.drawLinkSymbol(app_icon, context.get());
+                } else {
+
+                    app_icon = GlobState.getIconsHandler(contexts[0]).getDrawableIconForPackage(inst);
+
+                    if (app_icon == null) {
+                        app_icon = pm.getDefaultActivityIcon();
+                    }
+                    if (inst.isLink()) {
+                        app_icon = inst.drawLinkSymbol(app_icon, contexts[0]);
+                    }
                 }
 
             } catch (Exception | Error e) {
