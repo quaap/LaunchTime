@@ -25,6 +25,12 @@ Features
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
 
+New features in 0.7.3
+-----------
+* Better widgets support.
+* Swipe left and right to switch categories.
+* Better large screen/tablet support.
+* Fixes and speedups.
 
 New features in v0.7.2
 -----------
