@@ -1,5 +1,6 @@
 package com.quaap.launchtime.apps;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
@@ -202,11 +203,12 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     private static class ListLoaderTask extends  AsyncTask<String,Void,AppLauncher> {
         ViewHolder viewholder;
         WeakReference<AppCursorAdapter> appadaptref;
-        WeakReference<Context> contextref;
+        @SuppressLint("StaticFieldLeak")
+        Context context;
 
         ListLoaderTask(AppCursorAdapter appadapt, ViewHolder viewholder, Context context) {
             appadaptref = new WeakReference<>(appadapt);
-            contextref = new WeakReference<>(context);
+            this.context = context;
             this.viewholder = viewholder;
         }
 
@@ -219,7 +221,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
         @Override
         protected void onPostExecute(AppLauncher app) {
             if (app != null) {
-                Context context = contextref.get();
+                //Context context = contextref.get();
                 AppCursorAdapter appadapt = appadaptref.get();
                 app.loadAppIconAsync(context, context.getPackageManager());
                 View v = appadapt.mMain.getLauncherView(app, false, false);
