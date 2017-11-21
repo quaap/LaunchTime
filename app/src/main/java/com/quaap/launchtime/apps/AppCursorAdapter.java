@@ -223,6 +223,7 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             if (app != null) {
                 //Context context = contextref.get();
                 AppCursorAdapter appadapt = appadaptref.get();
+                if (appadapt==null) return;
                 app.loadAppIconAsync(context, context.getPackageManager());
                 View v = appadapt.mMain.getLauncherView(app, false, false);
 
