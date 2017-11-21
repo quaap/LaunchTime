@@ -24,6 +24,7 @@ import com.quaap.launchtime.apps.LaunchApp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -302,15 +303,21 @@ public class IconsHandler {
             return null;
         }
 
-        FileInputStream fis;
+        FileInputStream fis=null;
         try {
             fis = new FileInputStream(cacheGetFileName(key));
             BitmapDrawable drawable =
                     new BitmapDrawable(this.ctx.getResources(), BitmapFactory.decodeStream(fis));
-            fis.close();
+
             return drawable;
         } catch (Exception e) {
             Log.e(TAG, "Unable to get drawable from cache " + e);
+        } finally {
+            if (fis!=null) try {
+                fis.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Unable close fh " + e);
+            }
         }
 
         return null;
