@@ -793,56 +793,34 @@ public class MainActivity extends Activity implements
         //Look for new apps
         //final List<AppLauncher> launchers = processActivities();
 
-        new LoadAppsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        //new LoadAppsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         //loads the quickrow or adds default apps if it is empty
        // processQuickApps(launchers);
 
 
-    }
+        iconHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final List<AppLauncher> appLauncherss = processActivities();
 
+                mQuickRow.processQuickApps(appLauncherss, mPackageMan);
+                db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow.getGridLayout()), mQuickRow.getGridLayout());
 
-    private static class LoadAppsAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        private WeakReference<MainActivity> instref;
-
-        LoadAppsAsyncTask(MainActivity inst) {
-            super();
-            instref = new WeakReference<>(inst);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            final MainActivity inst = instref.get();
-            if (inst!=null) {
-
-                final List<AppLauncher> appLauncherss = inst.processActivities();
-
-                inst.mQuickRow.getScroller().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        inst.mQuickRow.processQuickApps(appLauncherss, inst.mPackageMan);
-                        inst.db().setAppCategoryOrder(inst.mRevCategoryMap.get(inst.mQuickRow.getGridLayout()), inst.mQuickRow.getGridLayout());
-                    }
-                });
-
-                if (inst.mCategory.equals(Categories.CAT_SEARCH)) {
-                    inst.populateRecentApps();
+                if (mCategory.equals(Categories.CAT_SEARCH)) {
+                    populateRecentApps();
                 } else {
-                    inst.repopulateIconSheet(inst.mCategory);
+                    repopulateIconSheet(mCategory);
                 }
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void v) {
-            MainActivity inst = instref.get();
-            if (inst!=null) {
-                inst.firstRunPostApps();
-            }
 
-        }
+                firstRunPostApps();
+            }
+        });
+
+
+
+
     };
 
     private void firstRunPostApps() {
@@ -1178,8 +1156,14 @@ public class MainActivity extends Activity implements
 
         try {
             activities = mPackageMan.queryIntentActivities(intent, PackageManager.GET_META_DATA);
-        } catch (Exception e) {
-            //Toast.makeText(this, "Problem getting app list: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        } catch (final Exception e) {
+            Log.e(TAG, "Problem getting app list: " + e.getLocalizedMessage(), e);
+            iconHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, "Problem getting app list: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
             return launchers;
         }
 
