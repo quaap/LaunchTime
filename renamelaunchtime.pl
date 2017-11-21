@@ -7,7 +7,7 @@ use strict;
 use File::Basename;
 
 
-my $gitbranch = "playstore73";
+my $gitbranch = "playstore74";
 
 my $from_pack = "com.quaap.launchtime";
 my $to_pack   = "com.quaap.launchtime_official";
@@ -16,7 +16,7 @@ my $basedir = ".";
 
 if (@ARGV>0) {
 
-    if (@ARGV!=1 || @ARGV!=3 || @ARGV!=4) {
+    if (@ARGV==2 || @ARGV>4) {
         die "Usage: $0 [gitbranch [from_package to_package [directory]]]";
     }
 
