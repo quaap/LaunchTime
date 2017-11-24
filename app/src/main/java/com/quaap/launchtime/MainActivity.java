@@ -1596,6 +1596,8 @@ public class MainActivity extends Activity implements
             if (mChildLock) return false;
 
             View dragObj = (View) event.getLocalState();
+            if (dragObj==null) return true;
+
             boolean isLauncher = true;
             boolean isSpecial = false;
             boolean isApplink = false;
