@@ -707,7 +707,7 @@ public class MainActivity extends Activity implements
             //Log.d(TAG, "x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
 
 
-            if (mIconSheet.getColumnCount() != mColumns) {
+            if (mIconSheet!=null && mIconSheet.getColumnCount() != mColumns) {
                 changeColumnCount(mIconSheet, mColumns);
             }
 
