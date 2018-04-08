@@ -270,7 +270,7 @@ public class BackupActivity extends Activity {
                 Intent mainIntent2 = new Intent(BackupActivity.this, MainActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(BackupActivity.this, 1010101, mainIntent2, PendingIntent.FLAG_CANCEL_CURRENT);
                 AlarmManager mgr = (AlarmManager)BackupActivity.this.getSystemService(Context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
+                if (mgr!=null) mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
                 Runtime.getRuntime().exit(0);
 
             }

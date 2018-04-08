@@ -37,6 +37,7 @@ public class LaunchReceiver extends BroadcastReceiver {
             String action = intent.getAction();
             if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
                 Uri data = intent.getData();
+                if (data==null) return;
                 String packageName = data.getEncodedSchemeSpecificPart();
                 Log.i("InstallCatch", "The installed package is: " + packageName);
 
@@ -81,6 +82,7 @@ public class LaunchReceiver extends BroadcastReceiver {
 
             } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
                 Uri data = intent.getData();
+                if (data==null) return;
                 String packageName = data.getEncodedSchemeSpecificPart();
                 Log.i("RemoveCatch", "The uninstalled package is: " + packageName);
                 if (!packageName.equals(context.getPackageName()) && !intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) { //upgrade

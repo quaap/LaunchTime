@@ -2,7 +2,6 @@ package com.quaap.launchtime.widgets;
 
 import android.appwidget.AppWidgetHostView;
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;

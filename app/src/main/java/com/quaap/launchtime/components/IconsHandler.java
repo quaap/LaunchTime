@@ -156,8 +156,10 @@ public class IconsHandler {
                 try {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-                        LauncherActivityInfo info = launcher.getActivityList(baseComponentName.getPackageName(), android.os.Process.myUserHandle()).get(0);
-                        app_icon = info.getBadgedIcon(0);
+                        if (launcher!=null) {
+                            LauncherActivityInfo info = launcher.getActivityList(baseComponentName.getPackageName(), android.os.Process.myUserHandle()).get(0);
+                            app_icon = info.getBadgedIcon(0);
+                        }
                     } else {
                         app_icon = pm.getActivityIcon(baseComponentName);
                     }

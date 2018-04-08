@@ -409,5 +409,5 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
             }
         }
-    };
+    }
 }

@@ -57,6 +57,8 @@ public class UnreadReceiver extends BroadcastReceiver{
         try {
             String action = intent.getAction();
 
+            if (action==null) return;
+
             int badgeCount = 0;
             String badgePackage = null;
             String badgeActivity = null;

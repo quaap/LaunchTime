@@ -12,11 +12,9 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -323,9 +321,9 @@ public class CustomizeLaunchersActivity extends Activity {
                         break;
                     case PICK_CUSTOM_ICON:
                         Uri photoUri = data.getData();
+                        if (photoUri!=null)
                         try {
-                            InputStream is = getContentResolver().openInputStream(
-                                    photoUri);
+                            InputStream is = getContentResolver().openInputStream(photoUri);
                             BitmapFactory.Options opts = new BitmapFactory.Options();
                             opts.inJustDecodeBounds = true;
                             bitmap = BitmapFactory.decodeStream(is, null, opts);

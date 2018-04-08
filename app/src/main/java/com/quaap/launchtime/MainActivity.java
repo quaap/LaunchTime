@@ -37,7 +37,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -821,7 +820,7 @@ public class MainActivity extends Activity implements
 
 
 
-    };
+    }
 
     private void firstRunPostApps() {
         if (db().isFirstRun()) {
@@ -2069,7 +2068,7 @@ public class MainActivity extends Activity implements
                     if (shortcutInfo.getShortLabel() != null)
                         label += shortcutInfo.getShortLabel();
 
-                    if (shortcutInfo.getLongLabel() != null && !label.equals(shortcutInfo.getLongLabel()))
+                    if (shortcutInfo.getLongLabel() != null && !label.contentEquals(shortcutInfo.getLongLabel()))
                         label += " (" + shortcutInfo.getLongLabel() + ")";
 
                     MenuItem menuItem = mShortcutActionsPopup.getMenu().add(label.trim());
@@ -2309,7 +2308,7 @@ public class MainActivity extends Activity implements
                 String delcat = (String)catDeletedSpinner.getSelectedItem();
                 categoryChangerListener.onClick(dialog, which, (delcat!=null && delcat.length()>0?delcat:category), shortname.getText().toString(), fullname.getText().toString(), isTiny.isChecked());
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
+                if (imm!=null) imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -2317,7 +2316,7 @@ public class MainActivity extends Activity implements
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
+                if (imm!=null) imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
         });
 
