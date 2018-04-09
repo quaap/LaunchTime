@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.quaap.launchtime"
+        applicationId "com.quaap.launchtime_official"
         minSdkVersion 18
         targetSdkVersion 26
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
