@@ -39,7 +39,7 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 74;
+        final int newsnum = 75;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
@@ -48,11 +48,17 @@ public class MsgBox {
 
                     String msg = "";
                     msg += "" +
+                            "In 0.7.5:\n" +
+                            " * More apps categorized.\n" +
+                            " * Updated German translations.\n" +
+                            " * Recognize new apps installed on Oreo.\n";
+
+                    msg += "\n" +
                             "In 0.7.4:\n" +
                             " * Fix crashes and other bugs.\n";
 
-                    msg += "" +
-                            "\nIn 0.7.3:\n" +
+                    msg += "\n" +
+                            "In 0.7.3:\n" +
                             " * Better widgets support.\n" +
                             " * Swipe left and right to switch categories.\n" +
                             " * Better large screen/tablet support.\n" +
