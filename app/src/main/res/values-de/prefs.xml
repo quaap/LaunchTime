@@ -19,8 +19,8 @@
      <string-array name="pref_orientation_strings">
          <item>System</item>
          <item>Nach Bedarf drehen</item>
-         <item>Force Porträt</item>
-         <item>Force Landschaft</item>
+         <item>Porträtmodus erzwingen</item>
+         <item>Landschaftsmodus erzwingen</item>
     </string-array>
 
 
@@ -28,7 +28,7 @@
          <item>Klein</item>
          <item>Mittel</item>
          <item>Groß</item>
-         <item>X-groß</item>
+         <item>Extragroß</item>
     </string-array>
 
 
