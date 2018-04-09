@@ -110,6 +110,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
     public static AppLauncher removeAppLauncher(String activityName, String packageName) {
         try {
+            if (activityName==null) activityName = "";
             return mAppLaunchers.remove(new ComponentName(packageName, activityName));
         } catch (Exception e) {
             Log.e("AppLauncher", e.getMessage(), e);

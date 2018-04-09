@@ -15,6 +15,9 @@ package com.quaap.launchtime;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import com.quaap.launchtime.apps.Badger;
@@ -35,6 +38,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
     private Badger badger;
 
+    private LaunchReceiver packrecv;
+
     public static GlobState getGlobState(Context context) {
         return (GlobState) context.getApplicationContext();
     }
@@ -53,6 +58,18 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         mIconsHandler = new IconsHandler(this);
 
         mStyle = new Style(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            packrecv = new LaunchReceiver(); //extended from BroadcastReceiver class
+            IntentFilter i = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
+            i.addDataScheme("package");
+            registerReceiver(packrecv, i);
+
+            i = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
+            i.addDataScheme("package");
+            registerReceiver(packrecv, i);
+        }
+
     }
 
     public static Style getStyle(Context context) {
@@ -78,6 +95,11 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
     @Override
     public void onTerminate() {
+
+        if (packrecv!=null) {
+            this.unregisterReceiver(packrecv);
+        }
+
         if (mDB != null) {
             mDB.close();
         }

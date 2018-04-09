@@ -33,6 +33,8 @@ public class LaunchReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
 
+        Log.i("InstallCatch", intent.toString());
+
         try {
             String action = intent.getAction();
             if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
