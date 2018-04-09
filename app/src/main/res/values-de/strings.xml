@@ -22,7 +22,7 @@
     <string name="category_Settings">Einstellungen</string>
     <string name="category_Hidden">Versteckt</string>
 
-    <string name="category_Search_full">Suchen &amp; Neueste</string>
+    <string name="category_Search_full">Suchen &amp; Letzte</string>
     <string name="category_Talk_full">Kommunikation</string>
     <string name="category_Games_full">Spiele &amp; Amusements</string>
     <string name="category_Internet_full">Internet</string>
@@ -34,13 +34,13 @@
     <string name="category_Hidden_full">Ausgeblendet</string>
 
 
-    <string name="search_apps">Suchen Sie Ihre Apps</string>
-    <string name="recent_apps">Neueste Apps</string>
+    <string name="search_apps">Apps durchsuchen</string>
+    <string name="recent_apps">Letzte Apps</string>
 
-    <string name="sort_category">Sortieren \nKategorie</string>
-    <string name="add_widgets">Fügen Sie\nWidgets</string>
-    <string name="add_category">Hinzufügen \nKategorie</string>
-    <string name="rename_category">Bearbeiten \nKategorie</string>
+    <string name="sort_category">Kategorie\nsortieren</string>
+    <string name="add_widgets">Widgets\nhinzufügen</string>
+    <string name="add_category">Kategorie\hinzufügen</string>
+    <string name="rename_category">Kategorie\bearbeiten</string>
 
     <string name="remove">Entfernen</string>
     <string name="done">Fertig</string>
@@ -52,35 +52,34 @@
     <string name="no_rename">Kategorie konnte nicht umbenannt werden.</string>
     <string name="add_cat">Kategorie hinzufügen</string>
     <string name="add_cat2">Kategorie hinzufügen</string>
-    <string name="no_add_cat">Konnte nicht Kategorie hinzufügen</string>
+    <string name="no_add_cat">Kategorie konnte nicht hinzugefügt werden</string>
     <string name="delete_cat">Kategorie löschen</string>
     <string name="delete_cat_prompt">Sind Sie sicher, dass Sie diese Kategorie löschen möchten?</string>
     <string name="delete">löschen</string>
-    <string name="cat_deleted">Kategorie gelöscht. Alle Anwendungen wurden in Kategorie %s</string>
-    <string name="no_delete_cat">konnte die Kategorie</string>
+    <string name="cat_deleted">Kategorie gelöscht. Alle Anwendungen wurden in Kategorie %s verschoben</string>
+    <string name="no_delete_cat">Kategorie konnte nicht gelöscht werden</string>
 
     <string name="short_name">Kurzname</string>
     <string name="full_name">Vollständiger Name (optional)</string>
-    <string name="is_tiny">Ist Winzige</string>
+    <string name="is_tiny">Verkleinern</string>
 
 
     <string name="pref_orient">Orientierung</string>
     <string name="pref_about">Hilfe</string>
     <string name="pref_help_about">Hilfe und über</string>
 
-    <string name="send_info_expl">Die folgenden Informationen werden an den Entwickler gesendet (nur) an
-        Besser verstehen, wie Benutzer ihre Apps kategorisieren. Nur deine IP wird protokolliert.</string>
+    <string name="send_info_expl">Die folgenden Informationen werden (nur) an den Entwickler gesendet, um 
+               besser zu verstehen, wie Benutzer ihre Apps kategorisieren. Nur deine IP wird protokolliert.</string>
     <string name="send">Senden</string>
     <string name="send_comment">Optionaler Kommentar:</string>
     <string name="remove_data">Deaktivieren Sie alle Elemente, die Sie nicht senden möchten</string>
     <string name="sent_success">Daten erfolgreich gesendet. Danke</string>
     <string name="sent_failed">Datentransfer fehlgeschlagen:</string>
     <string name="backup_and_restore">Sicherung und Wiederherstellung</string>
-    <string name="backup_explain">Wenn du alles so hast, wie du es magst oder machen willst
-        Einige große Änderungen, nehmen Sie ein Backup! Bitte beachten Sie, dass diese Backups gelöscht werden
-        Deinstallieren Sie die App, also verwenden Sie die Schaltfläche "Ausgewählte Sicherung auf Dateisystem kopieren", um sie zu speichern
-        Sie wollen behalten.</string>
-    <string name="take_new_backup">Neue Sicherung nehmen</string>
+    <string name="backup_explain">Wenn du alles so hast, wie du es magst oder du
+        große Änderungen machen willst, mache vorher ein Backup! Bitte beachte, dass diese Backups gelöscht werden, wenn die App
+        deinstalliert wird. Verwende daher die Schaltfläche "Ausgewählte Sicherung auf Dateisystem kopieren", um sie zu speichern.</string>
+    <string name="take_new_backup">Neue Sicherung machen</string>
     <string name="restore_selected_backup">Wiederherstellung der ausgewählten Sicherung</string>
     <string name="delete_selected_backup">Ausgewählte Sicherung löschen</string>
     <string name="copy_selected_backup">Ausgewählte Sicherung auf Dateisystem kopieren</string>
@@ -98,28 +97,28 @@
     <string name="take_backup">Take backup</string>
     <string name="backup_success">Sicherung erfolgreich!</string>
     <string name="backup_failed">Sicherung fehlgeschlagen</string>
-    <string name="select_file_restore">Wählen Sie Datei wiederherstellen</string>
+    <string name="select_file_restore">Wähle Datei zum wiederherstellen</string>
     <string name="no_backup">Kein solches Backup \'"</string>
     <string name="confirm_restore1">Wiederherstellung?</string>
     <string name="confirm_restore2">Wenn du wiederherstellst, gehen alle aktuellen Änderungen verloren.</string>
     <string name="restore">Wiederherstellung</string>
-    <string name="restore_successful">Wiederherstellung erfolgreich! Wird nun neu gestartet.</string>
+    <string name="restore_successful">Wiederherstellung erfolgreich! Es wird nun neu gestartet.</string>
     <string name="restore_failed_rollback">Wiederherstellung fehlgeschlagen. Zurückrollen</string>
     <string name="restore_failed2">Wiederherstellung fehlgeschlagen. Datenbankstatus unbekannt</string>
     <string name="confirm_delete1">löschen?</string>
-    <string name="confirm_delete2">Sind Sie sicher, dass die Rückseite oben löschen möchten \'</string>
-    <string name="delete_success">erfolgreich löschen</string>
+    <string name="confirm_delete2">Sind Sie sicher, dass die Sicherung löschen möchten \'</string>
+    <string name="delete_success">Löschen erfolgreich</string>
     <string name="delete_failed">Löschen fehlgeschlagen</string>
-    <string name="copy_sucess">erfolgreich kopieren</string>
+    <string name="copy_sucess">Kopie erfolgreich</string>
     <string name="copy_failed">Kopie fehlgeschlagen</string>
-    <string name="select_save_location">Standort zum Speichern auswählen</string>
-    <string name="perm_granted">Yay! Versuchen Sie es erneut.</string>
-    <string name="perm_not_granted">Boo</string>
+    <string name="select_save_location">Ort zum Speichern auswählen</string>
+    <string name="perm_granted">Juhu! Versuchen Sie es erneut.</string>
+    <string name="perm_not_granted">Buh!</string>
     <string name="app">app</string>
-    <string name="config">Konfig</string>
+    <string name="config">Konfiguration</string>
     <string name="previously_deleted">Bisher gelöscht</string>
     <string name="pref_senddat">App-Daten senden</string>
-    <string name="pref_senddat_summ">Senden Sie Daten, welche Apps in der App installiert sind Entwickler</string>
+    <string name="pref_senddat_summ">Daten zum Entwickler senden, welche Apps installiert sind</string>
     <string name="pref_backup">Sicherung und Wiederherstellung</string>
     <string name="pref_backup_summ">Sichern oder Wiederherstellen der Konfiguration von LaunchTime (Kategorien, App-Bestellung, aktuelle Apps usw.)</string>
     <string name="pref_system">Systemeinstellungen</string>
@@ -347,5 +346,5 @@
     <string name="pref_customize_desc">Ändern Sie einzelne Symbole und Etiketten</string>
     <string name="pref_icon_tint">Symbol-Tönung</string>
     <string name="user_theme">Benutzer-Thema %d</string>
-    <string name="reset_badge_counts">Zurücksetzen von App ungelesene Zähler</string>
+    <string name="reset_badge_counts">Ungelesene Zähler der Apps zurücksetzen</string>
 </resources>
