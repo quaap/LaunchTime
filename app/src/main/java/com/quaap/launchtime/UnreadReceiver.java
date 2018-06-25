@@ -22,24 +22,24 @@ import android.util.Log;
 public class UnreadReceiver extends BroadcastReceiver{
 
     //This works for Google Messages, at least
-    private static final String DEFAULT_ACTION = "android.intent.action.BADGE_COUNT_UPDATE";
+    public static final String DEFAULT_ACTION = "android.intent.action.BADGE_COUNT_UPDATE";
     private static final String DEFAULT_BADGE_COUNT = "badge_count";
     private static final String DEFAULT_BADGE_PACKAGENAME = "badge_count_package_name";
     private static final String DEFAULT_BADGE_ACTIVITY_NAME = "badge_count_class_name";
 
     //I'm not sure if these below will ever work because of permissions
-    private static final String SONY_ACTION = "com.sonyericsson.home.action.UPDATE_BADGE";
+    public static final String SONY_ACTION = "com.sonyericsson.home.action.UPDATE_BADGE";
     private static final String SONY_BADGE_COUNT = "com.sonyericsson.home.intent.extra.badge.MESSAGE";
     private static final String SONY_BADGE_SHOW = "com.sonyericsson.home.intent.extra.badge.SHOW_MESSAGE";
     private static final String SONY_BADGE_PACKAGENAME = "com.sonyericsson.home.intent.extra.badge.PACKAGE_NAME";
     private static final String SONY_BADGE_ACTIVITY_NAME = "com.sonyericsson.home.intent.extra.badge.ACTIVITY_NAME";
 
-    private static final String APEX_ACTION = "com.anddoes.launcher.COUNTER_CHANGED";
+    public static final String APEX_ACTION = "com.anddoes.launcher.COUNTER_CHANGED";
     private static final String APEX_BADGE_PACKAGENAME = "package";
     private static final String APEX_BADGE_ACTIVITY_NAME = "class";
     private static final String APEX_BADGE_COUNT = "count";
 
-    private static final String ADW_ACTION = "org.adw.launcher.counter.SEND";
+    public static final String ADW_ACTION = "org.adw.launcher.counter.SEND";
     private static final String ADW_BADGE_PACKAGENAME = "PNAME";
     private static final String ADW_BADGE_ACTIVITY_NAME = "CNAME";
     private static final String ADW_BADGE_COUNT = "COUNT";
@@ -56,7 +56,6 @@ public class UnreadReceiver extends BroadcastReceiver{
 
         try {
             String action = intent.getAction();
-
             if (action==null) return;
 
             int badgeCount = 0;

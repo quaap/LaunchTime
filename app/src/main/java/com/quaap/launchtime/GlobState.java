@@ -76,16 +76,16 @@ public class GlobState extends Application implements  DB.DBClosedListener {
             {
                 unreadrecv = new UnreadReceiver(); //extended from BroadcastReceiver class
 
-                IntentFilter iu = new IntentFilter("android.intent.action.BADGE_COUNT_UPDATE");
+                IntentFilter iu = new IntentFilter(UnreadReceiver.DEFAULT_ACTION);
                 registerReceiver(unreadrecv, iu);
 
-                iu = new IntentFilter("com.anddoes.launcher.COUNTER_CHANGED");
+                iu = new IntentFilter(UnreadReceiver.APEX_ACTION);
                 registerReceiver(unreadrecv, iu);
 
-                iu = new IntentFilter("com.sonyericsson.home.action.UPDATE_BADGE");
+                iu = new IntentFilter(UnreadReceiver.SONY_ACTION);
                 registerReceiver(unreadrecv, iu);
 
-                iu = new IntentFilter("org.adw.launcher.counter.SEND");
+                iu = new IntentFilter(UnreadReceiver.ADW_ACTION);
                 registerReceiver(unreadrecv, iu);
             }
 
@@ -94,7 +94,6 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
                 IntentFilter i = new IntentFilter("com.android.launcher.action.INSTALL_SHORTCUT");
                 registerReceiver(shortcutrecv, i);
-
 
             }
 
@@ -115,6 +114,11 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         return ((GlobState) context.getApplicationContext()).badger;
     }
 
+
+    public static ShortcutReceiver getShortcutReceiver(Context context) {
+        return ((GlobState) context.getApplicationContext()).shortcutrecv;
+
+    }
 
     public synchronized DB getDB() {
         if (mDB==null) {
