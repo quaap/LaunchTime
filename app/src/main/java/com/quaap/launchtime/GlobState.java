@@ -39,6 +39,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     private Badger badger;
 
     private LaunchReceiver packrecv;
+    private UnreadReceiver unreadrecv;
+    private ShortcutReceiver shortcutrecv;
 
     public static GlobState getGlobState(Context context) {
         return (GlobState) context.getApplicationContext();
@@ -60,14 +62,42 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         mStyle = new Style(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
         if (Build.VERSION.SDK_INT >= 26) {
-            packrecv = new LaunchReceiver(); //extended from BroadcastReceiver class
-            IntentFilter i = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
-            i.addDataScheme("package");
-            registerReceiver(packrecv, i);
+            {
+                packrecv = new LaunchReceiver(); //extended from BroadcastReceiver class
+                IntentFilter i = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
+                i.addDataScheme("package");
+                registerReceiver(packrecv, i);
 
-            i = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
-            i.addDataScheme("package");
-            registerReceiver(packrecv, i);
+                i = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
+                i.addDataScheme("package");
+                registerReceiver(packrecv, i);
+
+            }
+            {
+                unreadrecv = new UnreadReceiver(); //extended from BroadcastReceiver class
+
+                IntentFilter iu = new IntentFilter("android.intent.action.BADGE_COUNT_UPDATE");
+                registerReceiver(unreadrecv, iu);
+
+                iu = new IntentFilter("com.anddoes.launcher.COUNTER_CHANGED");
+                registerReceiver(unreadrecv, iu);
+
+                iu = new IntentFilter("com.sonyericsson.home.action.UPDATE_BADGE");
+                registerReceiver(unreadrecv, iu);
+
+                iu = new IntentFilter("org.adw.launcher.counter.SEND");
+                registerReceiver(unreadrecv, iu);
+            }
+
+            {
+                shortcutrecv = new ShortcutReceiver();
+
+                IntentFilter i = new IntentFilter("com.android.launcher.action.INSTALL_SHORTCUT");
+                registerReceiver(shortcutrecv, i);
+
+
+            }
+
         }
 
     }
@@ -98,6 +128,12 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
         if (packrecv!=null) {
             this.unregisterReceiver(packrecv);
+        }
+        if (shortcutrecv !=null) {
+            this.unregisterReceiver(shortcutrecv);
+        }
+        if (unreadrecv!=null) {
+            this.unregisterReceiver(unreadrecv);
         }
 
         if (mDB != null) {
