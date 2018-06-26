@@ -45,6 +45,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     private static Map<ComponentName,AppLauncher> mAppLaunchers = Collections.synchronizedMap(new HashMap<ComponentName,AppLauncher>());
     public static final String LINK_SEP = ":IS_APP_LINK:";
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
+    public static final String OREOSHORTCUT = "OREOSHORTCUT:";
 
 
     public static AppLauncher createAppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {
@@ -95,6 +96,18 @@ public class AppLauncher implements Comparable<AppLauncher> {
         AppLauncher app = mAppLaunchers.get(new ComponentName(ACTION_PACKAGE, actionName));
         if (app == null) {
             app = new AppLauncher(actionName, ACTION_PACKAGE, label, category, false);
+            mAppLaunchers.put(app.getComponentName(), app);
+        }
+        return app;
+    }
+
+
+    public static AppLauncher createOreoShortcut(String shortcutid, String mPackageName, String label, String category) {
+
+        String actionName = makeLink(OREOSHORTCUT, shortcutid);
+        AppLauncher app = mAppLaunchers.get(new ComponentName(mPackageName, actionName));
+        if (app == null) {
+            app = new AppLauncher(actionName, mPackageName, label, category, false);
             mAppLaunchers.put(app.getComponentName(), app);
         }
         return app;
@@ -188,6 +201,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
 
     private static String makeLink(String activityName, Uri uri) {
+        return makeLink(activityName, uri.toString());
+    }
+
+    private static String makeLink(String activityName, String uri) {
         if (!activityName.contains(LINK_SEP)) {
             return activityName + LINK_SEP + uri;
         }
@@ -228,6 +245,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
             return parts[1];
         }
         return null;
+    }
+
+    public boolean isOreoShortcut() {
+        return mActivityName.contains(OREOSHORTCUT);
     }
 
     public String getLabel() {

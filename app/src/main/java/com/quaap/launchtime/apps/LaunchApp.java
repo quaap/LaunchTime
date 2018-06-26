@@ -3,15 +3,20 @@ package com.quaap.launchtime.apps;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ShortcutInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.os.UserHandle;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.db.DB;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,15 +60,18 @@ public class LaunchApp {
 
         try {
 
-            //needed to place in the open apps list
-            Intent intent = getAppIntent(app);
-
-            Log.d(TAG, "Launching " + app.getComponentName());
-            if (isValidActivity(intent)) {
-                // actually start it
-                activity.startActivity(intent);
+            if (app.isOreoShortcut()) {
+                launchOreoShortcut(app);
             } else {
-                Toast.makeText(activity, "Could not launch item", Toast.LENGTH_LONG).show();
+                Intent intent = getAppIntent(app);
+
+                Log.d(TAG, "Launching " + app.getComponentName());
+                if (isValidActivity(intent)) {
+                    // actually start it
+                    activity.startActivity(intent);
+                } else {
+                    Toast.makeText(activity, "Could not launch item", Toast.LENGTH_LONG).show();
+                }
             }
 
             //log the launch
@@ -77,6 +85,34 @@ public class LaunchApp {
             Toast.makeText(activity, "Could not launch item: " + e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
         }
         //showButtonBar(false, true);
+    }
+
+    //Thanks to KISS: https://github.com/Neamar/KISS/blob/0e654be99665294f601c58991dd20ae8595572bd/app/src/main/java/fr/neamar/kiss/result/ShortcutsResult.java
+    public void launchOreoShortcut(final AppLauncher app) {
+        if (Build.VERSION.SDK_INT >= 26) {
+            final LauncherApps launcherApps = activity.getSystemService(LauncherApps.class);
+            // Only the default launcher is allowed to start shortcuts
+            if (!launcherApps.hasShortcutHostPermission()) {
+                Toast.makeText(activity, "Must be default launcher", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            LauncherApps.ShortcutQuery query = new LauncherApps.ShortcutQuery();
+            query.setPackage(app.getPackageName());
+            query.setShortcutIds(Collections.singletonList(app.getLinkUri()));
+            query.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED);
+
+            List<UserHandle> userHandles = launcherApps.getProfiles();
+
+            // Find the correct UserHandle, and launch the shortcut.
+            for (UserHandle userHandle : userHandles) {
+                List<ShortcutInfo> shortcuts = launcherApps.getShortcuts(query, userHandle);
+                if (shortcuts != null && shortcuts.size() > 0 && shortcuts.get(0).isEnabled()) {
+                    launcherApps.startShortcut(shortcuts.get(0), null, null);
+                    return;
+                }
+            }
+        }
     }
 
     public static Intent getAppIntent(final AppLauncher app) {

@@ -80,7 +80,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     }
 
-    private void addLink(Context context, String action, String label, Uri uri, Bitmap bitmap) {
+    public void addLink(Context context, String action, String label, Uri uri, Bitmap bitmap) {
         DB db = GlobState.getGlobState(context).getDB();
         String catID = Categories.getCategoryForAction(context, action);
         if (catID.equals(Categories.CAT_OTHER)) {
@@ -96,7 +96,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     }
 
-    private void addLink(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
+    public void addLink(Context context, String label, Uri uri, ComponentName cn, Bitmap bitmap) {
         DB db = GlobState.getGlobState(context).getDB();
 
         ComponentName latest = db.getLatestInstall();
@@ -117,6 +117,27 @@ public class ShortcutReceiver extends BroadcastReceiver {
         }
 
     }
+
+    public void addOreoLink(Context context, String shortcutid, String packageName, String label, Bitmap bitmap) {
+
+        Log.d("ShortcutCatch", "shortcutid: " + shortcutid);
+        Log.d("ShortcutCatch", "packageName: " + packageName);
+        Log.d("ShortcutCatch", "label: " + label);
+
+        DB db = GlobState.getGlobState(context).getDB();
+        String catID = Categories.getCategoryForPackage(context, packageName, true);
+        Log.d("ShortcutCatch", "catID: " + catID);
+
+        AppLauncher appLauncher = AppLauncher.createOreoShortcut(shortcutid, packageName,label,catID);
+        db.addApp(appLauncher);
+
+        if (bitmap!=null) {
+            SpecialIconStore.saveBitmap(context, appLauncher.getComponentName(), bitmap, SpecialIconStore.IconType.Shortcut);
+        }
+
+    }
+
+
 
     //            for (String key: extras.keySet()) {
     //                Log.d("ShortcutCatch", " extra: " + key + " = " + extras.get(key));
