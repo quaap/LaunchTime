@@ -1380,7 +1380,13 @@ public class MainActivity extends Activity implements
     }
 
     private void setupWidget() {
-        mWidgetHelper.popupSelectWidget();
+        try {
+            mWidgetHelper.popupSelectWidget();
+        } catch (Throwable t) {
+            //very rare
+            Toast.makeText(this, "Can't show widgets: " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+            Log.e("Widgets", t.getMessage(), t);
+        }
     }
 
     private void addWidget(AppWidgetHostView appwid) {

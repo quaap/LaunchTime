@@ -222,6 +222,10 @@ public class DB extends SQLiteOpenHelper {
         loadCategories(sqLiteDatabase, false, R.raw.packages2,4);
     }
 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
