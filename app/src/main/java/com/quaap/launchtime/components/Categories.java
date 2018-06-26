@@ -46,7 +46,7 @@ public class Categories {
     public static final String CAT_OTHER = "Other";
     public static final String CAT_SETTINGS = "Settings";
     public static final String CAT_HIDDEN = "Hidden";
-    public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS};
+    //public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS};
     public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
     public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
 
@@ -175,7 +175,9 @@ public class Categories {
     }
 
     public static boolean isTinyCategory(String category) {
-        return Arrays.asList(Categories.CAT_TINY).contains(category);
+        //none are tiny by default
+        return false;
+        //return Arrays.asList(Categories.CAT_TINY).contains(category);
     }
 
     public static boolean isHiddenCategory(String category) {
