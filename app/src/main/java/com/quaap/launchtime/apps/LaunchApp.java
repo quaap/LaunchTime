@@ -92,7 +92,7 @@ public class LaunchApp {
         if (Build.VERSION.SDK_INT >= 26) {
             final LauncherApps launcherApps = activity.getSystemService(LauncherApps.class);
             // Only the default launcher is allowed to start shortcuts
-            if (!launcherApps.hasShortcutHostPermission()) {
+            if (launcherApps==null || !launcherApps.hasShortcutHostPermission()) {
                 Toast.makeText(activity, "Must be default launcher", Toast.LENGTH_LONG).show();
                 return;
             }

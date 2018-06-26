@@ -186,17 +186,22 @@ public class Widget {
     private AppWidgetHostView configureWidget(Intent data) {
         // Get the selected widget information
         Bundle extras = data.getExtras();
-        int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-        AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
-        if (appWidgetInfo.configure != null) {
-            // If the widget wants to be configured then start its configuration activity
-            Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
-            intent.setComponent(appWidgetInfo.configure);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            mParent.startActivityForResult(intent, REQUEST_CREATE_APPWIDGET);
-        } else {
-            // Otherwise simply create it
-            return createWidget(data);
+        try {
+            int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+            if (appWidgetInfo.configure != null) {
+                // If the widget wants to be configured then start its configuration activity
+                Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+                intent.setComponent(appWidgetInfo.configure);
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                mParent.startActivityForResult(intent, REQUEST_CREATE_APPWIDGET);
+            } else {
+                // Otherwise simply create it
+                return createWidget(data);
+
+            }
+        } catch (Exception | Error e) {
+            Log.e("LaunchWidgeth", e.getMessage(), e);
         }
         return null;
     }

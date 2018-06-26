@@ -1,24 +1,16 @@
 package com.quaap.launchtime;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.LauncherApps;
 import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.util.Log;
 
-import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.IconsHandler;
 
 public class PinShortcutActivity extends Activity {

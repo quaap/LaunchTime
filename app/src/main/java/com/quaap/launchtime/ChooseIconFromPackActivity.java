@@ -98,7 +98,7 @@ public class ChooseIconFromPackActivity extends Activity {
         GridView gv = findViewById(R.id.icon_pack_icons);
 
 
-        final ImageAdapter adapter = new ImageAdapter(this, new ArrayList<Drawable>(iconPack.getUniqueIcons()));
+        final ImageAdapter adapter = new ImageAdapter(this, new ArrayList<>(iconPack.getUniqueIcons()));
         gv.setAdapter(adapter);
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,7 +180,7 @@ public class ChooseIconFromPackActivity extends Activity {
         private List<K> mKeys = new ArrayList<>();
 
         public MapAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull LinkedHashMap<K,V> map) {
-            super(context, resource, new ArrayList<V>(map.values()));
+            super(context, resource, new ArrayList<>(map.values()));
 
             mMap = map;
 

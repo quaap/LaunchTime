@@ -408,7 +408,7 @@ public class CustomizeLaunchersActivity extends Activity {
 
 
         public  Dialog createDialog() {
-            mAdapter = new ArrayAdapter<String>(CustomizeLaunchersActivity.this, R.layout.add_list_item);
+            mAdapter = new ArrayAdapter<>(CustomizeLaunchersActivity.this, R.layout.add_list_item);
             mAdapter.add(getString(R.string.custom_icon_select_picture));
             mAdapter.add(getString(R.string.custom_icon_icon_packs));
             if (SpecialIconStore.hasBitmap(CustomizeLaunchersActivity.this, mAppClicked.getComponentName(), SpecialIconStore.IconType.Custom)) {
