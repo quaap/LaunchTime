@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 public class DB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
@@ -295,7 +295,7 @@ public class DB extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL("alter table " + APP_TABLE + " add column " + CUSTOMLABEL + " TEXT");
         }
 
-        if (oldVersion<8) {
+        if (oldVersion<9) {
             buildCatTable(sqLiteDatabase);
         }
         sqLiteDatabase.delete(APP_ORDER_TABLE, PKGNAME + " is null", null);
