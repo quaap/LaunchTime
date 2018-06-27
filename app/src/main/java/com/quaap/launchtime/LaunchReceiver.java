@@ -42,6 +42,7 @@ public class LaunchReceiver extends BroadcastReceiver {
                 if (data==null) return;
                 String packageName = data.getEncodedSchemeSpecificPart();
                 Log.i("InstallCatch", "The installed package is: " + packageName);
+                //Log.i("InstallCatch", "The data is: " + data);
 
                 try {
                     DB db = ((GlobState) context.getApplicationContext()).getDB();
@@ -49,6 +50,9 @@ public class LaunchReceiver extends BroadcastReceiver {
                     PackageManager pm = context.getPackageManager();
 
                     Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
+                    if (packageIntent==null) {
+                        return;
+                    }
                     ResolveInfo ri = context.getPackageManager().resolveActivity(packageIntent, 0);
                     String activityName = ri.activityInfo.name;
                     ComponentName cn = new ComponentName(ri.activityInfo.packageName, activityName);
