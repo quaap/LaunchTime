@@ -29,8 +29,8 @@
         <item>game</item>
         <item>puzz</item>
         <item>battle</item>
-        <item>play</item>
         <item>studios</item>
+        <item>play</item>
         <item>com.huuuge</item>
         <item>com.ea</item>
         <item>com.king</item>
@@ -57,15 +57,20 @@
         <item>radio</item>
         <item>voice</item>
         <item>audio</item>
+        <item>player</item>
+        <item>dolby</item>
+        <item>bose</item>
         <item>speech</item>
         <item>pod</item>
         <item>music</item>
         <item>sound</item>
+        <item>song</item>
         <item>mp3</item>
-        <item>player</item>
         <item>guitar</item>
+        <item>tune</item>
         <item>drum</item>
         <item>piano</item>
+        <item>mix</item>
         <item>record</item>
         <item>sfx</item>
         <item>mic</item>
@@ -99,7 +104,6 @@
         <item>organiz</item>
         <item>clock</item>
         <item>time</item>
-        <item>viewer</item>
         <item>file</item>
         <item>manager</item>
         <item>memo</item>
@@ -107,6 +111,7 @@
         <item>reader</item>
         <item>office</item>
         <item>book</item>
+        <item>viewer</item>
         <item>doc</item>
     </string-array>
     <string-array translatable="false" name="CAT_SETTINGS">
