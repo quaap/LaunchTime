@@ -201,7 +201,9 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
 
     private static String makeLink(String activityName, Uri uri) {
-        return makeLink(activityName, uri.toString());
+        String uristr = "";
+        if (uri != null) uristr = uri.toString();
+        return makeLink(activityName, uristr);
     }
 
     private static String makeLink(String activityName, String uri) {
