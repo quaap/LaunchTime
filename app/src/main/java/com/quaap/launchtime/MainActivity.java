@@ -179,7 +179,9 @@ public class MainActivity extends Activity implements
     private static final int ADD_ICON = 1;
     private static final int REMOVE_ALL_ICONS = 2;
 
-    private static String TAG = "LaunchTime";
+    private static final String TAG = "LaunchTime";
+
+    private static String latestCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +224,7 @@ public class MainActivity extends Activity implements
         mSearchBox = new SearchBox(this, mIconSheetScroller);
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
         mCategory = mPrefs.getString("category", getTopCategory());
+        latestCategory = mCategory;
 
         mStyle = GlobState.getStyle(this);
 
@@ -485,11 +488,15 @@ public class MainActivity extends Activity implements
     }
 
 
+    public static String getLatestCategory() {
+        return latestCategory;
+    }
 
     private synchronized void switchCategory(String category) {
         try {
             if (category == null) return;
             mCategory = category;
+            latestCategory = mCategory;
 
             //make sure selected category is in the database.
             if (db().getCategoryDisplay(mCategory) == null) {

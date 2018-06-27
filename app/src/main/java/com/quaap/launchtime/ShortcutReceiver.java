@@ -82,9 +82,13 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     public void addLink(Context context, String action, String label, Uri uri, Bitmap bitmap) {
         DB db = GlobState.getGlobState(context).getDB();
-        String catID = Categories.getCategoryForAction(context, action);
-        if (catID.equals(Categories.CAT_OTHER)) {
-            catID = Categories.getCategoryForUri(context, uri.toString());
+
+        String catID = MainActivity.getLatestCategory();
+        if (catID==null || catID.isEmpty()) {
+            catID = Categories.getCategoryForAction(context, action);
+            if (catID.equals(Categories.CAT_OTHER)) {
+                catID = Categories.getCategoryForUri(context, uri.toString());
+            }
         }
 
         AppLauncher appLauncher = AppLauncher.createActionLink(action, uri,label, catID);
@@ -107,7 +111,10 @@ public class ShortcutReceiver extends BroadcastReceiver {
             }
         }
 
-        String catID = Categories.getCategoryForComponent(context, cn, true);
+        String catID = MainActivity.getLatestCategory();
+        if (catID==null || catID.isEmpty()) {
+            catID = Categories.getCategoryForComponent(context, cn, true);
+        }
 
         AppLauncher appLauncher = AppLauncher.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);
         db.addApp(appLauncher);
@@ -120,12 +127,15 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     public void addOreoLink(Context context, String shortcutid, String packageName, String label, Bitmap bitmap) {
 
-        Log.d("ShortcutCatch", "shortcutid: " + shortcutid);
-        Log.d("ShortcutCatch", "packageName: " + packageName);
-        Log.d("ShortcutCatch", "label: " + label);
+        Log.d("ShortcutOreo", "shortcutid: " + shortcutid);
+        Log.d("ShortcutOreo", "packageName: " + packageName);
+        Log.d("ShortcutOreo", "label: " + label);
 
         DB db = GlobState.getGlobState(context).getDB();
-        String catID = Categories.getCategoryForPackage(context, packageName, true);
+        String catID = MainActivity.getLatestCategory();
+        if (catID==null || catID.isEmpty()) {
+            catID = Categories.getCategoryForPackage(context, packageName, true);
+        }
         Log.d("ShortcutCatch", "catID: " + catID);
 
         AppLauncher appLauncher = AppLauncher.createOreoShortcut(shortcutid, packageName,label,catID);
