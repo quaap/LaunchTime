@@ -39,7 +39,7 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 75;
+        final int newsnum = 76;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
@@ -48,6 +48,13 @@ public class MsgBox {
 
                     String msg = "";
                     msg += "" +
+                            "In 0.7.6:\n" +
+                            " * Enable pinned shortcuts on Oreo (Android 8).\n" +
+                            " * Fix unread counts on Oreo (Android 8).\n" +
+                            " * Prevent a few rare crashes.\n" +
+                            " * More apps categorized.\n";
+
+                    msg += "\n" +
                             "In 0.7.5:\n" +
                             " * More apps categorized.\n" +
                             " * Updated German translations.\n" +
