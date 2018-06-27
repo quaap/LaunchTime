@@ -828,7 +828,7 @@ public class MainActivity extends Activity implements
             Log.d(TAG, "My name is " + selfAct);
 
             //Move self icon to hidden
-            db().updateAppCategory(selfAct, Categories.CAT_HIDDEN);
+            db().updateAppCategory(selfAct, this.getPackageName(), Categories.CAT_HIDDEN);
 
             //Take a backup no that things are pre-sorted.
             db().backup("After install");
@@ -1562,7 +1562,7 @@ public class MainActivity extends Activity implements
                         if (isAppLauncher) {
                             if (!isSearch) {
                                 mBeingDragged.setCategory(category);
-                                db().updateAppCategory(mBeingDragged.getActivityName(), category);
+                                db().updateAppCategory(mBeingDragged.getActivityName(), mBeingDragged.getPackageName(), category);
                                 mMainDragListener.onDrag(iconSheet, event);
                             }
                         } else {
@@ -1630,6 +1630,7 @@ public class MainActivity extends Activity implements
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
+                    //Log.d(TAG, "" + dragObj.getTag());
                     break;
 
                 case DragEvent.ACTION_DRAG_LOCATION:

@@ -574,14 +574,14 @@ public class DB extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void updateAppCategory(String actvname, String catID) {
+    public void updateAppCategory(String actvname, String pkgname, String catID) {
         SQLiteDatabase db = this.getWritableDatabase();
 
 
         ContentValues values = new ContentValues();
         values.put(CATID, catID);
 
-        db.update(APP_TABLE, values, ACTVNAME + "=?", new String[]{actvname});
+        db.update(APP_TABLE, values, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
 
         // Log.d("LaunchDB", "update " + pkgname + " " + catID);
     }
