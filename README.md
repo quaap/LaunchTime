@@ -25,6 +25,11 @@ Features
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
 
+
+New features in 0.7.6
+-----------
+* Oreo / Android 8 shortcuts
+
 New features in 0.7.3
 -----------
 * Better widgets support.
