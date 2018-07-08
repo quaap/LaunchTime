@@ -347,6 +347,6 @@
     <string name="pref_customize_desc">Change individual icons and labels</string>
     <string name="user_theme">User theme %d</string>
     <string name="pref_icon_tint">Icon tint</string>
-    <string name="reset_badge_counts">Reset app unread counts</string>
+    <string name="pref_show_badges">Show app unread counts</string>
 
 </resources>

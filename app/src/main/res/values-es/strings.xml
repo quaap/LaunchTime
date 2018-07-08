@@ -352,5 +352,5 @@
  <string name="pref_customize_desc">Cambiar iconos y etiquetas individuales</string>
     <string name="pref_icon_tint">Tinte de icono</string>
  <string name="user_theme">Tema de usuario %d</string>
-    <string name="reset_badge_counts">Restablecer recuentos de aplicaciones no leídas</string>
+ <string name="pref_show_badges">Mostrar los conteos no leídos de App</string>
 </resources>

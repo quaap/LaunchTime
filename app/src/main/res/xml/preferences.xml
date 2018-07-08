@@ -35,7 +35,7 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:title="Show unread counts"
+            android:title="@string/pref_show_badges"
             android:key="pref_show_badges" />
 
         <CheckBoxPreference

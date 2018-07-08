@@ -115,8 +115,8 @@
     <string name="add_a_comment">Ajouter un commentaire</string>
     <string name="send_error_report">Envoyer un rapport d\'erreur</string>
     <string name="go_to_settings">Se rendre à la configuration</string>
-    <string name="show_extfs_opts">Afficher les options de sauvegarde sur le disque...</string>
-    <string name="hide_extfs_opts">Masquer les options de sauvegarde sur le disque...</string>
+    <string name="show_extfs_opts">Afficher les options de sauvegarde sur le disque…</string>
+    <string name="hide_extfs_opts">Masquer les options de sauvegarde sur le disque…</string>
     <string name="no_backup_selected">Aucune sauvegarde sélectionnée</string>
     <string name="opt_name">Nom optionnel</string>
     <string name="new_backup">Nouvelle sauvegarde</string>
@@ -354,6 +354,6 @@
 
             ]]>
     </string>
-    <string name="reset_badge_counts">Réinitialisation de l\'application compte non lu</string>
+ <string name="pref_show_badges">Afficher les comptes non lus de l\'application</string>
 
 </resources>
