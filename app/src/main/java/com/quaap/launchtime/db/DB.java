@@ -1008,6 +1008,32 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
+    public List<ComponentName> getAppLaunchedListUsage() {
+
+        List<ComponentName> activitynames = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                true,
+                APP_HISTORY_TABLE,
+                new String[]{ACTVNAME, PKGNAME},
+                null, null, "1,2", null, "count(*) desc", null);
+
+        try {
+            while (cursor.moveToNext()) {
+                if (!cursor.isNull(0) && !cursor.isNull(1) ) {
+                    activitynames.add(new ComponentName(cursor.getString(cursor.getColumnIndex(PKGNAME)), cursor.getString(cursor.getColumnIndex(ACTVNAME))));
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+        return activitynames;
+
+    }
+
+
     public int getAppLaunchedCount(ComponentName activityname) {
         return getAppLaunchedCount(activityname, new Date(0));
     }
