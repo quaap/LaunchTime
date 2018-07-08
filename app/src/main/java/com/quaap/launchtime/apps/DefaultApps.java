@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
@@ -108,11 +109,17 @@ public class DefaultApps {
             ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
             activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "messen", "msg", "sms", "mms", "chat", "irc" ));
 
-            activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", "camera.Camera", ".camera", "kamera", "camera", "kam", "cam", "photo", "foto"));
-            activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "fone", "contacts"));
+            ComponentName camapp = getpkg(context, MediaStore.ACTION_IMAGE_CAPTURE, null, null);
+            activities.put("camera", Arrays.asList(camapp.getPackageName(), "cameraApp", "CameraActivity", "camera.Camera", ".camera", "kamera", "camera", "kam", "cam", "photo", "foto"));
 
-            activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
-            activities.put("email", Arrays.asList("k9", "inbox", "outlook", "mail"));
+            ComponentName phoneapp = getpkg(context, Intent.ACTION_DIAL, "tel:411", null);
+            activities.put("phone", Arrays.asList(phoneapp.getClassName(), phoneapp.getPackageName(), "DialtactsActivity", "dial", "phone", "fone", "contacts"));
+
+            ComponentName emailapp = getpkg(context, Intent.ACTION_SENDTO, "mailto:", null);
+            activities.put("email", Arrays.asList(emailapp.getPackageName(), "k9", "inbox", "outlook", "mail"));
+
+            ComponentName musicapp = getpkg(context, Intent.ACTION_VIEW, "file:", "audio/*");
+            activities.put("music", Arrays.asList(musicapp.getPackageName(), "music", "mp3", "media", "player"));
 
         } catch (Exception e) {
             Log.e("LaunchTime", e.getMessage(), e);
@@ -122,26 +129,38 @@ public class DefaultApps {
     }
 
     public static ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory) {
+        return getpkg(context, intentaction, intenturi, intentcategory, null);
+    }
+
+    public static ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory, String intenttype) {
 
         ComponentName cn = new ComponentName("_fakename", "_fakename");
 
-        Intent intent;
-        if (intenturi == null) {
-            intent = new Intent(intentaction);
-        } else {
-            intent = new Intent(intentaction, Uri.parse(intenturi));
-        }
-        if (intentcategory != null) {
-            intent.addCategory(intentcategory);
-        }
-        ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        if (resolveInfo != null) {
-            Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
-            if (resolveInfo.activityInfo.name!=null && !resolveInfo.activityInfo.name.equals("com.android.internal.app.ResolverActivity")) {
-
-                cn = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+        try {
+            Intent intent;
+            if (intenturi == null) {
+                intent = new Intent(intentaction);
+            } else {
+                intent = new Intent(intentaction, Uri.parse(intenturi));
             }
+            if (intentcategory != null) {
+                intent.addCategory(intentcategory);
+            }
+            if (intenttype!=null) {
+                intent.setType(intenttype);
+            }
+
+            ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (resolveInfo != null) {
+                Log.d("sh", resolveInfo.activityInfo.name + " " + resolveInfo.activityInfo.packageName);
+                if (resolveInfo.activityInfo.name != null && !resolveInfo.activityInfo.name.equals("com.android.internal.app.ResolverActivity")) {
+
+                    cn = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+                }
+            }
+        } catch (Throwable t) {
+            Log.e("DefApps", t.getMessage(), t);
         }
         return cn;
 
