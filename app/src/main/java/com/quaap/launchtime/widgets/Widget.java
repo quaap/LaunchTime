@@ -77,12 +77,16 @@ public class Widget {
     }
 
     public void popupSelectWidget() {
-        // Allocate widget id and start widget selection activity
-        int appWidgetId = this.mAppWidgetHost.allocateAppWidgetId();
-        Intent pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
-        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        addEmptyData(pickIntent); // This is needed work around some weird bug.
-        mParent.startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET);
+        try {
+            // Allocate widget id and start widget selection activity
+            int appWidgetId = this.mAppWidgetHost.allocateAppWidgetId();
+            Intent pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
+            pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            addEmptyData(pickIntent); // This is needed work around some weird bug.
+            mParent.startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET);
+        } catch (Throwable t) {
+            Log.e("Widget", t.getMessage(), t);
+        }
     }
 
 
