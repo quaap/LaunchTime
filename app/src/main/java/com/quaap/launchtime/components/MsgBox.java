@@ -39,7 +39,7 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 76;
+        final int newsnum = 77;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
@@ -47,7 +47,15 @@ public class MsgBox {
                 public void run() {
 
                     String msg = "";
+
                     msg += "" +
+                            "In 0.7.7:\n" +
+                            " * Add option to turn off unread badges.\n" +
+                            " * Better default apps in Quickbar.\n" +
+                            " * Prevent a few rare crashes.\n" +
+                            " * Fix bug on Oreo wrt loading iconpacks.\n";
+
+                    msg += "\n" +
                             "In 0.7.6:\n" +
                             " * Enable pinned shortcuts on Oreo (Android 8).\n" +
                             " * Fix unread counts on Oreo (Android 8).\n" +
