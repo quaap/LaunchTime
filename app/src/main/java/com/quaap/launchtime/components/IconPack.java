@@ -194,22 +194,24 @@ public class IconPack {
     }
 
     public Drawable get(String componentName) {
+        Drawable d = null;
         String drawable = packagesDrawables.get(componentName);
         if (drawable != null) { //there is a custom icon
             try {
                 int id = iconPackres.getIdentifier(drawable, "drawable", iconsPackPackageName);
                 if (id > 0) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        return iconPackres.getDrawable(id, theme);
+                        d = iconPackres.getDrawable(id, theme);
                     } else {
-                        return iconPackres.getDrawable(id);
+                        d = iconPackres.getDrawable(id);
                     }
                 }
             } catch (Exception | Error e){
-                Log.e(TAG, e.getMessage(), e);
+                d = null;
+                Log.e(TAG, iconsPackPackageName + " " + componentName + " " + e.getMessage(), e);
             }
         }
-        return null;
+        return d;
     }
 
 
@@ -280,7 +282,7 @@ public class IconPack {
                 }
             }
         } catch (OutOfMemoryError e){
-            Log.e(TAG, e.getMessage(), e);
+            Log.e(TAG, iconsPackPackageName + " " + drawableName + " " + e.getMessage(), e);
         }
         return null;
     }
