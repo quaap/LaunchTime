@@ -22,15 +22,53 @@
         <item>talk</item>
         <item>facebook</item>
         <item>social</item>
+        <item>dating</item>
         <item>chat</item>
+        <item>parl</item>
+        <item>communic</item>
+        <item>icq</item>
+        <item>irc</item>
+        <item>xmpp</item>
         <item>com.narvii</item>
     </string-array>
     <string-array translatable="false" name="CAT_GAMES">
         <item>game</item>
         <item>puzz</item>
         <item>battle</item>
-        <item>studios</item>
         <item>play</item>
+        <item>warfare</item>
+        <item>arcade</item>
+        <item>clash</item>
+        <item>hero</item>
+        <item>sudoku</item>
+        <item>pvp</item>
+        <item>chess</item>
+        <item>jewel</item>
+        <item>fruit</item>
+        <item>solitaire</item>
+        <item>candy</item>
+        <item>bubble</item>
+        <item>marble</item>
+        <item>ball</item>
+        <item>hockey</item>
+        <item>soccer</item>
+        <item>bowling</item>
+        <item>race</item>
+        <item>racing</item>
+        <item>ninja</item>
+        <item>zombie</item>
+        <item>hunter</item>
+        <item>shooter</item>
+        <item>trivia</item>
+        <item>quiz</item>
+        <item>words</item>
+        <item>crossword</item>
+        <item>simulat</item>
+        <item>saga</item>
+        <item>mahj</item>
+        <item>fight</item>
+        <item>attack</item>
+        <item>studios</item>
         <item>com.huuuge</item>
         <item>com.ea</item>
         <item>com.king</item>
@@ -42,16 +80,19 @@
         <item>com.miniclip</item>
     </string-array>
     <string-array translatable="false" name="CAT_INTERNET">
+        <item>web.browser</item>
+        <item>webbrowser</item>
         <item>download</item>
         <item>maps</item>
         <item>dropbox</item>
         <item>chrome</item>
         <item>mozilla</item>
         <item>drive</item>
-        <item>browser</item>
         <item>wiki</item>
         <item>weather</item>
         <item>forcast</item>
+        <item>web</item>
+        <item>browser</item>
     </string-array>
     <string-array translatable="false" name="CAT_MEDIA">
         <item>radio</item>
@@ -73,20 +114,33 @@
         <item>mix</item>
         <item>record</item>
         <item>sfx</item>
+        <item>soni</item>
+        <item>musiq</item>
         <item>mic</item>
     </string-array>
     <string-array translatable="false" name="CAT_GRAPHICS">
+        <item>camera</item>
+        <item>kamera</item>
         <item>pix</item>
         <item>gallery</item>
         <item>photo</item>
         <item>foto</item>
         <item>video</item>
+        <item>selfie</item>
         <item>draw</item>
         <item>graph</item>
         <item>gfx</item>
+        <item>collage</item>
+        <item>montage</item>
         <item>image</item>
+        <item>instagram</item>
+        <item>shutter</item>
+        <item>makeup</item>
+        <item>slideshow</item>
+        <item>kam</item>
         <item>cam</item>
         <item>pic</item>
+        <item>sfx</item>
         <item>tube</item>
         <item>vid</item>
         <item>movie</item>
@@ -109,10 +163,15 @@
         <item>memo</item>
         <item>note</item>
         <item>reader</item>
+        <item>fitness</item>
+        <item>exercis</item>
+        <item>weight</item>
+        <item>runner</item>
         <item>office</item>
         <item>book</item>
         <item>viewer</item>
         <item>doc</item>
+        <item>flashlight</item>
     </string-array>
     <string-array translatable="false" name="CAT_SETTINGS">
         <item>setting</item>
@@ -121,6 +180,7 @@
         <item>vending</item>
         <item>launch</item>
         <item>sync</item>
+        <item>imput</item>
         <item>backup</item>
         <item>prefer</item>
         <item>prefs</item>

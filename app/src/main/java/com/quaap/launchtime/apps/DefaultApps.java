@@ -101,15 +101,15 @@ public class DefaultApps {
 
             ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://www", null);
             activities.put("browser", Arrays.asList(browseapp.getPackageName(),
-                    "opera", "dolphin", "firefox", "mozilla", "chromium",
-                    "uc.browser", "brave.browser", "TunnyBrowser", "chrome",
+                    "duckduckgo", "web.browser", "webbrowser", "opera.", "dolphin", "firefox", "mozilla", "chromium",
+                    "uc.browser", "brave.browser", "TunnyBrowser", "emmx", "chrome",
                     ".browser", "browser"));
 
             ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
-            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms"));
+            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "messen", "msg", "sms", "mms", "chat", "irc" ));
 
-            activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", "camera.Camera", ".camera", "camera", "cam", "photo", "foto"));
-            activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "contacts"));
+            activities.put("camera", Arrays.asList("cameraApp", "CameraActivity", "camera.Camera", ".camera", "kamera", "camera", "kam", "cam", "photo", "foto"));
+            activities.put("phone", Arrays.asList("DialtactsActivity", "dial", "phone", "fone", "contacts"));
 
             activities.put("music", Arrays.asList("music", "mp3", "media", "player"));
             activities.put("email", Arrays.asList("k9", "inbox", "outlook", "mail"));
