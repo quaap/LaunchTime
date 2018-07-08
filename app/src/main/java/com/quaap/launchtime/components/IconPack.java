@@ -157,36 +157,61 @@ public class IconPack {
 
     }
 
-    public Map<String, Drawable> getAllIcons() {
+//    public Map<String, Drawable> getAllIcons() {
+//
+//        Map<String, Drawable> icons = new LinkedHashMap<>();
+//
+//        for (String key: packagesDrawables.keySet()) {
+//            Drawable g = get(key);
+//            if (g!=null) {
+//                icons.put(key, g);
+//            }
+//        }
+//
+//        return icons;
+//    }
+//
+//    public Set<Drawable> getUniqueIcons() {
+//
+//        Set<Drawable> icons = new LinkedHashSet<>();
+//        Set<String> iconNames = new LinkedHashSet<>();
+//
+//        for (String key: packagesDrawables.keySet()) {
+//            if (!iconNames.contains(packagesDrawables.get(key))) {
+//                Drawable g = get(key);
+//                if (g!=null) {
+//                    icons.add(g);
+//                    iconNames.add(packagesDrawables.get(key));
+//                }
+//            }
+//        }
+//
+//        return icons;
+//    }
 
-        Map<String, Drawable> icons = new LinkedHashMap<>();
-
-        for (String key: packagesDrawables.keySet()) {
-            Drawable g = get(key);
-            if (g!=null) {
-                icons.put(key, g);
-            }
-        }
-
-        return icons;
-    }
-
-    public Set<Drawable> getUniqueIcons() {
-
-        Set<Drawable> icons = new LinkedHashSet<>();
+    public Set<String> getUniqueIconNames() {
         Set<String> iconNames = new LinkedHashSet<>();
-
+        Set<String> iconValues = new LinkedHashSet<>();
         for (String key: packagesDrawables.keySet()) {
-            if (!iconNames.contains(packagesDrawables.get(key))) {
-                Drawable g = get(key);
-                if (g!=null) {
-                    icons.add(get(key));
-                    iconNames.add(packagesDrawables.get(key));
+            //Log.d("Iconpack", "Key = " + key);
+            try {
+                String value = packagesDrawables.get(key);
+                if (!iconValues.contains(value)) {
+                    iconValues.add(value);
+                    int id = iconPackres.getIdentifier(value, "drawable", iconsPackPackageName);
+                    if (id > 0) {
+                        iconNames.add(key);
+                        //Log.d("Iconpack", "value = " + value);
+                    }
                 }
-            }
-        }
+            } catch (Exception | Error e){
 
-        return icons;
+                Log.e(TAG, iconsPackPackageName + " " + e.getMessage(), e);
+            }
+
+
+        }
+        return iconNames;
     }
 
     public Drawable get(ComponentName componentName) {

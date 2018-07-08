@@ -26,6 +26,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -98,7 +99,7 @@ public class ChooseIconFromPackActivity extends Activity {
         GridView gv = findViewById(R.id.icon_pack_icons);
 
 
-        final ImageAdapter adapter = new ImageAdapter(this, new ArrayList<>(iconPack.getUniqueIcons()));
+        final ImageAdapter adapter = new ImageAdapter(this, iconPack);
         gv.setAdapter(adapter);
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,24 +131,25 @@ public class ChooseIconFromPackActivity extends Activity {
 
     private class ImageAdapter extends BaseAdapter {
         private Context mContext;
-        private ArrayList<Drawable> mDrawables;
-
+        private ArrayList<String> mDrawableNames;
+        private SparseArray<Drawable> mDrawables  = new SparseArray<>();
+        private IconPack mIconPack;
 
         private int mIconSize;
 
-        ImageAdapter(Context c, ArrayList<Drawable> drawables) {
+        ImageAdapter(Context c, IconPack iconPack) {
             mContext = c;
-            mDrawables = drawables;
-
+            mIconPack = iconPack;
+            mDrawableNames = new ArrayList<>(mIconPack.getUniqueIconNames());
             mIconSize = (int)mContext.getResources().getDimension(R.dimen.icon_width);
         }
 
         public int getCount() {
-            return mDrawables.size();
+            return mDrawableNames.size();
         }
 
         public Object getItem(int position) {
-            return mDrawables.get(position);
+            return mDrawableNames.get(position);
         }
 
         public long getItemId(int position) {
@@ -166,7 +168,12 @@ public class ChooseIconFromPackActivity extends Activity {
                 imageView = (ImageView) convertView;
             }
 
-            imageView.setImageDrawable(mDrawables.get(position));
+            Drawable d = mDrawables.get(position);
+            if (d==null) {
+                d = mIconPack.get(mDrawableNames.get(position));
+                mDrawables.put(position, d);
+            }
+            imageView.setImageDrawable(d);
             return imageView;
         }
 
