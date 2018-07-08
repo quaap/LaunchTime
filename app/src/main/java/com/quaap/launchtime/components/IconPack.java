@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -69,6 +70,9 @@ public class IconPack {
     private float factor = 1.0f;
 
 
+    private Resources.Theme theme;
+
+
     public IconPack(Context ctx, String packageName) {
 
         //clear icons pack
@@ -78,6 +82,7 @@ public class IconPack {
 
         iconPackres = null;
 
+        theme = ctx.getTheme();
 
 
         XmlPullParser xpp = null;
@@ -194,8 +199,11 @@ public class IconPack {
             try {
                 int id = iconPackres.getIdentifier(drawable, "drawable", iconsPackPackageName);
                 if (id > 0) {
-                    //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
-                    return iconPackres.getDrawable(id);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        return iconPackres.getDrawable(id, theme);
+                    } else {
+                        return iconPackres.getDrawable(id);
+                    }
                 }
             } catch (Exception | Error e){
                 Log.e(TAG, e.getMessage(), e);
@@ -261,7 +269,12 @@ public class IconPack {
             int id = iconPackres.getIdentifier(drawableName, "drawable", iconsPackPackageName);
             if (id > 0) {
                 //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
-                Drawable bitmap = iconPackres.getDrawable(id);
+                Drawable bitmap;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    bitmap = iconPackres.getDrawable(id, theme);
+                } else {
+                    bitmap = iconPackres.getDrawable(id);
+                }
                 if (bitmap instanceof BitmapDrawable) {
                     return ((BitmapDrawable) bitmap).getBitmap();
                 }

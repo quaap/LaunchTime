@@ -343,7 +343,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
             Drawable link;
             if (Build.VERSION.SDK_INT >= 21) {
-                link = context.getDrawable(R.drawable.link);
+                link = context.getResources().getDrawable(R.drawable.link, context.getTheme());
             } else {
                 link = context.getResources().getDrawable(R.drawable.link);
             }
