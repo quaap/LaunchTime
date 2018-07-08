@@ -103,36 +103,6 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             });
 
-
-            Preference badgebutton = findPreference("reset_badges");
-            badgebutton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-
-                    new AlertDialog.Builder(getActivity())
-
-                            .setTitle(R.string.reset_badge_counts)
-
-                            .setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    GlobState.getBadger(getActivity()).clearAll();
-                                    dialog.dismiss();
-                                }
-
-                            })
-                            .setNegativeButton(R.string.cancel,  new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .create().show();
-
-
-                    return true;
-                }
-            });
-
         }
 
         @Override

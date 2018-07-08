@@ -33,9 +33,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_app_system">
 
-        <Preference android:title="Reset app unread counts"
-            android:key="reset_badges"/>
-
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="Show unread counts"
