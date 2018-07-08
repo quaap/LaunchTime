@@ -445,7 +445,7 @@ public class CustomizeLaunchersActivity extends Activity {
                     break;
                 case 1:
                     Intent packIntent=new Intent(CustomizeLaunchersActivity.this, ChooseIconFromPackActivity.class);
-                    startActivityForResult(Intent.createChooser(packIntent, getString(R.string.custom_icon_select_icon_pack)), PICK_FROM_ICON_PACK);
+                    startActivityForResult(packIntent, PICK_FROM_ICON_PACK);
                     break;
                 case 2:
                     updateBitmap(null);
