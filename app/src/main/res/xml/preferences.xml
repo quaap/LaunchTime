@@ -21,6 +21,7 @@
             android:key="prefs_toddler_lock"
             android:summary="@string/pref_todd_lock_summ"
             android:paddingBottom="6dp" />
+
         <ListPreference
             android:defaultValue="0"
             android:title="@string/pref_orient"
@@ -29,12 +30,16 @@
             android:key="preference_orientation"
             android:summary="%s" />
 
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_app_system">
+
         <Preference android:title="Reset app unread counts"
             android:key="reset_badges"/>
 
-
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_app_system">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="Show unread counts"
+            android:key="pref_show_badges" />
 
         <CheckBoxPreference
             android:defaultValue="false"

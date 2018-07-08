@@ -407,6 +407,7 @@ public class MainActivity extends Activity implements
 
             if (key != null) {
 
+
                 // when the Theme updates many of these prefs at once, it sends "prefsUpdate" first so that we ignore everything until it is done.
                 if (key.equals("prefsUpdate")) {
                     prefsUpdate = sharedPreferences.getBoolean(key, false) ? prefsUpdate+1 : prefsUpdate-1;
@@ -464,6 +465,12 @@ public class MainActivity extends Activity implements
                         mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
                         if (mChildLock) mChildLockSetup = false;
                         checkChildLock();
+                    }
+
+                    if (key.equals("pref_show_badges")) {
+                        if (!sharedPreferences.getBoolean("pref_show_badges", true)) {
+                            GlobState.getBadger(this).clearAll();
+                        }
                     }
                 }
             }
@@ -1347,7 +1354,7 @@ public class MainActivity extends Activity implements
         if (item!=null) {
             TextView badge = item.findViewById(R.id.launcher_badge);
             if (badge!=null) {
-                if (bcount <= 0) {
+                if (bcount <= 0 || !mAppPreferences.getBoolean("pref_show_badges", true)) {
                     badge.setVisibility(View.GONE);
                 } else {
                     badge.setVisibility(View.VISIBLE);
