@@ -55,10 +55,26 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/show_cats_buttom"
+            android:layout_width="@dimen/cattabbar_width"
+            android:layout_height="26dp"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="2dp"
+            android:padding="2dp"
+            android:alpha=".8"
+            android:background="@color/btn_background"
+            android:clickable="true"
+            android:contentDescription="Show menu"
+            android:focusable="true"
+            android:gravity="end"
+            android:src="@android:drawable/arrow_up_float" />
+
         <LinearLayout
             android:id="@+id/category_tabs_wrap"
             android:layout_width="@dimen/cattabbar_width"
             android:layout_height="match_parent"
+            android:layout_gravity="right"
             android:orientation="vertical">
 
             <com.quaap.launchtime.apps.InteractiveScrollView

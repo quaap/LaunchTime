@@ -143,11 +143,11 @@ public class Style {
         int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));
         switch (iconsizePref) {
             case 0:  //small
-                launcherIconSize = (int)(iconsize*.85);
-                launcherFontSize = (int)(iconfontsize*.9);
+                launcherIconSize = (int)(iconsize*.76);
+                launcherFontSize = (int)(iconfontsize*.87);
                 break;
             case 1:  //medium
-                launcherIconSize = (int)iconsize;
+                launcherIconSize = (int)(iconsize*.95);
                 launcherFontSize = (int)iconfontsize;
                 break;
             case 2:  //large

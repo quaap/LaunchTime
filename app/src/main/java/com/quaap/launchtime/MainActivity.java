@@ -127,6 +127,7 @@ public class MainActivity extends Activity implements
     private Map<View, String> mRevCategoryMap;
     private volatile String mCategory;
     private ImageView mShowButtons;
+    private ImageView mShowCats;
 
 
     private TextView mSortCategoryButton;
@@ -699,7 +700,7 @@ public class MainActivity extends Activity implements
         itemClickedAnim.setDuration(200);
         itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        boolean autohideCats = mAppPreferences.getBoolean("pref_autohide_cats", true);
+        boolean autohideCats = isAutohide();
         try {
 
             mScreenDim = getScreenDimensions();
@@ -710,8 +711,8 @@ public class MainActivity extends Activity implements
             float wr = ( mScreenDim.x - (autohideCats?0:catwidth))/launcherw;
 
             if (wr<3) mColumns = 2;
-            else if (wr<5) mColumns = 3;
-            else if (wr<6) mColumns = 4;
+            else if (wr<4) mColumns = 3;
+            else if (wr<5) mColumns = 4;
             else if (wr<7.4) mColumns = 5;
             else if (wr<9) mColumns = 6;
             else if (wr<11) mColumns = 8;
@@ -728,6 +729,12 @@ public class MainActivity extends Activity implements
             mShowButtons.setBackgroundColor(mStyle.getCattabBackground());
             mShowButtons.setColorFilter(mStyle.getCattabTextColor());
             mShowButtons.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
+
+            mShowCats.setBackgroundColor(mStyle.getCattabBackground());
+            mShowCats.setColorFilter(mStyle.getCattabTextColor());
+            mShowCats.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
+
+
             //mShowButtons.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, categoryTabPaddingHeight*3));
             //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
             mSortCategoryButton.setBackgroundColor(mStyle.getCattabBackground());
@@ -745,46 +752,72 @@ public class MainActivity extends Activity implements
             int c = mStyle.getWallpaperColor();
             mIconSheetBottomFrame.setBackgroundColor(Color.argb(255, Color.red(c), Color.green(c), Color.blue(c)));
 
-            View iconsarea = findViewById(R.id.iconarea_wrap);
-            FrameLayout.LayoutParams iconsarealp = (FrameLayout.LayoutParams)iconsarea.getLayoutParams();
-            if (iconsarealp==null){
-                iconsarealp = new FrameLayout.LayoutParams(this,null);
-            }
 
-            //Switch the menu left/right
-            ViewGroup wrap = findViewById(R.id.icon_and_cat_wrap);
-            View cats = findViewById(R.id.category_tabs_wrap);
-            FrameLayout.LayoutParams catslp = (FrameLayout.LayoutParams)cats.getLayoutParams();
-            if (catslp==null){
-                catslp = new FrameLayout.LayoutParams(this,null);
-            }
-
-            if (mStyle.isLeftHandCategories()) {
-                catslp.gravity = Gravity.LEFT;
-
-                if (autohideCats) {
-                    iconsarealp.leftMargin = 2;
-                    iconsarealp.rightMargin = 2;
-                } else {
-                    iconsarealp.leftMargin = (int) catwidth;
-                    iconsarealp.rightMargin = 2;
-                }
-
-            } else {
-                catslp.gravity = Gravity.RIGHT;
-                if (autohideCats) {
-                    iconsarealp.leftMargin = 2;
-                    iconsarealp.rightMargin = 2;
-                } else {
-                    iconsarealp.leftMargin = 2;
-                    iconsarealp.rightMargin = (int) catwidth;
-                }
-            }
-            //cats.setLayoutParams(catslp);
+            handleAutohide();
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
+    }
+
+    private void hideCatsIfAutoHide() {
+        if (isAutohide()) showCats(false);
+    }
+
+    private void showCats(boolean show) {
+        View cats = findViewById(R.id.category_tabs_wrap);
+        cats.setVisibility(!show?View.GONE:View.VISIBLE);
+        mShowCats.setVisibility(show?View.GONE:View.VISIBLE);
+    }
+
+    private void handleAutohide() {
+        //Switch the menu left/right
+
+        boolean autohideCats = isAutohide();
+
+        float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
+
+        View iconsarea = findViewById(R.id.iconarea_wrap);
+        FrameLayout.LayoutParams iconsarealp = (FrameLayout.LayoutParams)iconsarea.getLayoutParams();
+        if (iconsarealp==null){
+            iconsarealp = new FrameLayout.LayoutParams(this,null);
+        }
+
+        View cats = findViewById(R.id.category_tabs_wrap);
+
+        showCats(!autohideCats);
+
+        FrameLayout.LayoutParams catslp = (FrameLayout.LayoutParams)cats.getLayoutParams();
+        if (catslp==null){
+            catslp = new FrameLayout.LayoutParams(this,null);
+        }
+
+        if (mStyle.isLeftHandCategories()) {
+            catslp.gravity = Gravity.LEFT;
+
+            if (autohideCats) {
+                iconsarealp.leftMargin = 2;
+                iconsarealp.rightMargin = 2;
+            } else {
+                iconsarealp.leftMargin = (int) catwidth;
+                iconsarealp.rightMargin = 2;
+            }
+
+        } else {
+            catslp.gravity = Gravity.RIGHT;
+            if (autohideCats) {
+                iconsarealp.leftMargin = 2;
+                iconsarealp.rightMargin = 2;
+            } else {
+                iconsarealp.leftMargin = 2;
+                iconsarealp.rightMargin = (int) catwidth;
+            }
+        }
+        //cats.setLayoutParams(catslp);
+    }
+
+    private boolean isAutohide() {
+        return mAppPreferences.getBoolean("pref_autohide_cats", true);
     }
 
     public LaunchApp getAppLauncher() {
@@ -1531,6 +1564,7 @@ public class MainActivity extends Activity implements
                 if (mChildLock) return;
                // view.startAnimation(itemClickedAnim);
                 switchCategory(category);
+                hideCatsIfAutoHide();
 
             }
         });
@@ -1735,11 +1769,14 @@ public class MainActivity extends Activity implements
                 //Stuff to be deleted
                 if (mQuickRow.isSelf(mDragDropSource)) {
                     removeDroppedItem(dragObj);
+                    hideCatsIfAutoHide();
                 } else if (mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)) {
                     removeDroppedRecentItem(dragObj);
+                    hideCatsIfAutoHide();
                 } else if (mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
                     removeDroppedItem(dragObj);
                     mSearchBox.refreshSearch(true);
+                    hideCatsIfAutoHide();
 
                 } else if (mDragDropSource == mCategoriesLayout && !isLauncher) {
                     //delete category tab
@@ -1751,9 +1788,11 @@ public class MainActivity extends Activity implements
                         mBeingUninstalled = dragObj;
                         launchUninstallIntent(mBeingDragged.getPackageName());
                     }
+                    hideCatsIfAutoHide();
                 }
                 return true;
             } else if (droppedOn == mLinkDropzone) {
+                hideCatsIfAutoHide();
                 if (isLauncher) {
                     AppLauncher app = (AppLauncher)dragObj.getTag();
                     Log.d(TAG, "Making link: " + app.getActivityName() + " " + app.getPackageName());
@@ -1772,15 +1811,16 @@ public class MainActivity extends Activity implements
             } else if (droppedOn.getParent() instanceof GridLayout){
                 target = (GridLayout) droppedOn.getParent();
             } else {
+                hideCatsIfAutoHide();
                 return true;
             }
+            hideCatsIfAutoHide();
 
             if (droppedOnTag!=null && droppedOnTag instanceof AppLauncher) {
                 if (((AppLauncher)droppedOnTag).isWidget()) {
                     target = (GridLayout) droppedOn.getParent();
                 }
             }
-
 
             //Find the drop position
             int index = -1;
@@ -2008,6 +2048,7 @@ public class MainActivity extends Activity implements
             mBeingDragged = dragitem;
             mDragDropSource = (ViewGroup) mDragPotential.getParent();
             Log.d(TAG, "Drag started: " + dragitem.getActivityName() +  ", source = " + mDragDropSource);
+            showCats(true);
             showHiddenCategories();
 
            // Log.d(TAG, "source = " + mDragDropSource);
@@ -2629,6 +2670,14 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 toggleButtonBar();
+            }
+        });
+
+        mShowCats = findViewById(R.id.show_cats_buttom);
+        mShowCats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCats(true);
             }
         });
 
