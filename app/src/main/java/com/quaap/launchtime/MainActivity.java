@@ -769,6 +769,7 @@ public class MainActivity extends Activity implements
         View cats = findViewById(R.id.category_tabs_wrap);
         cats.setVisibility(!show?View.GONE:View.VISIBLE);
         mShowCats.setVisibility(show?View.GONE:View.VISIBLE);
+
     }
 
     private void handleAutohide() {
@@ -815,6 +816,13 @@ public class MainActivity extends Activity implements
             }
         }
         //cats.setLayoutParams(catslp);
+        for (TextView catTab : mCategoryTabs.values()) {
+            int back = mStyle.getCattabBackground();
+            if (autohideCats) {
+                back = Color.argb(255, Color.red(back), Color.green(back), Color.blue(back));
+            }
+            catTab.setBackgroundColor(back);
+        }
     }
 
     private boolean isAutohide() {
@@ -1109,14 +1117,14 @@ public class MainActivity extends Activity implements
 
             if (appwid != null) {
 
-                cellheight *= 0.82f;
+                //cellheight *= 0.82f;
                 //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
 
                 //magic numbers to properly expand widgets...
                 final int wDp = pxToDip(cellwidth*wcells);
-                final int hDp = pxToDip(cellheight*hcells*4/3);
+                final int hDp = pxToDip(cellheight*hcells*1.1f);
                 lp.width = (int)(cellwidth*wcells*1.1);
-                lp.height = (int)(cellheight*hcells*1.5);
+                lp.height = (int)(cellheight*hcells*1.175);
 
                 //Log.d("widcol2", "w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
                 //Log.d("widcol2", "h=" + w + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
@@ -1128,6 +1136,7 @@ public class MainActivity extends Activity implements
                             appwid.getParent().requestLayout();
                         }
                         appwid.requestLayout();
+                        appwid.postInvalidate();
                     }
                 }, 1000);
 
