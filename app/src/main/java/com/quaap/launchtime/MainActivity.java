@@ -815,13 +815,21 @@ public class MainActivity extends Activity implements
                 iconsarealp.rightMargin = (int) catwidth;
             }
         }
+        int origback = mStyle.getCattabBackground();
+        int newback = origback;
+        if (autohideCats) {
+            newback = Color.argb(225, Color.red(origback), Color.green(origback), Color.blue(origback));
+        }
         //cats.setLayoutParams(catslp);
         for (TextView catTab : mCategoryTabs.values()) {
-            int back = mStyle.getCattabBackground();
-            if (autohideCats) {
-                back = Color.argb(255, Color.red(back), Color.green(back), Color.blue(back));
-            }
-            catTab.setBackgroundColor(back);
+            catTab.setBackgroundColor(newback);
+            catTab.setAlpha(.9f);
+        }
+        if (autohideCats) {
+            newback = Color.argb(80, Color.red(origback), Color.green(origback), Color.blue(origback));
+            cats.setBackgroundColor(newback);
+        } else {
+            cats.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 
