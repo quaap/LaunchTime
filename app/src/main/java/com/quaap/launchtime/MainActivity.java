@@ -466,6 +466,7 @@ public class MainActivity extends Activity implements
                         mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
                         if (mChildLock) mChildLockSetup = false;
                         checkChildLock();
+                        hideCatsIfAutoHide(false);
                     }
 
                     if (key.equals("pref_show_badges")) {
@@ -570,6 +571,9 @@ public class MainActivity extends Activity implements
     private int mBackPressedSessionCount;
     @Override
     public void onBackPressed() {
+
+        hideCatsIfAutoHide(false);
+
         //back does nothign if in toddler mode
         if (mChildLock) {
             if (++mBackPressedSessionCount==17) {
@@ -578,7 +582,6 @@ public class MainActivity extends Activity implements
             return;
         }
 
-        hideCatsIfAutoHide(false);
 
         String topCat = getTopCategory();
         if (mIconSheetBottomFrame.getVisibility()==View.VISIBLE) {
@@ -2744,8 +2747,10 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 cancelHide();
-                showCats(true);
-                toggleButtonBar();
+                if (!mChildLock) {
+                    showCats(true);
+                    toggleButtonBar();
+                }
             }
         });
 
