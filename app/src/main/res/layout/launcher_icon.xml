@@ -42,7 +42,6 @@
         android:layout_width="@dimen/icon_label_width"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:height="@dimen/icont_label_height"
         android:gravity="center_horizontal"
         android:maxLines="2"
         android:textColor="@color/textcolor"

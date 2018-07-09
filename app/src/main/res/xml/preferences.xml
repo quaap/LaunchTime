@@ -40,6 +40,11 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
+            android:title="Autohide categories menu"
+            android:key="pref_autohide_cats" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:title="@string/pref_hide_empty_cat"
             android:key="pref_hide_empty_cat"
             android:summaryOn="@string/prefs_empty_cats_hid"

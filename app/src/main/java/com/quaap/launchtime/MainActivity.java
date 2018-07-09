@@ -817,7 +817,7 @@ public class MainActivity extends Activity implements
     }
 
     private boolean isAutohide() {
-        return mAppPreferences.getBoolean("pref_autohide_cats", true);
+        return mAppPreferences.getBoolean("pref_autohide_cats", false);
     }
 
     public LaunchApp getAppLauncher() {
@@ -1080,7 +1080,7 @@ public class MainActivity extends Activity implements
             //int width = (int)(sw + 20) * mColumns;
 
             float cellwidth = sw * 1f;
-            float cellheight = cellwidth + 5;  // ~square cells
+            float cellheight = cellwidth *1.5f;  // ~square cells
 
 
             int wcells = (int) Math.ceil(w / cellwidth);
@@ -1108,6 +1108,7 @@ public class MainActivity extends Activity implements
 
             if (appwid != null) {
 
+                cellheight *= 0.75f;
                 //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
 
                 //magic numbers to properly expand widgets...
@@ -1383,7 +1384,7 @@ public class MainActivity extends Activity implements
                 setLayoutSize(iconImage, mStyle.getLauncherIconSize(), mStyle.getLauncherIconSize());
 
                 iconLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, mStyle.getLauncherFontSize());
-                setLayoutSize(iconLabel, mStyle.getLauncherSize(), mStyle.getLauncherSize()/2.4);
+                setLayoutSize(iconLabel, mStyle.getLauncherSize(), mStyle.getLauncherSize()/2.1);
 
             }
             app.setIconImage(iconImage);
@@ -1488,20 +1489,20 @@ public class MainActivity extends Activity implements
     private void storeLauncherDimen(AppLauncher app, int width, int height) {
         SharedPreferences.Editor ePrefs = mPrefs.edit();
 
-        ePrefs.putInt(app.getActivityName() + "_width", width);
+        ePrefs.putInt(app.getComponentName() + "_width", width);
 
-        ePrefs.putInt(app.getActivityName() + "_height", height);
+        ePrefs.putInt(app.getComponentName() + "_height", height);
 
         ePrefs.apply();
 
     }
 
     private int getLauncherWidth(AppLauncher app) {
-        return mPrefs.getInt(app.getActivityName() + "_width", 0);
+        return mPrefs.getInt(app.getComponentName() + "_width", 0);
     }
 
     private int getLauncherHeight(AppLauncher app) {
-        return mPrefs.getInt(app.getActivityName() + "_height", 0);
+        return mPrefs.getInt(app.getComponentName() + "_height", 0);
     }
 
 
@@ -2670,6 +2671,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 toggleButtonBar();
+                hideCatsIfAutoHide();
             }
         });
 
@@ -2678,6 +2680,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 showCats(true);
+                toggleButtonBar();
             }
         });
 
