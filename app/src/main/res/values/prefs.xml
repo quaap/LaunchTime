@@ -15,7 +15,7 @@
         <item>4000</item>
     </string-array>
 
-    <string-array translatable="false" name="pref_autohide_cat_strings">
+    <string-array name="pref_autohide_cat_strings">
         <item>immediately</item>
         <item>never</item>
         <item>after &#189; second</item>

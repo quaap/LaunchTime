@@ -31,6 +31,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -1118,13 +1119,18 @@ public class MainActivity extends Activity implements
 
     }
 
+
+    //Too much magic here.  Widgets are weird.
+
     @NonNull
     private GridLayout.LayoutParams getAppLauncherLayoutParams(GridLayout grid, AppLauncher app) {
 
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
 
-        int w = getLauncherWidth(app);
-        int h = getLauncherHeight(app);
+        final int wDp = getLauncherWidth(app);
+        final int hDp = getLauncherHeight(app);
+        float w = dipToPx(wDp);
+        float h = dipToPx(hDp);
 
         if (w>0 || h>0) {
             //float sw = getResources().getDimension(R.dimen.launcher_width);
@@ -1134,15 +1140,21 @@ public class MainActivity extends Activity implements
             //int width = (int)(sw + 20) * mColumns;
 
             float cellwidth = sw * 1f;
-            float cellheight = cellwidth *1.5f;  // ~square cells
+            float cellheight = cellwidth *1.1f;  // ~square cells
 
 
-            int wcells = (int) Math.ceil(w / cellwidth);
+            int wcells = Math.max((wDp+30)/125 - 1, 1); //(int) Math.floor(mStyle.getWidgetWidth(w) / cellwidth);
+
             if (wcells > 1) {
                 int start = GridLayout.UNDEFINED;
                 if (wcells > grid.getColumnCount()) {
                     wcells = grid.getColumnCount();
                 }
+                if (wcells > mStyle.getMaxWCells()) {
+                    wcells = mStyle.getMaxWCells();
+                }
+
+
                // if (wcells > 1) start = 0;
                 lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
 
@@ -1151,7 +1163,7 @@ public class MainActivity extends Activity implements
                 lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
 
-            int hcells = (int) Math.ceil(h / cellheight);
+            int hcells = Math.max((hDp+30)/100 - 1, 1); //(int) Math.floor(mStyle.getWidgetWidth(h) / cellheight);
             if (hcells > 1) {
                 lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
             } else {
@@ -1166,13 +1178,13 @@ public class MainActivity extends Activity implements
                 //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
 
                 //magic numbers to properly expand widgets...
-                final int wDp = pxToDip(cellwidth*wcells);
-                final int hDp = pxToDip(cellheight*hcells*1.1f);
-                lp.width = (int)(cellwidth*wcells*1.1);
-                lp.height = (int)(cellheight*hcells*1.175);
+//                final int wDp = w; //pxToDip(cellwidth*wcells);
+//                final int hDp = pxToDip(cellheight*hcells*1.1f);
+                lp.width = (int)(cellwidth*wcells);
+                lp.height = (int)(cellheight*hcells*1.35);
 
-                //Log.d("widcol2", "w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
-                //Log.d("widcol2", "h=" + w + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
+                Log.d("widcol2", "w=" + wDp + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+                Log.d("widcol2", "h=" + hDp + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
                 appwid.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1196,9 +1208,13 @@ public class MainActivity extends Activity implements
         return (int)((pixel - 0.5f)/scale);
     }
 
-    public int dipToPx(float dip){
+    public float dipToPx(float dip){
+        if (dip==0) return 0;
+
         float scale = getResources().getDisplayMetrics().density;
         return (int)(dip * scale + .5f);
+//        Resources r = getResources();
+//        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, r.getDisplayMetrics());
        // return (int)((pixel - 0.5f)/scale);
     }
 

@@ -55,7 +55,7 @@
 
         <ListPreference
             android:defaultValue="-1"
-            android:title="Autohide categories menu"
+            android:title="Hide categories menu"
             android:entries="@array/pref_autohide_cat_strings"
             android:entryValues="@array/pref_autohide_cat_values"
             android:key="pref_autohide_cats_timeout"

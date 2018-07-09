@@ -179,6 +179,18 @@ public class Style {
     }
 
 
+    public int getMaxWCells() {
+        int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));
+
+        return 6-iconsizePref;
+
+    }
+
+    public float getWidgetWidth(float minPixWidth) {
+        float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
+
+        return launcherIconSize * (minPixWidth/iconsize);
+    }
 
     private int getResColor(int res) {
         if (Build.VERSION.SDK_INT >= 23) {
