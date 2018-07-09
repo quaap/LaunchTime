@@ -3,6 +3,30 @@
 
     <!-- Translate only the "_strings" entries -->
 
+    <string-array translatable="false" name="pref_autohide_cat_values">
+        <item>0</item>
+        <item>-1</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
+        <item>4000</item>
+    </string-array>
+
+    <string-array translatable="false" name="pref_autohide_cat_strings">
+        <item>immediately</item>
+        <item>never</item>
+        <item>after &#189; second</item>
+        <item>after 1 seconds</item>
+        <item>after 1&#189; seconds *</item>
+        <item>after 2 seconds</item>
+        <item>after 2&#189; seconds</item>
+        <item>after 3 seconds</item>
+        <item>after 4 seconds</item>
+    </string-array>
+
     <string-array translatable="false" name="pref_return_home_values">
         <item>0</item>
         <item>30</item>

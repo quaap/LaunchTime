@@ -473,6 +473,10 @@ public class MainActivity extends Activity implements
                             GlobState.getBadger(this).clearAll();
                         }
                     }
+                    if (key.equals("pref_autohide_cats_timeout")) {
+                        handleAutohide();
+                    }
+
                 }
             }
         }
@@ -769,6 +773,8 @@ public class MainActivity extends Activity implements
 
     private void hideCatsIfAutoHide(boolean delay) {
         if (delay) {
+            int hidetime = Integer.parseInt(mAppPreferences.getString("pref_autohide_cats_timeout", "1500"));
+
             mOkToAutohide = (int)(Math.random()*10000000)+2;
             final int okhidse = mOkToAutohide;
             mCategoriesLayout.postDelayed(new Runnable() {
@@ -776,7 +782,7 @@ public class MainActivity extends Activity implements
                 public void run() {
                     if (isAutohide() && mOkToAutohide==okhidse) showCats(false);
                 }
-            }, 1500);
+            }, hidetime);
         } else {
             cancelHide();
             if (isAutohide()) showCats(false);
@@ -862,7 +868,7 @@ public class MainActivity extends Activity implements
     }
 
     private boolean isAutohide() {
-        return mAppPreferences.getBoolean("pref_autohide_cats", false);
+        return !mAppPreferences.getString("pref_autohide_cats_timeout", "-1").equals("-1");
     }
 
     public LaunchApp getAppLauncher() {
@@ -2727,6 +2733,7 @@ public class MainActivity extends Activity implements
         mShowButtons.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cancelHide();
                 toggleButtonBar();
                 hideCatsIfAutoHide(false);
             }
@@ -2736,6 +2743,7 @@ public class MainActivity extends Activity implements
         mShowCats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cancelHide();
                 showCats(true);
                 toggleButtonBar();
             }
