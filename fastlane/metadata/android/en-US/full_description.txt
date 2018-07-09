@@ -1,0 +1,38 @@
+Alternative homescreen/launcher which features a side menu used to automatically or manually organize your apps into common-sense and customizable categories. It also includes appwidget support, text search for apps, a QuickBar, homescreen shortcuts/links, recent apps list, UI color configurations, and portrait and landscape support.
+
+In version 0.7+, there is also beta support for adw/nova/apex iconpacks, icon and app label customization, icon tinting, built-in themes, and Android 7.1+ action and pinned shortcuts.
+
+
+Features:
+Configurable app categories in a scrollable side menu.
+
+Scrolling QuickBar on the bottom for easy access to your favorite apps.
+
+Text search to find apps.
+
+List of recent apps.
+
+Multiple widget support.
+
+Rearrange/sort icons and menu items.
+
+Shortcut/link support.
+
+Beta support for Android 7.1 shortcut actions.
+
+Beta support for adw/nova/apex iconpacks.
+
+Supports both portrait and landscape mode.
+
+Can hide apps you don't want but can't uninstall.
+
+Back up and restore your settings.
+
+Configurable colors.
+
+Icon packs.
+
+Customize icons and labels.
+
+Built-in themes.
+
