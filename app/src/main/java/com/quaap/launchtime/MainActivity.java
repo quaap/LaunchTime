@@ -699,6 +699,7 @@ public class MainActivity extends Activity implements
         itemClickedAnim.setDuration(200);
         itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
 
+        boolean autohideCats = mAppPreferences.getBoolean("pref_autohide_cats", true);
         try {
 
             mScreenDim = getScreenDimensions();
@@ -706,7 +707,7 @@ public class MainActivity extends Activity implements
             float launcherw = mStyle.getLauncherSize();
             float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
 
-            float wr = ( mScreenDim.x - catwidth)/launcherw;
+            float wr = ( mScreenDim.x - (autohideCats?0:catwidth))/launcherw;
 
             if (wr<3) mColumns = 2;
             else if (wr<5) mColumns = 3;
@@ -744,22 +745,42 @@ public class MainActivity extends Activity implements
             int c = mStyle.getWallpaperColor();
             mIconSheetBottomFrame.setBackgroundColor(Color.argb(255, Color.red(c), Color.green(c), Color.blue(c)));
 
+            View iconsarea = findViewById(R.id.iconarea_wrap);
+            FrameLayout.LayoutParams iconsarealp = (FrameLayout.LayoutParams)iconsarea.getLayoutParams();
+            if (iconsarealp==null){
+                iconsarealp = new FrameLayout.LayoutParams(this,null);
+            }
 
             //Switch the menu left/right
             ViewGroup wrap = findViewById(R.id.icon_and_cat_wrap);
             View cats = findViewById(R.id.category_tabs_wrap);
-            boolean isleft = wrap.getChildAt(0) == cats;
+            FrameLayout.LayoutParams catslp = (FrameLayout.LayoutParams)cats.getLayoutParams();
+            if (catslp==null){
+                catslp = new FrameLayout.LayoutParams(this,null);
+            }
+
             if (mStyle.isLeftHandCategories()) {
-                if (!isleft) {
-                    wrap.removeView(cats);
-                    wrap.addView(cats, 0);
+                catslp.gravity = Gravity.LEFT;
+
+                if (autohideCats) {
+                    iconsarealp.leftMargin = 2;
+                    iconsarealp.rightMargin = 2;
+                } else {
+                    iconsarealp.leftMargin = (int) catwidth;
+                    iconsarealp.rightMargin = 2;
                 }
+
             } else {
-                if (isleft) {
-                    wrap.removeView(cats);
-                    wrap.addView(cats);
+                catslp.gravity = Gravity.RIGHT;
+                if (autohideCats) {
+                    iconsarealp.leftMargin = 2;
+                    iconsarealp.rightMargin = 2;
+                } else {
+                    iconsarealp.leftMargin = 2;
+                    iconsarealp.rightMargin = (int) catwidth;
                 }
             }
+            //cats.setLayoutParams(catslp);
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -1038,7 +1059,7 @@ public class MainActivity extends Activity implements
                // if (wcells > 1) start = 0;
                 lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
 
-                //Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+                Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
             } else {
                 lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }

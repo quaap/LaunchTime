@@ -7,19 +7,16 @@
     android:orientation="vertical"
     tools:context="com.quaap.launchtime.MainActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/icon_and_cat_wrap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:layout_weight="7">
 
         <LinearLayout
             android:id="@+id/iconarea_wrap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <com.quaap.launchtime.apps.InteractiveScrollView
@@ -90,13 +87,13 @@
                 android:background="@color/btn_background"
                 android:clickable="true"
                 android:contentDescription="@string/config"
+                android:focusable="true"
                 android:gravity="end"
-                android:src="@android:drawable/arrow_up_float"
-                android:focusable="true" />
+                android:src="@android:drawable/arrow_up_float" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
