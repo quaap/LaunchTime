@@ -82,10 +82,10 @@ public class Style {
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 break;
             case Selected:
-                categoryTab.setPadding(6, categoryTabPaddingHeight*2, 2, categoryTabPaddingHeight*2);
+                categoryTab.setPadding(6, categoryTabPaddingHeight+2, 2, categoryTabPaddingHeight+2);
                 categoryTab.setTextColor(cattabSelectedText);
                 categoryTab.setBackgroundColor(cattabSelectedBackground);
-                categoryTab.setTextSize(categoryTabFontSize + 2);
+                categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
                 break;
             case Normal:
