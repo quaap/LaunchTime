@@ -574,7 +574,7 @@ public class MainActivity extends Activity implements
             return;
         }
 
-
+        hideCatsIfAutoHide(false);
 
         String topCat = getTopCategory();
         if (mIconSheetBottomFrame.getVisibility()==View.VISIBLE) {
@@ -761,11 +761,32 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private void hideCatsIfAutoHide() {
-        if (isAutohide()) showCats(false);
+    private int mOkToAutohide;
+
+    private void cancelHide() {
+        mOkToAutohide = 0;
     }
 
+    private void hideCatsIfAutoHide(boolean delay) {
+        if (delay) {
+            mOkToAutohide = (int)(Math.random()*10000000)+2;
+            final int okhidse = mOkToAutohide;
+            mCategoriesLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAutohide() && mOkToAutohide==okhidse) showCats(false);
+                }
+            }, 1500);
+        } else {
+            cancelHide();
+            if (isAutohide()) showCats(false);
+        }
+
+    }
+
+
     private void showCats(boolean show) {
+        cancelHide();
         View cats = findViewById(R.id.category_tabs_wrap);
         cats.setVisibility(!show?View.GONE:View.VISIBLE);
         mShowCats.setVisibility(show?View.GONE:View.VISIBLE);
@@ -786,8 +807,6 @@ public class MainActivity extends Activity implements
         }
 
         View cats = findViewById(R.id.category_tabs_wrap);
-
-        showCats(!autohideCats);
 
         FrameLayout.LayoutParams catslp = (FrameLayout.LayoutParams)cats.getLayoutParams();
         if (catslp==null){
@@ -825,12 +844,21 @@ public class MainActivity extends Activity implements
             catTab.setBackgroundColor(newback);
             catTab.setAlpha(.9f);
         }
+
         if (autohideCats) {
             newback = Color.argb(80, Color.red(origback), Color.green(origback), Color.blue(origback));
             cats.setBackgroundColor(newback);
         } else {
             cats.setBackgroundColor(Color.TRANSPARENT);
         }
+
+        if (autohideCats) {
+            hideCatsIfAutoHide(true);
+        } else {
+            showCats(true);
+        }
+
+
     }
 
     private boolean isAutohide() {
@@ -1577,13 +1605,20 @@ public class MainActivity extends Activity implements
 
 
         categoryTab.setClickable(true);
+        categoryTab.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                cancelHide();
+                return false;
+            }
+        });
         categoryTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mChildLock) return;
                // view.startAnimation(itemClickedAnim);
                 switchCategory(category);
-                hideCatsIfAutoHide();
+                hideCatsIfAutoHide(true);
 
             }
         });
@@ -1758,6 +1793,7 @@ public class MainActivity extends Activity implements
 
                     if (dragObj == droppedOn) {
                         // Log.d(TAG, "self drop");
+                        hideCatsIfAutoHide(false);
                         break;
                     }
 
@@ -1788,14 +1824,14 @@ public class MainActivity extends Activity implements
                 //Stuff to be deleted
                 if (mQuickRow.isSelf(mDragDropSource)) {
                     removeDroppedItem(dragObj);
-                    hideCatsIfAutoHide();
+                    hideCatsIfAutoHide(false);
                 } else if (mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)) {
                     removeDroppedRecentItem(dragObj);
-                    hideCatsIfAutoHide();
+                    hideCatsIfAutoHide(false);
                 } else if (mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())) {
                     removeDroppedItem(dragObj);
                     mSearchBox.refreshSearch(true);
-                    hideCatsIfAutoHide();
+                    hideCatsIfAutoHide(false);
 
                 } else if (mDragDropSource == mCategoriesLayout && !isLauncher) {
                     //delete category tab
@@ -1807,11 +1843,11 @@ public class MainActivity extends Activity implements
                         mBeingUninstalled = dragObj;
                         launchUninstallIntent(mBeingDragged.getPackageName());
                     }
-                    hideCatsIfAutoHide();
+                    hideCatsIfAutoHide(true);
                 }
                 return true;
             } else if (droppedOn == mLinkDropzone) {
-                hideCatsIfAutoHide();
+                hideCatsIfAutoHide(false);
                 if (isLauncher) {
                     AppLauncher app = (AppLauncher)dragObj.getTag();
                     Log.d(TAG, "Making link: " + app.getActivityName() + " " + app.getPackageName());
@@ -1825,15 +1861,18 @@ public class MainActivity extends Activity implements
                 return true;
             } else if (droppedOn instanceof GridLayout) {
                 target = (GridLayout) droppedOn;
+
+                hideCatsIfAutoHide(droppedOn!=mIconSheet);
             } else if (droppedOn instanceof FrameLayout) {
                 target = (FrameLayout) droppedOn;
+                hideCatsIfAutoHide(false);
             } else if (droppedOn.getParent() instanceof GridLayout){
                 target = (GridLayout) droppedOn.getParent();
+                hideCatsIfAutoHide(false);
             } else {
-                hideCatsIfAutoHide();
+                hideCatsIfAutoHide(true);
                 return true;
             }
-            hideCatsIfAutoHide();
 
             if (droppedOnTag!=null && droppedOnTag instanceof AppLauncher) {
                 if (((AppLauncher)droppedOnTag).isWidget()) {
@@ -2689,7 +2728,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 toggleButtonBar();
-                hideCatsIfAutoHide();
+                hideCatsIfAutoHide(false);
             }
         });
 
