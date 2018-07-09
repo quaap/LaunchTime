@@ -710,9 +710,10 @@ public class MainActivity extends Activity implements
 
             float wr = ( mScreenDim.x - (autohideCats?0:catwidth))/launcherw;
 
+            Log.d(TAG, "wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
             if (wr<3) mColumns = 2;
             else if (wr<4) mColumns = 3;
-            else if (wr<5) mColumns = 4;
+            else if (wr<5.4) mColumns = 4;
             else if (wr<7.4) mColumns = 5;
             else if (wr<9) mColumns = 6;
             else if (wr<11) mColumns = 8;
@@ -1092,7 +1093,7 @@ public class MainActivity extends Activity implements
                // if (wcells > 1) start = 0;
                 lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
 
-                Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+                //Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
             } else {
                 lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
@@ -1108,14 +1109,14 @@ public class MainActivity extends Activity implements
 
             if (appwid != null) {
 
-                cellheight *= 0.75f;
+                cellheight *= 0.82f;
                 //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
 
                 //magic numbers to properly expand widgets...
                 final int wDp = pxToDip(cellwidth*wcells);
                 final int hDp = pxToDip(cellheight*hcells*4/3);
                 lp.width = (int)(cellwidth*wcells*1.1);
-                lp.height = (int)(cellheight*hcells*4/3);
+                lp.height = (int)(cellheight*hcells*1.5);
 
                 //Log.d("widcol2", "w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
                 //Log.d("widcol2", "h=" + w + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
