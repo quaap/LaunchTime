@@ -1144,7 +1144,9 @@ public class MainActivity extends Activity implements
             float cellheight = cellwidth *1.1f;  // ~square cells
 
 
-            int wcells = Math.max((wDp+30)/125 - 1, 1); //(int) Math.floor(mStyle.getWidgetWidth(w) / cellwidth);
+            int owcells = (wDp+30)/120 - 1;
+            //int wcells = Math.max((int) Math.floor(mStyle.getWidgetWidth(w) / cellwidth) - 1, 1);
+            int wcells = Math.max((int)(owcells * mStyle.getRatio()), 1);
 
             if (wcells > 1) {
                 int start = GridLayout.UNDEFINED;
@@ -1164,7 +1166,8 @@ public class MainActivity extends Activity implements
                 lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
 
-            int hcells = Math.max((hDp+30)/100 - 1, 1); //(int) Math.floor(mStyle.getWidgetWidth(h) / cellheight);
+            int ohcells = (hDp+30)/100 - 1; //(int) Math.floor(mStyle.getWidgetWidth(h) / cellheight);
+            int hcells = Math.max((int)(ohcells * mStyle.getRatio()), 1);
             if (hcells > 1) {
                 lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
             } else {
@@ -1182,7 +1185,7 @@ public class MainActivity extends Activity implements
 //                final int wDp = w; //pxToDip(cellwidth*wcells);
 //                final int hDp = pxToDip(cellheight*hcells*1.1f);
                 lp.width = (int)(cellwidth*wcells);
-                lp.height = (int)(cellheight*hcells*1.35);
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
 
                 Log.d("widcol2", "w=" + wDp + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
                 Log.d("widcol2", "h=" + hDp + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);

@@ -187,9 +187,14 @@ public class Style {
     }
 
     public float getWidgetWidth(float minPixWidth) {
+
+        return minPixWidth * getRatio();
+    }
+
+    public float getRatio() {
         float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
 
-        return launcherIconSize * (minPixWidth/iconsize);
+        return iconsize / launcherIconSize;
     }
 
     private int getResColor(int res) {
