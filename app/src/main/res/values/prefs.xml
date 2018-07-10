@@ -16,15 +16,15 @@
     </string-array>
 
     <string-array name="pref_autohide_cat_strings">
-        <item>immediately</item>
-        <item>never</item>
-        <item>after &#189; second</item>
-        <item>after 1 seconds</item>
-        <item>after 1&#189; seconds *</item>
-        <item>after 2 seconds</item>
-        <item>after 2&#189; seconds</item>
-        <item>after 3 seconds</item>
-        <item>after 4 seconds</item>
+        <item>Immediately</item>
+        <item>Never</item>
+        <item>After &#189; second</item>
+        <item>After 1 seconds</item>
+        <item>After 1&#189; seconds *</item>
+        <item>After 2 seconds</item>
+        <item>After 2&#189; seconds</item>
+        <item>After 3 seconds</item>
+        <item>After 4 seconds</item>
     </string-array>
 
     <string-array translatable="false" name="pref_return_home_values">
