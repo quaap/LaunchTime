@@ -13,6 +13,8 @@ package com.quaap.launchtime;
  * See the GNU General Public License for more details.
  */
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -742,7 +744,7 @@ public class MainActivity extends Activity implements
             mShowCats.setBackgroundColor(mStyle.getCattabBackground());
             mShowCats.setColorFilter(mStyle.getCattabTextColor());
             mShowCats.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
-
+            mShowCats.setAlpha(.95f);
 
             //mShowButtons.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, categoryTabPaddingHeight*3));
             //mShowButtons.setPadding(2,categoryTabPaddingHeight,2,4);
@@ -797,9 +799,40 @@ public class MainActivity extends Activity implements
 
     private void showCats(boolean show) {
         cancelHide();
-        View cats = findViewById(R.id.category_tabs_wrap);
-        cats.setVisibility(!show?View.GONE:View.VISIBLE);
-        mShowCats.setVisibility(show?View.GONE:View.VISIBLE);
+        final View cats = findViewById(R.id.category_tabs_wrap);
+
+        if (!show && cats.getVisibility() == View.VISIBLE) {
+            animateDown(cats);
+            animateUp(mShowCats);
+        } else if (show && cats.getVisibility() == View.GONE) {
+            animateDown(mShowCats);
+            animateUp(cats);
+        }
+
+    }
+
+    private void animateDown(View ... views) {
+        for(final View view: views) {
+            view.animate().translationY(view.getHeight())
+                    .alpha(0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            view.setVisibility(View.GONE);
+
+                        }
+                    });
+        }
+
+    }
+    private void animateUp(View ... views) {
+        for(final View view: views) {
+            view.setVisibility(View.VISIBLE);
+            view.animate().translationY(0)
+                    .alpha(1)
+                    .setListener(null);
+        }
 
     }
 
@@ -867,6 +900,7 @@ public class MainActivity extends Activity implements
             hideCatsIfAutoHide(true);
         } else {
             showCats(true);
+            mShowCats.setVisibility(View.GONE);
         }
 
 
@@ -2327,8 +2361,6 @@ public class MainActivity extends Activity implements
         if (mChildLock) return;
 
         showButtonBar(false, false);
-        mRemoveDropzone.setVisibility(View.VISIBLE);
-        mShowButtons.setVisibility(View.GONE);
 
         if (mDragDropSource == mQuickRow.getGridLayout()
             || mDragDropSource == mCategoriesLayout
@@ -2352,13 +2384,21 @@ public class MainActivity extends Activity implements
                 mLinkDropzonePeek.setVisibility(View.VISIBLE);
             }
         }
+
+        animateUp(mRemoveDropzone);
+        //mRemoveDropzone.setVisibility(View.VISIBLE);
+        animateDown(mShowButtons);
+        //mShowButtons.setVisibility(View.GONE);
     }
 
     private void hideRemoveDropzone() {
-        mRemoveDropzone.setVisibility(View.GONE);
-        mLinkDropzone.setVisibility(View.GONE);
-        mLinkDropzonePeek.setVisibility(View.GONE);
-        mShowButtons.setVisibility(View.VISIBLE);
+
+        animateDown(mRemoveDropzone, mLinkDropzone,mLinkDropzonePeek);
+//        mRemoveDropzone.setVisibility(View.GONE);
+//        mLinkDropzone.setVisibility(View.GONE);
+//        mLinkDropzonePeek.setVisibility(View.GONE);
+        //mShowButtons.setVisibility(View.VISIBLE);
+        animateUp(mShowButtons);
     }
 
     private void launchUninstallIntent(String packageName) {
@@ -2855,11 +2895,13 @@ public class MainActivity extends Activity implements
                 mSortCategoryButton.setVisibility(View.VISIBLE);
                 mEditWidgetsButton.setVisibility(View.VISIBLE);
             }
-            mIconSheetBottomFrame.setVisibility(View.VISIBLE);
+            //mIconSheetBottomFrame.setVisibility(View.VISIBLE);
+            animateUp(mIconSheetBottomFrame);
             mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
         } else {
             if (hideCats) {hideHiddenCategories();}
-            mIconSheetBottomFrame.setVisibility(View.GONE);
+            animateDown(mIconSheetBottomFrame);
+            //mIconSheetBottomFrame.setVisibility(View.GONE);
             mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
     }
