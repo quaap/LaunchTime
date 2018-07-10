@@ -36,9 +36,7 @@ if (@ARGV>0) {
 }
 
 my @java_paths = (
- "app/src/main/java",
- "app/src/androidTest/java",
- "app/src/test/java"
+ "app/src/main/java"
 );
 
 my @skip = (
@@ -143,11 +141,13 @@ if (system("git checkout $gitbranch")!=0) {
 
 for my $jpath (@java_paths) {
    my $dir = "$basedir/$jpath";
-   
-   my $cmd = qq(git mv "$dir/$from_pack_dir" "$dir/$to_pack_dir");
-   print "$cmd\n";
-   if (system($cmd)!=0) {
-      die "Couldn't $cmd";
+
+   if (-d $dir) {
+       my $cmd = qq(git mv "$dir/$from_pack_dir" "$dir/$to_pack_dir");
+       print "$cmd\n";
+       if (system($cmd)!=0) {
+          die "Couldn't $cmd";
+       }
    }
    #print("move \"$dir/$from_pack_dir\",\"$dir/$to_pack_dir\"\n");
    #move("$dir/$from_pack_dir","$dir/$to_pack_dir");
