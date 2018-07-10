@@ -803,6 +803,7 @@ public class MainActivity extends Activity implements
 
     }
 
+    @SuppressLint("RtlHardcoded")
     private void handleAutohide() {
         //Switch the menu left/right
 

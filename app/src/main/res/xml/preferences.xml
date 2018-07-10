@@ -55,11 +55,11 @@
 
         <ListPreference
             android:defaultValue="-1"
-            android:title="Hide categories menu"
+            android:title="@string/pref_hide_menu"
             android:entries="@array/pref_autohide_cat_strings"
             android:entryValues="@array/pref_autohide_cat_values"
             android:key="pref_autohide_cats_timeout"
-            android:summary="Hide the menu: %s." />
+            android:summary="@string/pref_hide_menu_summ" />
 
         <ListPreference
             android:defaultValue="31536000"

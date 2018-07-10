@@ -65,17 +65,19 @@
             android:alpha=".8"
             android:background="@color/btn_background"
             android:clickable="true"
-            android:contentDescription="Show menu"
+            android:contentDescription="@string/show_menu"
             android:focusable="true"
             android:gravity="end"
-            android:src="@android:drawable/arrow_up_float" />
+            android:src="@android:drawable/arrow_up_float"
+            tools:ignore="RtlHardcoded" />
 
         <LinearLayout
             android:id="@+id/category_tabs_wrap"
             android:layout_width="@dimen/cattabbar_width"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="RtlHardcoded">
 
             <com.quaap.launchtime.apps.InteractiveScrollView
                 android:id="@+id/layout_categories_scroller"
