@@ -3,6 +3,18 @@
 
      <!-- Diese Datei wurde automatisch maschinell übersetzt. Bitte fühlen Sie sich frei, alle Fehler zu korrigieren, die Sie finden! -->
 
+    <string-array name="pref_autohide_cat_strings">
+        <item>sofort</item>
+        <item>never</item>
+        <item>nach &#189; Sekunden</item>
+        <item>nach 1 Sekunde</item>
+        <item>nach 1&#189; Sekunden *</item>
+        <item>nach 2 Sekunden</item>
+        <item>nach 2&#189; Sekunden</item>
+        <item>nach 3 Sekunden</item>
+        <item>nach 4 Sekunden</item>
+    </string-array>
+
      <string-array name="pref_return_home_strings">
          <item>sofort</item>
          <item>nach 30 Sekunden</item>

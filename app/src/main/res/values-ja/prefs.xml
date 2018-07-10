@@ -3,6 +3,17 @@
 
     <!-- Translate only the "_strings" entries -->
 
+    <string-array name="pref_autohide_cat_strings">
+        <item>すぐに</item>
+        <item>しない</item>
+        <item>&#189; 秒後</item>
+        <item>1 秒後</item>
+        <item>1&#189; 秒後 *</item>
+        <item>2 秒後</item>
+        <item>2&#189; 秒後</item>
+        <item>3 秒後</item>
+        <item>4 秒後</item>
+    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>すぐに</item>

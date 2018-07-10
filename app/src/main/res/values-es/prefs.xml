@@ -4,7 +4,18 @@
 
     <!-- Traduce sólo las "_entradas" de cadenas -->
 
-    
+
+    <string-array name="pref_autohide_cat_strings">
+        <item>Inmediatamente</item>
+        <item>Nunca</item>
+        <item>Después de &#189; segundos</item>
+        <item>Después de 1 segundo</item>
+        <item>Después de 1&#189; segundos *</item>
+        <item>Después de 2 segundos</item>
+        <item>Después de 2&#189; segundos</item>
+        <item>Después de 3 segundos</item>
+        <item>Después de 4 segundos</item>
+    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>Inmediatamente</item>

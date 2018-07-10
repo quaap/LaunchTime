@@ -4,6 +4,17 @@
     <!-- Translate only the "_strings" entries -->
 	<!-- Devinfostring: Transl. in ru, date: 2017-02-25, for: 0.4, by: Vladimir Berkut/lct@mail.ru -->
 
+    <string-array name="pref_autohide_cat_strings">
+        <item>немедленно</item>
+        <item>никогда</item>
+        <item>через &#189; секунд</item>
+        <item>через 1 секунду</item>
+        <item>через 1&#189; секунд *</item>
+        <item>через 2 секунд</item>
+        <item>через 2&#189; секунд</item>
+        <item>через 3 секунд</item>
+        <item>через 4 секунд</item>
+    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>немедленно</item>

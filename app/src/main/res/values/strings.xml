@@ -349,7 +349,7 @@
     <string name="pref_icon_tint">Icon tint</string>
     <string name="pref_show_badges">Show app unread counts</string>
     <string name="pref_hide_menu">Hide categories menu</string>
-    <string name="pref_hide_menu_summ">Hide the menu: %s.</string>
-    <string name="show_menu">Show menu</string>
+    <string name="pref_hide_menu_summ" translatable="false">%s</string>
+    <string name="show_menu" translatable="false">Show menu</string>
 
 </resources>

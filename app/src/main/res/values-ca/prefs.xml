@@ -4,7 +4,17 @@
 
     <!-- Tradueix només les "_entrades" de cordes -->
 
-    
+    <string-array name="pref_autohide_cat_strings">
+        <item>Immediatament</item>
+        <item>Mai</item>
+        <item>Després de  &#189; segons</item>
+        <item>Després de  1 segon</item>
+        <item>Després de  1&#189; segons *</item>
+        <item>Després de  2 segons</item>
+        <item>Després de  2&#189; segons</item>
+        <item>Després de  3 segons</item>
+        <item>Després de  4 segons</item>
+    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>Immediatament</item>

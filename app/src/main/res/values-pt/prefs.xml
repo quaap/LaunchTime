@@ -5,7 +5,17 @@
 
     <!-- Traduz só as "_entradas" de correntes -->
 
-    
+    <string-array name="pref_autohide_cat_strings">
+        <item>Imediatamente</item>
+        <item>Nunca</item>
+        <item>Após &#189; segundos</item>
+        <item>Após 1 segundo</item>
+        <item>Após 1&#189; segundos *</item>
+        <item>Após 2 segundos</item>
+        <item>Após 2&#189; segundos</item>
+        <item>Após 3 segundos</item>
+        <item>Após 4 segundos</item>
+    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>Imediatamente</item>

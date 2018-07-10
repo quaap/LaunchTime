@@ -5,7 +5,18 @@
 
     <!-- Il traduit seulement les "_entrées" de chaînes -->
 
-    
+
+    <string-array name="pref_autohide_cat_strings">
+        <item>Immédiatement</item>
+        <item>Jamais</item>
+        <item>Après &#189; secondes</item>
+        <item>Après 1 seconde</item>
+        <item>Après 1&#189; secondes *</item>
+        <item>Après 2 secondes</item>
+        <item>Après 2&#189; secondes</item>
+        <item>Après 3 secondes</item>
+        <item>Après 4 secondes</item>
+    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>Immédiatement</item>

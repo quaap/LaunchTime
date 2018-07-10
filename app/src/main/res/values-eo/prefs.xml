@@ -5,7 +5,17 @@
 
     <!-- Tradukas nur la "_eniritaj" de ĉenoj -->
 
-    
+    <string-array name="pref_autohide_cat_strings">
+        <item>Tuj</item>
+        <item>Neniam</item>
+        <item>Poste de &#189; sekundoj</item>
+        <item>Poste de 1 sekundoj</item>
+        <item>Poste de 1&#189; sekundoj *</item>
+        <item>Poste de 2 sekundoj</item>
+        <item>Poste de 2&#189; sekundoj</item>
+        <item>Poste de 3 sekundoj</item>
+        <item>Poste de 4 sekundoj</item>
+    </string-array>
 
     <string-array name="pref_return_home_strings">
         <item>Tuj</item>
