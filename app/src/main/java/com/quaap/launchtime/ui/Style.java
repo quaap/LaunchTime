@@ -145,22 +145,25 @@ public class Style {
             case 0:  //small
                 launcherIconSize = (int)(iconsize*.74);
                 launcherFontSize = (int)(iconfontsize*.87);
+                launcherSize = (int)(launcherIconSize*1.3);
                 break;
             case 1:  //medium
                 launcherIconSize = (int)(iconsize*.95);
                 launcherFontSize = (int)iconfontsize;
+                launcherSize = (int)(launcherIconSize*1.32);
                 break;
             case 2:  //large
                 launcherIconSize = (int)(iconsize*1.3);
                 launcherFontSize = (int)(iconfontsize*1.3);
+                launcherSize = (int)(launcherIconSize*1.33);
                 break;
             case 3: //x-large
                 launcherIconSize = (int)(iconsize*1.8);
                 launcherFontSize = (int)(iconfontsize*1.7);
+                launcherSize = (int)(launcherIconSize*1.3);
                 break;
         }
         //Log.d("style", "launcherFontSize = " + launcherFontSize);
-        launcherSize = (int)(launcherIconSize*1.3);
 
         cattabBackground = mAppPreferences.getInt("cattab_background", getResColor(R.color.cattab_background));
         cattabSelectedBackground = mAppPreferences.getInt("cattabselected_background", getResColor(R.color.cattabselected_background));

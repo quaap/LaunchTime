@@ -831,7 +831,7 @@ public class MainActivity extends Activity implements
                 iconsarealp.leftMargin = 2;
                 iconsarealp.rightMargin = 2;
             } else {
-                iconsarealp.leftMargin = (int) catwidth;
+                iconsarealp.leftMargin = (int) catwidth+1;
                 iconsarealp.rightMargin = 2;
             }
 
@@ -842,7 +842,7 @@ public class MainActivity extends Activity implements
                 iconsarealp.rightMargin = 2;
             } else {
                 iconsarealp.leftMargin = 2;
-                iconsarealp.rightMargin = (int) catwidth;
+                iconsarealp.rightMargin = (int) catwidth+1;
             }
         }
         int origback = mStyle.getCattabBackground();
@@ -980,6 +980,9 @@ public class MainActivity extends Activity implements
         mRevCategoryMap.put(iconSheet, category);
         iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(mMainDragListener);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity=Gravity.CENTER_HORIZONTAL;
+        iconSheet.setLayoutParams(lp);
 
         final TextView categoryTab = createCategoryTab(category, iconSheet);
 
