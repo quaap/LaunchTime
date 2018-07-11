@@ -33,7 +33,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -59,6 +58,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -108,6 +108,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static android.view.Gravity.LEFT;
+
 public class MainActivity extends Activity implements
         View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener,
         Badger.BadgerCountChangeListener {
@@ -117,6 +119,7 @@ public class MainActivity extends Activity implements
 
     private static final int UNINSTALL_RESULT = 3454;
 
+    private LinearLayout mIconsArea;
     private FrameLayout mIconSheetTopFrame;
     private InteractiveScrollView mIconSheetScroller;
     private ViewGroup mIconSheetBottomFrame;
@@ -187,6 +190,9 @@ public class MainActivity extends Activity implements
 
     private static String latestCategory;
 
+    private int mAnimationDuration = 200;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,7 +228,7 @@ public class MainActivity extends Activity implements
 
         mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
 
-        findViewById(R.id.iconarea_wrap).setOnDragListener(iconSheetDropRedirector);
+        mIconsArea.setOnDragListener(iconSheetDropRedirector);
 
 
         mSearchBox = new SearchBox(this, mIconSheetScroller);
@@ -243,6 +249,7 @@ public class MainActivity extends Activity implements
 
         GlobState.getBadger(this).setBadgerCountChangeListener(this);
 
+        showButtonBar(false, true);
 
 //        for (int i=0; i<100; i++) {
 //            ComponentName cn = db().getAppNames().get(1);
@@ -511,6 +518,9 @@ public class MainActivity extends Activity implements
     private synchronized void switchCategory(String category) {
         try {
             if (category == null) return;
+            if (mCategory!=null && !mCategory.equals(category)) {
+                animateHide(mIconsArea, AnimateDirection.Right, true);
+            }
             mCategory = category;
             latestCategory = mCategory;
 
@@ -527,29 +537,42 @@ public class MainActivity extends Activity implements
             checkConfig();
 
             //refresh icons on page
-            repopulateIconSheet(mCategory);
+            mIconSheetHolder.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    repopulateIconSheet(mCategory);
 
-            //the top frame holds the search zone, but only on the search page.
-            mIconSheetTopFrame.removeAllViews();
-            if (mCategory.equals(Categories.CAT_SEARCH)) {
+                    //the top frame holds the search zone, but only on the search page.
+                    mIconSheetTopFrame.removeAllViews();
+                    if (mCategory.equals(Categories.CAT_SEARCH)) {
 
-                mIconSheetTopFrame.addView(mSearchBox.getSearchView());
+                        mIconSheetTopFrame.addView(mSearchBox.getSearchView());
 
-                //Show recent apps
-                populateRecentApps();
+                        //Show recent apps
+                        populateRecentApps();
 
-                //load our cursor
-                mSearchBox.refreshSearch(true);
+                        //load our cursor
+                        mSearchBox.refreshSearch(true);
 
-            } else {
+                    } else {
 
-                // not the search page: close the cursor
-                mSearchBox.closeSeachAdapter();
-            }
+                        // not the search page: close the cursor
+                        mSearchBox.closeSeachAdapter();
+                    }
 
-            //Actually switch the icon sheet.
-            mIconSheetHolder.removeAllViews();
-            mIconSheetHolder.addView(mIconSheet);
+                    //Actually switch the icon sheet.
+                    mIconSheetHolder.removeAllViews();
+                    mIconSheetHolder.addView(mIconSheet);
+                }
+            }, mAnimationDuration);
+
+//
+//            mIconSheetHolder.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    animateUpShow(mIconsArea);
+//                }
+//            },300);
 
             showButtonBar(false, true);
         } catch (Exception e) {
@@ -802,37 +825,77 @@ public class MainActivity extends Activity implements
         final View cats = findViewById(R.id.category_tabs_wrap);
 
         if (!show && cats.getVisibility() == View.VISIBLE) {
-            animateDown(cats);
-            animateUp(mShowCats);
+            animateDownHide(cats);
+            animateUpShow(mShowCats);
         } else if (show && cats.getVisibility() == View.GONE) {
-            animateDown(mShowCats);
-            animateUp(cats);
+            animateDownHide(mShowCats);
+            animateUpShow(cats);
         }
 
     }
 
-    private void animateDown(View ... views) {
-        for(final View view: views) {
-            view.animate().translationY(view.getHeight())
-                    .alpha(0)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
+    private void animateUpShow(View view) {
+        animateShow(view,AnimateDirection.Down);
+    }
+    
+    private void animateDownHide(View view) {
+        animateHide(view, AnimateDirection.Down,false);
+    }
+    
+    enum AnimateDirection {Left, Up, Right, Down}
+
+    private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
+
+        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateDecelerateInterpolator())
+                .alpha(0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        if (andBack) {
+                            animateShow(view, towards);
+                        } else {
                             view.setVisibility(View.GONE);
-
                         }
-                    });
+
+                    }
+                });
+
+        switch(towards) {
+            case Down:
+                animate.translationY(view.getHeight());
+                break;
+            case Up:
+                animate.translationY(-view.getHeight());
+                break;
+            case Right:
+                animate.translationX(view.getWidth());
+                break;
+            case Left:
+                animate.translationX(-view.getHeight());
+                break;
+        }
+        animate.setStartDelay(0).start();
+    }
+    
+    private void animateShow(final View view, AnimateDirection from) {
+
+        view.setVisibility(View.VISIBLE);
+        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateDecelerateInterpolator())
+                .alpha(1)
+                .setListener(null);
+
+        switch(from) {
+            case Down:
+            case Up:
+                animate.translationY(0);
+                break;
+            case Right:
+            case Left:
+                animate.translationX(0);
+                break;
         }
 
-    }
-    private void animateUp(View ... views) {
-        for(final View view: views) {
-            view.setVisibility(View.VISIBLE);
-            view.animate().translationY(0)
-                    .alpha(1)
-                    .setListener(null);
-        }
 
     }
 
@@ -844,8 +907,7 @@ public class MainActivity extends Activity implements
 
         float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
 
-        View iconsarea = findViewById(R.id.iconarea_wrap);
-        FrameLayout.LayoutParams iconsarealp = (FrameLayout.LayoutParams)iconsarea.getLayoutParams();
+        FrameLayout.LayoutParams iconsarealp = (FrameLayout.LayoutParams)mIconsArea.getLayoutParams();
         if (iconsarealp==null){
             iconsarealp = new FrameLayout.LayoutParams(this,null);
         }
@@ -858,7 +920,7 @@ public class MainActivity extends Activity implements
         }
 
         if (mStyle.isLeftHandCategories()) {
-            catslp.gravity = Gravity.LEFT;
+            catslp.gravity = LEFT;
 
             if (autohideCats) {
                 iconsarealp.leftMargin = 2;
@@ -2385,20 +2447,22 @@ public class MainActivity extends Activity implements
             }
         }
 
-        animateUp(mRemoveDropzone);
+        animateUpShow(mRemoveDropzone);
         //mRemoveDropzone.setVisibility(View.VISIBLE);
-        animateDown(mShowButtons);
+        animateDownHide(mShowButtons);
         //mShowButtons.setVisibility(View.GONE);
     }
 
     private void hideRemoveDropzone() {
 
-        animateDown(mRemoveDropzone, mLinkDropzone,mLinkDropzonePeek);
+        animateDownHide(mRemoveDropzone);
+        animateDownHide(mLinkDropzone);
+        animateDownHide(mLinkDropzonePeek);
 //        mRemoveDropzone.setVisibility(View.GONE);
 //        mLinkDropzone.setVisibility(View.GONE);
 //        mLinkDropzonePeek.setVisibility(View.GONE);
         //mShowButtons.setVisibility(View.VISIBLE);
-        animateUp(mShowButtons);
+        animateUpShow(mShowButtons);
     }
 
     private void launchUninstallIntent(String packageName) {
@@ -2763,6 +2827,8 @@ public class MainActivity extends Activity implements
 
     private void initUI() {
 
+        mIconsArea = findViewById(R.id.iconarea_wrap);
+
         mCategoriesLayout = findViewById(R.id.layout_categories);
 
         mIconSheetTopFrame = findViewById(R.id.layout_icons_topframe);
@@ -2896,11 +2962,11 @@ public class MainActivity extends Activity implements
                 mEditWidgetsButton.setVisibility(View.VISIBLE);
             }
             //mIconSheetBottomFrame.setVisibility(View.VISIBLE);
-            animateUp(mIconSheetBottomFrame);
+            animateUpShow(mIconSheetBottomFrame);
             mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
         } else {
             if (hideCats) {hideHiddenCategories();}
-            animateDown(mIconSheetBottomFrame);
+            animateDownHide(mIconSheetBottomFrame);
             //mIconSheetBottomFrame.setVisibility(View.GONE);
             mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
