@@ -1,11 +1,15 @@
 package com.quaap.launchtime.ui;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,6 +51,8 @@ public class Style {
     private int launcherSize = 80;
     private int launcherFontSize = 12;
 
+    private int aniDuration;
+
     private SharedPreferences mAppPreferences;
 
     private Context mContext;
@@ -66,7 +72,7 @@ public class Style {
 
     public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
 
-    public void styleCategoryStyle(TextView categoryTab, CategoryTabStyle catstyle) {
+    public void styleCategoryStyle(final TextView categoryTab, CategoryTabStyle catstyle) {
 
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)categoryTab.getLayoutParams();
 
@@ -117,7 +123,29 @@ public class Style {
                 categoryTab.setBackgroundColor(cattabSelectedBackground);
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
-                categoryTab.animate().scaleX(1.2f).scaleY(1.2f).setInterpolator(new CycleInterpolator(1)).start();
+
+                if (aniDuration>0) {
+                    categoryTab.animate().scaleX(1.3f).scaleY(1.3f)
+                            .setInterpolator(new CycleInterpolator(1))
+                            .setDuration(aniDuration)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    categoryTab.animate().scaleX(1).scaleY(1).setStartDelay(50)
+                                            .setDuration(aniDuration)
+                                            .setInterpolator(new LinearInterpolator());
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                    super.onAnimationCancel(animation);
+                                    categoryTab.animate().scaleX(1).scaleY(1).setStartDelay(50)
+                                            .setDuration(aniDuration)
+                                            .setInterpolator(new LinearInterpolator());
+                                }
+                            }).start();
+                }
                 lp.leftMargin = 1;
                 lp.rightMargin = 1;
                 break;
@@ -173,6 +201,8 @@ public class Style {
                 categoryTabFontSize = 20;
                 break;
         }
+
+        aniDuration = Integer.parseInt(mAppPreferences.getString("pref_animate_duration", "250"));
 
 
         float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);

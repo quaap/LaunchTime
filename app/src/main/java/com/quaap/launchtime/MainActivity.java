@@ -888,9 +888,19 @@ public class MainActivity extends Activity implements
 
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
-        view.animate().cancel();
+        if (mAnimationDuration==0) {
+            view.clearAnimation();
+            view.setVisibility(View.GONE);
+            if (andBack) {
+                view.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
+
         ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateInterpolator())
                 .alpha(0)
+                .scaleY(.6f)
+                .scaleX(.6f)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -934,8 +944,16 @@ public class MainActivity extends Activity implements
     private void animateShow(final View view, AnimateDirection from) {
 
         view.setVisibility(View.VISIBLE);
+
+        if (mAnimationDuration==0) {
+            view.clearAnimation();
+            return;
+        }
+
         ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new DecelerateInterpolator())
                 .alpha(1)
+                .scaleY(1)
+                .scaleX(1)
                 .setListener(null);
 
         switch(from) {
