@@ -3,6 +3,17 @@
 
     <!-- Translate only the "_strings" entries -->
 
+    <string-array translatable="false" name="pref_animate_values">
+        <item>0</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+    </string-array>
+
+
     <string-array translatable="false" name="pref_autohide_cat_values">
         <item>0</item>
         <item>-1</item>

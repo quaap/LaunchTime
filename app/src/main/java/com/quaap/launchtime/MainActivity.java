@@ -490,6 +490,10 @@ public class MainActivity extends Activity implements
                     if (key.equals("pref_autohide_cats_timeout")) {
                         handleAutohide();
                     }
+                    if (key.equals("pref_animate_duration")) {
+                       mAnimationDuration = Integer.parseInt(sharedPreferences.getString(key, "200"));
+                    }
+
 
                 }
             }
