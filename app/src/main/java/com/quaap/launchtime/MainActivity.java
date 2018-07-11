@@ -1830,9 +1830,10 @@ public class MainActivity extends Activity implements
                 View dragObj = (View) event.getLocalState();
                 boolean isAppLauncher = dragObj.getTag() instanceof AppLauncher;
                 boolean isSearch = category.equals(Categories.CAT_SEARCH);
+                boolean isCurrent = category.equals(mCategory);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        if (catstyle == Style.CategoryTabStyle.Tiny || (!isAppLauncher || !isSearch)) {
+                        if (!isCurrent && (catstyle == Style.CategoryTabStyle.Tiny || (!isAppLauncher || !isSearch))) {
                             styleCategorySpecial(categoryTab, Style.CategoryTabStyle.DragHover);
                         }
                        // Log.d(TAG, "DRAG_ENTERED: " + ((AppLauncher)dragObj.getTag()).getActivityName());
@@ -1854,7 +1855,7 @@ public class MainActivity extends Activity implements
 
                     case DragEvent.ACTION_DROP:
                         if (isAppLauncher) {
-                            if (!isSearch) {
+                            if (!isSearch && !isCurrent) {
                                 mBeingDragged.setCategory(category);
                                 db().updateAppCategory(mBeingDragged.getActivityName(), mBeingDragged.getPackageName(), category);
                                 mMainDragListener.onDrag(iconSheet, event);
