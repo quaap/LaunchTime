@@ -585,7 +585,7 @@ public class MainActivity extends Activity implements
 //                }
 //            },300);
 
-            showButtonBar(false, true);
+            if (!isAutohide()) showButtonBar(false, true);
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "SwitchCat", e);
         }
@@ -1619,6 +1619,7 @@ public class MainActivity extends Activity implements
                     view.startAnimation(itemClickedAnim);
                     mLaunchApp.launchApp(app);
                     showButtonBar(false, true);
+                    hideCatsIfAutoHide(false);
                 }
             });
 
@@ -3030,7 +3031,7 @@ public class MainActivity extends Activity implements
 
     private void toggleButtonBar() {
         int vis = mIconSheetBottomFrame.getVisibility();
-        showButtonBar(vis != View.VISIBLE, true);
+        if (!isAutohide()) showButtonBar(vis != View.VISIBLE, true);
     }
 
 
@@ -3055,14 +3056,7 @@ public class MainActivity extends Activity implements
             if (hideCats) {hideHiddenCategories();}
             animateDownHide(mIconSheetBottomFrame);
             //mIconSheetBottomFrame.setVisibility(View.GONE);
-            mIconSheetHolder.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mOkToAutohide==0) {
-                        mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
-                    }
-                }
-            }, getAutohideTimeout());
+            if (!isAutohide()) mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
         }
     }
 
