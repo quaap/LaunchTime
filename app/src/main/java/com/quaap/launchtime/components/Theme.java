@@ -44,6 +44,12 @@ public class Theme {
     private Thing [] THING_MAP = {Thing.Mask, Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
 
 
+    private int [] getColorDefaultsClassic()  {
+        return new int [] {getResColor(R.color.icon_tint), getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
+                getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
+                Color.TRANSPARENT,  getResColor(R.color.textcolor)};
+    }
+
     private int [] getColorDefaults()  {
         return new int [] {getResColor(R.color.icon_tint), getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
                 getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
@@ -73,6 +79,16 @@ public class Theme {
 
     private void initBuiltinIconThemes() {
         builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
+
+        BuiltinTheme classic = new MonochromeTheme("classic", ctx.getString(R.string.theme_classic))
+                .setColor(Thing.Mask, Color.TRANSPARENT)
+                .setColor(Thing.Text, getResColor(R.color.textcolor_classic))
+                .setColor(Thing.AltText, Color.WHITE)
+                .setColor(Thing.Background, Color.TRANSPARENT)
+                .setColor(Thing.AltBackground, getResColor(R.color.cattab_background_classic));
+
+        builtinThemes.put(classic.getPackKey(), classic);
+
 
         int [] ucolors = {Color.argb(127,50,50,50), Color.argb(127,10,10,160), Color.argb(127,170,10,10)};
         int [] ubcolors = {Color.BLACK, Color.argb(127,0,0,60), Color.argb(127,60,0,6)};

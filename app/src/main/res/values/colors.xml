@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="textcolor">#e9e7e7</color>
+    <color name="textcolor_classic">#e9e7e7</color>
+    <color name="textcolorinv_classic">#ee111111</color>
+
+    <color name="btn_background_classic">#99125912</color>
+    <color name="cattab_background_classic">#99119911</color>
+    <color name="cattabselected_background_classic">#aa77ee77</color>
+    <color name="cattabselected_text_classic">#e9e7e7</color>
+
+    <color name="dragover_background_classic">#775555ee</color>
+
+    <color name="wallpaper_color_classic">#44006A00</color>
+
+    <color name="icon_tint_classic">#00000000</color>
+
+
+    <color name="textcolor">#FFDCDCDC</color>
     <color name="textcolorinv">#ee111111</color>
 
-    <color name="btn_background">#99125912</color>
-    <color name="cattab_background">#99119911</color>
-    <color name="cattabselected_background">#aa77ee77</color>
-    <color name="cattabselected_text">#e9e7e7</color>
+    <color name="btn_background">#7F0000C3</color>
+    <color name="cattab_background">#7F0A0AAD</color>
+    <color name="cattabselected_background">#8F0A0AFF</color>
+    <color name="cattabselected_text">#ffffff</color>
 
     <color name="dragover_background">#775555ee</color>
 
-    <color name="wallpaper_color">#44006A00</color>
+    <color name="wallpaper_color">#7F0000C3</color>
 
     <color name="icon_tint">#00000000</color>
 
