@@ -44,12 +44,12 @@
             android:title="@string/pref_show_badges"
             android:key="pref_show_badges" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="@string/pref_hide_empty_cat"
-            android:key="pref_hide_empty_cat"
-            android:summaryOn="@string/prefs_empty_cats_hid"
-            android:summaryOff="@string/prefs_empty_cats_show" />
+        <!--<CheckBoxPreference-->
+            <!--android:defaultValue="false"-->
+            <!--android:title="@string/pref_hide_empty_cat"-->
+            <!--android:key="pref_hide_empty_cat"-->
+            <!--android:summaryOn="@string/prefs_empty_cats_hid"-->
+            <!--android:summaryOff="@string/prefs_empty_cats_show" />-->
 
         <CheckBoxPreference
             android:defaultValue="true"

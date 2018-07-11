@@ -2447,15 +2447,18 @@ public class MainActivity extends Activity implements
     }
     private void hideHiddenCategories() {
 
-        if (mAppPreferences.getBoolean("pref_hide_empty_cat", false)) {
-            for (String cat : db().getCategories()) {
-                if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0) {
-                    mCategoryTabs.get(cat).setVisibility(View.GONE);
-                } else if (!Categories.isHiddenCategory(cat)) {
-                    mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
-                }
+        if (isAutohide()) {
+            return;
+        }
+
+        for (String cat : db().getCategories()) {
+            if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0) {
+                mCategoryTabs.get(cat).setVisibility(View.GONE);
+            } else if (!Categories.isHiddenCategory(cat)) {
+                mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
             }
         }
+
         for (String cat: Categories.CAT_HIDDENS) {
             if (mCategory.equals(cat) ) {
                 mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
