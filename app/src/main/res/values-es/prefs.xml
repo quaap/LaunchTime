@@ -15,6 +15,9 @@
         <item>Después de 2&#189; segundos</item>
         <item>Después de 3 segundos</item>
         <item>Después de 4 segundos</item>
+        <item>Después de 15 segundos</item>
+        <item>Después de 30 segundos</item>
+        <item>Después de 60 segundos</item>
     </string-array>
 
     <string-array name="pref_return_home_strings">

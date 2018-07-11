@@ -13,6 +13,9 @@
         <item>Nach 2&#189; Sekunden</item>
         <item>Nach 3 Sekunden</item>
         <item>Nach 4 Sekunden</item>
+        <item>Nach 15 Sekunden</item>
+        <item>Nach 30 Sekunden</item>
+        <item>Nach 60 Sekunden</item>
     </string-array>
 
      <string-array name="pref_return_home_strings">

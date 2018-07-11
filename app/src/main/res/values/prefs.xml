@@ -27,6 +27,9 @@
         <item>2500</item>
         <item>3000</item>
         <item>4000</item>
+        <item>15000</item>
+        <item>30000</item>
+        <item>60000</item>
     </string-array>
 
     <string-array name="pref_autohide_cat_strings">
@@ -39,6 +42,9 @@
         <item>After 2&#189; seconds</item>
         <item>After 3 seconds</item>
         <item>After 4 seconds</item>
+        <item>After 15 seconds</item>
+        <item>After 30 seconds</item>
+        <item>After 60 seconds</item>
     </string-array>
 
     <string-array translatable="false" name="pref_return_home_values">

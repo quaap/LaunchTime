@@ -15,6 +15,9 @@
         <item>Poste de 2&#189; sekundoj</item>
         <item>Poste de 3 sekundoj</item>
         <item>Poste de 4 sekundoj</item>
+        <item>Poste de 15 sekundoj</item>
+        <item>Poste de 30 sekundoj</item>
+        <item>Poste de 60 sekundoj</item>
     </string-array>
 
     <string-array name="pref_return_home_strings">
