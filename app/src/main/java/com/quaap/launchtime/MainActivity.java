@@ -48,17 +48,20 @@ import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewPropertyAnimator;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -696,7 +699,34 @@ public class MainActivity extends Activity implements
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
             readAnimationDuration();
 
-            int orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "0"));
+            int orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "-1"));
+            if (orientationPref==-1) {
+                Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                int rotation = display.getRotation();
+                int orientation = getResources().getConfiguration().orientation;
+
+
+                switch (rotation) {
+                    case Surface.ROTATION_180:
+                    case Surface.ROTATION_0:
+                        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            orientationPref = 3;
+                        } else {
+                            orientationPref = 2;
+                        }
+                        break;
+                    default:
+                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            orientationPref = 3;
+                        } else {
+                            orientationPref = 2;
+                        }
+                }
+
+
+                mAppPreferences.edit().putString("preference_orientation", orientationPref + "").apply();
+            }
+
 
             switch (orientationPref) {
                 case 0:
