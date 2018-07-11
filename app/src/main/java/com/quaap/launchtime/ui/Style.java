@@ -1,9 +1,11 @@
 package com.quaap.launchtime.ui;
 
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.view.animation.CycleInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -72,40 +74,67 @@ public class Style {
 //        categoryTab.setBackground(back);
         //lp.setMargins(2, 4, 2, 3);
 
+        boolean isOnLeft = isLeftHandCategories();
+
+        int padRight = 2;
+        int padLeft = 6;
+
+        if (isOnLeft) {
+            padRight = 6;
+            padLeft = 2;
+        }
+        lp.leftMargin = 2;
+        lp.rightMargin = 2;
         switch (catstyle) {
             case Tiny:
-                categoryTab.setPadding(6, categoryTabPaddingHeight/5, 2, categoryTabPaddingHeight/5);
+                categoryTab.setPadding(padLeft, categoryTabPaddingHeight/5, padRight, categoryTabPaddingHeight/5);
                 categoryTab.setTextColor(cattabTextColor);
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize-3);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
-                lp.leftMargin = 22;
+                if (isOnLeft) {
+                    lp.rightMargin = 22;
+                } else {
+                    lp.leftMargin = 22;
+                }
                 break;
             case DragHover:
-                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
+                categoryTab.setPadding(padLeft, categoryTabPaddingHeight, padRight, categoryTabPaddingHeight);
                 categoryTab.setTextColor(cattabTextColor);
                 categoryTab.setBackgroundColor(dragoverBackground);
+                categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
-                lp.leftMargin = 6;
+                if (isOnLeft) {
+                    lp.rightMargin = 6;
+                } else {
+                    lp.leftMargin = 6;
+                }
                 break;
             case Selected:
-                categoryTab.setPadding(6, categoryTabPaddingHeight+2, 2, categoryTabPaddingHeight+2);
+                categoryTab.setPadding(padLeft, categoryTabPaddingHeight+2, padRight, categoryTabPaddingHeight+2);
                 categoryTab.setTextColor(cattabSelectedText);
                 categoryTab.setBackgroundColor(cattabSelectedBackground);
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
+                categoryTab.animate().scaleX(1.2f).scaleY(1.2f).setInterpolator(new CycleInterpolator(1)).start();
                 lp.leftMargin = 1;
+                lp.rightMargin = 1;
                 break;
             case Normal:
             default:
-                categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
+                categoryTab.setPadding(padLeft, categoryTabPaddingHeight, padRight, categoryTabPaddingHeight);
                 categoryTab.setTextColor(cattabTextColor);
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
-                lp.leftMargin = 22;
+                if (isOnLeft) {
+                    lp.rightMargin = 22;
+                } else {
+                    lp.leftMargin = 22;
+                }
         }
+        categoryTab.setLayoutParams(lp);
     }
 
     public int getLauncherIconSize() {

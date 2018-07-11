@@ -963,7 +963,7 @@ public class MainActivity extends Activity implements
 
         if (mStyle.isLeftHandCategories()) {
             catslp.gravity = LEFT;
-
+            ((FrameLayout.LayoutParams)mShowCats.getLayoutParams()).gravity=Gravity.LEFT|Gravity.BOTTOM;
             if (autohideCats) {
                 iconsarealp.leftMargin = 2;
                 iconsarealp.rightMargin = 2;
@@ -974,6 +974,7 @@ public class MainActivity extends Activity implements
 
         } else {
             catslp.gravity = Gravity.RIGHT;
+            ((FrameLayout.LayoutParams)mShowCats.getLayoutParams()).gravity=Gravity.RIGHT|Gravity.BOTTOM;
             if (autohideCats) {
                 iconsarealp.leftMargin = 2;
                 iconsarealp.rightMargin = 2;
@@ -1833,10 +1834,10 @@ public class MainActivity extends Activity implements
                 boolean isCurrent = category.equals(mCategory);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        if (!isCurrent && (catstyle == Style.CategoryTabStyle.Tiny || (!isAppLauncher || !isSearch))) {
+                        if (!isCurrent && !isSearch && isAppLauncher) {
                             styleCategorySpecial(categoryTab, Style.CategoryTabStyle.DragHover);
                         }
-                       // Log.d(TAG, "DRAG_ENTERED: " + ((AppLauncher)dragObj.getTag()).getActivityName());
+                        //Log.d(TAG, "DRAG_ENTERED: " + category + ((AppLauncher)dragObj.getTag()).getActivityName());
 
                         break;
 
@@ -1849,6 +1850,7 @@ public class MainActivity extends Activity implements
                         hideRemoveDropzone();
                         hideHiddenCategories();
                     case DragEvent.ACTION_DRAG_EXITED:
+                        //Log.d(TAG, "DRAG_EXITED: " + category + ((AppLauncher)dragObj.getTag()).getActivityName());
 
                         styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default);
                         break;
