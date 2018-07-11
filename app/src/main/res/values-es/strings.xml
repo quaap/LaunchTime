@@ -354,4 +354,5 @@
  <string name="user_theme">Tema de usuario %d</string>
  <string name="pref_show_badges">Mostrar los conteos no leídos de App</string>
  <string name="pref_hide_menu">Ocultar menú de categorías</string>
+    <string name="pref_amimation_speed">Milisegundos de animación</string>
 </resources>

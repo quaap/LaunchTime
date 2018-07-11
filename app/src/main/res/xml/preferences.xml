@@ -33,6 +33,12 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_app_system">
 
+        <PreferenceScreen
+            android:title="@string/pref_system"
+            android:summary="@string/pref_system_summ">
+            <intent android:action="android.settings.SETTINGS"/>
+        </PreferenceScreen>
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/pref_show_badges"
@@ -62,12 +68,12 @@
             android:summary="@string/pref_hide_menu_summ" />
 
         <ListPreference
-            android:defaultValue="200"
-            android:title="Animation milliseconds"
+            android:defaultValue="250"
+            android:title="@string/pref_amimation_speed"
             android:entries="@array/pref_animate_values"
             android:entryValues="@array/pref_animate_values"
             android:key="pref_animate_duration"
-            android:summary="%s" />
+            android:summary="@string/pref_animation_speed_summ" />
 
         <ListPreference
             android:defaultValue="31536000"
@@ -94,12 +100,6 @@
                 android:action="android.intent.action.VIEW"
                 android:targetPackage="com.quaap.launchtime"
                 android:targetClass="com.quaap.launchtime.BackupActivity"/>
-        </PreferenceScreen>
-
-        <PreferenceScreen
-            android:title="@string/pref_system"
-            android:summary="@string/pref_system_summ">
-            <intent android:action="android.settings.SETTINGS"/>
         </PreferenceScreen>
 
     </PreferenceCategory>

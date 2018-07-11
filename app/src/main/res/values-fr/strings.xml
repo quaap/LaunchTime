@@ -356,5 +356,6 @@
     </string>
  <string name="pref_show_badges">Afficher les comptes non lus de l\'application</string>
     <string name="pref_hide_menu">Masquer les catégories menu</string>
+    <string name="pref_amimation_speed">Animation millisecondes</string>
 
 </resources>

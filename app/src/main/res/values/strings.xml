@@ -351,5 +351,7 @@
     <string name="pref_hide_menu">Hide categories menu</string>
     <string name="pref_hide_menu_summ" translatable="false">%s</string>
     <string name="show_menu" translatable="false">Show menu</string>
+    <string name="pref_amimation_speed">Animation milliseconds</string>
+    <string name="pref_animation_speed_summ" translatable="false">%s</string>
 
 </resources>

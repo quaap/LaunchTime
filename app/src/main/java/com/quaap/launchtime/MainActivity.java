@@ -193,7 +193,7 @@ public class MainActivity extends Activity implements
 
     private static String latestCategory;
 
-    private int mAnimationDuration = 200;
+    private int mAnimationDuration = 250;
 
 
     @Override
@@ -354,6 +354,7 @@ public class MainActivity extends Activity implements
         super.onResume();
         Log.d(TAG, "onResume");
 
+
         //Check how long we've been gone
         long pausetime = mPrefs.getLong("pausetime", -1);
         int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
@@ -491,7 +492,7 @@ public class MainActivity extends Activity implements
                         handleAutohide();
                     }
                     if (key.equals("pref_animate_duration")) {
-                       mAnimationDuration = Integer.parseInt(sharedPreferences.getString(key, "200"));
+                       readAnimationDuration();
                     }
 
 
@@ -693,7 +694,7 @@ public class MainActivity extends Activity implements
             mStyle.readPrefs();
 
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
-
+            readAnimationDuration();
 
             int orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "0"));
 
@@ -718,6 +719,10 @@ public class MainActivity extends Activity implements
         }
     }
 
+
+    private void readAnimationDuration() {
+        mAnimationDuration = Integer.parseInt(mAppPreferences.getString("pref_animate_duration", "250"));
+    }
 
     //This is run on switchcategory and screen rotation, etc.
     // Checks global preferences and
