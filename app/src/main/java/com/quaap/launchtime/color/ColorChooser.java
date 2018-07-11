@@ -112,6 +112,13 @@ public class ColorChooser extends FrameLayout {
                 colorHex.setCursorVisible(true);
             }
         });
+        colorHex.setVisibility(GONE);
+        colorHex.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                colorHex.setVisibility(VISIBLE);
+            }
+        },100);
 
         colorPreview = frame.findViewById(R.id.color_preview);
         colorPreview.setOnClickListener(new View.OnClickListener() {
