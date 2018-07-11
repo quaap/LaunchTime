@@ -888,6 +888,7 @@ public class MainActivity extends Activity implements
 
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
+        view.animate().cancel();
         ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateInterpolator())
                 .alpha(0)
                 .setListener(new AnimatorListenerAdapter() {
@@ -900,6 +901,16 @@ public class MainActivity extends Activity implements
                             view.setVisibility(View.GONE);
                         }
 
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        if (andBack) {
+                            animateShow(view, towards);
+                        } else {
+                            view.setVisibility(View.GONE);
+                        }
                     }
                 });
 
