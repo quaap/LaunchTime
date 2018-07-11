@@ -990,11 +990,11 @@ public class MainActivity extends Activity implements
         //cats.setLayoutParams(catslp);
         for (TextView catTab : mCategoryTabs.values()) {
             catTab.setBackgroundColor(newback);
-            catTab.setAlpha(.9f);
+            catTab.setAlpha(.98f);
         }
 
         if (autohideCats) {
-            newback = Color.argb(80, Color.red(origback), Color.green(origback), Color.blue(origback));
+            newback = Color.argb(50, Color.red(origback), Color.green(origback), Color.blue(origback));
             cats.setBackgroundColor(newback);
         } else {
             cats.setBackgroundColor(Color.TRANSPARENT);
@@ -1765,13 +1765,14 @@ public class MainActivity extends Activity implements
         if (catstyle == Style.CategoryTabStyle.Normal) {
             lp.weight = 1;
         }
-        styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default, category);
         lp.gravity = Gravity.CENTER;
         lp.setMargins(2, 4, 2, 3);
 
         categoryTab.setLayoutParams(lp);
 
         categoryTab.setGravity(Gravity.CENTER);
+
+        styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default, category);
 
 
         categoryTab.setClickable(true);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.quaap.launchtime.R;
@@ -65,6 +66,11 @@ public class Style {
 
     public void styleCategoryStyle(TextView categoryTab, CategoryTabStyle catstyle) {
 
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)categoryTab.getLayoutParams();
+
+//        ShapeDrawable back = new ShapeDrawable(new RoundRectShape(new float[]{20,20,20,20,20,20,20,20}, null, null));
+//        categoryTab.setBackground(back);
+        //lp.setMargins(2, 4, 2, 3);
 
         switch (catstyle) {
             case Tiny:
@@ -73,6 +79,7 @@ public class Style {
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize-3);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
+                lp.leftMargin = 22;
                 break;
             case DragHover:
                 categoryTab.setPadding(6, categoryTabPaddingHeight, 2, categoryTabPaddingHeight);
@@ -80,6 +87,7 @@ public class Style {
                 categoryTab.setBackgroundColor(dragoverBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
+                lp.leftMargin = 6;
                 break;
             case Selected:
                 categoryTab.setPadding(6, categoryTabPaddingHeight+2, 2, categoryTabPaddingHeight+2);
@@ -87,6 +95,7 @@ public class Style {
                 categoryTab.setBackgroundColor(cattabSelectedBackground);
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
+                lp.leftMargin = 1;
                 break;
             case Normal:
             default:
@@ -95,6 +104,7 @@ public class Style {
                 categoryTab.setBackgroundColor(cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
+                lp.leftMargin = 22;
         }
     }
 
