@@ -60,7 +60,10 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -846,7 +849,7 @@ public class MainActivity extends Activity implements
 
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
-        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateDecelerateInterpolator())
+        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateInterpolator())
                 .alpha(0)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -881,7 +884,7 @@ public class MainActivity extends Activity implements
     private void animateShow(final View view, AnimateDirection from) {
 
         view.setVisibility(View.VISIBLE);
-        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateDecelerateInterpolator())
+        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new DecelerateInterpolator())
                 .alpha(1)
                 .setListener(null);
 
