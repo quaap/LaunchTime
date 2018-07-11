@@ -1934,8 +1934,10 @@ public class MainActivity extends Activity implements
                         hscrollOnDrag(droppedOn, event, mQuickRow.getScroller());
 
                         if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility()!=View.VISIBLE && (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) && System.currentTimeMillis()-mDropZoneHover > 400) {
-                            mLinkDropzone.setVisibility(View.VISIBLE);
-                            mLinkDropzonePeek.setVisibility(View.GONE);
+                            //mLinkDropzone.setVisibility(View.VISIBLE);
+                            animateShow(mLinkDropzone, AnimateDirection.Right);
+                            //mLinkDropzonePeek.setVisibility(View.GONE);
+                            animateDownHide(mLinkDropzonePeek);
                            // Log.d(TAG, "mLinkDropzone.setVisibility(View.VISIBLE)");
                         }
                     }
@@ -2476,7 +2478,8 @@ public class MainActivity extends Activity implements
             mRemoveAppText.setText(R.string.remove_launcher);
             mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.recycle);
             mRemoveAppText.setTextColor(Color.BLACK);
-            mLinkDropzonePeek.setVisibility(View.GONE);
+            //mLinkDropzonePeek.setVisibility(View.GONE);
+            animateDownHide(mLinkDropzonePeek);
         } else {
             mRemoveDropzone.setBackgroundColor(Color.RED);
            // mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
@@ -2485,7 +2488,8 @@ public class MainActivity extends Activity implements
             //mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showy, 0,0,R.drawable.trash);
             mRemoveAppText.setTextColor(Color.WHITE);
             if (!Categories.CAT_SEARCH.equals(mCategory)) {
-                mLinkDropzonePeek.setVisibility(View.VISIBLE);
+                //mLinkDropzonePeek.setVisibility(View.VISIBLE);
+                animateUpShow(mLinkDropzonePeek);
             }
         }
 
@@ -2498,7 +2502,7 @@ public class MainActivity extends Activity implements
     private void hideRemoveDropzone() {
 
         animateDownHide(mRemoveDropzone);
-        animateDownHide(mLinkDropzone);
+        animateHide(mLinkDropzone, AnimateDirection.Right, false);
         animateDownHide(mLinkDropzonePeek);
 //        mRemoveDropzone.setVisibility(View.GONE);
 //        mLinkDropzone.setVisibility(View.GONE);
