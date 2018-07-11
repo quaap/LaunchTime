@@ -2953,7 +2953,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 cancelHide();
-                //toggleButtonBar();
+                toggleButtonBar();
                 hideCatsIfAutoHide(false);
             }
         });
@@ -2965,7 +2965,7 @@ public class MainActivity extends Activity implements
                 cancelHide();
                 if (!mChildLock) {
                     showCats(true);
-
+                    showButtonBar(true, true);
                 }
             }
         });
@@ -3058,7 +3058,9 @@ public class MainActivity extends Activity implements
             mIconSheetHolder.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
+                    if (mOkToAutohide==0) {
+                        mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
+                    }
                 }
             }, getAutohideTimeout());
         }
