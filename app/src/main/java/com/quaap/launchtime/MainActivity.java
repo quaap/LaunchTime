@@ -844,7 +844,7 @@ public class MainActivity extends Activity implements
 
     private void hideCatsIfAutoHide(boolean delay) {
         if (delay) {
-            int hidetime = Integer.parseInt(mAppPreferences.getString("pref_autohide_cats_timeout", "1500"));
+            int hidetime = getAutohideTimeout();
 
             mOkToAutohide = (int)(Math.random()*10000000)+2;
             final int okhidse = mOkToAutohide;
@@ -865,6 +865,7 @@ public class MainActivity extends Activity implements
     private void showCats(boolean show) {
         cancelHide();
         final View cats = findViewById(R.id.category_tabs_wrap);
+        showButtonBar(show,false);
 
         if (!show && cats.getVisibility() == View.VISIBLE) {
             animateDownHide(cats);
@@ -1042,6 +1043,10 @@ public class MainActivity extends Activity implements
 
     private boolean isAutohide() {
         return !mAppPreferences.getString("pref_autohide_cats_timeout", "-1").equals("-1");
+    }
+
+    private int getAutohideTimeout() {
+        return Integer.parseInt(mAppPreferences.getString("pref_autohide_cats_timeout", "1500"));
     }
 
     public LaunchApp getAppLauncher() {
@@ -2948,7 +2953,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 cancelHide();
-                toggleButtonBar();
+                //toggleButtonBar();
                 hideCatsIfAutoHide(false);
             }
         });
@@ -2960,7 +2965,7 @@ public class MainActivity extends Activity implements
                 cancelHide();
                 if (!mChildLock) {
                     showCats(true);
-                    toggleButtonBar();
+
                 }
             }
         });
@@ -3050,7 +3055,12 @@ public class MainActivity extends Activity implements
             if (hideCats) {hideHiddenCategories();}
             animateDownHide(mIconSheetBottomFrame);
             //mIconSheetBottomFrame.setVisibility(View.GONE);
-            mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
+            mIconSheetHolder.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
+                }
+            }, getAutohideTimeout());
         }
     }
 
