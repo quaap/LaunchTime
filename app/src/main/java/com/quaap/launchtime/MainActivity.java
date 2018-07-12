@@ -1018,7 +1018,12 @@ public class MainActivity extends Activity implements
         int origback = mStyle.getCattabBackground();
 
         if (autohideCats) {
-            GradientDrawable newback = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[] {Color.argb(1, Color.red(origback), Color.green(origback), Color.blue(origback)), Color.argb(160, Color.red(origback), Color.green(origback), Color.blue(origback))});
+            GradientDrawable newback = new GradientDrawable(
+                    mStyle.isLeftHandCategories()?
+                            GradientDrawable.Orientation.RIGHT_LEFT:
+                            GradientDrawable.Orientation.LEFT_RIGHT,
+                    new int[] {Color.argb(1, Color.red(origback), Color.green(origback), Color.blue(origback)),
+                            Color.argb(160, Color.red(origback), Color.green(origback), Color.blue(origback))});
             //  Color.argb(50, Color.red(origback), Color.green(origback), Color.blue(origback));
             newback.setGradientCenter(.07f, .5f);
             cats.setBackground(newback);

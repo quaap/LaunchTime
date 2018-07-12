@@ -48,6 +48,7 @@ public class Style {
     private int categoryTabPaddingHeight = 25;
 
     private int cattabBackgroundHighContrast;
+    private int cattabSelectedBackgroundHighContrast;
 
 
     private int launcherIconSize = 55;
@@ -123,7 +124,7 @@ public class Style {
             case Selected:
                 categoryTab.setPadding(padLeft, categoryTabPaddingHeight+2, padRight, categoryTabPaddingHeight+2);
                 categoryTab.setTextColor(cattabSelectedText);
-                categoryTab.setBackgroundColor(cattabSelectedBackground);
+                categoryTab.setBackgroundColor(highContrast?cattabSelectedBackgroundHighContrast:cattabSelectedBackground);
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
 
@@ -166,8 +167,15 @@ public class Style {
                 }
         }
 
-        if (highContrast && categoryTab.getAlpha()<.85f) {
-            categoryTab.setAlpha(.85f);
+        if (highContrast) {
+            if (categoryTab.getAlpha()<.89f) {
+                categoryTab.setAlpha(.9f);
+            }
+            lp.topMargin=2;
+            lp.bottomMargin=2;
+        } else {
+            lp.topMargin=4;
+            lp.bottomMargin=3;
         }
 
         categoryTab.setLayoutParams(lp);
@@ -260,8 +268,14 @@ public class Style {
         cattabBackgroundHighContrast = cattabBackground;
 
         int alpha = Color.alpha(cattabBackground);
-        if (alpha<210) alpha=210;
+        if (alpha<220) alpha=220;
         cattabBackgroundHighContrast = Color.argb(alpha, Color.red(cattabBackground), Color.green(cattabBackground), Color.blue(cattabBackground));
+
+        alpha = Color.alpha(cattabSelectedBackground);
+        if (alpha<220) alpha=220;
+        cattabSelectedBackgroundHighContrast = Color.argb(alpha, Color.red(cattabSelectedBackground), Color.green(cattabSelectedBackground), Color.blue(cattabSelectedBackground));
+
+
 
     }
 
