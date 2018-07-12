@@ -39,7 +39,7 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 77;
+        final int newsnum = 80;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
@@ -49,11 +49,16 @@ public class MsgBox {
                     String msg = "";
 
                     msg += "" +
-                            "In 0.7.7:\n" +
-                            " * Add option to turn off unread badges.\n" +
+                            "In 0.8.0:\n" +
+                            " * Autohide the menu!\n" +
+                            " * Better menu appearence.\n" +
+                            " * Animated transitions.\n" +
+                            " * Turn off/on unread badges.\n" +
                             " * Better default apps in Quickbar.\n" +
-                            " * Prevent a few rare crashes.\n" +
-                            " * Fix bug on Oreo wrt loading iconpacks.\n";
+                            " * Many pearance tweaks.\n" +
+                            " * Some speed-ups.\n" +
+                            " * Fix Oreo crash loading iconpacks.\n" +
+                            " * Fix a few bugs and crashes.\n";
 
                     msg += "\n" +
                             "In 0.7.6:\n" +
