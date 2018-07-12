@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
-import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;

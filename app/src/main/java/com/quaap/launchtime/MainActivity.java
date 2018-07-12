@@ -67,9 +67,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -567,6 +565,9 @@ public class MainActivity extends Activity implements
                     mIconSheetTopFrame.removeAllViews();
                     if (mCategory.equals(Categories.CAT_SEARCH)) {
 
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp.gravity=Gravity.START;
+                        mIconSheetTopFrame.setLayoutParams(lp);
                         mIconSheetTopFrame.addView(mSearchBox.getSearchView());
 
                         //Show recent apps
@@ -580,12 +581,13 @@ public class MainActivity extends Activity implements
                         label.setTextColor(mStyle.getCattabTextColor());
                         label.setText(db().getCategoryDisplayFull(mCategory));
                         label.setTextSize(mStyle.getCategoryTabFontSize());
-                        label.setPadding(60,4,60,4);
+                        label.setShadowLayer(8,4,4,mStyle.getCattabTextColorInvert());
+                        label.setPadding(60,5,60,5);
                         label.setBackgroundColor(mStyle.getCattabBackground());
-                        label.setAlpha(.85f);
+                        label.setAlpha(.9f);
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         lp.gravity=Gravity.CENTER;
-                        lp.topMargin=5;
+                        lp.topMargin=6;
                         mIconSheetTopFrame.setLayoutParams(lp);
                         mIconSheetTopFrame.addView(label);
                         // not the search page: close the cursor
@@ -736,12 +738,16 @@ public class MainActivity extends Activity implements
                             orientationPref = 2;
                         }
                         break;
+                    case Surface.ROTATION_270:
+                    case Surface.ROTATION_90:
                     default:
                         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                             orientationPref = 3;
                         } else {
                             orientationPref = 2;
                         }
+
+                        break;
                 }
 
 
