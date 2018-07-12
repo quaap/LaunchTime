@@ -575,8 +575,19 @@ public class MainActivity extends Activity implements
                         //load our cursor
                         mSearchBox.refreshSearch(true);
 
-                    } else {
-
+                    } else if (isAutohide() && mAppPreferences.getBoolean("prefs_cat_label", true)) {
+                        TextView label = new TextView(MainActivity.this);
+                        label.setTextColor(mStyle.getCattabTextColor());
+                        label.setText(db().getCategoryDisplayFull(mCategory));
+                        label.setTextSize(mStyle.getCategoryTabFontSize());
+                        label.setPadding(60,4,60,4);
+                        label.setBackgroundColor(mStyle.getCattabBackground());
+                        label.setAlpha(.85f);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp.gravity=Gravity.CENTER;
+                        lp.topMargin=5;
+                        mIconSheetTopFrame.setLayoutParams(lp);
+                        mIconSheetTopFrame.addView(label);
                         // not the search page: close the cursor
                         mSearchBox.closeSeachAdapter();
                     }

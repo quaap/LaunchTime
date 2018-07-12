@@ -67,6 +67,11 @@
             android:key="pref_autohide_cats_timeout"
             android:summary="@string/pref_hide_menu_summ" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_show_catlabel"
+            android:key="prefs_cat_label"/>
+
         <ListPreference
             android:defaultValue="250"
             android:title="@string/pref_amimation_speed"
