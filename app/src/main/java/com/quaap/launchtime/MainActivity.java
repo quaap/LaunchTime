@@ -565,7 +565,7 @@ public class MainActivity extends Activity implements
                     mIconSheetTopFrame.removeAllViews();
                     if (mCategory.equals(Categories.CAT_SEARCH)) {
 
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         lp.gravity=Gravity.START;
                         mIconSheetTopFrame.setLayoutParams(lp);
                         mIconSheetTopFrame.addView(mSearchBox.getSearchView());
