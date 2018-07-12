@@ -351,4 +351,6 @@
     <string name="pref_amimation_speed">Animations millisekunden</string>
     <string name="theme_classic">Klassisch</string>
     <string name="nothing_in_cat">Nichts zu zeigen</string>
+    <string name="pref_show_catlabel">Kategorielabel</string>
+    <string name="pref_show_catlabel_summ">Kategorielabel im automatischen Versteckmodus anzeigen</string>
 </resources>

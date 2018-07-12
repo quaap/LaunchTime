@@ -356,4 +356,6 @@
     <string name="pref_amimation_speed">アニメーションのミリ秒</string>
     <string name="theme_classic">クラシック</string>
     <string name="nothing_in_cat">表示するものは何もない</string>
+    <string name="pref_show_catlabel">カテゴリラベル</string>
+    <string name="pref_show_catlabel_summ">自動非表示モードでカテゴリラベルを表示する</string>
 </resources>

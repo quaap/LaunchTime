@@ -31,6 +31,7 @@
             android:summary="%s" />
 
     </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_app_system">
 
         <PreferenceScreen
@@ -44,21 +45,6 @@
             android:title="@string/pref_show_badges"
             android:key="pref_show_badges" />
 
-        <!--<CheckBoxPreference-->
-            <!--android:defaultValue="false"-->
-            <!--android:title="@string/pref_hide_empty_cat"-->
-            <!--android:key="pref_hide_empty_cat"-->
-            <!--android:summaryOn="@string/prefs_empty_cats_hid"-->
-            <!--android:summaryOff="@string/prefs_empty_cats_show" />-->
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/prefs_new_apps_cat"
-            android:key="prefs_autocat"
-            android:summaryOn="@string/prefs_cat_apps"
-            android:summaryOff="@string/prefs_cat_no" />
-
-
         <ListPreference
             android:defaultValue="-1"
             android:title="@string/pref_hide_menu"
@@ -70,15 +56,8 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/pref_show_catlabel"
-            android:key="prefs_cat_label"/>
-
-        <ListPreference
-            android:defaultValue="250"
-            android:title="@string/pref_amimation_speed"
-            android:entries="@array/pref_animate_values"
-            android:entryValues="@array/pref_animate_values"
-            android:key="pref_animate_duration"
-            android:summary="@string/pref_animation_speed_summ" />
+            android:key="prefs_cat_label"
+            android:summary="@string/pref_show_catlabel_summ"/>
 
         <ListPreference
             android:defaultValue="31536000"
@@ -97,6 +76,13 @@
                 android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
         </PreferenceScreen>
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/prefs_new_apps_cat"
+            android:key="prefs_autocat"
+            android:summaryOn="@string/prefs_cat_apps"
+            android:summaryOff="@string/prefs_cat_no" />
+
 
         <PreferenceScreen
             android:title="@string/pref_backup"
@@ -111,6 +97,14 @@
 
 
     <PreferenceCategory android:title="@string/pref_color_style">
+
+        <ListPreference
+            android:defaultValue="250"
+            android:title="@string/pref_amimation_speed"
+            android:entries="@array/pref_animate_values"
+            android:entryValues="@array/pref_animate_values"
+            android:key="pref_animate_duration"
+            android:summary="@string/pref_animation_speed_summ" />
 
         <ListPreference
             android:defaultValue="@string/pref_cat_location_values_def"

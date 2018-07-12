@@ -355,6 +355,7 @@
     <string name="pref_animation_speed_summ" translatable="false">%s</string>
     <string name="theme_classic">Classic</string>
     <string name="nothing_in_cat">Nothing to show</string>
-    <string name="pref_show_catlabel">Show category label</string>
+    <string name="pref_show_catlabel">Category label</string>
+    <string name="pref_show_catlabel_summ">Show category label in autohide mode</string>
 
 </resources>

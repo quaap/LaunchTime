@@ -359,5 +359,7 @@
     <string name="pref_amimation_speed">Animation millisecondes</string>
     <string name="theme_classic">Classique</string>
  <string name="nothing_in_cat">Rien à montrer</string>
+    <string name="pref_show_catlabel">étiquette de catégorie</string>
+ <string name="pref_show_catlabel_summ">Afficher l\'étiquette de la catégorie en mode de masquage automatique</string>
 
 </resources>

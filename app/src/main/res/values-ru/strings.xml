@@ -351,4 +351,6 @@
     <string name="pref_amimation_speed">Мультипликация анимации</string>
     <string name="theme_classic">классический</string>
     <string name="nothing_in_cat">Ничего не показывать</string>
+    <string name="pref_show_catlabel">Маркировка категории</string>
+    <string name="pref_show_catlabel_summ">Показать ярлык категории в режиме автоматического скрытия</string>
 </resources>
