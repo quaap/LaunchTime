@@ -55,7 +55,7 @@ public class MsgBox {
                             " * Animated transitions.\n" +
                             " * Turn off/on unread badges.\n" +
                             " * Better default apps in Quickbar.\n" +
-                            " * Many pearance tweaks.\n" +
+                            " * Many apearance tweaks.\n" +
                             " * Some speed-ups.\n" +
                             " * Fix Oreo crash loading iconpacks.\n" +
                             " * Fix a few bugs and crashes.\n";
