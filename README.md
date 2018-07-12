@@ -75,7 +75,7 @@ Permissions
 Data is never submitted without explicit user permission. Submitted data is as anonymized as
 possible, and no one but the app author sees the submitted data. It is only used to improve the
 app, never sold or used nefariously. (I'm just some guy who programs for fun.)
-If you don't want to use those featues you can skip them, and you can disable the "storage" 
+If you don't want to use those features you can skip them, and you can disable the "storage" 
 permissions in the Application Manager.
 
 
