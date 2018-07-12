@@ -165,6 +165,7 @@ public class MainActivity extends Activity implements
 
     private Animation itemClickedAnim;
 
+    private String mCategoryJustCreated;
 
     private int mColumns = 3;
 
@@ -2525,7 +2526,9 @@ public class MainActivity extends Activity implements
         }
 
         for (String cat : db().getCategories()) {
-            if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0) {
+            boolean isNewCat = mCategoryJustCreated!=null && cat.equals(mCategoryJustCreated);
+
+            if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0 && !isNewCat) {
                 mCategoryTabs.get(cat).setVisibility(View.GONE);
             } else if (!Categories.isHiddenCategory(cat)) {
                 mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
@@ -2816,11 +2819,15 @@ public class MainActivity extends Activity implements
         if (newDisplayName.length() < 1) {
             throw new IllegalArgumentException("Must give a name");
         }
+        mCategoryJustCreated = category;
+
         Log.d(TAG, category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
         if (db().addCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
             createIconSheet(category);
 
             switchCategory(category);
+
+            db().setCategoryOrder(mCategoriesLayout);
         } else {
             Toast.makeText(MainActivity.this, R.string.no_add_cat, Toast.LENGTH_SHORT).show();
         }
@@ -2849,24 +2856,28 @@ public class MainActivity extends Activity implements
     private void deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);
 
+        boolean appsInCat = db().getAppCount(category) > 0;
+
         if (db().deleteCategory(category)) {
 
             View iconSheet = mIconSheets.get(category);
             mRevCategoryMap.remove(iconSheet);
-
 
             mCategoryTabs.remove(category);
             mRevCategoryMap.remove(categoryTab);
 
             mCategoriesLayout.removeView(categoryTab);
 
-            repopulateIconSheet(Categories.CAT_OTHER);
+            //repopulateIconSheet(Categories.CAT_OTHER);
             //String newcat = mCategoryTabs.keySet().iterator().next();
 
-            if (category.equals(mCategory)) {
+            if (category.equals(mCategory) && appsInCat) {
                 switchCategory(Categories.CAT_OTHER);
+                mCategoryTabs.get(Categories.CAT_OTHER).setVisibility(View.VISIBLE);
+            } else if (category.equals(mCategory)) {
+                switchCategory(getTopCategory());
             }
-            mCategoryTabs.get(Categories.CAT_OTHER).setVisibility(View.VISIBLE);
+
         } else {
             Toast.makeText(MainActivity.this, R.string.no_delete_cat, Toast.LENGTH_SHORT).show();
         }

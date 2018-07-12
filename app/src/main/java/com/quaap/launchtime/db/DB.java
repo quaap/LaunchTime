@@ -829,19 +829,19 @@ public class DB extends SQLiteOpenHelper {
         setCategoryOrder(cats);
     }
 
-    public void setCategoryOrder(List<String> apps) {
+    public void setCategoryOrder(List<String> cats) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             db.beginTransaction();
 
-            for (int i = 0; i < apps.size(); i++) {
+            for (int i = 0; i < cats.size(); i++) {
 
                 ContentValues values = new ContentValues();
 
                 values.put(INDEX, i);
 
-                db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{apps.get(i)});
+                db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{cats.get(i)});
             }
 
             db.setTransactionSuccessful();
