@@ -38,6 +38,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -1015,20 +1016,14 @@ public class MainActivity extends Activity implements
             }
         }
         int origback = mStyle.getCattabBackground();
-        int newback = origback;
-        if (autohideCats) {
-            newback = Color.argb(225, Color.red(origback), Color.green(origback), Color.blue(origback));
-        }
-        //cats.setLayoutParams(catslp);
-        for (TextView catTab : mCategoryTabs.values()) {
-            catTab.setBackgroundColor(newback);
-            catTab.setAlpha(.98f);
-        }
 
         if (autohideCats) {
-            newback = Color.argb(50, Color.red(origback), Color.green(origback), Color.blue(origback));
-            cats.setBackgroundColor(newback);
+            GradientDrawable newback = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[] {Color.argb(1, Color.red(origback), Color.green(origback), Color.blue(origback)), Color.argb(160, Color.red(origback), Color.green(origback), Color.blue(origback))});
+            //  Color.argb(50, Color.red(origback), Color.green(origback), Color.blue(origback));
+            newback.setGradientCenter(.07f, .5f);
+            cats.setBackground(newback);
         } else {
+            cats.setBackground(null);
             cats.setBackgroundColor(Color.TRANSPARENT);
         }
 
@@ -1807,7 +1802,7 @@ public class MainActivity extends Activity implements
         if (catstyle ==  Style.CategoryTabStyle.Default) {
             catstyle = getDefaultCategoryStyle(category);
         }
-        mStyle.styleCategoryStyle(categoryTab, catstyle);
+        mStyle.styleCategoryStyle(categoryTab, catstyle, isAutohide());
 
     }
 
@@ -1916,6 +1911,9 @@ public class MainActivity extends Activity implements
                         //Log.d(TAG, "DRAG_EXITED: " + category + ((AppLauncher)dragObj.getTag()).getActivityName());
 
                         styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default);
+                        if (isAutohide()) {
+                           // f
+                        }
                         break;
 
                     case DragEvent.ACTION_DROP:

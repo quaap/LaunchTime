@@ -354,4 +354,6 @@
     <string name="pref_show_badges">アプリの未読数を表示する</string>
     <string name="pref_hide_menu">カテゴリを非表示にする</string>
     <string name="pref_amimation_speed">アニメーションのミリ秒</string>
+    <string name="theme_classic">クラシック</string>
+    <string name="nothing_in_cat">表示するものは何もない</string>
 </resources>

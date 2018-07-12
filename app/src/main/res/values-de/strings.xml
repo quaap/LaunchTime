@@ -349,4 +349,6 @@
     <string name="pref_show_badges">App ungelesene Zählungen anzeigen</string>
     <string name="pref_hide_menu">Kategorienmenü ausblenden</string>
     <string name="pref_amimation_speed">Animations millisekunden</string>
+    <string name="theme_classic">Klassisch</string>
+    <string name="nothing_in_cat">Nichts zu zeigen</string>
 </resources>

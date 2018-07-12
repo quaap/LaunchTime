@@ -355,4 +355,6 @@
  <string name="pref_show_badges">Mostrar l\'app no llegit compta</string>
  <string name="pref_hide_menu">Amaga el menú de categories</string>
     <string name="pref_amimation_speed">Millisegons d\'animació</string>
+    <string name="theme_classic">Clàssic</string>
+ <string name="nothing_in_cat">Res de mostrar</string>
 </resources>

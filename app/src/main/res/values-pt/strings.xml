@@ -356,4 +356,6 @@
  <string name="pref_show_badges">Mostrar aplicativos não lidos do aplicativo</string>
  <string name="pref_hide_menu">Ocultar menu de categorias</string>
     <string name="pref_amimation_speed">Milissegundos de animação</string>
+    <string name="theme_classic">Clássico</string>
+ <string name="nothing_in_cat">Nada para mostrar</string>
 </resources>

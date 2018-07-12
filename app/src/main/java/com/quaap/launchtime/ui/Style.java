@@ -47,6 +47,9 @@ public class Style {
     private float categoryTabFontSize = 16;
     private int categoryTabPaddingHeight = 25;
 
+    private int cattabBackgroundHighContrast;
+
+
     private int launcherIconSize = 55;
     private int launcherSize = 80;
     private int launcherFontSize = 12;
@@ -72,7 +75,7 @@ public class Style {
 
     public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
 
-    public void styleCategoryStyle(final TextView categoryTab, CategoryTabStyle catstyle) {
+    public void styleCategoryStyle(final TextView categoryTab, CategoryTabStyle catstyle, boolean highContrast) {
 
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)categoryTab.getLayoutParams();
 
@@ -95,7 +98,7 @@ public class Style {
             case Tiny:
                 categoryTab.setPadding(padLeft, categoryTabPaddingHeight/5, padRight, categoryTabPaddingHeight/5);
                 categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(cattabBackground);
+                categoryTab.setBackgroundColor(highContrast?cattabBackgroundHighContrast:cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize-3);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 if (isOnLeft) {
@@ -153,7 +156,7 @@ public class Style {
             default:
                 categoryTab.setPadding(padLeft, categoryTabPaddingHeight, padRight, categoryTabPaddingHeight);
                 categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(cattabBackground);
+                categoryTab.setBackgroundColor(highContrast?cattabBackgroundHighContrast:cattabBackground);
                 categoryTab.setTextSize(categoryTabFontSize);
                 categoryTab.setShadowLayer(0, 0, 0, 0);
                 if (isOnLeft) {
@@ -162,6 +165,11 @@ public class Style {
                     lp.leftMargin = 22;
                 }
         }
+
+        if (highContrast && categoryTab.getAlpha()<.85f) {
+            categoryTab.setAlpha(.85f);
+        }
+
         categoryTab.setLayoutParams(lp);
     }
 
@@ -248,6 +256,13 @@ public class Style {
         wallpaperColor = mAppPreferences.getInt("wallpapercolor", getResColor(R.color.wallpaper_color));
 
         iconTint = mAppPreferences.getInt("icon_tint", Color.TRANSPARENT);
+
+        cattabBackgroundHighContrast = cattabBackground;
+
+        int alpha = Color.alpha(cattabBackground);
+        if (alpha<210) alpha=210;
+        cattabBackgroundHighContrast = Color.argb(alpha, Color.red(cattabBackground), Color.green(cattabBackground), Color.blue(cattabBackground));
+
     }
 
 

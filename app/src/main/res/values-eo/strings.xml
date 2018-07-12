@@ -356,4 +356,6 @@
  <string name="pref_show_badges">Show app unread counts</string>
     <string name="pref_hide_menu">Kaŝi kategoriojn menuo</string>
     <string name="pref_amimation_speed">Kuraĝigo milisekundoj</string>
+    <string name="theme_classic">Klasika</string>
+ <string name="nothing_in_cat">Nenio por montri</string>
 </resources>
