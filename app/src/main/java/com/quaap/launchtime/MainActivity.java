@@ -44,6 +44,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -68,6 +69,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -895,16 +897,23 @@ public class MainActivity extends Activity implements
     
     enum AnimateDirection {Left, Up, Right, Down}
 
+    private Map<View,Long> aniHideStarted = new HashMap<>();
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
         if (mAnimationDuration==0) {
-            view.clearAnimation();
+
             view.setVisibility(View.GONE);
             if (andBack) {
                 view.setVisibility(View.VISIBLE);
             }
             return;
         }
+
+        long now = SystemClock.uptimeMillis();
+        float fac = andBack?2.5f:1;
+        Long then = aniHideStarted.get(view);
+        if (then!=null && now - then < mAnimationDuration*fac) return;
+        aniHideStarted.put(view,now);
 
         ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateInterpolator())
                 .alpha(0)
@@ -914,6 +923,7 @@ public class MainActivity extends Activity implements
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
+
                         if (andBack) {
                             animateShow(view, towards);
                         } else {
