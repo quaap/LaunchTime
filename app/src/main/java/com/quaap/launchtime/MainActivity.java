@@ -288,14 +288,14 @@ public class MainActivity extends Activity implements
         @Override
         public void onLeftSwipe(float absDist) {
             if (mChildLock) return;
-            switchCategory(getNextCategory(mCategory, -1));
+            switchCategory(getNextCategory(mCategory, -1), AnimateDirection.Right);
             scrollToCategoryTab();
         }
 
         @Override
         public void onRightSwipe(float absDist) {
             if (mChildLock) return;
-            switchCategory(getNextCategory(mCategory, 1));
+            switchCategory(getNextCategory(mCategory, 1), AnimateDirection.Left);
             scrollToCategoryTab();
         }
     };
@@ -528,11 +528,16 @@ public class MainActivity extends Activity implements
         return latestCategory;
     }
 
+
     private synchronized void switchCategory(String category) {
+        switchCategory(category, mStyle.isLeftHandCategories()?AnimateDirection.Left:AnimateDirection.Right);
+    }
+
+    private synchronized void switchCategory(String category, AnimateDirection dir) {
         try {
             if (category == null) return;
             if (mCategory!=null && !mCategory.equals(category)) {
-                animateHide(mIconsArea, AnimateDirection.Right, true);
+                animateHide(mIconsArea, dir, true);
             }
             mCategory = category;
             latestCategory = mCategory;
