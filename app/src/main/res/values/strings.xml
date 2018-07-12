@@ -354,5 +354,6 @@
     <string name="pref_amimation_speed">Animation milliseconds</string>
     <string name="pref_animation_speed_summ" translatable="false">%s</string>
     <string name="theme_classic">Classic</string>
+    <string name="nothing_in_cat">Nothing to show</string>
 
 </resources>

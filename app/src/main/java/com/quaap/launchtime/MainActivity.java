@@ -191,6 +191,7 @@ public class MainActivity extends Activity implements
     private AddIconHandler iconHandler;
     private static final int ADD_ICON = 1;
     private static final int REMOVE_ALL_ICONS = 2;
+    private static final int NO_ICONS = 3;
 
     private static final String TAG = "LaunchTime";
 
@@ -1213,6 +1214,9 @@ public class MainActivity extends Activity implements
         if (apps.size()>0) {
             db().setAppCategoryOrder(category, iconSheet);
         }
+        if (db().getAppCount(category) == 0) {
+            showNoIconsSend(category);
+        }
     }
 
     private void addAppToIconSheet(String category, AppLauncher app, boolean reuse) {
@@ -1261,6 +1265,30 @@ public class MainActivity extends Activity implements
     private void removeIconSheetSend(String category) {
         Message msg = new Message();
         msg.arg1 = REMOVE_ALL_ICONS;
+        Bundle data = new Bundle();
+        data.putString("category", category);
+        msg.setData(data);
+        iconHandler.sendMessage(msg);
+    }
+
+    private void showNoIconsRecv(Message msg) {
+        Bundle data = msg.getData();
+        String category = data.getString("category");
+        GridLayout iconSheet = mIconSheets.get(category);
+        if (iconSheet!=null) {
+            TextView v = new TextView(this);
+            v.setText(R.string.nothing_in_cat);
+            v.setTextColor(mStyle.getTextColor());
+            v.setTextSize(mStyle.getLauncherFontSize());
+            v.setPadding(2,40,2,2);
+            v.setMaxLines(3);
+            iconSheet.addView(v);
+        }
+    }
+
+    private void showNoIconsSend(String category) {
+        Message msg = new Message();
+        msg.arg1 = NO_ICONS;
         Bundle data = new Bundle();
         data.putString("category", category);
         msg.setData(data);
@@ -3200,6 +3228,9 @@ public class MainActivity extends Activity implements
                         break;
                     case REMOVE_ALL_ICONS:
                         inst.removeIconSheetRecv(msg);
+                        break;
+                    case NO_ICONS:
+                        inst.showNoIconsRecv(msg);
                 }
             }
         }
