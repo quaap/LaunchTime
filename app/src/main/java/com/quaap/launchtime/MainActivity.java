@@ -722,9 +722,13 @@ public class MainActivity extends Activity implements
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
             readAnimationDuration();
 
+            WindowManager wm = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE));
+
+
             int orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "-1"));
-            if (orientationPref==-1) {
-                Display display = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            if (orientationPref==-1 && wm!=null) {
+
+                Display display = wm.getDefaultDisplay();
                 int rotation = display.getRotation();
                 int orientation = getResources().getConfiguration().orientation;
 
@@ -808,18 +812,19 @@ public class MainActivity extends Activity implements
             mScreenDim = getScreenDimensions();
             //float launcherw = getResources().getDimension(R.dimen.launcher_width);
             float launcherw = mStyle.getLauncherSize();
-            float catwidth = getResources().getDimension(R.dimen.cattabbar_width)+2;
+            float catwidth = getResources().getDimension(R.dimen.cattabbar_width)+3;
 
             float wr = ( mScreenDim.x - (autohideCats?0:catwidth))/launcherw;
 
-            //Log.d(TAG, "density=" + getResources().getDisplayMetrics().density + " wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
+            Log.d(TAG, "density=" + getResources().getDisplayMetrics().density + " wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
             if (wr<3) mColumns = 2;
             else if (wr<4.16) mColumns = 3;
             else if (wr<5.4) mColumns = 4;
             else if (wr<7.4) mColumns = 5;
             else if (wr<9) mColumns = 6;
-            else if (wr<11) mColumns = 8;
-            else mColumns = 9;
+            else if (wr<10.2) mColumns = 8;
+            else if (wr<13.2) mColumns = 9;
+            else mColumns = 10;
 
 
             //Log.d(TAG, "x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
