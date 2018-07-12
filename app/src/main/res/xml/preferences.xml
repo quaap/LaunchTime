@@ -67,6 +67,13 @@
             android:key="pref_return_home"
             android:summary="@string/pref_returnhome_summ" />
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/prefs_new_apps_cat"
+            android:key="prefs_autocat"
+            android:summaryOn="@string/prefs_cat_apps"
+            android:summaryOff="@string/prefs_cat_no" />
+
         <PreferenceScreen
             android:title="@string/pref_senddat"
             android:summary="@string/pref_senddat_summ">
@@ -75,14 +82,6 @@
                 android:targetPackage="com.quaap.launchtime"
                 android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
         </PreferenceScreen>
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/prefs_new_apps_cat"
-            android:key="prefs_autocat"
-            android:summaryOn="@string/prefs_cat_apps"
-            android:summaryOff="@string/prefs_cat_no" />
-
 
         <PreferenceScreen
             android:title="@string/pref_backup"
