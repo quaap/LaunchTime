@@ -789,13 +789,13 @@ public class MainActivity extends Activity implements
             mScreenDim = getScreenDimensions();
             //float launcherw = getResources().getDimension(R.dimen.launcher_width);
             float launcherw = mStyle.getLauncherSize();
-            float catwidth = getResources().getDimension(R.dimen.cattabbar_width);
+            float catwidth = getResources().getDimension(R.dimen.cattabbar_width)+2;
 
             float wr = ( mScreenDim.x - (autohideCats?0:catwidth))/launcherw;
 
-            Log.d(TAG, "wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
+            //Log.d(TAG, "density=" + getResources().getDisplayMetrics().density + " wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
             if (wr<3) mColumns = 2;
-            else if (wr<4) mColumns = 3;
+            else if (wr<4.16) mColumns = 3;
             else if (wr<5.4) mColumns = 4;
             else if (wr<7.4) mColumns = 5;
             else if (wr<9) mColumns = 6;
