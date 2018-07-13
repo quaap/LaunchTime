@@ -36,7 +36,8 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="LaunchTime Config">
+            android:label="LaunchTime Config"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
