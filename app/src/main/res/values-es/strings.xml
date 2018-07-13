@@ -359,4 +359,6 @@
  <string name="nothing_in_cat">Nada que mostrar</string>
     <string name="pref_show_catlabel">Etiqueta de categoría</string>
  <string name="pref_show_catlabel_summ">" Mostrar etiqueta de categoría en el modo de ocultación automática"</string>
+    <string name="pref_rounded">Rounded shapes</string>
+ <string name="pref_center">Center icons</string>
 </resources>

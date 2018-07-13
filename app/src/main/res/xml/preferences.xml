@@ -115,8 +115,13 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:title="Rounded shapes"
+            android:title="@string/pref_rounded"
             android:key="pref_rounded_tabs"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_center"
+            android:key="pref_center_sheet"/>
 
         <ListPreference
             android:defaultValue="@string/pref_cat_location_values_def"

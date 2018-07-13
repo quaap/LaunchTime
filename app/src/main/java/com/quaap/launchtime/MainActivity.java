@@ -502,6 +502,9 @@ public class MainActivity extends Activity implements
                        readAnimationDuration();
                     }
 
+                    if (key.equals("pref_center_sheet")) {
+                        setAllIconSheetsLayout();
+                    }
 
                 }
             }
@@ -1203,6 +1206,23 @@ public class MainActivity extends Activity implements
 
     }
 
+    private void setAllIconSheetsLayout() {
+        for (GridLayout sheet: mIconSheets.values()) {
+            setIconSheetLayout(sheet);
+        }
+    }
+
+    private void setIconSheetLayout(GridLayout iconSheet) {
+
+        FrameLayout.LayoutParams lp;
+        if (mAppPreferences.getBoolean("pref_center_sheet", true)) {
+            lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.CENTER_HORIZONTAL;
+        } else {
+            lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        iconSheet.setLayoutParams(lp);
+    }
 
     @NonNull
     private GridLayout createIconSheet(String category) {
@@ -1211,9 +1231,7 @@ public class MainActivity extends Activity implements
         mRevCategoryMap.put(iconSheet, category);
         iconSheet.setColumnCount(mColumns);
         iconSheet.setOnDragListener(mMainDragListener);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.gravity=Gravity.CENTER_HORIZONTAL;
-        iconSheet.setLayoutParams(lp);
+        setIconSheetLayout(iconSheet);
 
         final TextView categoryTab = createCategoryTab(category, iconSheet);
 

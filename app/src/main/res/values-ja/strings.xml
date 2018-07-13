@@ -358,4 +358,6 @@
     <string name="nothing_in_cat">表示するものは何もない</string>
     <string name="pref_show_catlabel">カテゴリラベル</string>
     <string name="pref_show_catlabel_summ">自動非表示モードでカテゴリラベルを表示する</string>
+    <string name="pref_rounded">Rounded shapes</string>
+    <string name="pref_center">Center icons</string>
 </resources>

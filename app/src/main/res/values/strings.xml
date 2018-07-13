@@ -357,5 +357,7 @@
     <string name="nothing_in_cat">Nothing to show</string>
     <string name="pref_show_catlabel">Category label</string>
     <string name="pref_show_catlabel_summ">Show category label in autohide mode</string>
+    <string name="pref_rounded">Rounded shapes</string>
+    <string name="pref_center">Center icons</string>
 
 </resources>
