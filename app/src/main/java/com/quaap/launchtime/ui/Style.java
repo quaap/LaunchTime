@@ -6,6 +6,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -54,6 +57,14 @@ public class Style {
     private int launcherSize = 80;
     private int launcherFontSize = 12;
 
+    private Drawable roundedBgNormal;
+    private Drawable roundedBgTiny;
+    private Drawable roundedBgSelected;
+    private Drawable roundedBgDrag;
+    private Drawable roundedBgNormalHigh;
+    private Drawable roundedBgTinyHigh;
+    private Drawable roundedBgSelectedHigh;
+
     private int aniDuration;
 
     private SharedPreferences mAppPreferences;
@@ -94,13 +105,21 @@ public class Style {
         }
         lp.leftMargin = 2;
         lp.rightMargin = 2;
+
+
+        Rect pad  = new Rect();
+        Drawable bg = null;
+        int bgcolor;
+        categoryTab.setBackground(bg);
+        categoryTab.setShadowLayer(0, 0, 0, 0);
+
         switch (catstyle) {
             case Tiny:
-                categoryTab.setPadding(padLeft, categoryTabPaddingHeight/5, padRight, categoryTabPaddingHeight/5);
                 categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(highContrast?cattabBackgroundHighContrast:cattabBackground);
+                bg = highContrast?roundedBgTinyHigh:roundedBgTiny;
+                bgcolor = highContrast?cattabBackgroundHighContrast:cattabBackground;
+                pad.set(padLeft, categoryTabPaddingHeight/5, padRight, categoryTabPaddingHeight/5);
                 categoryTab.setTextSize(categoryTabFontSize-3);
-                categoryTab.setShadowLayer(0, 0, 0, 0);
                 if (isOnLeft) {
                     lp.rightMargin = 22;
                 } else {
@@ -108,12 +127,13 @@ public class Style {
                 }
                 break;
             case DragHover:
-                categoryTab.setPadding(padLeft, categoryTabPaddingHeight, padRight, categoryTabPaddingHeight);
                 categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(dragoverBackground);
+                bg = roundedBgDrag;
+                bgcolor = dragoverBackground;
+
+                pad.set(padLeft, categoryTabPaddingHeight, padRight, categoryTabPaddingHeight);
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setTextSize(categoryTabFontSize);
-                categoryTab.setShadowLayer(0, 0, 0, 0);
                 if (isOnLeft) {
                     lp.rightMargin = 6;
                 } else {
@@ -121,9 +141,11 @@ public class Style {
                 }
                 break;
             case Selected:
-                categoryTab.setPadding(padLeft, categoryTabPaddingHeight+2, padRight, categoryTabPaddingHeight+2);
                 categoryTab.setTextColor(cattabSelectedText);
-                categoryTab.setBackgroundColor(highContrast?cattabSelectedBackgroundHighContrast:cattabSelectedBackground);
+                bg = highContrast?roundedBgSelectedHigh:roundedBgSelected;
+                bgcolor = highContrast?cattabSelectedBackgroundHighContrast:cattabSelectedBackground;
+
+                pad.set(padLeft, categoryTabPaddingHeight+2, padRight, categoryTabPaddingHeight+2);
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
 
@@ -154,17 +176,23 @@ public class Style {
                 break;
             case Normal:
             default:
-                categoryTab.setPadding(padLeft, categoryTabPaddingHeight, padRight, categoryTabPaddingHeight);
                 categoryTab.setTextColor(cattabTextColor);
-                categoryTab.setBackgroundColor(highContrast?cattabBackgroundHighContrast:cattabBackground);
+                bg = highContrast?roundedBgNormalHigh:roundedBgNormal;
+                bgcolor = highContrast?cattabBackgroundHighContrast:cattabBackground;
+                pad.set(padLeft, categoryTabPaddingHeight, padRight, categoryTabPaddingHeight);
                 categoryTab.setTextSize(categoryTabFontSize);
-                categoryTab.setShadowLayer(0, 0, 0, 0);
                 if (isOnLeft) {
                     lp.rightMargin = 22;
                 } else {
                     lp.leftMargin = 22;
                 }
         }
+
+        categoryTab.setBackgroundColor(bgcolor);
+        if (isRoundedTabs()) {
+            categoryTab.setBackground(bg);
+        }
+        categoryTab.setPadding(pad.left, pad.top, pad.right, pad.bottom);
 
         if (highContrast) {
             if (categoryTab.getAlpha()<.89f) {
@@ -274,10 +302,37 @@ public class Style {
         if (alpha<220) alpha=220;
         cattabSelectedBackgroundHighContrast = Color.argb(alpha, Color.red(cattabSelectedBackground), Color.green(cattabSelectedBackground), Color.blue(cattabSelectedBackground));
 
+        Drawable base = mContext.getResources().getDrawable(R.drawable.rounded);
+        roundedBgNormal = base.getConstantState().newDrawable().mutate();
+        roundedBgNormalHigh = base.getConstantState().newDrawable().mutate();
+        roundedBgSelected = base.getConstantState().newDrawable().mutate();
+        roundedBgSelectedHigh = base.getConstantState().newDrawable().mutate();
+        roundedBgDrag = base.getConstantState().newDrawable().mutate();
+        roundedBgTiny = base.getConstantState().newDrawable().mutate();
+        roundedBgTinyHigh = base.getConstantState().newDrawable().mutate();
 
+
+        roundedBgNormal.setColorFilter(cattabBackground, PorterDuff.Mode.MULTIPLY);
+        roundedBgNormalHigh.setColorFilter(cattabBackgroundHighContrast, PorterDuff.Mode.MULTIPLY);
+
+        roundedBgTiny.setColorFilter(cattabBackground, PorterDuff.Mode.MULTIPLY);
+        roundedBgTinyHigh.setColorFilter(cattabBackgroundHighContrast, PorterDuff.Mode.MULTIPLY);
+
+
+        roundedBgSelected.setColorFilter(cattabSelectedBackground, PorterDuff.Mode.MULTIPLY);
+        roundedBgSelectedHigh.setColorFilter(cattabSelectedBackgroundHighContrast, PorterDuff.Mode.MULTIPLY);
+
+        roundedBgDrag.setColorFilter(dragoverBackground, PorterDuff.Mode.MULTIPLY);
 
     }
 
+    public boolean isRoundedTabs() {
+        return mAppPreferences.getBoolean("pref_rounded_tabs", true);
+    }
+
+    public Drawable getTabBackground() {
+        return roundedBgNormal;
+    }
 
     public int getMaxWCells() {
         int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));

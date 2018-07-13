@@ -97,13 +97,10 @@
 
     <PreferenceCategory android:title="@string/pref_color_style">
 
-        <ListPreference
-            android:defaultValue="250"
-            android:title="@string/pref_amimation_speed"
-            android:entries="@array/pref_animate_values"
-            android:entryValues="@array/pref_animate_values"
-            android:key="pref_animate_duration"
-            android:summary="@string/pref_animation_speed_summ" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="Rounded shapes"
+            android:key="pref_rounded_tabs"/>
 
         <ListPreference
             android:defaultValue="@string/pref_cat_location_values_def"
@@ -128,6 +125,14 @@
             android:entryValues="@array/pref_tab_size_values"
             android:key="preference_iconsize"
             android:summary="%s" />
+
+        <ListPreference
+            android:defaultValue="250"
+            android:title="@string/pref_amimation_speed"
+            android:entries="@array/pref_animate_values"
+            android:entryValues="@array/pref_animate_values"
+            android:key="pref_animate_duration"
+            android:summary="@string/pref_animation_speed_summ" />
 
 
         <com.quaap.launchtime.color.ColorPreference

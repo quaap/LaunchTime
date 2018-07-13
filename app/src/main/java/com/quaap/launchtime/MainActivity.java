@@ -582,12 +582,15 @@ public class MainActivity extends Activity implements
                         label.setText(db().getCategoryDisplayFull(mCategory));
                         label.setTextSize(mStyle.getCategoryTabFontSize());
                         label.setShadowLayer(8,4,4,mStyle.getCattabTextColorInvert());
-                        label.setPadding(60,5,60,5);
                         label.setBackgroundColor(mStyle.getCattabBackground());
-                        label.setAlpha(.9f);
+                        if (mStyle.isRoundedTabs()) {
+                            label.setBackground(mStyle.getTabBackground());
+                        }
+                        label.setPadding(60,5,60,5);
+                        label.setAlpha(.96f);
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         lp.gravity=Gravity.CENTER;
-                        lp.topMargin=6;
+                        lp.topMargin=10;
                         mIconSheetTopFrame.setLayoutParams(lp);
                         mIconSheetTopFrame.addView(label);
                         // not the search page: close the cursor
