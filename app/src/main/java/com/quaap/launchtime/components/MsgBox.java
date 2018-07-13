@@ -54,6 +54,7 @@ public class MsgBox {
                             " * Better menu appearence.\n" +
                             " * Animated transitions.\n" +
                             " * Turn off/on unread badges.\n" +
+                            " * New pref options\n" +
                             " * Better default apps in Quickbar.\n" +
                             " * Many appearance tweaks.\n" +
                             " * Some speed-ups.\n" +
@@ -85,27 +86,27 @@ public class MsgBox {
                             " * Fixes and speedups.\n" +
                             "";
 
-                    msg += "\n" +
-                            "In 0.7.2:\n" +
-                            " * Beta \"unread\" badges on certain apps.\n" +
-                            " * Minor fixes.\n" +
-                            "";
-
-                    msg += "\n" +
-                            "In 0.7.1:\n" +
-                            " * Updated French translations.\n" +
-                            " * Fixes for a few rare crashes.\n";
-
-                    msg += "\n" +
-                            "In 0.7.0:\n" +
-                            " * Icon packs.\n" +
-                            " * Customize icons and labels.\n" +
-                            " * Built-in themes.\n" +
-                            " * Backups save customization.\n" +
-                            " * Better app shortcuts.\n" +
-                            " * Better color selector.\n" +
-                            " * Android 7.1 shortcut actions.\n" +
-                            " * Machine translations for German, French, Spanish, and others (expert translations wanted!).";
+//                    msg += "\n" +
+//                            "In 0.7.2:\n" +
+//                            " * Beta \"unread\" badges on certain apps.\n" +
+//                            " * Minor fixes.\n" +
+//                            "";
+//
+//                    msg += "\n" +
+//                            "In 0.7.1:\n" +
+//                            " * Updated French translations.\n" +
+//                            " * Fixes for a few rare crashes.\n";
+//
+//                    msg += "\n" +
+//                            "In 0.7.0:\n" +
+//                            " * Icon packs.\n" +
+//                            " * Customize icons and labels.\n" +
+//                            " * Built-in themes.\n" +
+//                            " * Backups save customization.\n" +
+//                            " * Better app shortcuts.\n" +
+//                            " * Better color selector.\n" +
+//                            " * Android 7.1 shortcut actions.\n" +
+//                            " * Machine translations for German, French, Spanish, and others (expert translations wanted!).";
 
                     msg += "\n\n" + "Go to Settings->Help for links to submit feature requests, bugs, and pull requests.";
                     show(context, "What's new!", msg);

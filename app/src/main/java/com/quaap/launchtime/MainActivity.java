@@ -593,11 +593,11 @@ public class MainActivity extends Activity implements
                             }
                             mCategoryLabel.setTextColor(mStyle.getCattabTextColor());
                             mCategoryLabel.setText(db().getCategoryDisplayFull(mCategory));
-                            mCategoryLabel.setTextSize(mStyle.getCategoryTabFontSize());
+                            mCategoryLabel.setTextSize(mStyle.getCategoryTabFontSize()+1);
                             mCategoryLabel.setShadowLayer(8,4,4,mStyle.getCattabTextColorInvert());
                             mCategoryLabel.setBackgroundColor(mStyle.getCattabBackground());
                             if (mStyle.isRoundedTabs()) {
-                                mCategoryLabel.setBackground(mStyle.getBgDrawableFor(mCategoryLabel, Style.CategoryTabStyle.Default,false));
+                                mCategoryLabel.setBackground(mStyle.getBgDrawableFor(mCategoryLabel, Style.CategoryTabStyle.Default,true));
                             }
                             mCategoryLabel.setPadding(60,5,60,5);
                             mCategoryLabel.setAlpha(.96f);
@@ -1200,6 +1200,14 @@ public class MainActivity extends Activity implements
                     startActivity(help);
                 }
             }, 3000);
+
+//            mCategoriesScroller.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    promptAutoHide();
+//                }
+//            }, 6000);
+
         }
 
         MsgBox.showNewsMessage(this, mPrefs);
@@ -2920,6 +2928,38 @@ public class MainActivity extends Activity implements
                 .setNegativeButton(R.string.cancel, null)
                 .show();
 
+    }
+
+    private void promptAutoHide() {
+
+        final String message = getString(R.string.pref_hide_menu);
+        new AlertDialog.Builder(MainActivity.this)
+                .setIcon(android.R.drawable.ic_menu_manage)
+                .setTitle("Autohide menu?")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        enableAutoHide(true);
+                    }
+
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        enableAutoHide(false);
+                    }
+
+                })
+                .show();
+
+    }
+
+
+    private void enableAutoHide(boolean enable) {
+
+        mAppPreferences.edit().putString("pref_autohide_cats_timeout", enable?"1500":"-1").apply();
+        readPrefs();
     }
 
     private void deleteCategory(final String category) {
