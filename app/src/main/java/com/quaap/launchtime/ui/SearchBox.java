@@ -3,11 +3,13 @@ package com.quaap.launchtime.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
@@ -15,6 +17,7 @@ import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppCursorAdapter;
 import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.apps.StaticListView;
+import com.quaap.launchtime.components.MsgBox;
 import com.quaap.launchtime.db.DB;
 
 /**
@@ -54,8 +57,7 @@ public class SearchBox {
         quickasett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent l = new Intent("android.settings.SETTINGS");
-                mainActivity.startActivity(l);
+                launchAction("android.settings.SETTINGS", "settings");
             }
         });
 
@@ -66,6 +68,47 @@ public class SearchBox {
                 MainActivity.openSettings(mainActivity);
             }
         });
+
+
+        ImageView quickbsett = mSearchView.findViewById(R.id.quick_settings_bt);
+        quickbsett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent l = new Intent(Intent.ACTION_VIEW);
+                launchActivity("com.android.settings", "com.android.settings.bluetooth.BluetoothSettings", "BluetoothSettings");
+            }
+        });
+
+
+        ImageView quickvsett = mSearchView.findViewById(R.id.quick_settings_vol);
+        quickvsett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchActivity("com.android.settings", "com.android.settings.SoundSettings", "BluetoothSettings");
+            }
+        });
+
+        ImageView quickwisett = mSearchView.findViewById(R.id.quick_settings_wifi);
+        quickwisett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchActivity("com.android.settings", "com.android.settings.wifi.WifiSettings", "WifiSettings");
+            }
+        });
+
+        ImageView quickdevsett = mSearchView.findViewById(R.id.quick_settings_dev);
+        quickdevsett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MsgBox.show(mMainActivity, mMainActivity.getString(android.R.string.dialog_alert_title), "These options can be dangerous! Proceed?", new Runnable() {
+                    @Override
+                    public void run() {
+                        launchActivity("com.android.settings", "com.android.settings.DevelopmentSettings", "DevOps");
+                    }
+                });
+            }
+        });
+
         mSearchbox = mSearchView.findViewById(R.id.search_box);
 
         mSearchAdapter = new AppCursorAdapter(mainActivity, mSearchbox, R.layout.search_item, 0);
@@ -119,6 +162,30 @@ public class SearchBox {
         refreshSearch(false);
 
     }
+
+    private void launchActivity(String packageName, String classname, String name) {
+        try {
+            Intent l = new Intent(Intent.ACTION_VIEW);
+            l.setClassName(packageName, classname);
+            l.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mMainActivity.startActivity(l);
+        } catch (Throwable t) {
+            Log.e("short", t.getMessage(), t);
+            Toast.makeText(mMainActivity, "Couldn't start setting "  + name, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void launchAction(String action, String name) {
+        try {
+            Intent l = new Intent(action);
+            l.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mMainActivity.startActivity(l);
+        } catch (Throwable t) {
+            Log.e("short", t.getMessage(), t);
+            Toast.makeText(mMainActivity, "Couldn't start setting "  + name, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public void refreshSearch(boolean rememberPos) {
         if (rememberPos) mSearchRememberScrollPos = mIconSheetScroller.getScrollY();

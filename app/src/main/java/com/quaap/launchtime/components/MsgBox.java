@@ -26,7 +26,7 @@ public class MsgBox {
         builder.setTitle(title);
         builder.setMessage(message);
 
-        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -36,6 +36,27 @@ public class MsgBox {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    public static void show(Context context, String title, String message, final Runnable run) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (run!=null) {
+                    run.run();
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
