@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -69,6 +70,7 @@ public class IconPack {
     // scale factor of an icons pack
     private float factor = 1.0f;
 
+    private static final int MAX_DRAWABLE_DIM = 257;
 
     private Resources.Theme theme;
 
@@ -225,10 +227,12 @@ public class IconPack {
             try {
                 int id = iconPackres.getIdentifier(drawable, "drawable", iconsPackPackageName);
                 if (id > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        d = iconPackres.getDrawable(id, theme);
-                    } else {
-                        d = iconPackres.getDrawable(id);
+                    if (isOkSize(iconPackres, id, drawable)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            d = iconPackres.getDrawable(id, theme);
+                        } else {
+                            d = iconPackres.getDrawable(id);
+                        }
                     }
                 }
             } catch (Exception | Error e){
@@ -239,7 +243,18 @@ public class IconPack {
         return d;
     }
 
-
+    public static boolean isOkSize(Resources res, int id, String drawable) {
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeResource(res, id, options);
+            //Log.d(TAG, "Drawable " + drawable + " " + options.outHeight + " " + options.outWidth);
+            return options.outHeight < MAX_DRAWABLE_DIM && options.outWidth < MAX_DRAWABLE_DIM;
+        } catch (Throwable t) {
+            Log.e(TAG, t.getMessage(), t);
+            return false;
+        }
+    }
     public Drawable generateBitmap(Drawable defaultBitmap) {
 
         // if no support images in the icon pack return the bitmap itself
@@ -295,15 +310,17 @@ public class IconPack {
         try {
             int id = iconPackres.getIdentifier(drawableName, "drawable", iconsPackPackageName);
             if (id > 0) {
-                //noinspection deprecation: Resources.getDrawable(int, Theme) requires SDK 21+
-                Drawable bitmap;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    bitmap = iconPackres.getDrawable(id, theme);
-                } else {
-                    bitmap = iconPackres.getDrawable(id);
-                }
-                if (bitmap instanceof BitmapDrawable) {
-                    return ((BitmapDrawable) bitmap).getBitmap();
+
+                if (isOkSize(iconPackres, id, drawableName)) {
+                    Drawable bitmap;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        bitmap = iconPackres.getDrawable(id, theme);
+                    } else {
+                        bitmap = iconPackres.getDrawable(id);
+                    }
+                    if (bitmap instanceof BitmapDrawable) {
+                        return ((BitmapDrawable) bitmap).getBitmap();
+                    }
                 }
             }
         } catch (OutOfMemoryError e){
