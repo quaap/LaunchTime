@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 public class DB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
@@ -298,6 +298,13 @@ public class DB extends SQLiteOpenHelper {
         if (oldVersion<9) {
             buildCatTable(sqLiteDatabase);
         }
+
+        if (oldVersion<10) {
+            ContentValues values = new ContentValues();
+            values.put(INDEX, 101);
+            sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{Categories.CAT_SEARCH});
+        }
+
         sqLiteDatabase.delete(APP_ORDER_TABLE, PKGNAME + " is null", null);
     }
 
