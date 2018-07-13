@@ -34,7 +34,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
+        if (GlobState.enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
         String action = intent.getAction();
         if ("com.android.launcher.action.INSTALL_SHORTCUT".equals(action)) {
             Log.d("ShortcutCatch", "intent received");

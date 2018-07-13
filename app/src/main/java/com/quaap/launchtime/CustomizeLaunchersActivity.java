@@ -76,7 +76,7 @@ public class CustomizeLaunchersActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize_launchers);
 
-        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        if (GlobState.enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         mIconSize = (int) getResources().getDimension(android.R.dimen.app_icon_size);
 

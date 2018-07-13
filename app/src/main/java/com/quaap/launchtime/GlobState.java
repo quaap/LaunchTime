@@ -42,6 +42,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     private UnreadReceiver unreadrecv;
     private ShortcutReceiver shortcutrecv;
 
+    public static final boolean enableCrashReporter = false;
+
     public static GlobState getGlobState(Context context) {
         return (GlobState) context.getApplicationContext();
     }
@@ -50,7 +52,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     public void onCreate() {
         super.onCreate();
 
-        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        if (enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         Categories.init(this);
 

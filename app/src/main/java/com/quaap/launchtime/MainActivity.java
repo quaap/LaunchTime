@@ -208,7 +208,7 @@ public class MainActivity extends Activity implements
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
 
-        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        if (GlobState.enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         setContentView(R.layout.activity_main);
 

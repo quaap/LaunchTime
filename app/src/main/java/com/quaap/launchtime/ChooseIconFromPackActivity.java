@@ -52,7 +52,7 @@ public class ChooseIconFromPackActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_icon_from_pack);
 
-        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        if (GlobState.enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         Map<String,String> iconpacks = IconPack.listAvailableIconsPacks(this);
 

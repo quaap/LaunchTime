@@ -66,7 +66,7 @@ public class BackupActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
 
-        if (!BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+        if (GlobState.enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         backupsLayout = findViewById(R.id.bakups_list);
 
