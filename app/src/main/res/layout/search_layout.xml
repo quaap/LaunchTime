@@ -17,9 +17,9 @@
 
         <ImageView
             android:id="@+id/quick_settings_android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="8dp"
             android:background="#44888888"
             android:contentDescription="Android Settings"
@@ -28,9 +28,9 @@
 
         <ImageView
             android:id="@+id/quick_settings_launchtime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="8dp"
             android:background="#44888888"
             android:contentDescription="My Settings"
