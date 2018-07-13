@@ -187,6 +187,7 @@ public class MainActivity extends Activity implements
     //private DB db();
 
     private SearchBox mSearchBox;
+    private TextView mCategoryLabel;
 
     private Style mStyle;
 
@@ -576,25 +577,35 @@ public class MainActivity extends Activity implements
                         //load our cursor
                         mSearchBox.refreshSearch(true);
 
-                    } else if (isAutohide() && mAppPreferences.getBoolean("prefs_cat_label", true)) {
-                        TextView label = new TextView(MainActivity.this);
-                        label.setTextColor(mStyle.getCattabTextColor());
-                        label.setText(db().getCategoryDisplayFull(mCategory));
-                        label.setTextSize(mStyle.getCategoryTabFontSize());
-                        label.setShadowLayer(8,4,4,mStyle.getCattabTextColorInvert());
-                        label.setBackgroundColor(mStyle.getCattabBackground());
-                        if (mStyle.isRoundedTabs()) {
-                            label.setBackground(mStyle.getTabBackground());
-                        }
-                        label.setPadding(60,5,60,5);
-                        label.setAlpha(.96f);
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        lp.gravity=Gravity.CENTER;
-                        lp.topMargin=10;
-                        mIconSheetTopFrame.setLayoutParams(lp);
-                        mIconSheetTopFrame.addView(label);
+                    } else {
                         // not the search page: close the cursor
                         mSearchBox.closeSeachAdapter();
+
+                        if (isAutohide() && mAppPreferences.getBoolean("prefs_cat_label", true)) {
+                            // not the search page: close the cursor
+                            mSearchBox.closeSeachAdapter();
+
+                            if (mCategoryLabel==null) {
+                                mCategoryLabel = new TextView(MainActivity.this);
+                            }
+                            mCategoryLabel.setTextColor(mStyle.getCattabTextColor());
+                            mCategoryLabel.setText(db().getCategoryDisplayFull(mCategory));
+                            mCategoryLabel.setTextSize(mStyle.getCategoryTabFontSize());
+                            mCategoryLabel.setShadowLayer(8,4,4,mStyle.getCattabTextColorInvert());
+                            mCategoryLabel.setBackgroundColor(mStyle.getCattabBackground());
+                            if (mStyle.isRoundedTabs()) {
+                                mCategoryLabel.setBackground(mStyle.getBgDrawableFor(mCategoryLabel, Style.CategoryTabStyle.Default,false));
+                            }
+                            mCategoryLabel.setPadding(60,5,60,5);
+                            mCategoryLabel.setAlpha(.96f);
+
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            lp.gravity=Gravity.CENTER;
+                            lp.topMargin=10;
+                            mIconSheetTopFrame.setLayoutParams(lp);
+
+                            mIconSheetTopFrame.addView(mCategoryLabel);
+                        }
                     }
 
                     //Actually switch the icon sheet.
