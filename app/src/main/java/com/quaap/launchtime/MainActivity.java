@@ -812,22 +812,27 @@ public class MainActivity extends Activity implements
         boolean autohideCats = isAutohide();
         try {
 
-            mScreenDim = getScreenDimensions();
-            //float launcherw = getResources().getDimension(R.dimen.launcher_width);
-            float launcherw = mStyle.getLauncherSize();
-            float catwidth = getResources().getDimension(R.dimen.cattabbar_width)+3;
+            String force = mAppPreferences.getString(isLandscape()?"pref_columns_landscape":"pref_columns_portrait", "0");
+            if (force.equals("0")) {
+                mScreenDim = getScreenDimensions();
+                //float launcherw = getResources().getDimension(R.dimen.launcher_width);
+                float launcherw = mStyle.getLauncherSize();
+                float catwidth = getResources().getDimension(R.dimen.cattabbar_width) + 3;
 
-            float wr = ( mScreenDim.x - (autohideCats?0:catwidth))/launcherw;
+                float wr = (mScreenDim.x - (autohideCats ? 0 : catwidth)) / launcherw;
 
-            Log.d(TAG, "density=" + getResources().getDisplayMetrics().density + " wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
-            if (wr<3) mColumns = 2;
-            else if (wr<4.16) mColumns = 3;
-            else if (wr<5.4) mColumns = 4;
-            else if (wr<7.4) mColumns = 5;
-            else if (wr<9) mColumns = 6;
-            else if (wr<10.2) mColumns = 8;
-            else if (wr<13.2) mColumns = 9;
-            else mColumns = 10;
+                Log.d(TAG, "density=" + getResources().getDisplayMetrics().density + " wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
+                if (wr < 3) mColumns = 2;
+                else if (wr < 4.16) mColumns = 3;
+                else if (wr < 5.4) mColumns = 4;
+                else if (wr < 7.4) mColumns = 5;
+                else if (wr < 9) mColumns = 6;
+                else if (wr < 10.2) mColumns = 8;
+                else if (wr < 13.2) mColumns = 9;
+                else mColumns = 10;
+            } else {
+                mColumns = Integer.parseInt(force);
+            }
 
 
             //Log.d(TAG, "x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
