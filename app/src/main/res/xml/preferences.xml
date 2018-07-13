@@ -13,7 +13,7 @@
     </PreferenceScreen>
 
 
-    <PreferenceCategory android:title="Mode">
+    <PreferenceCategory android:title="@string/pref_app_system">
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -22,66 +22,6 @@
             android:summary="@string/pref_todd_lock_summ"
             android:paddingBottom="6dp" />
 
-        <ListPreference
-            android:defaultValue="0"
-            android:title="@string/pref_orient"
-            android:entries="@array/pref_orientation_strings"
-            android:entryValues="@array/pref_orientation_values"
-            android:key="preference_orientation"
-            android:summary="%s" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/pref_app_system">
-
-        <PreferenceScreen
-            android:title="@string/pref_system"
-            android:summary="@string/pref_system_summ">
-            <intent android:action="android.settings.SETTINGS"/>
-        </PreferenceScreen>
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/pref_show_badges"
-            android:key="pref_show_badges" />
-
-        <ListPreference
-            android:defaultValue="-1"
-            android:title="@string/pref_hide_menu"
-            android:entries="@array/pref_autohide_cat_strings"
-            android:entryValues="@array/pref_autohide_cat_values"
-            android:key="pref_autohide_cats_timeout"
-            android:summary="@string/pref_hide_menu_summ" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/pref_show_catlabel"
-            android:key="prefs_cat_label"
-            android:summary="@string/pref_show_catlabel_summ"/>
-
-        <ListPreference
-            android:defaultValue="0"
-            android:title="Force columns portrait"
-            android:entries="@array/pref_columns_values"
-            android:entryValues="@array/pref_columns_values"
-            android:key="pref_columns_portrait"
-            android:summary="@string/pref_animation_speed_summ" />
-
-        <ListPreference
-            android:defaultValue="0"
-            android:title="Force columns landscape"
-            android:entries="@array/pref_columns_values"
-            android:entryValues="@array/pref_columns_values"
-            android:key="pref_columns_landscape"
-            android:summary="@string/pref_animation_speed_summ" />
-
-        <ListPreference
-            android:defaultValue="31536000"
-            android:title="@string/pref_returnhome"
-            android:entries="@array/pref_return_home_strings"
-            android:entryValues="@array/pref_return_home_values"
-            android:key="pref_return_home"
-            android:summary="@string/pref_returnhome_summ" />
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -89,6 +29,12 @@
             android:key="prefs_autocat"
             android:summaryOn="@string/prefs_cat_apps"
             android:summaryOff="@string/prefs_cat_no" />
+
+        <PreferenceScreen
+            android:title="@string/pref_system"
+            android:summary="@string/pref_system_summ">
+            <intent android:action="android.settings.SETTINGS"/>
+        </PreferenceScreen>
 
         <PreferenceScreen
             android:title="@string/pref_senddat"
@@ -112,16 +58,6 @@
 
 
     <PreferenceCategory android:title="@string/pref_color_style">
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/pref_rounded"
-            android:key="pref_rounded_tabs"/>
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/pref_center"
-            android:key="pref_center_sheet"/>
 
         <ListPreference
             android:defaultValue="@string/pref_cat_location_values_def"
@@ -147,13 +83,15 @@
             android:key="preference_iconsize"
             android:summary="%s" />
 
-        <ListPreference
-            android:defaultValue="250"
-            android:title="@string/pref_amimation_speed"
-            android:entries="@array/pref_animate_values"
-            android:entryValues="@array/pref_animate_values"
-            android:key="pref_animate_duration"
-            android:summary="@string/pref_animation_speed_summ" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_rounded"
+            android:key="pref_rounded_tabs"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_center"
+            android:key="pref_center_sheet"/>
 
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icontext"
@@ -197,8 +135,6 @@
             android:key="icons-pack"
             android:summary="%s"
             android:title="@string/icons_pack_name" />
-
-
     </PreferenceCategory>
 
     <PreferenceScreen
@@ -209,4 +145,69 @@
             android:targetPackage="com.quaap.launchtime"
             android:targetClass="com.quaap.launchtime.CustomizeLaunchersActivity"/>
     </PreferenceScreen>
+
+
+    <PreferenceCategory android:title="@string/pref_tweaks_lab">
+
+        <ListPreference
+            android:defaultValue="-1"
+            android:title="@string/pref_hide_menu"
+            android:entries="@array/pref_autohide_cat_strings"
+            android:entryValues="@array/pref_autohide_cat_values"
+            android:key="pref_autohide_cats_timeout"
+            android:summary="@string/pref_hide_menu_summ" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_show_catlabel"
+            android:key="prefs_cat_label"
+            android:summary="@string/pref_show_catlabel_summ"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_show_badges"
+            android:key="pref_show_badges" />
+
+        <ListPreference
+            android:defaultValue="3600"
+            android:title="@string/pref_returnhome"
+            android:entries="@array/pref_return_home_strings"
+            android:entryValues="@array/pref_return_home_values"
+            android:key="pref_return_home"
+            android:summary="@string/pref_returnhome_summ" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:title="@string/pref_orient"
+            android:entries="@array/pref_orientation_strings"
+            android:entryValues="@array/pref_orientation_values"
+            android:key="preference_orientation"
+            android:summary="%s" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:title="@string/pref_numcolspor_label"
+            android:entries="@array/pref_columns_values"
+            android:entryValues="@array/pref_columns_values"
+            android:key="pref_columns_portrait"
+            android:summary="@string/pref_animation_speed_summ" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:title="@string/pref_numcolsland_label"
+            android:entries="@array/pref_columns_values"
+            android:entryValues="@array/pref_columns_values"
+            android:key="pref_columns_landscape"
+            android:summary="@string/pref_animation_speed_summ" />
+
+        <ListPreference
+            android:defaultValue="250"
+            android:title="@string/pref_amimation_speed"
+            android:entries="@array/pref_animate_values"
+            android:entryValues="@array/pref_animate_values"
+            android:key="pref_animate_duration"
+            android:summary="@string/pref_animation_speed_summ" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

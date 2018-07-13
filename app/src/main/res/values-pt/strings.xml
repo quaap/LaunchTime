@@ -362,4 +362,7 @@
  <string name="pref_show_catlabel_summ">Mostrar rótulo de categoria no modo de ocultamento automático</string>
     <string name="pref_rounded">Rounded shapes</string>
  <string name="pref_center">Center icons</string>
+    <string name="pref_numcolspor_label">Force num columns portrait</string>
+ <string name="pref_numcolsland_label">Force num columns landscape</string>
+ <string name="pref_tweaks_lab">New features and tweaks</string>
 </resources>
