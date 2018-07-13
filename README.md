@@ -26,6 +26,17 @@ Features
 * Back up and restore your settings.
 
 
+Upcoming features in 0.8.0
+-----------
+* Autohide the menu!
+* Better menu appearence.
+* Animated transitions.
+* Turn off/on unread badges.
+* Better default apps in Quickbar.
+* Many appearance tweaks.
+* New pref options to turn on or off many of the new changes.
+
+
 New features in 0.7.6
 -----------
 * Oreo / Android 8 shortcuts
