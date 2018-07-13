@@ -225,22 +225,27 @@ public class Style {
 
         leftHandCategories = mAppPreferences.getString("pref_categories_loc", "right").equals("left");
 
+        float density = mContext.getResources().getDisplayMetrics().density / 2.0f;
+
+        if (density<.75f) density = .75f;
+        if (density>1.5f) density = 1.5f;
+
         int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
         switch (tabsizePref) {
             case 0:  //small
-                categoryTabPaddingHeight = 16;
+                categoryTabPaddingHeight = (int)(16 * density);
                 categoryTabFontSize = 14;
                 break;
             case 1:  //medium
-                categoryTabPaddingHeight = 20;
+                categoryTabPaddingHeight = (int)(20 * density);
                 categoryTabFontSize = 16;
                 break;
             case 2:  //large
-                categoryTabPaddingHeight = 25;
+                categoryTabPaddingHeight = (int)(25 * density);
                 categoryTabFontSize = 18;
                 break;
             case 3: //x-large
-                categoryTabPaddingHeight = 30;
+                categoryTabPaddingHeight = (int)(25 * density);
                 categoryTabFontSize = 20;
                 break;
         }
