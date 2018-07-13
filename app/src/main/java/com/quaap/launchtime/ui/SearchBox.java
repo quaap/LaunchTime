@@ -74,7 +74,6 @@ public class SearchBox {
         quickbsett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent l = new Intent(Intent.ACTION_VIEW);
                 launchActivity("com.android.settings", "com.android.settings.bluetooth.BluetoothSettings", "BluetoothSettings");
             }
         });
@@ -100,7 +99,8 @@ public class SearchBox {
         quickdevsett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MsgBox.show(mMainActivity, mMainActivity.getString(android.R.string.dialog_alert_title), "These options can be dangerous! Proceed?", new Runnable() {
+                MsgBox.show(mMainActivity, mMainActivity.getString(android.R.string.dialog_alert_title),
+                        mMainActivity.getString(R.string.devops_warn), new Runnable() {
                     @Override
                     public void run() {
                         launchActivity("com.android.settings", "com.android.settings.DevelopmentSettings", "DevOps");

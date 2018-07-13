@@ -358,9 +358,11 @@
     <string name="nothing_in_cat">表示するものは何もない</string>
     <string name="pref_show_catlabel">カテゴリラベル</string>
     <string name="pref_show_catlabel_summ">自動非表示モードでカテゴリラベルを表示する</string>
-    <string name="pref_rounded">Rounded shapes</string>
     <string name="pref_center">Center icons</string>
     <string name="pref_numcolspor_label">Force num columns portrait</string>
     <string name="pref_numcolsland_label">Force num columns landscape</string>
-    <string name="pref_tweaks_lab">New features and tweaks</string>
+    <string name="pref_tweaks_lab">新しい機能と調整</string>
+    <string name="devops_warn">これらのオプションは危険です！続行しますか？</string>
+    <string name="pref_rounded">丸みを帯びた形</string>
+    <string name="pref_tweaks_lab">新しい機能と調整</string>
 </resources>

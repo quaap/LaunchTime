@@ -353,9 +353,11 @@
     <string name="nothing_in_cat">Ничего не показывать</string>
     <string name="pref_show_catlabel">Маркировка категории</string>
     <string name="pref_show_catlabel_summ">Показать ярлык категории в режиме автоматического скрытия</string>
-    <string name="pref_rounded">Rounded shapes</string>
     <string name="pref_center">Center icons</string>
     <string name="pref_numcolspor_label">Force num columns portrait</string>
     <string name="pref_numcolsland_label">Force num columns landscape</string>
-    <string name="pref_tweaks_lab">New features and tweaks</string>
+    <string name="pref_tweaks_lab">Новые функции и настройки</string>
+    <string name="devops_warn">Эти варианты могут быть опасными! Продолжить?</string>
+    <string name="pref_rounded">Округлые фигуры</string>
+    <string name="pref_tweaks_lab">Новые функции и настройки</string>
 </resources>
