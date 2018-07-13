@@ -53,7 +53,6 @@ public class Categories {
 
     public static final String[] DefCategoryOrder = {
             CAT_TALK,
-            CAT_SEARCH,
             CAT_GAMES,
             CAT_INTERNET,
             CAT_MEDIA,
@@ -61,7 +60,8 @@ public class Categories {
             CAT_Utilities,
             CAT_SETTINGS,
             CAT_OTHER,
-            CAT_HIDDEN
+            CAT_HIDDEN,
+            CAT_SEARCH
     };
 
     private static Map<String, String[]> mCategorKeywords;

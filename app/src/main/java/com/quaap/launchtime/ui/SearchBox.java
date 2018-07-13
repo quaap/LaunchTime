@@ -2,10 +2,12 @@ package com.quaap.launchtime.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
@@ -39,13 +41,31 @@ public class SearchBox {
     private MainActivity mMainActivity;
     private InteractiveScrollView mIconSheetScroller;
 
-    public SearchBox(MainActivity mainActivity, InteractiveScrollView iconSheetScroller) {
+    public SearchBox(final MainActivity mainActivity, InteractiveScrollView iconSheetScroller) {
 
         mMainActivity = mainActivity;
         mIconSheetScroller = iconSheetScroller;
 
+
         mSearchView = (ViewGroup) LayoutInflater.from(mainActivity).inflate(R.layout.search_layout, null);
 
+
+        ImageView quickasett = mSearchView.findViewById(R.id.quick_settings_android);
+        quickasett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent l = new Intent("android.settings.SETTINGS");
+                mainActivity.startActivity(l);
+            }
+        });
+
+        ImageView quicklsett = mSearchView.findViewById(R.id.quick_settings_launchtime);
+        quicklsett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.openSettings(mainActivity);
+            }
+        });
         mSearchbox = mSearchView.findViewById(R.id.search_box);
 
         mSearchAdapter = new AppCursorAdapter(mainActivity, mSearchbox, R.layout.search_item, 0);
