@@ -47,6 +47,7 @@ my @skip = (
    "captures",
    ".git",
    ".idea",
+   ".gradle",
    "README.md",
    "packages1.txt",
    "packages2.txt",
