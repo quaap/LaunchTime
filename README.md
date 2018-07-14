@@ -31,6 +31,7 @@ Upcoming features in 0.8.0
 * Autohide the menu!
 * Better menu appearence.
 * Animated transitions.
+* Quick settings access on the Search page.
 * Turn off/on unread badges.
 * Better default apps in Quickbar.
 * Many appearance tweaks.

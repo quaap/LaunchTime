@@ -74,6 +74,7 @@ public class MsgBox {
                             " * Autohide the menu!\n" +
                             " * Better menu appearence.\n" +
                             " * Animated transitions.\n" +
+                            " * Quick settings access on search.\n" +
                             " * Turn off/on unread badges.\n" +
                             " * New pref options\n" +
                             " * Better default apps in Quickbar.\n" +

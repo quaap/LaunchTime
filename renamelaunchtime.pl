@@ -7,7 +7,7 @@ use strict;
 use File::Basename;
 
 
-my $gitbranch = "playstore76";
+my $gitbranch = "playstore80";
 
 my $from_pack = "com.quaap.launchtime";
 my $to_pack   = "com.quaap.launchtime_official";
