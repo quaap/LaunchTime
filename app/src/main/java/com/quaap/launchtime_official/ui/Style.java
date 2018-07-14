@@ -299,27 +299,7 @@ public class Style {
         if (alpha<220) alpha=220;
         cattabSelectedBackgroundHighContrast = Color.argb(alpha, Color.red(cattabSelectedBackground), Color.green(cattabSelectedBackground), Color.blue(cattabSelectedBackground));
 
-//        Drawable base = mContext.getResources().getDrawable(R.drawable.rounded);
-//        roundedBgNormal = base.getConstantState().newDrawable().mutate();
-//        roundedBgNormalHigh = base.getConstantState().newDrawable().mutate();
-//        roundedBgSelected = base.getConstantState().newDrawable().mutate();
-//        roundedBgSelectedHigh = base.getConstantState().newDrawable().mutate();
-//        roundedBgDrag = base.getConstantState().newDrawable().mutate();
-//        roundedBgTiny = base.getConstantState().newDrawable().mutate();
-//        roundedBgTinyHigh = base.getConstantState().newDrawable().mutate();
-//
-//
-//        roundedBgNormal.setColorFilter(cattabBackground, PorterDuff.Mode.MULTIPLY);
-//        roundedBgNormalHigh.setColorFilter(cattabBackgroundHighContrast, PorterDuff.Mode.MULTIPLY);
-//
-//        roundedBgTiny.setColorFilter(cattabBackground, PorterDuff.Mode.MULTIPLY);
-//        roundedBgTinyHigh.setColorFilter(cattabBackgroundHighContrast, PorterDuff.Mode.MULTIPLY);
-//
-//
-//        roundedBgSelected.setColorFilter(cattabSelectedBackground, PorterDuff.Mode.MULTIPLY);
-//        roundedBgSelectedHigh.setColorFilter(cattabSelectedBackgroundHighContrast, PorterDuff.Mode.MULTIPLY);
-//
-//        roundedBgDrag.setColorFilter(dragoverBackground, PorterDuff.Mode.MULTIPLY);
+        bgDrawables.clear();
 
     }
 
