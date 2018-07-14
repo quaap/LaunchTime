@@ -97,7 +97,7 @@ sub look_dir {
          look_dir($ffile);
          
       } elsif (-T $ffile) {
-          #  print "$ffile\n";
+            print "$ffile\n";
          open F, '<:utf8', $ffile;
          my @lines = <F>;
          close F;
