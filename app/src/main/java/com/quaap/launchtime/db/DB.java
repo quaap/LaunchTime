@@ -673,6 +673,9 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, int index) {
+        if (catID==null || catID.isEmpty()) {
+            return false;
+        }
         try {
 
             for (String existcat: getCategories()) {
@@ -703,6 +706,9 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean updateCategory(String catID, String displayName, String displayNameFull, boolean isTiny) {
+        if (catID==null || catID.isEmpty()) {
+            return false;
+        }
         try {
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -722,6 +728,10 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean deleteCategory(String catID) {
+        if (catID==null || catID.isEmpty()) {
+            return false;
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         try {
 
