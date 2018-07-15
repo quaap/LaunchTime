@@ -74,6 +74,10 @@ public class GlobState extends Application implements  DB.DBClosedListener {
                 i.addDataScheme("package");
                 registerReceiver(packrecv, i);
 
+                i = new IntentFilter(Intent.ACTION_PACKAGE_CHANGED);
+                i.addDataScheme("package");
+                registerReceiver(packrecv, i);
+
             }
             {
                 unreadrecv = new UnreadReceiver(); //extended from BroadcastReceiver class
