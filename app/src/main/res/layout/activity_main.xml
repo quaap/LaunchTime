@@ -137,6 +137,7 @@
                     android:id="@+id/layout_quickrow"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/quickbar_height"
+                    android:layout_gravity="center"
                     android:alignmentMode="alignBounds"
                     android:useDefaultMargins="false">
 

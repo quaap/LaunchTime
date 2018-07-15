@@ -1215,6 +1215,7 @@ public class MainActivity extends Activity implements
     }
 
     private void setAllIconSheetsLayout() {
+        mQuickRow.setCenterIcons(mAppPreferences.getBoolean("pref_center_sheet", true));
         for (GridLayout sheet: mIconSheets.values()) {
             setIconSheetLayout(sheet);
         }

@@ -3,10 +3,13 @@ package com.quaap.launchtime.ui;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
@@ -91,6 +94,18 @@ public class QuickRow {
             AppLauncher inbar = (AppLauncher) mQuickRow.getChildAt(i).getTag();
             inbar.clearDrawable();
         }
+    }
+
+
+    public void setCenterIcons(boolean center) {
+
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mQuickRow.getLayoutParams();
+        if (center) {
+            lp.gravity = Gravity.CENTER_HORIZONTAL;
+        } else {
+            lp.gravity = Gravity.START;
+        }
+        mQuickRow.setLayoutParams(lp);
     }
 
     public boolean isSelf(View other) {
