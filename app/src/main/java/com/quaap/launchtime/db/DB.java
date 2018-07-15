@@ -763,8 +763,10 @@ public class DB extends SQLiteOpenHelper {
         try {
             //Log.d("DB", "getting catagories");
             while (cursor.moveToNext()) {
-
-                categories.add(cursor.getString(cursor.getColumnIndex(CATID)));
+                String cat = cursor.getString(cursor.getColumnIndex(CATID));
+                if (cat!=null) {
+                    categories.add(cat);
+                }
                 //          Log.d("DB", "got catID " + cursor.getString(0));
             }
         } finally {
