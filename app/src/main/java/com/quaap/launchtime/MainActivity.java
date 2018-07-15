@@ -2594,7 +2594,9 @@ public class MainActivity extends Activity implements
 
     private void showHiddenCategories() {
         for (String cat: db().getCategories()) {
-            mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
+            if (mCategoryTabs!=null && cat!=null && mCategoryTabs.get(cat)!=null) {
+                mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
+            }
         }
     }
     private void hideHiddenCategories() {
