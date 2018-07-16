@@ -12,6 +12,8 @@ landscape support.
 <a href="https://play.google.com/store/apps/details?id=com.quaap.launchtime_official" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/></a>
 
+![LaunchTime new](https://raw.githubusercontent.com/quaap/LaunchTime/master/fastlane/metadata/android/en-US/images/phoneScreenshots/app_5.jpg)
+
 Features
 ----------
 * Configurable app categories in a scrollable side menu.
@@ -69,6 +71,8 @@ New features in v0.6
 * Beta support for adw/nova/apex iconpacks
 * Customize icon sizes.
 
+
+![LaunchTime](https://quaap.com/D/media/lt0.png)
 
 Categorization
 ----------
