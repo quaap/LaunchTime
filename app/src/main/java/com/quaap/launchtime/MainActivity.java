@@ -884,6 +884,7 @@ public class MainActivity extends Activity implements
 
 
             handleAutohide();
+            setAllIconSheetsLayout();
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -2171,6 +2172,7 @@ public class MainActivity extends Activity implements
                     }
                     hideCatsIfAutoHide(true);
                 }
+                setAllIconSheetsLayout();
                 return true;
             } else if (droppedOn == mLinkDropzone) {
                 hideCatsIfAutoHide(false);
@@ -2275,6 +2277,7 @@ public class MainActivity extends Activity implements
             if (mCategory.equals(Categories.CAT_SEARCH)) {
                 mSearchBox.refreshSearch(true);
             }
+            setAllIconSheetsLayout();
             return false;
         }
 

@@ -100,7 +100,7 @@ public class QuickRow {
     public void setCenterIcons(boolean center) {
 
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mQuickRow.getLayoutParams();
-        if (center) {
+        if (center && mQuickRow.getChildCount()<6) {
             lp.gravity = Gravity.CENTER_HORIZONTAL;
         } else {
             lp.gravity = Gravity.START;
