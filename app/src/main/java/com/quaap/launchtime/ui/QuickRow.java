@@ -2,6 +2,7 @@ package com.quaap.launchtime.ui;
 
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
@@ -42,9 +43,12 @@ public class QuickRow {
 
     private MainActivity mMainActivity;
 
+    private Style mStyle;
+
     public QuickRow(final View.OnDragListener dragListener, MainActivity mainActivity) {
 
         mMainActivity = mainActivity;
+        mStyle = GlobState.getStyle(mMainActivity);
 
         mQuickRow = mMainActivity.findViewById(R.id.layout_quickrow);
 
@@ -98,9 +102,11 @@ public class QuickRow {
 
 
     public void setCenterIcons(boolean center) {
+        float num = mMainActivity.getScreenDimensions().x / mStyle.getLauncherSize();
 
+        Log.d("Quick", "cols = " + num);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mQuickRow.getLayoutParams();
-        if (center && mQuickRow.getChildCount()<6) {
+        if (center && mQuickRow.getChildCount()<=num) {
             lp.gravity = Gravity.CENTER_HORIZONTAL;
         } else {
             lp.gravity = Gravity.START;
