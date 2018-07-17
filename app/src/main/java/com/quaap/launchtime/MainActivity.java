@@ -391,6 +391,7 @@ public class MainActivity extends Activity implements
                 public void run() {
                     mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
                     scrollToCategoryTab();
+                    showButtonBar(false, true);
 
                 }
             }, 100);
@@ -402,6 +403,7 @@ public class MainActivity extends Activity implements
         }
         hideRemoveDropzone();
 
+        hideCatsIfAutoHide(true);
         showButtonBar(false, true);
         //lock things up if it was in toddler mode
         checkChildLock();
