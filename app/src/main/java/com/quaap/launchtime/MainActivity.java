@@ -332,6 +332,7 @@ public class MainActivity extends Activity implements
         super.onConfigurationChanged(newConfig);
         mScreenDim = getScreenDimensions();
         checkConfig();
+        //showButtonBar(false, true);
     }
 
     private long mPauseTime = 0;
@@ -401,6 +402,7 @@ public class MainActivity extends Activity implements
         }
         hideRemoveDropzone();
 
+        showButtonBar(false, true);
         //lock things up if it was in toddler mode
         checkChildLock();
     }
@@ -885,6 +887,7 @@ public class MainActivity extends Activity implements
 
             handleAutohide();
             setAllIconSheetsLayout();
+            showButtonBar(false, true);
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
