@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/quick_settings_vol"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="#44888888"
@@ -28,8 +28,8 @@
 
         <ImageView
             android:id="@+id/quick_settings_wifi"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="#44888888"
@@ -40,8 +40,8 @@
 
         <ImageView
             android:id="@+id/quick_settings_bt"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="#44888888"
@@ -52,8 +52,8 @@
 
         <ImageView
             android:id="@+id/quick_settings_dev"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="#44888888"
@@ -63,8 +63,8 @@
 
         <ImageView
             android:id="@+id/quick_settings_android"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="#44888888"
@@ -74,7 +74,7 @@
 
         <ImageView
             android:id="@+id/quick_settings_launchtime"
-            android:layout_width="22dp"
+            android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
