@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.quaap.launchtime.MainActivity">
+    tools:context="com.quaap.launchtime_official.MainActivity">
 
     <FrameLayout
         android:id="@+id/icon_and_cat_wrap"
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.quaap.launchtime.apps.InteractiveScrollView
+            <com.quaap.launchtime_official.apps.InteractiveScrollView
                 android:id="@+id/layout_icons_scroller"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -52,7 +52,7 @@
                     </FrameLayout>
 
                 </LinearLayout>
-            </com.quaap.launchtime.apps.InteractiveScrollView>
+            </com.quaap.launchtime_official.apps.InteractiveScrollView>
 
         </LinearLayout>
 
@@ -80,7 +80,7 @@
             android:orientation="vertical"
             tools:ignore="RtlHardcoded">
 
-            <com.quaap.launchtime.apps.InteractiveScrollView
+            <com.quaap.launchtime_official.apps.InteractiveScrollView
                 android:id="@+id/layout_categories_scroller"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -93,7 +93,7 @@
                     android:orientation="vertical">
 
                 </LinearLayout>
-            </com.quaap.launchtime.apps.InteractiveScrollView>
+            </com.quaap.launchtime_official.apps.InteractiveScrollView>
 
             <ImageView
                 android:id="@+id/settings_button"
