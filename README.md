@@ -12,7 +12,9 @@ landscape support.
 <a href="https://play.google.com/store/apps/details?id=com.quaap.launchtime_official" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/></a>
 
-![LaunchTime new](https://raw.githubusercontent.com/quaap/LaunchTime/master/fastlane/metadata/android/en-US/images/phoneScreenshots/app_5.jpg)
+![LaunchTime new](https://quaap.com/D/media/sc1.jpg) 
+![LaunchTime new](https://quaap.com/D/media/sc2.jpg) 
+![LaunchTime new](https://quaap.com/D/media/sc3.jpg)
 
 Features
 ----------
@@ -28,7 +30,7 @@ Features
 * Back up and restore your settings.
 
 
-Upcoming features in 0.8.0
+New features in 0.8.0
 -----------
 * Autohide the menu!
 * Better menu appearence.
@@ -71,8 +73,6 @@ New features in v0.6
 * Beta support for adw/nova/apex iconpacks
 * Customize icon sizes.
 
-
-![LaunchTime](https://quaap.com/D/media/lt0.png)
 
 Categorization
 ----------
