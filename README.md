@@ -30,11 +30,12 @@ Features
 * Back up and restore your settings.
 
 
-New features in 0.8.0
+New features in 0.8.0+
 -----------
 * Autohide the menu!
 * Better menu appearence.
 * Animated transitions.
+* General appearance improvements.
 * Quick settings access on the Search page.
 * Turn off/on unread badges.
 * Better default apps in Quickbar.
