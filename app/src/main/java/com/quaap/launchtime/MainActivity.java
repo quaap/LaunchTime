@@ -1428,19 +1428,12 @@ public class MainActivity extends Activity implements
         float h = dipToPx(hDp);
 
         if (w>0 || h>0) {
-            //float sw = getResources().getDimension(R.dimen.launcher_width);
             float sw = mStyle.getLauncherSize();
-            //float sh = getResources().getDimension(R.dimen.launcher_height);
-
-            //int width = (int)(sw + 20) * mColumns;
 
             float cellwidth = sw * 1f;
             float cellheight = cellwidth *1.1f;  // ~square cells
 
-
-            int owcells = (wDp+30)/120 - 1;
-            //int wcells = Math.max((int) Math.floor(mStyle.getWidgetWidth(w) / cellwidth) - 1, 1);
-            int wcells = Math.max((int)(owcells * mStyle.getRatio()), 1);
+            int wcells = (int)Math.round(Math.max(w/cellwidth*.75, 1));
 
             if (wcells > 1) {
                 int start = GridLayout.UNDEFINED;
@@ -1451,8 +1444,6 @@ public class MainActivity extends Activity implements
                     wcells = mStyle.getMaxWCells();
                 }
 
-
-               // if (wcells > 1) start = 0;
                 lp.columnSpec = GridLayout.spec(start, wcells, GridLayout.FILL);
 
                 //Log.d("widcol", "w=" + w + " wcells=" + wcells + " start=" + start + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
@@ -1460,8 +1451,7 @@ public class MainActivity extends Activity implements
                 lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
 
-            int ohcells = (hDp+30)/100 - 1; //(int) Math.floor(mStyle.getWidgetWidth(h) / cellheight);
-            int hcells = Math.max((int)(ohcells * mStyle.getRatio()), 1);
+            int hcells = (int)Math.round(Math.max(h/cellheight*.825, 1));
             if (hcells > 1) {
                 lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
             } else {
@@ -1472,17 +1462,18 @@ public class MainActivity extends Activity implements
 
             if (appwid != null) {
 
-                //cellheight *= 0.82f;
-                //appwid.updateAppWidgetSize(null, (int) sw, (int) sh, (int) (cellwidth * wcells), (int) (cellheight * hcells));
+                lp.width = (int)(cellwidth*wcells*1.1);
 
-                //magic numbers to properly expand widgets...
-//                final int wDp = w; //pxToDip(cellwidth*wcells);
-//                final int hDp = pxToDip(cellheight*hcells*1.1f);
-                lp.width = (int)(cellwidth*wcells);
-                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
+                if (h > cellheight*hcells*1.3) {
+                    lp.height = (int)(cellheight*hcells*1.4);
+                } else {
+                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
+                }
 
-                Log.d("widcol2", "w=" + wDp + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
-                Log.d("widcol2", "h=" + hDp + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
+                //lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
+
+                Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+                Log.d("widcol2", "hDp=" + hDp + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
                 appwid.postDelayed(new Runnable() {
                     @Override
                     public void run() {
