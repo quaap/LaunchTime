@@ -104,7 +104,7 @@ public class QuickRow {
     public void setCenterIcons(boolean center) {
         float num = mMainActivity.getScreenDimensions().x / mStyle.getLauncherSize();
 
-        Log.d("Quick", "cols = " + num);
+        //Log.d("Quick", "cols = " + num);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mQuickRow.getLayoutParams();
         if (center && mQuickRow.getChildCount()<=num) {
             lp.gravity = Gravity.CENTER_HORIZONTAL;
