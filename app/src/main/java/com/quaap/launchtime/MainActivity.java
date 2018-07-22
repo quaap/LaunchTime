@@ -2452,12 +2452,13 @@ public class MainActivity extends Activity implements
     private LinearLayout mShortcutActionsPopup;
 
     private boolean handle25Shortcuts(View view, final AppLauncher appitem) {
+
+
+        List<ShortcutInfo> shortcutInfos = null;
         if (Build.VERSION.SDK_INT>=25) {
-
-
             final LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
             if (launcherApps==null) return false;
-            List<ShortcutInfo> shortcutInfos = null;
+
             if (launcherApps.hasShortcutHostPermission()) {
                 try {
 
@@ -2475,75 +2476,79 @@ public class MainActivity extends Activity implements
                     Log.e(TAG, "Couldn't query shortcuts", e);
                 }
             }
+        }
 
-            try {
-                if (shortcutInfos != null && shortcutInfos.size()>0) {
+        try {
+            dismissActionPopup();
+
+            mShortcutActionsPopup = findViewById(R.id.action_menu);
+            //setForceShowIcon(mShortcutActionsPopup);
+            mShortcutActionsPopup.removeAllViews();
+
+            addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
+                @Override
+                public void run() {
+                    mLaunchApp.launchApp(appitem);
+                    showButtonBar(false, true);
                     dismissActionPopup();
+                }
+            });
 
-                    mShortcutActionsPopup = findViewById(R.id.action_menu);
-                    //setForceShowIcon(mShortcutActionsPopup);
-                    mShortcutActionsPopup.removeAllViews();
-
-                    addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
-                        @Override
-                        public void run() {
-                            mLaunchApp.launchApp(appitem);
-                            showButtonBar(false, true);
-                            dismissActionPopup();
-                        }
-                    });
+            if (Build.VERSION.SDK_INT >= 25) {
+                if (shortcutInfos != null && shortcutInfos.size()>0) {
+                    final LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
+                    if (launcherApps == null) return false;
 
                     for (final ShortcutInfo shortcutInfo : shortcutInfos) {
 
                         addShortcutToActionPopup(launcherApps, shortcutInfo);
                     }
-
-                    addActionMenuItem(getString(android.R.string.cancel), null, new Runnable() {
-                        @Override
-                        public void run() {
-                            dismissActionPopup();
-                        }
-                    });
-
-                    mShortcutActionsPopup.setVisibility(View.VISIBLE);
-
-                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
-
-                    int width = mShortcutActionsPopup.getWidth();
-                    if (width==0) width = (int)(getResources().getDimension(R.dimen.action_menu_width));
-
-                    int height = (int)(mShortcutActionsPopup.getChildCount()
-                                    * (getResources().getDimension(R.dimen.action_icon_width) * 1.3));
-
-                    int [] viewpos = new int[2];
-                    view.getLocationOnScreen(viewpos);
-
-                    int top = viewpos[1] - height - 10;
-                    if (top <= 0) top = viewpos[1] + view.getHeight()/2;
-
-                    int left = viewpos[0] + view.getWidth()/2 - width/2;
-                    if (left <= 0) {
-                        left = viewpos[0]+4;
-                    } else if (left + width > mScreenDim.x) {
-                        left -= width;
-                    }
-
-
-                    lp.topMargin = top;
-                    lp.leftMargin = left;
-
-                    mShortcutActionsPopup.setLayoutParams(lp);
-
-                    return true;
                 }
-
-
-            } catch (Exception e) {
-                Log.e(TAG, "Couldn't create menu", e);
             }
 
+            addActionMenuItem(getString(android.R.string.cancel), null, new Runnable() {
+                @Override
+                public void run() {
+                    dismissActionPopup();
+                }
+            });
 
+            mShortcutActionsPopup.setVisibility(View.VISIBLE);
+
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
+
+            int width = mShortcutActionsPopup.getWidth();
+            if (width==0) width = (int)(getResources().getDimension(R.dimen.action_menu_width));
+
+            int height = (int)(mShortcutActionsPopup.getChildCount()
+                            * (getResources().getDimension(R.dimen.action_icon_width) * 1.3));
+
+            int [] viewpos = new int[2];
+            view.getLocationOnScreen(viewpos);
+
+            int top = viewpos[1] - height - 10;
+            if (top <= 0) top = viewpos[1] + view.getHeight()/2;
+
+            int left = viewpos[0] + view.getWidth()/2 - width/2;
+            if (left <= 0) {
+                left = viewpos[0]+4;
+            } else if (left + width > mScreenDim.x) {
+                left -= width;
+            }
+
+            lp.topMargin = top;
+            lp.leftMargin = left;
+
+            mShortcutActionsPopup.setLayoutParams(lp);
+
+            return true;
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "Couldn't create menu", e);
         }
+
+
         return false;
     }
 
