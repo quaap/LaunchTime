@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.FeatureInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -2645,13 +2646,12 @@ public class MainActivity extends Activity implements
         StringBuilder data = new StringBuilder(1024);
         try {
 
-            PackageInfo pi = getPackageManager().getPackageInfo(packagename, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
+            PackageInfo pi = getPackageManager().getPackageInfo(packagename, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS | PackageManager.GET_CONFIGURATIONS);
 
             String name = pi.applicationInfo.loadLabel(getPackageManager()).toString();
             itemText.setText(name);
 
             icon.setImageDrawable(pi.applicationInfo.loadIcon(getPackageManager()));
-
 
             data
                     .append("Name: ")
@@ -2670,42 +2670,47 @@ public class MainActivity extends Activity implements
                     .append(new Date(pi.lastUpdateTime))
                     .append("\n\n");
 
-//            Bundle metaData = pi.applicationInfo.metaData;
-//            if (metaData!=null) {
-//                for(String key: metaData.keySet()) {
-//                    data.append("  ")
-//                            .append(key)
-//                            .append(": ")
-//                            .append(metaData.get(key))
-//                            .append("\n");
-//
-//                }
-//            }
+            data.append("\n").append("Requested Features:\n");
+            int fcount = 0;
+            if (pi.reqFeatures!=null) {
+                for (FeatureInfo fi: pi.reqFeatures) {
+                    if (fi!=null) {
+                        fcount++;
+                        data.append(" ");
+                        if (fi.name!=null) data.append(fi.name).append(" ");
+                        if ((fi.flags & FeatureInfo.FLAG_REQUIRED) == FeatureInfo.FLAG_REQUIRED) {
+                            data.append("Required");
+                        }
 
+                        if (fi.reqGlEsVersion!=0) {
+                            data.append(" / GL ES ver: ").append(fi.reqGlEsVersion);
+                        }
 
+                        data.append("\n");
+                    }
+                }
+            }
+            data.append(fcount).append(" total\n");
+
+            data.append("\n").append("Granted permissions:\n");
+            int gcount = 0;
             if (pi.requestedPermissions != null) {
-//                for (String reqperm : pi.requestedPermissions) {
-//                    if (reqperm != null) {
-//                        data.append(" ").append(reqperm.trim()).append("\n");
-//                    }
-//                }
-
-                data.append("\n").append("Granted permissions:\n");
-                int gcount = 0;
                 for (int index = 0; index < pi.requestedPermissions.length; index++) {
                     if ((pi.requestedPermissionsFlags[index] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
                         String perm = pi.requestedPermissions[index];
-                        if (perm!=null) {
+                        if (perm != null) {
                             gcount++;
                             data.append(" ").append(perm).append("\n");
                         }
                     }
                 }
-                data.append(gcount).append(" total\n");
+            }
+            data.append(gcount).append(" total\n");
 
 
-                data.append("\n").append("Denied permissions:\n");
-                int dcount = 0;
+            data.append("\n").append("Not granted permissions:\n");
+            int dcount = 0;
+            if (pi.requestedPermissions != null) {
                 for (int index = 0; index < pi.requestedPermissions.length; index++) {
                     if ((pi.requestedPermissionsFlags[index] & PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
                         String perm = pi.requestedPermissions[index];
@@ -2715,17 +2720,9 @@ public class MainActivity extends Activity implements
                         }
                     }
                 }
-                data.append(dcount).append(" total\n");
             }
 
-//            data.append("Requested permissions:\n");
-//
-//            if (pi.permissions!=null) {
-//                for (PermissionInfo perm : pi.permissions) {
-//                    data.append("  ").append(perm.name).append("\n");
-//                }
-//            }
-
+            data.append(dcount).append(" total\n");
 
         } catch (Exception e) {
             data.append("\n").append(e.getMessage()).append("\n");
