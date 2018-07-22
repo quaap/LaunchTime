@@ -1101,7 +1101,7 @@ public class MainActivity extends Activity implements
         if (autohideCats) {
             hideCatsIfAutoHide(true);
         } else {
-            showCats(true);
+            //showCats(true);
             mShowCats.setVisibility(View.GONE);
         }
 
