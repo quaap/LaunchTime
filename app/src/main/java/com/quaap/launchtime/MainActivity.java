@@ -2369,7 +2369,7 @@ public class MainActivity extends Activity implements
         AppLauncher dragitem = (AppLauncher) view.getTag();
         mDragPotential = view;
 
-        if (handle25Shortcuts(view, dragitem)) {
+        if (!dragitem.isWidget() && handle25Shortcuts(view, dragitem)) {
 
             final int slop  = ViewConfiguration.get(this).getScaledTouchSlop();
             mDragPotential.setOnTouchListener(new View.OnTouchListener() {
@@ -2380,6 +2380,7 @@ public class MainActivity extends Activity implements
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                        if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
                         dismissActionPopup();
                         startDrag();
                     } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
