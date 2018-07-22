@@ -73,6 +73,12 @@
             tools:ignore="RtlHardcoded" />
 
         <LinearLayout
+            android:id="@+id/action_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+
+        <LinearLayout
             android:id="@+id/category_tabs_wrap"
             android:layout_width="@dimen/cattabbar_width"
             android:layout_height="match_parent"

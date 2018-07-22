@@ -23,5 +23,7 @@
     <dimen name="launcher_sm_fontsize">12sp</dimen>
     <dimen name="cattabbar_width">100dp</dimen>
 
+    <dimen name="action_icon_width">25dp</dimen>
+    <dimen name="action_menu_width">130dp</dimen>
 
 </resources>

@@ -55,7 +55,6 @@ import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
@@ -2449,7 +2448,7 @@ public class MainActivity extends Activity implements
 
 
 
-    private PopupMenu mShortcutActionsPopup;
+    private LinearLayout mShortcutActionsPopup;
 
     private boolean handle25Shortcuts(View view, final AppLauncher appitem) {
         if (Build.VERSION.SDK_INT>=25) {
@@ -2480,18 +2479,16 @@ public class MainActivity extends Activity implements
                 if (shortcutInfos != null && shortcutInfos.size()>0) {
                     dismissActionPopup();
 
-                    mShortcutActionsPopup = new PopupMenu(this, view);
-                    setForceShowIcon(mShortcutActionsPopup);
+                    mShortcutActionsPopup = findViewById(R.id.action_menu);
+                    //setForceShowIcon(mShortcutActionsPopup);
+                    mShortcutActionsPopup.removeAllViews();
 
-                    MenuItem appmenuItem = mShortcutActionsPopup.getMenu().add(appitem.getLabel());
-                    appmenuItem.setIcon(appitem.getIconDrawable());
-                    appmenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
                         @Override
-                        public boolean onMenuItemClick(MenuItem item) {
+                        public void run() {
                             mLaunchApp.launchApp(appitem);
                             showButtonBar(false, true);
                             dismissActionPopup();
-                            return true;
                         }
                     });
 
@@ -2500,16 +2497,18 @@ public class MainActivity extends Activity implements
                         addShortcutToActionPopup(launcherApps, shortcutInfo);
                     }
 
-                    MenuItem menuItem = mShortcutActionsPopup.getMenu().add("⌧");
-                    menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    addActionMenuItem("⌧", null, new Runnable() {
                         @Override
-                        public boolean onMenuItemClick(MenuItem item) {
+                        public void run() {
                             dismissActionPopup();
-                            return true;
                         }
                     });
 
-                    mShortcutActionsPopup.show();
+                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
+                    lp.bottomMargin = view.getTop();
+                    mShortcutActionsPopup.setLayoutParams(lp);
+                    mShortcutActionsPopup.setVisibility(View.VISIBLE);
+
                     return true;
                 }
 
@@ -2521,6 +2520,25 @@ public class MainActivity extends Activity implements
 
         }
         return false;
+    }
+
+    private void addActionMenuItem(String label, Drawable icon, final Runnable action) {
+        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.action_menu_entry, null);
+
+        item.setBackgroundResource(R.drawable.rounded);
+
+        TextView itemText = item.findViewById(R.id.action_menu_text);
+        itemText.setText(label);
+
+        ImageView itemIcon = item.findViewById(R.id.action_menu_icon);
+        itemIcon.setImageDrawable(icon);
+        item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View item) {
+                action.run();
+            }
+        });
+        mShortcutActionsPopup.addView(item);
     }
 
     private void addShortcutToActionPopup(final LauncherApps launcherApps, final ShortcutInfo shortcutInfo) {
@@ -2537,16 +2555,10 @@ public class MainActivity extends Activity implements
                     if (shortcutInfo.getLongLabel() != null && !label.contentEquals(shortcutInfo.getLongLabel()))
                         label += " (" + shortcutInfo.getLongLabel() + ")";
 
-                    MenuItem menuItem = mShortcutActionsPopup.getMenu().add(label.trim());
-
-
                     Drawable icon = launcherApps.getShortcutIconDrawable(shortcutInfo, DisplayMetrics.DENSITY_DEFAULT);
-                    if (icon != null) menuItem.setIcon(icon);
-
-
-                    menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    addActionMenuItem(label.trim(), icon, new Runnable() {
                         @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
+                        public void run() {
                             if (Build.VERSION.SDK_INT >= 25) {
                                 try {
                                     launcherApps.startShortcut(shortcutInfo, null, null);
@@ -2554,10 +2566,10 @@ public class MainActivity extends Activity implements
                                     Log.e(TAG, "Couldn't Launch shortcut", e);
                                 }
                             }
-
-                            return true;
+                            dismissActionPopup();
                         }
                     });
+
                 }
             }
         }
@@ -2565,7 +2577,7 @@ public class MainActivity extends Activity implements
 
     private void dismissActionPopup() {
         if (mShortcutActionsPopup!=null) {
-            mShortcutActionsPopup.dismiss();
+            mShortcutActionsPopup.setVisibility(View.GONE);
             mShortcutActionsPopup = null;
 
         }
