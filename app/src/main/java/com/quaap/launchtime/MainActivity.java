@@ -29,7 +29,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.LauncherApps;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
 import android.content.res.Configuration;
@@ -71,6 +73,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -79,6 +82,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -105,6 +109,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -2452,7 +2457,7 @@ public class MainActivity extends Activity implements
 
     private LinearLayout mShortcutActionsPopup;
 
-    private boolean handle25Shortcuts(View view, final AppLauncher appitem) {
+    private boolean handle25Shortcuts(final View view, final AppLauncher appitem) {
 
 
         List<ShortcutInfo> shortcutInfos = null;
@@ -2507,7 +2512,15 @@ public class MainActivity extends Activity implements
                 }
             }
 
-            addActionMenuItem(getString(android.R.string.cancel), null, new Runnable() {
+
+            addActionMenuItem("Appinfo", getResources().getDrawable(android.R.drawable.ic_menu_info_details), new Runnable() {
+                @Override
+                public void run() {
+                    showAppinfo(view, appitem);
+                }
+            });
+
+            addActionMenuItem(getString(android.R.string.cancel), getResources().getDrawable(android.R.drawable.ic_menu_close_clear_cancel), new Runnable() {
                 @Override
                 public void run() {
                     dismissActionPopup();
@@ -2611,6 +2624,86 @@ public class MainActivity extends Activity implements
         if (mShortcutActionsPopup!=null) {
             mShortcutActionsPopup.setVisibility(View.GONE);
             mShortcutActionsPopup = null;
+
+        }
+    }
+
+    private void showAppinfo(View view, AppLauncher appitem) {
+        if (appitem==null) return;
+
+        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.appinfo_view, null);
+
+
+        try {
+            String packagename = appitem.getPackageName();
+            PackageInfo pi = getPackageManager().getPackageInfo(packagename, 0);
+
+            TextView itemText = item.findViewById(R.id.appinfo_name);
+            itemText.setText(appitem.getLabel());
+
+            ImageView icon = item.findViewById(R.id.appinfo_icon);
+            icon.setImageDrawable(appitem.getIconDrawable());
+
+            StringBuilder data = new StringBuilder(1024);
+
+
+            TextView itemDetails = item.findViewById(R.id.appinfo_data);
+
+            data.append("VersionCode: ");
+            if (Build.VERSION.SDK_INT >= 22) {
+                data.append(pi.getLongVersionCode());
+            } else {
+                data.append(pi.versionCode);
+            }
+
+            data    .append("\n")
+                    .append("VersionName: ")
+                    .append(pi.versionName)
+                    .append("\n")
+                    .append("Installed: ")
+                    .append(new Date(pi.firstInstallTime))
+                    .append("\n")
+                    .append("Updated: ")
+                    .append(new Date(pi.lastUpdateTime))
+                    .append("\n");
+
+
+            data.append("Requested permissions:\n");
+
+            if (pi.requestedPermissions!=null) {
+                for (String reqperm : pi.requestedPermissions) {
+                    data.append("  ").append(reqperm).append("\n");
+                }
+            }
+
+            data.append("Requested permissions:\n");
+
+            if (pi.permissions!=null) {
+                for (PermissionInfo perm : pi.permissions) {
+                    data.append("  ").append(perm.name).append("\n");
+                }
+            }
+
+            itemDetails.setText(data);
+
+            Button ok = item.findViewById(R.id.appinfo_ok);
+
+            final PopupWindow pw = new PopupWindow(item, mScreenDim.x-100, mScreenDim.y-100);
+
+            ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  pw.dismiss();
+                }
+            });
+
+
+
+
+            pw.showAsDropDown(view);
+
+
+        } catch (PackageManager.NameNotFoundException e) {
 
         }
     }
