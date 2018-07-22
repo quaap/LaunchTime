@@ -2670,7 +2670,7 @@ public class MainActivity extends Activity implements
                     .append(new Date(pi.lastUpdateTime))
                     .append("\n\n");
 
-            data.append("\n").append("Requested Features:\n");
+            data.append("\n").append("Requested features:\n");
             int fcount = 0;
             if (pi.reqFeatures!=null) {
                 for (FeatureInfo fi: pi.reqFeatures) {

@@ -7,17 +7,29 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/appinfo_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp" />
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/appinfo_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp" />
+        <ImageView
+            android:id="@+id/appinfo_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:padding="4dp" />
+
+        <TextView
+            android:id="@+id/appinfo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:padding="4dp"
+            android:textColor="@android:color/black"
+            android:textSize="24sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
