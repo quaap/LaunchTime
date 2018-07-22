@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -2646,12 +2647,16 @@ public class MainActivity extends Activity implements
 
             PackageInfo pi = getPackageManager().getPackageInfo(packagename, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
 
-            itemText.setText(pi.applicationInfo.loadLabel(getPackageManager()).toString());
+            String name = pi.applicationInfo.loadLabel(getPackageManager()).toString();
+            itemText.setText(name);
 
             icon.setImageDrawable(pi.applicationInfo.loadIcon(getPackageManager()));
 
 
             data
+                    .append("Name: ")
+                    .append(name)
+                    .append("\n")
                     .append("PackageName: ")
                     .append(packagename)
                     .append("\n")
@@ -2678,14 +2683,39 @@ public class MainActivity extends Activity implements
 //            }
 
 
-            data.append("Requested permissions:\n");
-
             if (pi.requestedPermissions != null) {
-                for (String reqperm : pi.requestedPermissions) {
-                    if (reqperm != null) {
-                        data.append(" ").append(reqperm.trim()).append("\n");
+//                for (String reqperm : pi.requestedPermissions) {
+//                    if (reqperm != null) {
+//                        data.append(" ").append(reqperm.trim()).append("\n");
+//                    }
+//                }
+
+                data.append("\n").append("Granted permissions:\n");
+                int gcount = 0;
+                for (int index = 0; index < pi.requestedPermissions.length; index++) {
+                    if ((pi.requestedPermissionsFlags[index] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+                        String perm = pi.requestedPermissions[index];
+                        if (perm!=null) {
+                            gcount++;
+                            data.append(" ").append(perm).append("\n");
+                        }
                     }
                 }
+                data.append(gcount).append(" total\n");
+
+
+                data.append("\n").append("Denied permissions:\n");
+                int dcount = 0;
+                for (int index = 0; index < pi.requestedPermissions.length; index++) {
+                    if ((pi.requestedPermissionsFlags[index] & PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
+                        String perm = pi.requestedPermissions[index];
+                        if (perm!=null) {
+                            dcount++;
+                            data.append(" ").append(perm).append("\n");
+                        }
+                    }
+                }
+                data.append(dcount).append(" total\n");
             }
 
 //            data.append("Requested permissions:\n");
@@ -2706,10 +2736,12 @@ public class MainActivity extends Activity implements
 
         itemDetails.setText(data);
 
+
         Button ok = item.findViewById(R.id.appinfo_ok);
 
-        final PopupWindow pw = new PopupWindow(item, mScreenDim.x - 10, mScreenDim.y - 10);
-
+        final PopupWindow pw = new PopupWindow(item, mScreenDim.x - 50, mScreenDim.y - 100);
+        pw.setOutsideTouchable(false);
+        pw.setFocusable(true);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -2732,7 +2764,28 @@ public class MainActivity extends Activity implements
         });
 
 
-        pw.showAsDropDown(view);
+        Button settings = item.findViewById(R.id.appinfo_settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    //Open the specific App Info page:
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.parse("package:" + packagename));
+                    startActivity(intent);
+
+                } catch ( ActivityNotFoundException e ) {
+                    Toast.makeText(MainActivity.this, "Package not found", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+                    startActivity(intent);
+                } catch (Throwable t) {
+                    Log.e(TAG, t.getMessage(), t);
+                }
+
+            }
+        });
+
+        pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), Gravity.CENTER, 0, 25);
 
     }
 

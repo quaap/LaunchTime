@@ -26,29 +26,46 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/appinfo_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@android:string/ok" />
-
-        <Button
             android:id="@+id/appinfo_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="6dp"
             android:text="@android:string/copy" />
+
+        <Button
+            android:id="@+id/appinfo_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="6dp"
+            android:text="Settings" />
+
+        <Button
+            android:id="@+id/appinfo_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="6dp"
+            android:text="@android:string/ok" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:padding="4dp">
 
-        <EditText
+        <TextView
             android:id="@+id/appinfo_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
+            android:background="@android:color/white"
+            android:padding="2dp"
+            android:textColor="@android:color/black"
+            android:textIsSelectable="true"
             android:textSize="14sp" />
     </ScrollView>
+
 
 </LinearLayout>
