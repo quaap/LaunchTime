@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -102,6 +103,8 @@ import com.quaap.launchtime.ui.SearchBox;
 import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -2629,34 +2632,29 @@ public class MainActivity extends Activity implements
     }
 
     private void showAppinfo(View view, AppLauncher appitem) {
-        if (appitem==null) return;
+        if (appitem == null) return;
 
         ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.appinfo_view, null);
 
+        final TextView itemDetails = item.findViewById(R.id.appinfo_data);
+        TextView itemText = item.findViewById(R.id.appinfo_name);
+        ImageView icon = item.findViewById(R.id.appinfo_icon);
 
+        final String packagename = appitem.getPackageName();
+        StringBuilder data = new StringBuilder(1024);
         try {
-            String packagename = appitem.getPackageName();
-            PackageInfo pi = getPackageManager().getPackageInfo(packagename, 0);
 
-            TextView itemText = item.findViewById(R.id.appinfo_name);
-            itemText.setText(appitem.getLabel());
+            PackageInfo pi = getPackageManager().getPackageInfo(packagename, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
 
-            ImageView icon = item.findViewById(R.id.appinfo_icon);
-            icon.setImageDrawable(appitem.getIconDrawable());
+            itemText.setText(pi.applicationInfo.loadLabel(getPackageManager()).toString());
 
-            StringBuilder data = new StringBuilder(1024);
+            icon.setImageDrawable(pi.applicationInfo.loadIcon(getPackageManager()));
 
 
-            TextView itemDetails = item.findViewById(R.id.appinfo_data);
-
-            data.append("VersionCode: ");
-            if (Build.VERSION.SDK_INT >= 22) {
-                data.append(pi.getLongVersionCode());
-            } else {
-                data.append(pi.versionCode);
-            }
-
-            data    .append("\n")
+            data
+                    .append("PackageName: ")
+                    .append(packagename)
+                    .append("\n")
                     .append("VersionName: ")
                     .append(pi.versionName)
                     .append("\n")
@@ -2665,47 +2663,77 @@ public class MainActivity extends Activity implements
                     .append("\n")
                     .append("Updated: ")
                     .append(new Date(pi.lastUpdateTime))
-                    .append("\n");
+                    .append("\n\n");
+
+//            Bundle metaData = pi.applicationInfo.metaData;
+//            if (metaData!=null) {
+//                for(String key: metaData.keySet()) {
+//                    data.append("  ")
+//                            .append(key)
+//                            .append(": ")
+//                            .append(metaData.get(key))
+//                            .append("\n");
+//
+//                }
+//            }
 
 
             data.append("Requested permissions:\n");
 
-            if (pi.requestedPermissions!=null) {
+            if (pi.requestedPermissions != null) {
                 for (String reqperm : pi.requestedPermissions) {
-                    data.append("  ").append(reqperm).append("\n");
+                    if (reqperm != null) {
+                        data.append(" ").append(reqperm.trim()).append("\n");
+                    }
                 }
             }
 
-            data.append("Requested permissions:\n");
-
-            if (pi.permissions!=null) {
-                for (PermissionInfo perm : pi.permissions) {
-                    data.append("  ").append(perm.name).append("\n");
-                }
-            }
-
-            itemDetails.setText(data);
-
-            Button ok = item.findViewById(R.id.appinfo_ok);
-
-            final PopupWindow pw = new PopupWindow(item, mScreenDim.x-100, mScreenDim.y-100);
-
-            ok.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                  pw.dismiss();
-                }
-            });
+//            data.append("Requested permissions:\n");
+//
+//            if (pi.permissions!=null) {
+//                for (PermissionInfo perm : pi.permissions) {
+//                    data.append("  ").append(perm.name).append("\n");
+//                }
+//            }
 
 
-
-
-            pw.showAsDropDown(view);
-
-
-        } catch (PackageManager.NameNotFoundException e) {
-
+        } catch (Exception e) {
+            data.append("\n").append(e.getMessage()).append("\n");
+            StringWriter stack = new StringWriter(1000);
+            e.printStackTrace(new PrintWriter(stack));
+            data.append(stack.toString());
         }
+
+        itemDetails.setText(data);
+
+        Button ok = item.findViewById(R.id.appinfo_ok);
+
+        final PopupWindow pw = new PopupWindow(item, mScreenDim.x - 10, mScreenDim.y - 10);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pw.dismiss();
+            }
+        });
+
+
+        Button copy = item.findViewById(R.id.appinfo_copy);
+
+        copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboard == null) return;
+                ClipData clip = ClipData.newPlainText("Appinfo for " + packagename, itemDetails.getText());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(MainActivity.this, "Copied", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        pw.showAsDropDown(view);
+
     }
 
     public static void setForceShowIcon(PopupMenu popupMenu) {
