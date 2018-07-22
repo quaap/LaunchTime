@@ -543,6 +543,7 @@ public class MainActivity extends Activity implements
 
     private synchronized void switchCategory(String category, AnimateDirection dir) {
         try {
+            dismissActionPopup();
             if (category == null) return;
             if (mCategory!=null && !mCategory.equals(category)) {
                 animateHide(mIconsArea, dir, true);
@@ -917,7 +918,7 @@ public class MainActivity extends Activity implements
             cancelHide();
             if (isAutohide()) showCats(false);
         }
-
+        dismissActionPopup();
     }
 
 
@@ -933,7 +934,7 @@ public class MainActivity extends Activity implements
             animateDownHide(mShowCats);
             animateUpShow(cats);
         }
-
+        dismissActionPopup();
     }
 
     private void animateUpShow(View view) {
@@ -2497,17 +2498,41 @@ public class MainActivity extends Activity implements
                         addShortcutToActionPopup(launcherApps, shortcutInfo);
                     }
 
-                    addActionMenuItem("⌧", null, new Runnable() {
+                    addActionMenuItem(getString(android.R.string.cancel), null, new Runnable() {
                         @Override
                         public void run() {
                             dismissActionPopup();
                         }
                     });
 
-                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
-                    lp.bottomMargin = view.getTop();
-                    mShortcutActionsPopup.setLayoutParams(lp);
                     mShortcutActionsPopup.setVisibility(View.VISIBLE);
+
+                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
+
+                    int width = mShortcutActionsPopup.getWidth();
+                    if (width==0) width = (int)(getResources().getDimension(R.dimen.action_menu_width));
+
+                    int height = (int)(mShortcutActionsPopup.getChildCount()
+                                    * (getResources().getDimension(R.dimen.action_icon_width) * 1.3));
+
+                    int [] viewpos = new int[2];
+                    view.getLocationOnScreen(viewpos);
+
+                    int top = viewpos[1] - height - 10;
+                    if (top <= 0) top = viewpos[1] + view.getHeight()/2;
+
+                    int left = viewpos[0] + view.getWidth()/2 - width/2;
+                    if (left <= 0) {
+                        left = viewpos[0]+4;
+                    } else if (left + width > mScreenDim.x) {
+                        left -= width;
+                    }
+
+
+                    lp.topMargin = top;
+                    lp.leftMargin = left;
+
+                    mShortcutActionsPopup.setLayoutParams(lp);
 
                     return true;
                 }
@@ -2536,6 +2561,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View item) {
                 action.run();
+                dismissActionPopup();
             }
         });
         mShortcutActionsPopup.addView(item);
