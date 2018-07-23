@@ -181,7 +181,7 @@ public class AppInfo {
 
         Button ok = item.findViewById(R.id.appinfo_ok);
 
-        final PopupWindow pw = new PopupWindow(item, main.mScreenDim.x - 50, main.mScreenDim.y - 100);
+        final PopupWindow pw = new PopupWindow(item, (int)main.getResources().getDimension(R.dimen.appinfo_width), main.mScreenDim.y - 100);
         pw.setOutsideTouchable(false);
         pw.setFocusable(true);
         ok.setOnClickListener(new View.OnClickListener() {

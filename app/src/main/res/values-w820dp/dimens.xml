@@ -29,4 +29,8 @@
     <dimen name="action_icon_width">30dp</dimen>
     <dimen name="action_menu_width">160dp</dimen>
 
+    <dimen name="appinfo_width">450dp</dimen>
+
+    <dimen name="widget_resize_width">350dp</dimen>
+    <dimen name="widget_resize_height">350dp</dimen>
 </resources>

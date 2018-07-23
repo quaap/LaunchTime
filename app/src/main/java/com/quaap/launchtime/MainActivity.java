@@ -1522,6 +1522,7 @@ public class MainActivity extends Activity implements
     }
 
     private void showWidgetResize(final AppLauncher appitem) {
+
         AppWidgetHostView appwid = mLoadedWidgets.get(appitem.getActivityName());
         if (appwid!=null) {
             //final int resizeMode = appwid.getAppWidgetInfo().resizeMode;
@@ -1529,7 +1530,9 @@ public class MainActivity extends Activity implements
             ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.widget_size, null);
 
 
-            final PopupWindow pw = new PopupWindow(item, mScreenDim.x-100,mScreenDim.y/3);
+            final PopupWindow pw = new PopupWindow(item,
+                    (int)getResources().getDimension(R.dimen.widget_resize_width),
+                    (int)getResources().getDimension(R.dimen.widget_resize_height));
 
             pw.setOutsideTouchable(false);
             pw.setFocusable(true);
@@ -1590,22 +1593,35 @@ public class MainActivity extends Activity implements
             bindSeek(height, heightLab, hcells,1, 8, resize);
 
 
+            int xpos = 0;
             int ypos = mScreenDim.y*2/3;
 
+            int gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
 
             View widframe = getLauncherView(appitem,false);
             int [] viewpos = new int[2];
             if (widframe!=null) {
                 widframe.getLocationOnScreen(viewpos);
-                if (viewpos[1] > mScreenDim.y*.4) {
-                    ypos = 10;
+
+                if (viewpos[1] > mScreenDim.y*.3) {
+                    ypos = mScreenDim.y/20;
                 }
-                else  if (viewpos[1] > mScreenDim.y*.3 && viewpos[1] < mScreenDim.y*.4) {
-                    mIconSheetScroller.smoothScrollBy(0, (int)(mScreenDim.y*.25));
+//                else  if (viewpos[1] > mScreenDim.y*.3 && viewpos[1] < mScreenDim.y*.4) {
+//                    mIconSheetScroller.smoothScrollBy(0, (int)(mScreenDim.y*.25));
+//                }
+
+                if (mScreenDim.x>mScreenDim.y) {
+                    gravity = Gravity.LEFT|Gravity.TOP;
+                    if (viewpos[0] > mScreenDim.x * .3) {
+                        xpos = mScreenDim.x / 24;
+                    } else {
+                        xpos = mScreenDim.x * 2 / 3;
+                    }
                 }
+
             }
 
-            pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), Gravity.CENTER_HORIZONTAL|Gravity.TOP, 0, ypos);
+            pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), gravity, xpos, ypos);
         }
 
     }
@@ -1613,8 +1629,14 @@ public class MainActivity extends Activity implements
     private void bindSeek(SeekBar seekBar, final TextView seekLabel, int start, final int min, int max, final Runnable onChange) {
 
         if (start<min) start = min;
+        if (start>max) max = start;
         //seekLabel.setText(start+"");
-        seekBar.setMax(min + max);
+        seekBar.setMax(max-min);
+        seekBar.setProgress(start-min);
+
+        String value = start + "";
+        seekLabel.setText(value);
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -1633,9 +1655,6 @@ public class MainActivity extends Activity implements
 
             }
         });
-        seekBar.setProgress(start-min);
-        String value = start + "";
-        seekLabel.setText(value);
     }
 
 
@@ -2575,24 +2594,18 @@ public class MainActivity extends Activity implements
                         } else {
                             final int slop  = ViewConfiguration.get(MainActivity.this).getScaledTouchSlop();
                             if (Math.abs(oX - event.getX()) > slop || Math.abs(oY - event.getY()) > slop) {
-                                if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
+                                clearDragPotential(false);
                                 dismissActionPopup();
                                 startDrag();
                             }
                         }
                         //Log.d("movet", event.getX() + "," + event.getY());
                     } else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-                        if (mDragPotential != null) {
-                            mDragPotential.setOnTouchListener(null);
-                            if (dragitem.isWidget()) {
-                                setTouchListener((ViewGroup)mDragPotential, null);
-                            }
-                        }
-                        mDragPotential = null;
+                        clearDragPotential(true);
                         //dismissActionPopup();
-                    } //else {
-                        //Log.d(TAG, event.getActionMasked() + "");
-                    //}
+                    } else {
+                        Log.d(TAG, event.getActionMasked() + " event");
+                    }
 
 
                     return false;
@@ -2656,7 +2669,17 @@ public class MainActivity extends Activity implements
     }
 
 
-
+    private void clearDragPotential(boolean nullit) {
+        if (mDragPotential!=null) {
+            mDragPotential.setOnTouchListener(null);
+            if (mDragPotential instanceof ViewGroup) {
+                setTouchListener((ViewGroup) mDragPotential, null);
+            }
+        }
+        if (nullit) {
+            mDragPotential = null;
+        }
+    }
 
 
     private LinearLayout mShortcutActionsPopup;
@@ -2703,7 +2726,6 @@ public class MainActivity extends Activity implements
                         public void run() {
                             showWidgetResize(appitem);
                             showButtonBar(false, true);
-                            dismissActionPopup();
                         }
                     });
                 }
@@ -2714,7 +2736,6 @@ public class MainActivity extends Activity implements
                     public void run() {
                         mLaunchApp.launchApp(appitem);
                         showButtonBar(false, true);
-                        dismissActionPopup();
                     }
                 });
             }
@@ -2803,7 +2824,7 @@ public class MainActivity extends Activity implements
         itemText.setTextColor(mStyle.getCattabTextColor());
         itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize());
 
-        if (label!=null && label.length()>27) label = label.substring(0,25) + "...";
+        if (label!=null && label.length()>30) label = label.substring(0,28) + "...";
         itemText.setText(label);
 
         ImageView itemIcon = item.findViewById(R.id.action_menu_icon);
@@ -2813,6 +2834,7 @@ public class MainActivity extends Activity implements
             public void onClick(View item) {
                 action.run();
                 dismissActionPopup();
+                clearDragPotential(true);
             }
         });
 
