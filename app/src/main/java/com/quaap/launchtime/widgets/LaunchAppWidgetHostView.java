@@ -27,6 +27,9 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
     private OnLongClickListener mLongClickListener;
     private long mLongClickStarted = -1;
 
+    private float x;
+    private float y;
+
 
     public LaunchAppWidgetHostView(Context context) {
         super(context);
@@ -44,20 +47,34 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (mLongClickListener == null) return false;
+
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                x=ev.getX();
+                y=ev.getY();
                 mLongClickStarted = System.currentTimeMillis();
+                final long starttime = mLongClickStarted;
+                this.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mLongClickListener != null && mLongClickStarted == starttime) {
+                            mLongClickListener.onLongClick(LaunchAppWidgetHostView.this);
+                            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                        }
+                    }
+                }, ViewConfiguration.getLongPressTimeout());
                 break;
             case MotionEvent.ACTION_MOVE:
-                boolean upVal = System.currentTimeMillis() - mLongClickStarted > ViewConfiguration.getLongPressTimeout();
-                if (upVal && mLongClickListener != null) {
-                    mLongClickListener.onLongClick(LaunchAppWidgetHostView.this);
-                    performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                final int slop  = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+                if (Math.abs(x - ev.getX()) > slop || Math.abs(y - ev.getY()) > slop) { //moved too much, not a longclick
+                    mLongClickStarted = -1;
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 mLongClickStarted = -1;
         }
+
 
         return false;
     }
