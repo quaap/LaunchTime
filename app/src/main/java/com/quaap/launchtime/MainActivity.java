@@ -2568,19 +2568,19 @@ public class MainActivity extends Activity implements
             if (width==0) width = (int)(getResources().getDimension(R.dimen.action_menu_width));
 
             int height = (int)(mShortcutActionsPopup.getChildCount()
-                            * (getResources().getDimension(R.dimen.action_icon_width) * 1.6));
+                            * (getResources().getDimension(R.dimen.action_icon_width)*1.4 + 28));
 
             int [] viewpos = new int[2];
             view.getLocationOnScreen(viewpos);
 
             int top = viewpos[1] - height - 10;
-            if (top <= 0) top = viewpos[1] + view.getHeight()/2;
+            if (top <= 0) top = viewpos[1] + view.getHeight()*2/3;
 
             int left = viewpos[0] + view.getWidth()/2 - width/2;
             if (left <= 0) {
                 left = viewpos[0]+4;
             } else if (left + width > mScreenDim.x) {
-                left -= width;
+                left = mScreenDim.x - (int)(width*1.05);
             }
 
             lp.topMargin = top;
@@ -2606,7 +2606,7 @@ public class MainActivity extends Activity implements
 
         TextView itemText = item.findViewById(R.id.action_menu_text);
         itemText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mStyle.getLauncherFontSize());
-        if (label!=null && label.length()>22) label = label.substring(0,20) + "...";
+        if (label!=null && label.length()>27) label = label.substring(0,25) + "...";
         itemText.setText(label);
 
         ImageView itemIcon = item.findViewById(R.id.action_menu_icon);
@@ -2620,7 +2620,7 @@ public class MainActivity extends Activity implements
         });
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)getResources().getDimension(R.dimen.action_menu_width), ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.bottomMargin = 24;
+        lp.bottomMargin = 28;
 
         item.setLayoutParams(lp);
         mShortcutActionsPopup.addView(item);

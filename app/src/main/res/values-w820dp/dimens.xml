@@ -27,6 +27,6 @@
     <dimen name="cattabbar_width">130dp</dimen>
 
     <dimen name="action_icon_width">30dp</dimen>
-    <dimen name="action_menu_width">145dp</dimen>
+    <dimen name="action_menu_width">160dp</dimen>
 
 </resources>
