@@ -1434,13 +1434,18 @@ public class MainActivity extends Activity implements
         float w = dipToPx(wDp);
         float h = dipToPx(hDp);
 
-        if (w>0 || h>0) {
-            float sw = mStyle.getLauncherSize();
+        int wcells = getWidgetWCells(app);
+        int hcells = getWidgetHCells(app);
 
-            float cellwidth = sw * 1f;
-            float cellheight = cellwidth *1.1f;  // ~square cells
+        float sw = mStyle.getLauncherSize();
 
-            int wcells = (int)Math.round(Math.max(w/cellwidth*.75, 1));
+        float cellwidth = sw * 1f;
+        float cellheight = cellwidth *1.1f;  // ~square cells
+
+
+        if (w>0 || wcells>0) {
+
+            if (wcells == 0) wcells = (int) Math.round(Math.max(w / cellwidth * .75, 1));
 
             if (wcells > 1) {
                 int start = GridLayout.UNDEFINED;
@@ -1457,43 +1462,49 @@ public class MainActivity extends Activity implements
             } else {
                 lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
+        }
+        if (h>0 || hcells>0) {
 
-            int hcells = (int)Math.round(Math.max(h/cellheight*.825, 1));
+            if (hcells == 0) hcells = (int) Math.round(Math.max(h / cellheight * .825, 1));
+
             if (hcells > 1) {
                 lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
             } else {
                 lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, GridLayout.FILL);
             }
 
-            final AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
+        }
 
-            if (appwid != null) {
+        final AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
 
-                lp.width = (int)(cellwidth*wcells*1.1);
+        if (appwid != null) {
 
-                if (h > cellheight*hcells*1.3) {
-                    lp.height = (int)(cellheight*hcells*1.4);
-                } else {
-                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
-                }
+            lp.width = (int)(cellwidth*wcells*1.1);
 
-                //lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
-
-                //Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
-                //Log.d("widcol2", "hDp=" + hDp + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
-                appwid.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        appwid.updateAppWidgetSize(null, wDp, hDp, wDp, hDp);
-                        if (appwid.getParent()!=null) {
-                            appwid.getParent().requestLayout();
-                        }
-                        appwid.requestLayout();
-                        appwid.postInvalidate();
-                    }
-                }, 1000);
-
+            if (h > cellheight*hcells*1.3) {
+                lp.height = (int)(cellheight*hcells*1.4);
+            } else {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
             }
+
+            storeWidgetDimen(app, wcells, hcells);
+            //lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
+
+            //Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+            //Log.d("widcol2", "hDp=" + hDp + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
+            appwid.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    appwid.updateAppWidgetSize(null, wDp, hDp, wDp, hDp);
+                    if (appwid.getParent()!=null) {
+                        appwid.getParent().requestLayout();
+                    }
+                    appwid.requestLayout();
+                    appwid.postInvalidate();
+                }
+            }, 1000);
+
+
         }
 
         return lp;
@@ -1853,6 +1864,27 @@ public class MainActivity extends Activity implements
 
 
     }
+
+    private void storeWidgetDimen(AppLauncher app, int wcells, int hcells) {
+        SharedPreferences.Editor ePrefs = mPrefs.edit();
+
+        ePrefs.putInt(app.getComponentName() + "_wcells", wcells);
+
+        ePrefs.putInt(app.getComponentName() + "_hcells", hcells);
+
+        ePrefs.apply();
+
+    }
+
+    private int getWidgetWCells(AppLauncher app) {
+        return mPrefs.getInt(app.getComponentName() + "_wcells", 0);
+    }
+
+    private int getWidgetHCells(AppLauncher app) {
+        return mPrefs.getInt(app.getComponentName() + "_hcells", 0);
+    }
+
+
 
     private void storeLauncherDimen(AppLauncher app, int width, int height) {
         SharedPreferences.Editor ePrefs = mPrefs.edit();
