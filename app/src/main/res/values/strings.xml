@@ -364,5 +364,6 @@
     <string name="pref_tweaks_lab">New features and tweaks</string>
     <string name="devops_warn">These options can be dangerous! Proceed?</string>
     <string name="pref_show_action">Show action menus</string>
+    <string name="appinfo_label">Appinfo</string>
 
 </resources>

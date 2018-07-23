@@ -109,6 +109,10 @@ public class AppInfo {
             if ((pi.applicationInfo.flags & ApplicationInfo.FLAG_VM_SAFE_MODE) == ApplicationInfo.FLAG_VM_SAFE_MODE)
                 data.append("needs safe mode");
 
+            if (data.charAt(data.length()-2) == ',') {
+                data.deleteCharAt(data.length()-2);
+            }
+
             data.append("\n");
 
             data.append("\n").append("Requested features:\n");

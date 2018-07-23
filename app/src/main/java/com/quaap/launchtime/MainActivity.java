@@ -2550,7 +2550,7 @@ public class MainActivity extends Activity implements
             }
 
 
-            addActionMenuItem("Appinfo", getResources().getDrawable(android.R.drawable.ic_menu_info_details), new Runnable() {
+            addActionMenuItem(getString(R.string.appinfo_label), getResources().getDrawable(android.R.drawable.ic_menu_info_details), new Runnable() {
                 @Override
                 public void run() {
                     AppInfo.showAppinfo(MainActivity.this, view, appitem);

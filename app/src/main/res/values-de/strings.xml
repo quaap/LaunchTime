@@ -360,5 +360,6 @@
     <string name="devops_warn">Diese Optionen können gefährlich sein! Vorgehen?</string>
     <string name="pref_rounded">Abgerundete Formen</string>
     <string name="pref_show_action">Show action menus</string>
+    <string name="appinfo_lable">Appinfo</string>
 
 </resources>

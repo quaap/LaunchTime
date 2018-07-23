@@ -366,5 +366,6 @@
     <string name="devops_warn">Aquestes opcions poden ser perilloses! Continuar?</string>
  <string name="pref_rounded">Formes arrodonides</string>
     <string name="pref_show_action">Show action menus</string>
+ <string name="appinfo_lable">Appinfo</string>
 
 </resources>
