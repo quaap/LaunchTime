@@ -929,7 +929,7 @@ public class MainActivity extends Activity implements
     private void showCats(boolean show) {
         cancelHide();
         final View cats = findViewById(R.id.category_tabs_wrap);
-        showButtonBar(show,false);
+        showButtonBar(false,false);
 
         if (!show && cats.getVisibility() == View.VISIBLE) {
             animateDownHide(cats);
@@ -1105,7 +1105,7 @@ public class MainActivity extends Activity implements
         if (autohideCats) {
             hideCatsIfAutoHide(true);
         } else {
-            //showCats(true);
+            showCats(true);
             mShowCats.setVisibility(View.GONE);
         }
 
