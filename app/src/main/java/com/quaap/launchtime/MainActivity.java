@@ -21,20 +21,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
-import android.content.ActivityNotFoundException;
 import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.pm.FeatureInfo;
+
 import android.content.pm.LauncherApps;
-import android.content.pm.PackageInfo;
+
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
+
 import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
 import android.content.res.Configuration;
@@ -76,7 +74,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -84,13 +82,13 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
+
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quaap.launchtime.apps.AppInfo;
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.Badger;
 import com.quaap.launchtime.apps.LaunchApp;
@@ -105,16 +103,11 @@ import com.quaap.launchtime.ui.SearchBox;
 import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -179,7 +172,7 @@ public class MainActivity extends Activity implements
     private int mColumns = 3;
 
 
-    private Point mScreenDim;
+    public Point mScreenDim;
 
     private SharedPreferences mAppPreferences;
 
@@ -2521,7 +2514,7 @@ public class MainActivity extends Activity implements
             addActionMenuItem("Appinfo", getResources().getDrawable(android.R.drawable.ic_menu_info_details), new Runnable() {
                 @Override
                 public void run() {
-                    showAppinfo(view, appitem);
+                    AppInfo.showAppinfo(MainActivity.this, view, appitem);
                 }
             });
 
@@ -2630,179 +2623,6 @@ public class MainActivity extends Activity implements
             mShortcutActionsPopup.setVisibility(View.GONE);
             mShortcutActionsPopup = null;
 
-        }
-    }
-
-    private void showAppinfo(View view, AppLauncher appitem) {
-        if (appitem == null) return;
-
-        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.appinfo_view, null);
-
-        final TextView itemDetails = item.findViewById(R.id.appinfo_data);
-        TextView itemText = item.findViewById(R.id.appinfo_name);
-        ImageView icon = item.findViewById(R.id.appinfo_icon);
-
-        final String packagename = appitem.getPackageName();
-        StringBuilder data = new StringBuilder(1024);
-        try {
-
-            PackageInfo pi = getPackageManager().getPackageInfo(packagename, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS | PackageManager.GET_CONFIGURATIONS);
-
-            String name = pi.applicationInfo.loadLabel(getPackageManager()).toString();
-            itemText.setText(name);
-
-            icon.setImageDrawable(pi.applicationInfo.loadIcon(getPackageManager()));
-
-            data
-                    .append("Name: ")
-                    .append(name)
-                    .append("\n")
-                    .append("PackageName: ")
-                    .append(packagename)
-                    .append("\n")
-                    .append("VersionName: ")
-                    .append(pi.versionName)
-                    .append("\n")
-                    .append("Installed: ")
-                    .append(new Date(pi.firstInstallTime))
-                    .append("\n")
-                    .append("Updated: ")
-                    .append(new Date(pi.lastUpdateTime))
-                    .append("\n\n");
-
-            data.append("\n").append("Requested features:\n");
-            int fcount = 0;
-            if (pi.reqFeatures!=null) {
-                for (FeatureInfo fi: pi.reqFeatures) {
-                    if (fi!=null) {
-                        fcount++;
-                        data.append(" ");
-                        if (fi.name!=null) data.append(fi.name).append(" ");
-                        if ((fi.flags & FeatureInfo.FLAG_REQUIRED) == FeatureInfo.FLAG_REQUIRED) {
-                            data.append("Required");
-                        }
-
-                        if (fi.reqGlEsVersion!=0) {
-                            data.append(" / GL ES ver: ").append(fi.reqGlEsVersion);
-                        }
-
-                        data.append("\n");
-                    }
-                }
-            }
-            data.append(fcount).append(" total\n");
-
-            data.append("\n").append("Granted permissions:\n");
-            int gcount = 0;
-            if (pi.requestedPermissions != null) {
-                for (int index = 0; index < pi.requestedPermissions.length; index++) {
-                    if ((pi.requestedPermissionsFlags[index] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                        String perm = pi.requestedPermissions[index];
-                        if (perm != null) {
-                            gcount++;
-                            data.append(" ").append(perm).append("\n");
-                        }
-                    }
-                }
-            }
-            data.append(gcount).append(" total\n");
-
-
-            data.append("\n").append("Not granted permissions:\n");
-            int dcount = 0;
-            if (pi.requestedPermissions != null) {
-                for (int index = 0; index < pi.requestedPermissions.length; index++) {
-                    if ((pi.requestedPermissionsFlags[index] & PackageInfo.REQUESTED_PERMISSION_GRANTED) == 0) {
-                        String perm = pi.requestedPermissions[index];
-                        if (perm!=null) {
-                            dcount++;
-                            data.append(" ").append(perm).append("\n");
-                        }
-                    }
-                }
-            }
-
-            data.append(dcount).append(" total\n");
-
-        } catch (Exception e) {
-            data.append("\n").append(e.getMessage()).append("\n");
-            StringWriter stack = new StringWriter(1000);
-            e.printStackTrace(new PrintWriter(stack));
-            data.append(stack.toString());
-        }
-
-        itemDetails.setText(data);
-
-
-        Button ok = item.findViewById(R.id.appinfo_ok);
-
-        final PopupWindow pw = new PopupWindow(item, mScreenDim.x - 50, mScreenDim.y - 100);
-        pw.setOutsideTouchable(false);
-        pw.setFocusable(true);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pw.dismiss();
-            }
-        });
-
-
-        Button copy = item.findViewById(R.id.appinfo_copy);
-
-        copy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                if (clipboard == null) return;
-                ClipData clip = ClipData.newPlainText("Appinfo for " + packagename, itemDetails.getText());
-                clipboard.setPrimaryClip(clip);
-                Toast.makeText(MainActivity.this, "Copied", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        Button settings = item.findViewById(R.id.appinfo_settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    //Open the specific App Info page:
-                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.parse("package:" + packagename));
-                    startActivity(intent);
-
-                } catch ( ActivityNotFoundException e ) {
-                    Toast.makeText(MainActivity.this, "Package not found", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
-                    startActivity(intent);
-                } catch (Throwable t) {
-                    Log.e(TAG, t.getMessage(), t);
-                }
-
-            }
-        });
-
-        pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), Gravity.CENTER, 0, 25);
-
-    }
-
-    public static void setForceShowIcon(PopupMenu popupMenu) {
-        try {
-            Field[] fields = popupMenu.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if ("mPopup".equals(field.getName())) {
-                    field.setAccessible(true);
-                    Object menuPopupHelper = field.get(popupMenu);
-                    Class<?> classPopupHelper = Class.forName(menuPopupHelper
-                            .getClass().getName());
-                    Method setForceIcons = classPopupHelper.getMethod(
-                            "setForceShowIcon", boolean.class);
-                    setForceIcons.invoke(menuPopupHelper, true);
-                    break;
-                }
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
     }
 

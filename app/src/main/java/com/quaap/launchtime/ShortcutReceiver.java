@@ -113,7 +113,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
         String catID = MainActivity.getLatestCategory();
         if (catID==null || catID.isEmpty()) {
-            catID = Categories.getCategoryForComponent(context, cn, true);
+            catID = Categories.getCategoryForComponent(context, cn, true, null);
         }
 
         AppLauncher appLauncher = AppLauncher.createActionLink(cn.getClassName(), uri, cn.getPackageName(),label, catID);

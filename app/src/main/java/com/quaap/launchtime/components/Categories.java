@@ -2,7 +2,9 @@ package com.quaap.launchtime.components;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
+import android.os.Build;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
@@ -121,11 +123,11 @@ public class Categories {
         return checkCat(context, category);
     }
 
-    public static String getCategoryForComponent(Context context, ComponentName activity, boolean guess) {
-        return getCategoryForComponent(context, activity.getClassName(), activity.getPackageName(), guess);
+    public static String getCategoryForComponent(Context context, ComponentName activity, boolean guess, ApplicationInfo ai) {
+        return getCategoryForComponent(context, activity.getClassName(), activity.getPackageName(), guess, ai);
     }
 
-    public static String getCategoryForComponent(Context context, String actvname, String pkgname, boolean guess) {
+    public static String getCategoryForComponent(Context context, String actvname, String pkgname, boolean guess, ApplicationInfo ai) {
 
         String catact = getCategoryForActivity(context, actvname, false);
         String catpack = getCategoryForPackage(context, pkgname, false);
@@ -137,11 +139,75 @@ public class Categories {
             category = guessCategoryForPackage(context,pkgname);
         }
 
+        if (category==null || category.equals(CAT_OTHER)) {
+            category = getCategoryFromPiCat(ai);
+        }
+
 
         return checkCat(context, category);
 
     }
+//    CAT_TALK,
+//    CAT_GAMES,
+//    CAT_INTERNET,
+//    CAT_MEDIA,
+//    CAT_GRAPHICS,
+//    CAT_Utilities,
+//    CAT_SETTINGS,
+//    CAT_OTHER,
+//    CAT_HIDDEN,
+//    CAT_SEARCH
 
+    public static String getCategoryFromPiCat(ApplicationInfo appinfo) {
+        if (appinfo==null) return null;
+        String cat = null;
+        if (Build.VERSION.SDK_INT >= 26) {
+            int category = appinfo.category;
+            switch (category) {
+
+                case ApplicationInfo.CATEGORY_AUDIO:
+                    cat = CAT_MEDIA;
+                    break;
+
+                case ApplicationInfo.CATEGORY_GAME:
+                    cat = CAT_GAMES;
+                    break;
+
+                case ApplicationInfo.CATEGORY_IMAGE:
+                    cat = CAT_GRAPHICS;
+                    break;
+
+                case ApplicationInfo.CATEGORY_MAPS:
+                    cat = CAT_INTERNET;
+                    break;
+
+                case ApplicationInfo.CATEGORY_NEWS:
+                    cat = CAT_INTERNET;
+                    break;
+
+                case ApplicationInfo.CATEGORY_PRODUCTIVITY:
+                    cat = CAT_Utilities;
+                    break;
+
+                case ApplicationInfo.CATEGORY_SOCIAL:
+                    cat = CAT_TALK;
+                    break;
+
+                case ApplicationInfo.CATEGORY_VIDEO:
+                    cat = CAT_GRAPHICS;
+                    break;
+
+                case ApplicationInfo.CATEGORY_UNDEFINED:
+                default:
+                    cat = null;
+                    break;
+
+            }
+        } else if ((appinfo.flags & ApplicationInfo.FLAG_IS_GAME) == ApplicationInfo.FLAG_IS_GAME) {
+            cat = CAT_GAMES;
+        }
+        return cat;
+    }
 
 
     public static String guessCategoryForPackage(Context context, String pkgname) {
