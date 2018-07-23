@@ -76,6 +76,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -84,7 +85,9 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1481,21 +1484,29 @@ public class MainActivity extends Activity implements
 
             lp.width = (int)(cellwidth*wcells*1.1);
 
-            if (h > cellheight*hcells*1.3) {
-                lp.height = (int)(cellheight*hcells*1.4);
-            } else {
-                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
-            }
+            int calcHeight = (int)(cellheight*hcells*1.4);
+            //if (h > cellheight*hcells*1.3) {
+                lp.height = calcHeight;
+            //} else {
+            //    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
+            //}
 
-            storeWidgetDimen(app, wcells, hcells);
+            storeWidgetWCells(app, wcells);
+            storeWidgetHCells(app, hcells);
             //lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
 
-            //Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
-            //Log.d("widcol2", "hDp=" + hDp + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
+            final int hDpf;
+            if (h<calcHeight) {
+                hDpf = pxToDip(calcHeight);
+            } else {
+                hDpf = hDp;
+            }
+            Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+            Log.d("widcol2", "hDp=" + hDpf + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
             appwid.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    appwid.updateAppWidgetSize(null, wDp, hDp, wDp, hDp);
+                    appwid.updateAppWidgetSize(null, wDp, hDpf, wDp, hDpf);
                     if (appwid.getParent()!=null) {
                         appwid.getParent().requestLayout();
                     }
@@ -1509,6 +1520,99 @@ public class MainActivity extends Activity implements
 
         return lp;
     }
+
+    private void showWidgetResize(final AppLauncher appitem) {
+        AppWidgetHostView appwid = mLoadedWidgets.get(appitem.getActivityName());
+        if (appwid!=null) {
+            //final int resizeMode = appwid.getAppWidgetInfo().resizeMode;
+
+            ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.widget_size, null);
+
+
+            final PopupWindow pw = new PopupWindow(item, mScreenDim.x-100,mScreenDim.y/3);
+
+            pw.setOutsideTouchable(false);
+            pw.setFocusable(true);
+
+            Button ok = item.findViewById(R.id.wid_size_ok);
+            ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pw.dismiss();
+                }
+            });
+
+            Button defaults = item.findViewById(R.id.wid_set_default_size);
+            defaults.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pw.dismiss();
+                }
+            });
+
+            final SeekBar width = item.findViewById(R.id.width_seek);
+            final SeekBar height = item.findViewById(R.id.height_seek);
+
+            Runnable resize = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, (width.getProgress()+1) +","+ (height.getProgress()+1));
+                    storeWidgetWCells(appitem, width.getProgress()+1);
+                    storeWidgetHCells(appitem, height.getProgress()+1);
+
+                    GridLayout.LayoutParams lp = getAppLauncherLayoutParams(mIconSheet, appitem);
+                    View widframe = getLauncherView(appitem,false);
+                    if (widframe != null) {
+                        widframe.setLayoutParams(lp);
+                    }
+                }
+            };
+            int wcells = getWidgetWCells(appitem);
+            width.setProgress(wcells-1);
+            int hcells = getWidgetHCells(appitem);
+            height.setProgress(hcells-1);
+
+            TextView widthLab = item.findViewById(R.id.width_num);
+            bindSeek(width, widthLab, wcells, 1, mStyle.getMaxWCells(), resize);
+
+
+            TextView heightLab = item.findViewById(R.id.height_num);
+            bindSeek(height, heightLab, hcells,1, 8, resize);
+
+            pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), Gravity.CENTER, 0, mScreenDim.y*2/3);
+        }
+
+    }
+
+    private void bindSeek(SeekBar seekBar, final TextView seekLabel, int start, final int min, int max, final Runnable onChange) {
+
+        if (start<min) start = min;
+        //seekLabel.setText(start+"");
+        seekBar.setMax(min + max);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                String value = (i+min) + "";
+                seekLabel.setText(value);
+                if (onChange!=null) onChange.run();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        seekBar.setProgress(start-min);
+        String value = start + "";
+        seekLabel.setText(value);
+    }
+
+
 
     public int pxToDip(float pixel){
         float scale = getResources().getDisplayMetrics().density;
@@ -1865,10 +1969,17 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void storeWidgetDimen(AppLauncher app, int wcells, int hcells) {
+    private void storeWidgetWCells(AppLauncher app, int wcells) {
         SharedPreferences.Editor ePrefs = mPrefs.edit();
 
         ePrefs.putInt(app.getComponentName() + "_wcells", wcells);
+
+        ePrefs.apply();
+
+    }
+
+    private void storeWidgetHCells(AppLauncher app, int hcells) {
+        SharedPreferences.Editor ePrefs = mPrefs.edit();
 
         ePrefs.putInt(app.getComponentName() + "_hcells", hcells);
 
@@ -1881,7 +1992,9 @@ public class MainActivity extends Activity implements
     }
 
     private int getWidgetHCells(AppLauncher app) {
-        return mPrefs.getInt(app.getComponentName() + "_hcells", 0);
+        int cells =mPrefs.getInt(app.getComponentName() + "_hcells", 0);
+        Log.d(TAG, "in getWidgetHCells " + cells);
+        return cells;
     }
 
 
@@ -2556,7 +2669,20 @@ public class MainActivity extends Activity implements
             //setForceShowIcon(mShortcutActionsPopup);
             mShortcutActionsPopup.removeAllViews();
 
-            if (!appitem.isWidget()) {
+            if (appitem.isWidget()) {
+                AppWidgetHostView appwid = mLoadedWidgets.get(appitem.getActivityName());
+                if (appwid!=null) {
+                    addActionMenuItem("Resize", android.R.drawable.arrow_up_float, new Runnable() {
+                        @Override
+                        public void run() {
+                            showWidgetResize(appitem);
+                            showButtonBar(false, true);
+                            dismissActionPopup();
+                        }
+                    });
+                }
+
+            } else {
                 addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
                     @Override
                     public void run() {
@@ -2580,14 +2706,14 @@ public class MainActivity extends Activity implements
             }
 
 
-            addActionMenuItem(getString(R.string.appinfo_label), getResources().getDrawable(android.R.drawable.ic_menu_info_details), new Runnable() {
+            addActionMenuItem(getString(R.string.appinfo_label), android.R.drawable.ic_menu_info_details, new Runnable() {
                 @Override
                 public void run() {
                     AppInfo.showAppinfo(MainActivity.this, view, appitem);
                 }
             });
 
-            addActionMenuItem(getString(android.R.string.cancel), getResources().getDrawable(android.R.drawable.ic_menu_close_clear_cancel), new Runnable() {
+            addActionMenuItem(getString(android.R.string.cancel), android.R.drawable.ic_menu_close_clear_cancel, new Runnable() {
                 @Override
                 public void run() {
                     dismissActionPopup();
@@ -2631,6 +2757,10 @@ public class MainActivity extends Activity implements
 
 
         return false;
+    }
+
+    private void addActionMenuItem(String label, int iconResource, final Runnable action) {
+        addActionMenuItem(label, getResources().getDrawable(iconResource), action);
     }
 
     private void addActionMenuItem(String label, Drawable icon, final Runnable action) {
