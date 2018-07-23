@@ -2372,9 +2372,6 @@ public class MainActivity extends Activity implements
 
         final AppLauncher dragitem = (AppLauncher) view.getTag();
         mDragPotential = view;
-        if (dragitem.isWidget()) {
-            Log.d(TAG, "widget");
-        }
 
         if (handle25Shortcuts(view, dragitem)) {
 
@@ -2387,7 +2384,12 @@ public class MainActivity extends Activity implements
                 public boolean onTouch(View v, MotionEvent event) {
 
                     if (event.getActionMasked() == MotionEvent.ACTION_CANCEL && event.getSource()!= InputDevice.SOURCE_ANY) {
-                        if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
+                        if (mDragPotential != null) {
+                            mDragPotential.setOnTouchListener(null);
+                            if (dragitem.isWidget()) {
+                                setTouchListener((ViewGroup)mDragPotential, null);
+                            }
+                        }
                         dismissActionPopup();
                         startDrag();
                     } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
@@ -2408,8 +2410,7 @@ public class MainActivity extends Activity implements
                         if (mDragPotential != null) {
                             mDragPotential.setOnTouchListener(null);
                             if (dragitem.isWidget()) {
-                                Log.d(TAG, "widget2");
-                                ((ViewGroup)((ViewGroup)mDragPotential).getChildAt(0)).getChildAt(0).setOnTouchListener(null);
+                                setTouchListener((ViewGroup)mDragPotential, null);
                             }
                         }
                         mDragPotential = null;
@@ -2426,8 +2427,7 @@ public class MainActivity extends Activity implements
             mDragPotential.setOnTouchListener(tl);
 
             if (dragitem.isWidget()) {
-                Log.d(TAG, "widget2");
-                ((ViewGroup)((ViewGroup)mDragPotential).getChildAt(0)).getChildAt(0).setOnTouchListener(tl);
+                setTouchListener((ViewGroup)mDragPotential, tl);
             }
 
 
@@ -2435,6 +2435,17 @@ public class MainActivity extends Activity implements
             startDrag();
         }
         return true;
+    }
+
+    private void setTouchListener(ViewGroup vg, View.OnTouchListener tl) {
+        vg.setOnTouchListener(tl);
+        for (int i=0; i<vg.getChildCount(); i++) {
+            View vc = vg.getChildAt(i);
+            vc.setOnTouchListener(tl);
+            if (vc instanceof ViewGroup) {
+                setTouchListener((ViewGroup)vc, tl);
+            }
+        }
     }
 
     public boolean startDrag() {
