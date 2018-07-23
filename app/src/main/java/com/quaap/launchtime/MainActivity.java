@@ -2442,6 +2442,7 @@ public class MainActivity extends Activity implements
     }
 
     private void setTouchListener(ViewGroup vg, View.OnTouchListener tl) {
+        if (vg==null) return;
         vg.setOnTouchListener(tl);
         for (int i=0; i<vg.getChildCount(); i++) {
             View vc = vg.getChildAt(i);
@@ -2452,9 +2453,9 @@ public class MainActivity extends Activity implements
         }
     }
 
-    public boolean startDrag() {
+    public void startDrag() {
 
-        if (mDragPotential==null) return false;
+        if (mDragPotential==null) return;
 
         AppLauncher dragitem = (AppLauncher) mDragPotential.getTag();
         String label = dragitem.getLabel();
@@ -2474,16 +2475,13 @@ public class MainActivity extends Activity implements
             Log.d(TAG, "Drag started: " + dragitem.getActivityName() +  ", source = " + mDragDropSource);
             showCats(true);
             showHiddenCategories();
-
            // Log.d(TAG, "source = " + mDragDropSource);
             //if (mDragDropSource.getId()!=R.id.icontarget) {
                 showRemoveDropzone();
             //}
-            return true;
         }
+        mDragPotential = null;
 
-
-        return false;
     }
 
 
