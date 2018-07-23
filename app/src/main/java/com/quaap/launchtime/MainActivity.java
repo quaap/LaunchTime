@@ -1594,17 +1594,18 @@ public class MainActivity extends Activity implements
 
 
             View widframe = getLauncherView(appitem,false);
+            int [] viewpos = new int[2];
             if (widframe!=null) {
-                int [] viewpos = new int[2];
                 widframe.getLocationOnScreen(viewpos);
-                if (viewpos[1] > mScreenDim.y/2) {
-                    //mIconSheetScroller.smoothScrollBy(0, 0);
-
+                if (viewpos[1] > mScreenDim.y*.4) {
                     ypos = 10;
+                }
+                else  if (viewpos[1] > mScreenDim.y*.3 && viewpos[1] < mScreenDim.y*.4) {
+                    mIconSheetScroller.smoothScrollBy(0, (int)(mScreenDim.y*.25));
                 }
             }
 
-            pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), Gravity.CENTER_HORIZONTAL, 0, ypos);
+            pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), Gravity.CENTER_HORIZONTAL|Gravity.TOP, 0, ypos);
         }
 
     }
