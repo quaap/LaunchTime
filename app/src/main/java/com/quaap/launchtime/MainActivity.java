@@ -2522,14 +2522,16 @@ public class MainActivity extends Activity implements
             //setForceShowIcon(mShortcutActionsPopup);
             mShortcutActionsPopup.removeAllViews();
 
-            addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
-                @Override
-                public void run() {
-                    mLaunchApp.launchApp(appitem);
-                    showButtonBar(false, true);
-                    dismissActionPopup();
-                }
-            });
+            if (!appitem.isWidget()) {
+                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
+                    @Override
+                    public void run() {
+                        mLaunchApp.launchApp(appitem);
+                        showButtonBar(false, true);
+                        dismissActionPopup();
+                    }
+                });
+            }
 
             if (Build.VERSION.SDK_INT >= 25) {
                 if (shortcutInfos != null && shortcutInfos.size()>0) {
@@ -2566,7 +2568,7 @@ public class MainActivity extends Activity implements
             if (width==0) width = (int)(getResources().getDimension(R.dimen.action_menu_width));
 
             int height = (int)(mShortcutActionsPopup.getChildCount()
-                            * (getResources().getDimension(R.dimen.action_icon_width) * 1.3));
+                            * (getResources().getDimension(R.dimen.action_icon_width) * 1.6));
 
             int [] viewpos = new int[2];
             view.getLocationOnScreen(viewpos);
@@ -2616,6 +2618,11 @@ public class MainActivity extends Activity implements
                 dismissActionPopup();
             }
         });
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)getResources().getDimension(R.dimen.action_menu_width), ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.bottomMargin = 24;
+
+        item.setLayoutParams(lp);
         mShortcutActionsPopup.addView(item);
     }
 
