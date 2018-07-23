@@ -81,8 +81,8 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
             case MotionEvent.ACTION_OUTSIDE:
             case MotionEvent.ACTION_UP:
                 mLongClickStarted = -1;
-                ev.setSource(InputDevice.SOURCE_ANY);
-                if (wasLong) {
+                ev.setSource(InputDevice.SOURCE_ANY); //returning true means target will get ACTION_CANCEL.
+                if (wasLong) {                        // setSource is a hack to let us know to ignore that cancel.
                     wasLong = false;
                     return true;
                 }
