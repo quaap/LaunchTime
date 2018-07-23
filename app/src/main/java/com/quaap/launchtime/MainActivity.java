@@ -1543,17 +1543,11 @@ public class MainActivity extends Activity implements
             });
 
             Button defaults = item.findViewById(R.id.wid_set_default_size);
-            defaults.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    pw.dismiss();
-                }
-            });
 
             final SeekBar width = item.findViewById(R.id.width_seek);
             final SeekBar height = item.findViewById(R.id.height_seek);
 
-            Runnable resize = new Runnable() {
+            final Runnable resize = new Runnable() {
                 @Override
                 public void run() {
                     Log.d(TAG, (width.getProgress()+1) +","+ (height.getProgress()+1));
@@ -1567,6 +1561,22 @@ public class MainActivity extends Activity implements
                     }
                 }
             };
+
+            defaults.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    storeWidgetWCells(appitem, 0);
+                    storeWidgetHCells(appitem, 0);
+                    GridLayout.LayoutParams lp = getAppLauncherLayoutParams(mIconSheet, appitem);
+                    View widframe = getLauncherView(appitem,false);
+                    if (widframe != null) {
+                        widframe.setLayoutParams(lp);
+                    }
+                    pw.dismiss();
+                }
+            });
+
+
             int wcells = getWidgetWCells(appitem);
             width.setProgress(wcells-1);
             int hcells = getWidgetHCells(appitem);
