@@ -2570,6 +2570,8 @@ public class MainActivity extends Activity implements
         item.setBackgroundResource(R.drawable.rounded);
 
         TextView itemText = item.findViewById(R.id.action_menu_text);
+        itemText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mStyle.getLauncherFontSize());
+        if (label!=null && label.length()>22) label = label.substring(0,20) + "...";
         itemText.setText(label);
 
         ImageView itemIcon = item.findViewById(R.id.action_menu_icon);
