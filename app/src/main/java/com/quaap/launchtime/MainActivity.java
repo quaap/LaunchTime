@@ -56,6 +56,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
+import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -2369,36 +2370,48 @@ public class MainActivity extends Activity implements
     public boolean onLongClick(View view) {
         if (mChildLock) return false;
 
-        AppLauncher dragitem = (AppLauncher) view.getTag();
+        final AppLauncher dragitem = (AppLauncher) view.getTag();
         mDragPotential = view;
+        if (dragitem.isWidget()) {
+            Log.d(TAG, "widget");
+        }
 
-        if (!dragitem.isWidget() && handle25Shortcuts(view, dragitem)) {
+        if (handle25Shortcuts(view, dragitem)) {
 
-            final int slop  = ViewConfiguration.get(this).getScaledTouchSlop();
-            mDragPotential.setOnTouchListener(new View.OnTouchListener() {
+            View.OnTouchListener tl = new View.OnTouchListener() {
                 float oX = -1;
                 float oY = -1;
 
                 @SuppressLint("ClickableViewAccessibility")
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+
+                    if (event.getActionMasked() == MotionEvent.ACTION_CANCEL && event.getSource()!= InputDevice.SOURCE_ANY) {
                         if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
                         dismissActionPopup();
                         startDrag();
                     } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+
                         if (oX == -1) {
                             oX = event.getX();
                             oY = event.getY();
                         } else {
+                            final int slop  = ViewConfiguration.get(MainActivity.this).getScaledTouchSlop();
                             if (Math.abs(oX - event.getX()) > slop || Math.abs(oY - event.getY()) > slop) {
+                                if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
                                 dismissActionPopup();
                                 startDrag();
                             }
                         }
                         //Log.d("movet", event.getX() + "," + event.getY());
                     } else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-                        if (mDragPotential != null) mDragPotential.setOnTouchListener(null);
+                        if (mDragPotential != null) {
+                            mDragPotential.setOnTouchListener(null);
+                            if (dragitem.isWidget()) {
+                                Log.d(TAG, "widget2");
+                                ((ViewGroup)((ViewGroup)mDragPotential).getChildAt(0)).getChildAt(0).setOnTouchListener(null);
+                            }
+                        }
                         mDragPotential = null;
                         //dismissActionPopup();
                     } //else {
@@ -2408,7 +2421,16 @@ public class MainActivity extends Activity implements
 
                     return false;
                 }
-            });
+            };
+
+            mDragPotential.setOnTouchListener(tl);
+
+            if (dragitem.isWidget()) {
+                Log.d(TAG, "widget2");
+                ((ViewGroup)((ViewGroup)mDragPotential).getChildAt(0)).getChildAt(0).setOnTouchListener(tl);
+            }
+
+
         } else {
             startDrag();
         }
