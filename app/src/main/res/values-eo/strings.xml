@@ -366,5 +366,6 @@
     <string name="pref_tweaks_lab">Novaj trajtoj kaj tweaks</string>
     <string name="devops_warn">Ĉi tiuj elektoj povas esti danĝeraj! Sekvi?</string>
  <string name="pref_rounded">Rondigitaj formoj</string>
+    <string name="pref_show_action">Show action menus</string>
 
 </resources>

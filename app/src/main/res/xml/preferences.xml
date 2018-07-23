@@ -168,6 +168,10 @@
             android:title="@string/pref_show_badges"
             android:key="pref_show_badges" />
 
+        <CheckBoxPreference
+            android:title="@string/pref_show_action"
+            android:key="pref_show_action_menus" />
+
         <ListPreference
             android:defaultValue="3600"
             android:title="@string/pref_returnhome"

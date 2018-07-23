@@ -365,4 +365,5 @@
     <string name="pref_tweaks_lab">Nuevas características y ajustes</string>
     <string name="devops_warn">Estas opciones pueden ser peligrosas! ¿Proceder?</string>
     <string name="pref_rounded">Formas redondeadas</string>
+    <string name="pref_show_action">Show action menus</string>
 </resources>

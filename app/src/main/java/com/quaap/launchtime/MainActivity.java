@@ -1198,8 +1198,11 @@ public class MainActivity extends Activity implements
             //Move self icon to hidden
             db().updateAppCategory(selfAct, this.getPackageName(), Categories.CAT_HIDDEN);
 
+
             //Take a backup no that things are pre-sorted.
             db().backup("After install");
+
+            mAppPreferences.edit().putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25).apply();
 
             //Show the help screen on very first run.
             mCategoriesScroller.postDelayed(new Runnable() {
@@ -2373,7 +2376,8 @@ public class MainActivity extends Activity implements
         final AppLauncher dragitem = (AppLauncher) view.getTag();
         mDragPotential = view;
 
-        if (handle25Shortcuts(view, dragitem)) {
+        boolean useMenus = mAppPreferences.getBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25);
+        if (useMenus && handle25Shortcuts(view, dragitem)) {
 
             View.OnTouchListener tl = new View.OnTouchListener() {
                 float oX = -1;
@@ -2602,10 +2606,17 @@ public class MainActivity extends Activity implements
     private void addActionMenuItem(String label, Drawable icon, final Runnable action) {
         ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.action_menu_entry, null);
 
-        item.setBackgroundResource(R.drawable.rounded);
+        item.setBackgroundColor(mStyle.getCattabSelectedBackground());
+
+        if (mStyle.isRoundedTabs()) {
+            item.setBackground(mStyle.getBgDrawableFor(item, Style.CategoryTabStyle.Normal,true));
+        }
 
         TextView itemText = item.findViewById(R.id.action_menu_text);
-        itemText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mStyle.getLauncherFontSize());
+
+        itemText.setTextColor(mStyle.getCattabTextColor());
+        itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize());
+
         if (label!=null && label.length()>27) label = label.substring(0,25) + "...";
         itemText.setText(label);
 
