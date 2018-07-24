@@ -365,5 +365,9 @@
     <string name="devops_warn">これらのオプションは危険です！続行しますか？</string>
     <string name="pref_rounded">丸みを帯びた形</string>
     <string name="pref_show_action">Show action menus</string>
-    <string name="appinfo_lable">Appinfo</string>
+    <string name="appinfo_label">Appinfo</string>
+    <string name="appinfo_insettings">In Settings</string>
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    <string name="defaults">Defaults</string>
 </resources>

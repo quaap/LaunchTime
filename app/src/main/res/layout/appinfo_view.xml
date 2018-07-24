@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:layout_marginStart="6dp"
-            android:text="Settings" />
+            android:text="@string/appinfo_insettings" />
 
         <Button
             android:id="@+id/appinfo_ok"

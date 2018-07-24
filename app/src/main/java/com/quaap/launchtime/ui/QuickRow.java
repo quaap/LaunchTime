@@ -2,7 +2,6 @@ package com.quaap.launchtime.ui;
 
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;

@@ -13,7 +13,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Width"
+        android:text="@string/width"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -46,14 +46,15 @@
             android:paddingEnd="4dp"
             android:text="0"
             android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:ignore="HardcodedText" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Height"
+        android:text="@string/height"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -86,7 +87,8 @@
             android:paddingEnd="4dp"
             android:text="0"
             android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:ignore="HardcodedText" />
     </RelativeLayout>
 
     <LinearLayout
@@ -99,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Defaults" />
+            android:text="@string/defaults" />
 
         <Space
             android:layout_width="40dp"
