@@ -2601,7 +2601,7 @@ public class MainActivity extends Activity implements
         mDragPotential = view;
 
         boolean useMenus = mAppPreferences.getBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25);
-        if (useMenus && handle25Shortcuts(view, dragitem)) {
+        if ((useMenus || dragitem.isWidget()) && handle25Shortcuts(view, dragitem)) {
 
             View.OnTouchListener tl = new View.OnTouchListener() {
                 float oX = -1;
