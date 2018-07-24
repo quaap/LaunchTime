@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-   <!--This text was automatically machine translated. If you see any mistakes please correct them!-->
-   <!--Este texto era automaticamente a máquina traduziu. Se vês quaisquer enganos comprazem corrigir-lhes!-->
 
     <!-- Traduz só as "_entradas" de correntes -->
 
@@ -32,34 +30,27 @@
     </string-array>
 
 
-    
-
     <string-array name="pref_orientation_strings">
         <item>Sistema</item>
-        <item>Rotate Quando precisado</item>
-        <item>Retrato de força</item>
-        <item>Paisagem de força</item>
+        <item>Rotação forçada</item>
+        <item>Retrato forçado</item>
+        <item>Paisagem forçada</item>
     </string-array>
 
-
-    
 
     <string-array name="pref_size_strings">
         <item>Pequeno</item>
         <item>Médio</item>
         <item>Grande</item>
-        <item>X-Grande</item>
+        <item>Muito Grande</item>
     </string-array>
 
-    
-    
+
 
     <string-array name="pref_cat_location_strings">
-        <item>Correcto</item>
+        <item>À direita</item>
         <item>À esquerda</item>
     </string-array>
-
-    
 
 
 </resources>
