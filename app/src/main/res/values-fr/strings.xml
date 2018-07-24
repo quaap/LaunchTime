@@ -179,7 +179,7 @@
 
     <string name="letters">ABCDFGHJKLMNPQRSTVWXZ</string>
 
-    <string name="kid_escape_text">Appuyez sur \'%s\' pour quitter</string>
+    <string name="kid_escape_text">Appuyez sur \'%s\'</string>
     <string name="reset_db">Reset la base de donnée ?</string>
     <string name="reset_db_explain">La base de donnée sera recréer et toutes les applications seront
         réorganisée selon votre choix de \"catégorisation automatique des applications\".</string>

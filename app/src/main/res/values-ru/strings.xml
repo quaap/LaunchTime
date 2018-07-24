@@ -173,7 +173,7 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
     <string name="sort_prompt_title">Сортировка категории по</string>
-    <string name="kid_escape_text">Нажмите \'%s\' для выхода</string>
+    <string name="kid_escape_text">Нажмите \'%s\'</string>
     <string name="reset_db">Сбросить базу данных?</string>
     <string name="reset_db_explain">База данных будет пересоздана и все приложения
         пере-категоризированны по вашим настройкам \"авто-сортировки\" .</string>

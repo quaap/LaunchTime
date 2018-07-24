@@ -172,7 +172,7 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
     <string name="sort_prompt_title">カテゴリの並び替え</string>
-    <string name="kid_escape_text">\'%s\' を押すと終了します</string>
+    <string name="kid_escape_text">\'%s\' を押</string>
     <string name="reset_db">データベースをリセットしますか?</string>
     <string name="reset_db_explain">データベースは再作成され、すべてのアプリは
         \"アプリを自動カテゴリ\" の設定に従って再カテゴリされます。</string>

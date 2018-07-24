@@ -173,7 +173,7 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
     <string name="sort_prompt_title">Sort category by</string>
-    <string name="kid_escape_text">Press \'%s\' to exit</string>
+    <string name="kid_escape_text">Press \'%s\'</string>
     <string name="reset_db">Reset the database?</string>
     <string name="reset_db_explain">The database will be recreated and all apps will be
         re-categorized according to your \"auto-categorize apps\" setting.</string>

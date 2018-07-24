@@ -174,7 +174,7 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
     <string name="sort_prompt_title">Kategorio de klaso por</string>
-    <string name="kid_escape_text">Premas \'%s\' por eliri</string>
+    <string name="kid_escape_text">Premas \'%s\'</string>
     <string name="reset_db">Reset La database?</string>
     <string name="reset_db_explain">La database estos recreated kaj ĉiu apps estos
         re-categorized laŭ via \"aŭto-categorize apps\" ŝovante.</string>

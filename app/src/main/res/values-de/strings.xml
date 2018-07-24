@@ -168,7 +168,7 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
 <string name="sort_prompt_title">Kategorie sortieren nach</string>
-    <string name="kid_escape_text">Drücken Sie \'%s\' zum Beenden</string>
+    <string name="kid_escape_text">Drücken Sie \'%s\'</string>
     <string name="reset_db">die Datenbank zurücksetzen</string>
     <string name="reset_db_explain">Die Datenbank wird neu erstellt und alle Apps werden angezeigt
         Neu kategorisiert nach Ihrer \"auto-categorize apps\" Einstellung.</string>

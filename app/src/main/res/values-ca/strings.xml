@@ -173,7 +173,7 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
     <string name="sort_prompt_title">Categoria de classe per</string>
-    <string name="kid_escape_text">Premsa \'%s\' per sortir</string>
+    <string name="kid_escape_text">Premsa \'%s\'</string>
     <string name="reset_db">Reinicialització la base de dades?</string>
     <string name="reset_db_explain">La base de dades serà recreated i tot apps serà
         re-categorized segons el vostre \"cotxe-categorize apps\" posant.</string>

@@ -3632,7 +3632,8 @@ public class MainActivity extends Activity implements
                     kidcode += c;
                 }
                 if (mDumbMode) {
-                    kidcode += kidcode + kidcode;
+                    //kidcode += kidcode + kidcode;
+                    kidcode += kidcode;
                 }
 
                 List<String> kidcodearr = Arrays.asList(kidcode.split("(?!^)"));

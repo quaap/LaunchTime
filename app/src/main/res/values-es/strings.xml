@@ -173,7 +173,7 @@
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
     <string name="sort_prompt_title">Categoría de clase por</string>
-    <string name="kid_escape_text">Prensa \'%s\' para salir</string>
+    <string name="kid_escape_text">Prensa \'%s\'</string>
     <string name="reset_db">Reset El database?</string>
     <string name="reset_db_explain">El database será recreated y todo apps será
         re-categorized según vuestro \"coche-categorize apps\" poniendo.</string>

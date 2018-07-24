@@ -297,7 +297,6 @@
                 android:id="@+id/kid_code_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:lines="2"
                 android:textSize="16sp" />
 
