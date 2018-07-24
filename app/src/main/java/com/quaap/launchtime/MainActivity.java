@@ -2732,8 +2732,7 @@ public class MainActivity extends Activity implements
                     LauncherApps.ShortcutQuery q = new LauncherApps.ShortcutQuery();
                     q.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC | LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST);
                     q.setPackage(appitem.getPackageName());
-                    q.setActivity(appitem.getComponentName());
-
+                    q.setActivity(appitem.getBaseComponentName());
 
                     shortcutInfos = launcherApps.getShortcuts(q, android.os.Process.myUserHandle());
 
