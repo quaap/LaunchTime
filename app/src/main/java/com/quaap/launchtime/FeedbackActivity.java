@@ -32,6 +32,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +59,8 @@ public class FeedbackActivity extends Activity {
     Map<String,AppLauncher> appMap = new HashMap<>();
     String version;
     String appname;
+    ListView itemsList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class FeedbackActivity extends Activity {
         if (GlobState.enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         
         setContentView(R.layout.activity_feedback);
+
+        itemsList = findViewById(R.id.info_data_items);
 
         appname = getString(R.string.app_name);
         version = "0";
@@ -75,25 +81,63 @@ public class FeedbackActivity extends Activity {
             e.printStackTrace();
         }
 
+
         Button sendIt = findViewById(R.id.info_send);
 
         sendIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AsyncTask<Void, Void, String> sendItAsync = new AsyncTask<Void, Void, String>() {
 
-                    @Override
-                    protected String doInBackground(Void... voids) {
-                        return sendData();
-                    }
+                int count = 0;
+                for (String key: includes.keySet()) {
+                    if (includes.get(key)) count++;
+                }
 
-                    @Override
-                    protected void onPostExecute(String message) {
-                        Toast.makeText(FeedbackActivity.this, message, Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                };
-                sendItAsync.execute();
+                if (count>0) {
+                    AsyncTask<Void, Void, String> sendItAsync = new AsyncTask<Void, Void, String>() {
+
+                        @Override
+                        protected String doInBackground(Void... voids) {
+                            return sendData();
+                        }
+
+                        @Override
+                        protected void onPostExecute(String message) {
+                            Toast.makeText(FeedbackActivity.this, message, Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    };
+                    sendItAsync.execute();
+                } else {
+                    Toast.makeText(FeedbackActivity.this, "Must select something, otherwise there's no point in sending!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        ImageView selectNone = findViewById(R.id.info_select_none);
+        selectNone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (String key: includes.keySet()) {
+                    includes.put(key, false);
+                }
+
+                Log.d("Feedback", "selectNone");
+                populateItems();
+
+            }
+        });
+
+        ImageView selectAll = findViewById(R.id.info_select_all);
+        selectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (String key: includes.keySet()) {
+                    includes.put(key, true);
+                }
+
+                Log.d("Feedback", "selectAll");
+                populateItems();
             }
         });
 
@@ -197,12 +241,13 @@ public class FeedbackActivity extends Activity {
         }
 
 
-        ListView itemsList = findViewById(R.id.info_data_items);
-
-        itemsList.setAdapter(new PackageAdapter(this, new ArrayList<>(scrubbednames.keySet())));
+        populateItems();
 
     }
 
+    private void populateItems() {
+        itemsList.setAdapter(new PackageAdapter(this, new ArrayList<>(scrubbednames.keySet())));
+    }
 
 
     private String sendData() {
