@@ -1468,7 +1468,12 @@ public class MainActivity extends Activity implements
         }
         if (h>0 || hcells>0) {
 
-            if (hcells == 0) hcells = (int) Math.round(Math.max(h / cellheight * .825, 1));
+            if (hcells == 0) {
+                hcells = (int) Math.round(Math.max(h / cellheight * .75, 1));
+                if (hcells > mStyle.getMaxWCells()) {
+                    hcells = mStyle.getMaxWCells();
+                }
+            }
 
             if (hcells > 1) {
                 lp.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, hcells, GridLayout.FILL);
@@ -1484,12 +1489,13 @@ public class MainActivity extends Activity implements
 
             lp.width = (int)(cellwidth*wcells*1.1);
 
-            int calcHeight = (int)(cellheight*hcells*1.4);
-            //if (h > cellheight*hcells*1.3) {
-                lp.height = calcHeight;
-            //} else {
-            //    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
-            //}
+            int calcHeight = (int)(cellheight*hcells*(hcells/(hcells-.2)));
+            lp.height = calcHeight;
+//            if (h > cellheight*hcells*1.3) {
+//                lp.height = calcHeight;
+//            } else {
+//                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;//(int)(cellheight*hcells*1.2);
+//            }
 
             storeWidgetWCells(app, wcells);
             storeWidgetHCells(app, hcells);
@@ -1502,7 +1508,7 @@ public class MainActivity extends Activity implements
                 hDpf = hDp;
             }
             Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
-            Log.d("widcol2", "hDp=" + hDpf + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
+            Log.d("widcol2", "hDp=" + hDp + " hDpf=" + hDpf + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
             appwid.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1933,6 +1939,7 @@ public class MainActivity extends Activity implements
         return item;
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateAppBadgeCount(ViewGroup item, int bcount) {
         if (item!=null) {
             TextView badge = item.findViewById(R.id.launcher_badge);
