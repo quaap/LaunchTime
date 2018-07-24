@@ -115,10 +115,11 @@ public class DefaultApps {
             activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms", "messen", "mms", "chat", "irc" ));
 
             ComponentName camapp = getpkg(context, MediaStore.ACTION_IMAGE_CAPTURE, null, null);
-            activities.put("camera", Arrays.asList(camapp.getPackageName(), "cameraApp", "CameraActivity", "camera.Camera", ".camera", "kamera", "camera", "kam", "cam", "photo", "foto"));
+            //Log.d("DefApps", camapp.getPackageName() + " " + camapp.getClassName());
+            activities.put("camera", Arrays.asList(camapp.getClassName(), "cameraApp", "CameraActivity", "camera.Camera", ".camera", "kamera", "camera", "kam", "cam", "photo", "foto"));
 
             ComponentName phoneapp = getpkg(context, Intent.ACTION_DIAL, "tel:411", null);
-            activities.put("phone", Arrays.asList(phoneapp.getClassName(), phoneapp.getPackageName(), "DialtactsActivity", "dial", "phone", "fone", "contacts"));
+            activities.put("phone", Arrays.asList(phoneapp.getClassName(), phoneapp.getPackageName(), "DialtactsActivity", "dialer", "dial", "phone", "fone", "contacts"));
 
             ComponentName emailapp = getpkg(context, Intent.ACTION_SENDTO, "mailto:", null);
             activities.put("email", Arrays.asList(emailapp.getPackageName(),
