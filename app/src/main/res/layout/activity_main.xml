@@ -34,12 +34,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <FrameLayout
+                    <LinearLayout
                         android:id="@+id/layout_icons_topframe"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    </FrameLayout>
+                    </LinearLayout>
 
                     <FrameLayout
                         android:id="@+id/icon_sheet_holder"
@@ -297,6 +298,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:lines="2"
                 android:textSize="16sp" />
 
             <TextView

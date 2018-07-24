@@ -134,7 +134,7 @@ public class MainActivity extends Activity implements
     private static final int UNINSTALL_RESULT = 3454;
 
     private LinearLayout mIconsArea;
-    private FrameLayout mIconSheetTopFrame;
+    private LinearLayout mIconSheetTopFrame;
     private InteractiveScrollView mIconSheetScroller;
     private ViewGroup mIconSheetBottomFrame;
     private ViewGroup mIconSheetHolder;
@@ -594,7 +594,7 @@ public class MainActivity extends Activity implements
                     if (mCategory.equals(Categories.CAT_SEARCH)) {
 
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        lp.gravity=Gravity.START;
+                        lp.gravity = Gravity.START;
                         mIconSheetTopFrame.setLayoutParams(lp);
                         mIconSheetTopFrame.addView(mSearchBox.getSearchView());
 
@@ -632,6 +632,19 @@ public class MainActivity extends Activity implements
                             mIconSheetTopFrame.setLayoutParams(lp);
 
                             mIconSheetTopFrame.addView(mCategoryLabel);
+                        }
+
+                        if (mCategory.equals(Categories.CAT_DUMB) && !mDumbMode) {
+                            Button dumbmode = new Button(MainActivity.this);
+                            dumbmode.setText(R.string.activate_dumbmode);
+                            dumbmode.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    view.setVisibility(View.GONE);
+                                    mAppPreferences.edit().putBoolean("prefs_dumbmode", true).apply();
+                                }
+                            });
+                            mIconSheetTopFrame.addView(dumbmode);
                         }
                     }
 
@@ -3618,6 +3631,10 @@ public class MainActivity extends Activity implements
                     b[i].setText(c);
                     kidcode += c;
                 }
+                if (mDumbMode) {
+                    kidcode += kidcode + kidcode;
+                }
+
                 List<String> kidcodearr = Arrays.asList(kidcode.split("(?!^)"));
                 String shuffled;
                 int i = 0;

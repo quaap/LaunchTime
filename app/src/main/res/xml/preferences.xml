@@ -24,9 +24,9 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:title="Dumbphone mode"
+            android:title="@string/activate_dumbmode"
             android:key="prefs_dumbmode"
-            android:summary="Lock into a special category with a useful subset of apps to reduce distractions. This is an experimental feature."
+            android:summary="@string/dumbmode_summ"
             android:paddingBottom="6dp" />
 
         <CheckBoxPreference

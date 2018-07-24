@@ -371,4 +371,8 @@
  <string name="width">Width</string>
  <string name="height">Height</string>
  <string name="defaults">Defaults</string>
+    <string name="activate_dumbmode">Activate dumbphone</string>
+    <string name="dumbmode_summ">Lock into a special category with a useful subset of apps to reduce distractions. This is an experimental feature.</string>
+ <string name="category_Dumb">Dumb</string>
+ <string name="category_Dumb_full">Dumb Phone</string>
 </resources>
