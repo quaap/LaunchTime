@@ -29,13 +29,6 @@
             android:summary="@string/dumbmode_summ"
             android:paddingBottom="6dp" />
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/prefs_new_apps_cat"
-            android:key="prefs_autocat"
-            android:summaryOn="@string/prefs_cat_apps"
-            android:summaryOff="@string/prefs_cat_no" />
-
         <PreferenceScreen
             android:title="@string/pref_system"
             android:summary="@string/pref_system_summ">
@@ -59,6 +52,13 @@
                 android:targetPackage="com.quaap.launchtime"
                 android:targetClass="com.quaap.launchtime.BackupActivity"/>
         </PreferenceScreen>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/prefs_new_apps_cat"
+            android:key="prefs_autocat"
+            android:summaryOn="@string/prefs_cat_apps"
+            android:summaryOff="@string/prefs_cat_no" />
 
     </PreferenceCategory>
 
