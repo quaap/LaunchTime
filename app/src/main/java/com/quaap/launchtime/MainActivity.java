@@ -415,61 +415,6 @@ public class MainActivity extends Activity implements
         hideCatsIfAutoHide(true);
         showButtonBar(false, true);
         //lock things up if it was in toddler mode
-
-        mDumbMode = false;
-
-        if (mDumbMode) {
-            String category = Categories.CAT_DUMB;
-            if (db().getCategoryDisplay(category)==null) {
-                db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),100);
-                createIconSheet(category);
-                final List<AppLauncher> appLauncherss = processActivities();
-                List<ComponentName> apps = new ArrayList<>();
-                List<String> onlyTypes = new ArrayList<>();
-                onlyTypes.add("camera");
-                onlyTypes.add("phone");
-                onlyTypes.add("msg");
-                onlyTypes.add("music");
-                DefaultApps.checkDefaultApps(this, appLauncherss, apps, onlyTypes);
-
-                String [] needs = new String[] {"calc", "clock", "calendar"};
-
-
-                NEEDS:
-                for(String key: needs) {
-                    for (AppLauncher app: appLauncherss) {
-                        String packagename = app.getPackageName().toLowerCase();
-                        if (packagename.contains(key)) {
-                            apps.add(app.getComponentName());
-                            continue NEEDS;
-                        }
-                    }
-                }
-
-
-                for(ComponentName ap: apps) {
-                    Log.d(TAG, "Trying " + ap);
-                    if (ap!=null) {
-                        AppLauncher app = db().getApp(ap);
-                        if (app==null) {
-                            Log.d(TAG, "null app for " + ap);
-                        } else {
-                            AppLauncher applauncher = app.makeAppLink();
-                            applauncher.setCategory(category);
-                            db().addApp(applauncher);
-                            //addAppToIconSheet(category, applauncher, true);
-                           // applauncher.loadAppIconAsync(this,mPackageMan);
-
-                        }
-                    } else {
-                        Log.d(TAG, "null ap");
-                    }
-                }
-            }
-            switchCategory(category);
-            mAppPreferences.edit().putBoolean("prefs_toddler_lock", true).apply();
-        }
-
         checkChildLock();
 
     }
@@ -558,6 +503,15 @@ public class MainActivity extends Activity implements
                         checkChildLock();
                         hideCatsIfAutoHide(false);
                     }
+
+                    if (key.equals("prefs_dumbmode")) {
+                        mDumbMode = sharedPreferences.getBoolean("prefs_dumbmode", false);
+                        if (mDumbMode) {
+                            startDumbMode();
+                        }
+                    }
+
+
 
                     if (key.equals("pref_show_badges")) {
                         if (!sharedPreferences.getBoolean("pref_show_badges", true)) {
@@ -806,6 +760,7 @@ public class MainActivity extends Activity implements
 
             mStyle.readPrefs();
 
+            mDumbMode = mAppPreferences.getBoolean("prefs_dumbmode", false);
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
             readAnimationDuration();
 
@@ -3570,7 +3525,7 @@ public class MainActivity extends Activity implements
     //initialize the form members
 
     private void showButtonBar(boolean visible, boolean hideCats) {
-        if (checkChildLock()) return;
+        if (mChildLock) return;
 
         if (visible) {
             showHiddenCategories();
@@ -3611,10 +3566,14 @@ public class MainActivity extends Activity implements
 
 
     private void deactivateChildLock() {
+        boolean oldDumbMode = mDumbMode;
         mChildLock = false;
+        mDumbMode = false;
         mAppPreferences.edit().putBoolean("prefs_toddler_lock", false).apply();
+        mAppPreferences.edit().putBoolean("prefs_dumbmode", false).apply();
         kidaccumecode = "";
         checkChildLock();
+        if (oldDumbMode) switchCategory(getTopCategory());
     }
 
 
@@ -3622,6 +3581,9 @@ public class MainActivity extends Activity implements
         View kid_escape_area = findViewById(R.id.kid_escape_area);
         View decorView = getWindow().getDecorView();
        // View catswrap = findViewById(R.id.category_tabs_wrap);
+        if (mDumbMode) {
+            switchCategory(Categories.CAT_DUMB);
+        }
 
         if (mChildLock ) {
 
@@ -3689,6 +3651,68 @@ public class MainActivity extends Activity implements
     }
 
 
+    private void startDumbMode() {
+
+        mDumbMode = true;
+
+        final String category = Categories.CAT_DUMB;
+        if (db().getCategoryDisplay(category)==null) {
+            db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),100);
+            createIconSheet(category);
+            final List<AppLauncher> appLauncherss = processActivities();
+            List<ComponentName> apps = new ArrayList<>();
+            List<String> onlyTypes = new ArrayList<>();
+            onlyTypes.add("camera");
+            onlyTypes.add("phone");
+            onlyTypes.add("msg");
+            onlyTypes.add("music");
+            DefaultApps.checkDefaultApps(this, appLauncherss, apps, onlyTypes);
+
+            String [] needs = new String[] {"calc", "clock", "calendar", "maps"};
+
+
+            NEEDS:
+            for(String key: needs) {
+                for (AppLauncher app: appLauncherss) {
+                    String packagename = app.getPackageName().toLowerCase();
+                    if (packagename.contains(key)) {
+                        apps.add(app.getComponentName());
+                        continue NEEDS;
+                    }
+                }
+            }
+
+
+            for(ComponentName ap: apps) {
+                Log.d(TAG, "Trying " + ap);
+                if (ap!=null) {
+                    AppLauncher app = db().getApp(ap);
+                    if (app==null) {
+                        Log.d(TAG, "null app for " + ap);
+                    } else {
+                        AppLauncher applauncher = app.makeAppLink();
+                        applauncher.setCategory(category);
+                        db().addApp(applauncher);
+                        //addAppToIconSheet(category, applauncher, true);
+                        // applauncher.loadAppIconAsync(this,mPackageMan);
+
+                    }
+                } else {
+                    Log.d(TAG, "null ap");
+                }
+            }
+        }
+
+        mAppPreferences.edit().putBoolean("prefs_toddler_lock", true).apply();
+
+        //switchCategory(Categories.CAT_DUMB);
+//        mChildLock=true;
+//        mChildLockSetup = false;
+
+        checkChildLock();
+
+
+    }
 
 
     public boolean isAppInstalled(String packageName) {

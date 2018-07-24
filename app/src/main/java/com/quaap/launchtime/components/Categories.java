@@ -51,8 +51,8 @@ public class Categories {
     public static final String CAT_DUMB = "Dumb";
 
     //public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
-    public static final String[] CAT_TINY = {CAT_HIDDEN};
-    public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
+    public static final String[] CAT_TINY = {CAT_HIDDEN, CAT_DUMB};
+    public static final String[] CAT_HIDDENS = {CAT_HIDDEN, CAT_DUMB};
     public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
     public static final String[] CAT_NODROP = {CAT_SEARCH, CAT_DUMB};
 
@@ -66,8 +66,8 @@ public class Categories {
             CAT_Utilities,
             CAT_SETTINGS,
             CAT_OTHER,
-            CAT_HIDDEN,
-            CAT_SEARCH
+            CAT_SEARCH,
+            CAT_HIDDEN
     };
 
     private static Map<String, String[]> mCategorKeywords;

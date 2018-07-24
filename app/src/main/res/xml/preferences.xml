@@ -22,6 +22,12 @@
             android:summary="@string/pref_todd_lock_summ"
             android:paddingBottom="6dp" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Dumbphone mode"
+            android:key="prefs_dumbmode"
+            android:summary="Lock into a special category with a useful subset of apps to reduce distractions. This is an experimental feature."
+            android:paddingBottom="6dp" />
 
         <CheckBoxPreference
             android:defaultValue="true"
