@@ -2788,12 +2788,16 @@ public class MainActivity extends Activity implements
             view.getLocationOnScreen(viewpos);
 
             int top = viewpos[1] - height - 10;
-            if (top <= 0) top = viewpos[1] + view.getHeight()*2/3;
+            if (top <= 0) {
+                top = viewpos[1] + view.getHeight()*2/3;
+            } else if (top+height>=mScreenDim.y) {
+                top = mScreenDim.y - height - 10;
+            }
 
             int left = viewpos[0] + view.getWidth()/2 - width/2;
             if (left <= 0) {
                 left = viewpos[0]+4;
-            } else if (left + width > mScreenDim.x) {
+            } else if (left + width >= mScreenDim.x) {
                 left = mScreenDim.x - (int)(width*1.05);
             }
 
