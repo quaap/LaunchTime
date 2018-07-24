@@ -31,8 +31,11 @@ import java.util.TreeMap;
 public class DefaultApps {
 
     //QuickBar
+    public static void checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder) {
+        checkDefaultApps(context,launchers,quickRowOrder,null);
+    }
 
-    public static void checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder, View quickRow) {
+    public static void checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder, List<String> onlyTypes) {
         if (quickRowOrder.isEmpty()) {
             Map<String, List<String>> defactivities = getDefaultActivities(context);
            // boolean addeddefault = false;
@@ -50,6 +53,8 @@ public class DefaultApps {
                     //try the app for each one of the activities
                     for (Iterator<Map.Entry<String, List<String>>> defactit = defactivities.entrySet().iterator(); defactit.hasNext(); ) {
                         Map.Entry<String, List<String>> defactent = defactit.next();
+
+                        if (onlyTypes!=null && !onlyTypes.contains(defactent.getKey())) continue;
 
                         //if we have a test, search the app name
                         if (defactent.getValue().size() > i) {
@@ -107,7 +112,7 @@ public class DefaultApps {
                     ".browser", "browser"));
 
             ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
-            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "messen", "msg", "sms", "mms", "chat", "irc" ));
+            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms", "messen", "mms", "chat", "irc" ));
 
             ComponentName camapp = getpkg(context, MediaStore.ACTION_IMAGE_CAPTURE, null, null);
             activities.put("camera", Arrays.asList(camapp.getPackageName(), "cameraApp", "CameraActivity", "camera.Camera", ".camera", "kamera", "camera", "kam", "cam", "photo", "foto"));
@@ -116,10 +121,21 @@ public class DefaultApps {
             activities.put("phone", Arrays.asList(phoneapp.getClassName(), phoneapp.getPackageName(), "DialtactsActivity", "dial", "phone", "fone", "contacts"));
 
             ComponentName emailapp = getpkg(context, Intent.ACTION_SENDTO, "mailto:", null);
-            activities.put("email", Arrays.asList(emailapp.getPackageName(), "k9", "inbox", "outlook", "mail"));
+            activities.put("email", Arrays.asList(emailapp.getPackageName(),
+                    "k9", "inbox", "outlook", "email", "mail", "com.google.android.gm"));
 
             ComponentName musicapp = getpkg(context, Intent.ACTION_VIEW, "file:", "audio/*");
-            activities.put("music", Arrays.asList(musicapp.getPackageName(), "music", "mp3", "media", "player"));
+            activities.put("music", Arrays.asList(musicapp.getPackageName(),
+                    "com.spotify.music",
+                    "com.pandora.android",
+                    "com.google.android.music",
+                    "org.gateshipone.odyssey",
+                    "org.fitchfamily.android.symphony",
+                    "ch.blinkenlights.android.vanilla",
+                    "com.rhapsody",
+                    "musicplayer",  "music.player",
+                    "mp3", "music", "tunein", "radio", "song"));
+
 
         } catch (Exception e) {
             Log.e("LaunchTime", e.getMessage(), e);

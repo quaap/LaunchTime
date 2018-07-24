@@ -21,6 +21,7 @@
     <string name="category_Other">Other</string>
     <string name="category_Settings">Settings</string>
     <string name="category_Hidden">Hidden</string>
+    <string name="category_Dumb">Dumb</string>
 
     <string name="category_Search_full">Search &amp; Recent</string>
     <string name="category_Talk_full">Communication</string>
@@ -32,6 +33,7 @@
     <string name="category_Other_full">Other</string>
     <string name="category_Settings_full">Settings &amp; System</string>
     <string name="category_Hidden_full">Hidden</string>
+    <string name="category_Dumb_full">Dumb Phone</string>
 
 
     <string name="search_apps">Search your Apps</string>

@@ -95,6 +95,7 @@ import android.widget.Toast;
 import com.quaap.launchtime.apps.AppInfo;
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.Badger;
+import com.quaap.launchtime.apps.DefaultApps;
 import com.quaap.launchtime.apps.LaunchApp;
 import com.quaap.launchtime.apps.InteractiveScrollView;
 import com.quaap.launchtime.components.Categories;
@@ -185,6 +186,8 @@ public class MainActivity extends Activity implements
 
     private boolean mChildLock;
     private boolean mChildLockSetup;
+
+    private boolean mDumbMode;
 
     private LaunchApp mLaunchApp;
 
@@ -412,7 +415,63 @@ public class MainActivity extends Activity implements
         hideCatsIfAutoHide(true);
         showButtonBar(false, true);
         //lock things up if it was in toddler mode
+
+        mDumbMode = false;
+
+        if (mDumbMode) {
+            String category = Categories.CAT_DUMB;
+            if (db().getCategoryDisplay(category)==null) {
+                db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),100);
+                createIconSheet(category);
+                final List<AppLauncher> appLauncherss = processActivities();
+                List<ComponentName> apps = new ArrayList<>();
+                List<String> onlyTypes = new ArrayList<>();
+                onlyTypes.add("camera");
+                onlyTypes.add("phone");
+                onlyTypes.add("msg");
+                onlyTypes.add("music");
+                DefaultApps.checkDefaultApps(this, appLauncherss, apps, onlyTypes);
+
+                String [] needs = new String[] {"calc", "clock", "calendar"};
+
+
+                NEEDS:
+                for(String key: needs) {
+                    for (AppLauncher app: appLauncherss) {
+                        String packagename = app.getPackageName().toLowerCase();
+                        if (packagename.contains(key)) {
+                            apps.add(app.getComponentName());
+                            continue NEEDS;
+                        }
+                    }
+                }
+
+
+                for(ComponentName ap: apps) {
+                    Log.d(TAG, "Trying " + ap);
+                    if (ap!=null) {
+                        AppLauncher app = db().getApp(ap);
+                        if (app==null) {
+                            Log.d(TAG, "null app for " + ap);
+                        } else {
+                            AppLauncher applauncher = app.makeAppLink();
+                            applauncher.setCategory(category);
+                            db().addApp(applauncher);
+                            //addAppToIconSheet(category, applauncher, true);
+                           // applauncher.loadAppIconAsync(this,mPackageMan);
+
+                        }
+                    } else {
+                        Log.d(TAG, "null ap");
+                    }
+                }
+            }
+            switchCategory(category);
+            mAppPreferences.edit().putBoolean("prefs_toddler_lock", true).apply();
+        }
+
         checkChildLock();
+
     }
 
     private String getTopCategory() {
@@ -2045,7 +2104,7 @@ public class MainActivity extends Activity implements
 
     private int getWidgetHCells(AppLauncher app) {
         int cells =mPrefs.getInt(app.getComponentName() + "_hcells", 0);
-        Log.d(TAG, "in getWidgetHCells " + cells);
+        //Log.d(TAG, "in getWidgetHCells " + cells);
         return cells;
     }
 
@@ -2914,18 +2973,26 @@ public class MainActivity extends Activity implements
         for (String cat : db().getCategories()) {
             boolean isNewCat = mCategoryJustCreated!=null && cat.equals(mCategoryJustCreated);
 
-            if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0 && !isNewCat) {
-                mCategoryTabs.get(cat).setVisibility(View.GONE);
-            } else if (!Categories.isHiddenCategory(cat)) {
-                mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
+            TextView cattab = mCategoryTabs.get(cat);
+
+            if (cattab!=null) {
+                if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0 && !isNewCat) {
+                    cattab.setVisibility(View.GONE);
+                } else if (!Categories.isHiddenCategory(cat)) {
+                    cattab.setVisibility(View.VISIBLE);
+                }
             }
         }
 
         for (String cat: Categories.CAT_HIDDENS) {
-            if (mCategory.equals(cat) ) {
-                mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
-            } else {
-                mCategoryTabs.get(cat).setVisibility(View.GONE);
+            TextView cattab = mCategoryTabs.get(cat);
+
+            if (cattab!=null) {
+                if (mCategory.equals(cat)) {
+                    cattab.setVisibility(View.VISIBLE);
+                } else {
+                    cattab.setVisibility(View.GONE);
+                }
             }
         }
     }

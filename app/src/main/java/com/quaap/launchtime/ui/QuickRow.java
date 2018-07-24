@@ -144,7 +144,7 @@ public class QuickRow {
         List<AppLauncher> quickRowApps = new ArrayList<>();
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
 
-        DefaultApps.checkDefaultApps(mQuickRow.getContext(), launchers, quickRowOrder, mQuickRow);
+        DefaultApps.checkDefaultApps(mQuickRow.getContext(), launchers, quickRowOrder);
 
 
         for (AppLauncher app : launchers) {

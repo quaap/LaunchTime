@@ -48,10 +48,14 @@ public class Categories {
     public static final String CAT_OTHER = "Other";
     public static final String CAT_SETTINGS = "Settings";
     public static final String CAT_HIDDEN = "Hidden";
+    public static final String CAT_DUMB = "Dumb";
+
     //public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
     public static final String[] CAT_TINY = {CAT_HIDDEN};
     public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
     public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
+    public static final String[] CAT_NODROP = {CAT_SEARCH, CAT_DUMB};
+
 
     public static final String[] DefCategoryOrder = {
             CAT_TALK,
@@ -267,6 +271,7 @@ public class Categories {
         catmap.put(CAT_OTHER, R.string.category_Other);
         catmap.put(CAT_SETTINGS, R.string.category_Settings);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden);
+        catmap.put(CAT_DUMB, R.string.category_Dumb);
         return context.getString(catmap.get(category));
     }
 
@@ -282,6 +287,7 @@ public class Categories {
         catmap.put(CAT_OTHER, R.string.category_Other_full);
         catmap.put(CAT_SETTINGS, R.string.category_Settings_full);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden_full);
+        catmap.put(CAT_DUMB, R.string.category_Dumb_full);
         return context.getString(catmap.get(category));
     }
 

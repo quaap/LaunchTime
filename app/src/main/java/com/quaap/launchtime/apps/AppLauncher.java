@@ -355,7 +355,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 if (Color.alpha(tint)>10) {
                     link.setColorFilter(tint, PorterDuff.Mode.MULTIPLY);
                 }
-                link.setBounds(canvas.getWidth() * 2 / 3, canvas.getHeight() * 2 / 3, canvas.getWidth(), canvas.getHeight());
+                link.setBounds(canvas.getWidth() * 3 / 4, canvas.getHeight() * 3 / 4, canvas.getWidth(), canvas.getHeight());
                 link.draw(canvas);
             }
 
