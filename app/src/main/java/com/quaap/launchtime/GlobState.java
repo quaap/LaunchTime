@@ -42,7 +42,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     private UnreadReceiver unreadrecv;
     private ShortcutReceiver shortcutrecv;
 
-    public static final boolean enableCrashReporter = false;
+    public static final boolean enableCrashReporter
+            = GlobState.class.getPackage().getName().equals("com.quaap.launch"+"time");
 
     public static GlobState getGlobState(Context context) {
         return (GlobState) context.getApplicationContext();
