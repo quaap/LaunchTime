@@ -2311,6 +2311,17 @@ public class MainActivity extends Activity implements
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
                     //Log.d(TAG, "" + dragObj.getTag());
+
+                    if (mCategory.equals(Categories.CAT_SEARCH)) {
+                        try {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            if (imm != null)
+                                imm.hideSoftInputFromWindow(findViewById(R.id.search_box).getWindowToken(), 0);
+                        } catch (Throwable t) {
+                            //Log.e(TAG, t.getMessage(), t);
+                        }
+                    }
+
                     break;
 
                 case DragEvent.ACTION_DRAG_LOCATION:
@@ -2679,14 +2690,6 @@ public class MainActivity extends Activity implements
     public void startDrag() {
 
         if (mDragPotential==null) return;
-
-        try {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null)
-                imm.hideSoftInputFromWindow(findViewById(R.id.search_box).getWindowToken(), 0);
-        } catch (Throwable t) {
-            Log.e(TAG, t.getMessage(), t);
-        }
 
         AppLauncher dragitem = (AppLauncher) mDragPotential.getTag();
         String label = dragitem.getLabel();
