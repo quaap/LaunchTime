@@ -420,12 +420,15 @@ public class MainActivity extends Activity implements
     }
 
     private String getTopCategory() {
-        String category = db().getCategories().get(0);
-        // If the category has been deleted, pick a known-good category
-        if (category==null || db().getCategoryDisplay(category)==null) {
-            category = Categories.CAT_TALK;
+        for (String category: db().getCategories()) {
+            // If the category has been deleted, pick a known-good category
+            if (category==null || db().getCategoryDisplay(category)==null || db().isHiddenCategory(category) || Categories.isHiddenCategory(category)) {
+                continue;
+            }
+            return category;
         }
-        return category;
+        // If the category has been deleted, pick a known-good category
+        return Categories.CAT_TALK;
     }
 
     //private List<String> prefsChanging = Collections.synchronizedList(new ArrayList<String>());
