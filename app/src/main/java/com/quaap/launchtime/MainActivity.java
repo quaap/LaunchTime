@@ -1537,8 +1537,8 @@ public class MainActivity extends Activity implements
             } else {
                 hDpf = hDp;
             }
-            Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
-            Log.d("widcol2", "hDp=" + hDp + " hDpf=" + hDpf + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
+            //Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
+            //Log.d("widcol2", "hDp=" + hDp + " hDpf=" + hDpf + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
             appwid.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1589,7 +1589,7 @@ public class MainActivity extends Activity implements
             final Runnable resize = new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, (width.getProgress()+1) +","+ (height.getProgress()+1));
+                    //Log.d(TAG, (width.getProgress()+1) +","+ (height.getProgress()+1));
                     storeWidgetWCells(appitem, width.getProgress()+1);
                     storeWidgetHCells(appitem, height.getProgress()+1);
 
