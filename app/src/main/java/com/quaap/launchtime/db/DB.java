@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
+@SuppressWarnings({"TryFinallyCanBeTryWithResources", "WeakerAccess"})
 public class DB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "db";
