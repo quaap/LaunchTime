@@ -67,9 +67,12 @@ public class DB extends SQLiteOpenHelper {
 
     private static final String INDEX = "pos";
     private static final String TIME = "time";
-    private static final String ISTINY = "tiny";
+    private static final String FLAGS = "tiny";
     private static final String LEVEL = "level";
 
+
+    private static int FLAGS_ISTINY = 1;
+    private static int FLAGS_ISHIDDEN = 2;
 
 
     private static final String APP_TABLE_OLD = "apps";
@@ -89,7 +92,7 @@ public class DB extends SQLiteOpenHelper {
 
 
     private static final String TAB_ORDER_TABLE = "tab_order";
-    private static final String[] tabordercolumns = {CATID, LABEL, LABELFULL, ISTINY, INDEX};
+    private static final String[] tabordercolumns = {CATID, LABEL, LABELFULL, FLAGS, INDEX};
     private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "TEXT", "SHORT", "INT"};
     private static final String TAB_ORDER_TABLE_CREATE = buildCreateTableStmt(TAB_ORDER_TABLE, tabordercolumns, tabordercolumntypes);
 
@@ -142,7 +145,7 @@ public class DB extends SQLiteOpenHelper {
             Log.d("db", "first run: creating categories");
             for (int i = 0; i < Categories.DefCategoryOrder.length; i++) {
                 String cat = Categories.DefCategoryOrder[i];
-                addCategory(cat, Categories.getCatLabel(mContext, cat), Categories.getCatFullLabel(mContext, cat), Categories.isTinyCategory(cat), i);
+                addCategory(cat, Categories.getCatLabel(mContext, cat), Categories.getCatFullLabel(mContext, cat), Categories.isTinyCategory(cat), Categories.isHiddenCategory(cat), i);
             }
         } else {
             Log.d("db", "opening database");
@@ -259,6 +262,7 @@ public class DB extends SQLiteOpenHelper {
 
 
             Log.i("db", "copy to new table");
+
             sqLiteDatabase.execSQL("insert into " + APP_TABLE + "(" + cols + ") select " + cols + " from " + APP_TABLE_OLD);
             sqLiteDatabase.execSQL("drop table " + APP_TABLE_OLD);
 
@@ -285,7 +289,7 @@ public class DB extends SQLiteOpenHelper {
             values.put(INDEX, 1);
 
             //move search/recent away from top to correct old order.
-            //{CATID, LABEL, LABELFULL, ISTINY, INDEX};
+            //{CATID, LABEL, LABELFULL, FLAGS, INDEX};
             if (sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=0", null)>0) {
                 values.put(INDEX, 0);
                 sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
@@ -666,14 +670,14 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean addCategory(String catID, String displayName, String displayNameFull, int index) {
-        return addCategory(catID, displayName, displayNameFull, false, index);
+        return addCategory(catID, displayName, displayNameFull, false, false, index);
     }
 
-    public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny) {
-        return addCategory(catID, displayName, displayNameFull, isTiny, -1);
+    public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, boolean isHidden) {
+        return addCategory(catID, displayName, displayNameFull, isTiny, false, -1);
     }
 
-    public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, int index) {
+    public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, boolean isHidden, int index) {
         if (catID==null || catID.isEmpty()) {
             return false;
         }
@@ -685,12 +689,16 @@ public class DB extends SQLiteOpenHelper {
 
             SQLiteDatabase db = this.getWritableDatabase();
 
+            int flags = 0;
+            if (isTiny) flags |= FLAGS_ISTINY;
+            if (isHidden) flags |= FLAGS_ISHIDDEN;
+
             // Log.d("DB", "adding catID " + catID);
             ContentValues values = new ContentValues();
             values.put(CATID, catID);
             values.put(LABEL, displayName);
             values.put(LABELFULL, displayNameFull);
-            values.put(ISTINY, isTiny?1:0);
+            values.put(FLAGS, flags);
             values.put(INDEX, index);
 
             db.insert(TAB_ORDER_TABLE, null, values);
@@ -703,10 +711,10 @@ public class DB extends SQLiteOpenHelper {
 
 
     public boolean updateCategory(String catID, String displayName, String displayNameFull) {
-        return updateCategory(catID, displayName, displayNameFull, false);
+        return updateCategory(catID, displayName, displayNameFull, false, false);
     }
 
-    public boolean updateCategory(String catID, String displayName, String displayNameFull, boolean isTiny) {
+    public boolean updateCategory(String catID, String displayName, String displayNameFull, boolean isTiny, boolean isHidden) {
         if (catID==null || catID.isEmpty()) {
             return false;
         }
@@ -716,9 +724,13 @@ public class DB extends SQLiteOpenHelper {
             // Log.d("DB", "adding catID " + catID);
             ContentValues values = new ContentValues();
 
+            int flags = 0;
+            if (isTiny) flags |= FLAGS_ISTINY;
+            if (isHidden) flags |= FLAGS_ISHIDDEN;
+
             values.put(LABEL, displayName);
             values.put(LABELFULL, displayNameFull);
-            values.put(ISTINY, isTiny?1:0);
+            values.put(FLAGS, flags);
 
             db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{catID});
         } catch (Exception e) {
@@ -821,11 +833,11 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{ISTINY}, CATID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{FLAGS}, CATID + "=?", new String[]{catID}, null, null, null, null);
         boolean tiny = false;
         try {
             if (cursor.moveToNext()) {
-                tiny = cursor.getShort(cursor.getColumnIndex(ISTINY)) == 1;
+                tiny = ((cursor.getShort(cursor.getColumnIndex(FLAGS)) & FLAGS_ISTINY) == FLAGS_ISTINY);
             }
         } catch (Exception e) {
             Log.e("LaunchDB", "tiny error.", e);
@@ -834,6 +846,26 @@ public class DB extends SQLiteOpenHelper {
         }
         return tiny;
     }
+
+
+    public boolean isHiddenCategory(String catID) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{FLAGS}, CATID + "=?", new String[]{catID}, null, null, null, null);
+        boolean hidden = false;
+        try {
+            if (cursor.moveToNext()) {
+                hidden = ((cursor.getShort(cursor.getColumnIndex(FLAGS)) & FLAGS_ISHIDDEN) == FLAGS_ISHIDDEN);
+            }
+        } catch (Exception e) {
+            Log.e("LaunchDB", "tiny error.", e);
+        } finally {
+            cursor.close();
+        }
+        return hidden;
+    }
+
 
     public void setCategoryOrder(ViewGroup container) {
 

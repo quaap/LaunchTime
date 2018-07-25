@@ -373,5 +373,6 @@
     <string name="defaults">Defaults</string>
     <string name="activate_dumbmode">Dumbphone mode</string>
     <string name="dumbmode_summ">Lock into a special category with a useful subset of apps to reduce distractions. This is an experimental feature.</string>
+    <string name="is_hidden">Is Hidden</string>
 
 </resources>

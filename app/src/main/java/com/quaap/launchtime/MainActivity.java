@@ -322,7 +322,7 @@ public class MainActivity extends Activity implements
         List<String> categories = db().getCategories();
         for (ListIterator<String> it = categories.listIterator(); it.hasNext();) {
             String cat = it.next();
-            if (Categories.isHiddenCategory(cat)) it.remove();
+            if (!cat.equals(category) && (Categories.isHiddenCategory(cat) || db().isHiddenCategory(cat))) it.remove();
         }
         int last = categories.size() -1;
         for (int i=0; i<categories.size(); i++) {
@@ -2134,7 +2134,7 @@ public class MainActivity extends Activity implements
 
         final Style.CategoryTabStyle catstyle = getDefaultCategoryStyle(category);
 
-        if (Categories.isHiddenCategory(category)) {
+        if (Categories.isHiddenCategory(category) || db().isHiddenCategory(category)) {
             categoryTab.setVisibility(View.GONE);
         }
 
@@ -2943,25 +2943,29 @@ public class MainActivity extends Activity implements
             TextView cattab = mCategoryTabs.get(cat);
 
             if (cattab!=null) {
-                if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0 && !isNewCat) {
-                    cattab.setVisibility(View.GONE);
-                } else if (!Categories.isHiddenCategory(cat)) {
-                    cattab.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-
-        for (String cat: Categories.CAT_HIDDENS) {
-            TextView cattab = mCategoryTabs.get(cat);
-
-            if (cattab!=null) {
                 if (mCategory.equals(cat)) {
                     cattab.setVisibility(View.VISIBLE);
-                } else {
+                } else if (Categories.isHiddenCategory(cat) || db().isHiddenCategory(cat)) {
                     cattab.setVisibility(View.GONE);
+                } else  if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0 && !isNewCat) {
+                    cattab.setVisibility(View.GONE);
+                } else {
+                    cattab.setVisibility(View.VISIBLE);
                 }
             }
         }
+
+//        for (String cat: Categories.CAT_HIDDENS) {
+//            TextView cattab = mCategoryTabs.get(cat);
+//
+//            if (cattab!=null) {
+//                if (mCategory.equals(cat)) {
+//                    cattab.setVisibility(View.VISIBLE);
+//                } else {
+//                    cattab.setVisibility(View.GONE);
+//                }
+//            }
+//        }
     }
 
     private void showRemoveDropzone() {
@@ -3093,7 +3097,7 @@ public class MainActivity extends Activity implements
     }
 
     private void promptGetCategoryName(String title, String message, final String category, String defName,
-                                       String defFullName, boolean defIsTiny, final CategoryChangerListener categoryChangerListener) {
+                                       String defFullName, boolean defIsTiny, boolean defIsHidden, final CategoryChangerListener categoryChangerListener) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
 
@@ -3107,6 +3111,7 @@ public class MainActivity extends Activity implements
         final EditText shortname = view.findViewById(R.id.shortname);
         final EditText fullname = view.findViewById(R.id.fullname);
         final CheckBox isTiny = view.findViewById(R.id.istiny_checkbox);
+        final CheckBox isHidden = view.findViewById(R.id.ishidden_checkbox);
 
         int vis = View.GONE;
         if (category.length()==0 && populateDeletedCategorySpinner(catDeletedSpinner, shortname, fullname)) {
@@ -3123,6 +3128,12 @@ public class MainActivity extends Activity implements
         shortname.setText(defName);
         fullname.setText(defFullName);
         isTiny.setChecked(defIsTiny);
+        if (Categories.isHiddenCategory(category)) {
+            isHidden.setVisibility(View.INVISIBLE);
+        } else {
+            isHidden.setVisibility(View.VISIBLE);
+            isHidden.setChecked(defIsHidden);
+        }
 
         builder.setView(view);
 
@@ -3130,7 +3141,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String delcat = (String)catDeletedSpinner.getSelectedItem();
-                categoryChangerListener.onClick(dialog, which, (delcat!=null && delcat.length()>0?delcat:category), shortname.getText().toString(), fullname.getText().toString(), isTiny.isChecked());
+                categoryChangerListener.onClick(dialog, which, (delcat!=null && delcat.length()>0?delcat:category), shortname.getText().toString(), fullname.getText().toString(), isTiny.isChecked(), isHidden.isChecked());
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm!=null) imm.hideSoftInputFromWindow(shortname.getWindowToken(), 0);
             }
@@ -3160,11 +3171,12 @@ public class MainActivity extends Activity implements
                 db().getCategoryDisplay(category),
                 db().getCategoryDisplayFull(category),
                 db().isTinyCategory(category),
+                db().isHiddenCategory(category),
                 new CategoryChangerListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny) {
+                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny, boolean isHidden) {
                         try {
-                            renameCategory(category, newDisplayName, newDisplayFullName, isTiny);
+                            renameCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden);
                         } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
@@ -3173,7 +3185,7 @@ public class MainActivity extends Activity implements
                 });
     }
 
-    private void renameCategory(String category, String newDisplayName, String newDisplayFullName, boolean isTiny) {
+    private void renameCategory(String category, String newDisplayName, String newDisplayFullName, boolean isTiny, boolean isHidden) {
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
 
@@ -3185,7 +3197,7 @@ public class MainActivity extends Activity implements
             throw new IllegalArgumentException("Must give a name");
         }
 
-        if (db().updateCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
+        if (db().updateCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden)) {
 
             TextView categoryTab = mCategoryTabs.get(category);
             if (category.equals(mCategory)) {
@@ -3207,11 +3219,12 @@ public class MainActivity extends Activity implements
                 "",
                 "",
                 false,
+                false,
                 new CategoryChangerListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny) {
+                    public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny, boolean isHidden) {
                         try {
-                            addCategory(category, newDisplayName, newDisplayFullName, isTiny);
+                            addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden);
                         } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
@@ -3220,7 +3233,7 @@ public class MainActivity extends Activity implements
                 });
     }
 
-    private void addCategory(String category, String newDisplayName, String newDisplayFullName,  boolean isTiny) {
+    private void addCategory(String category, String newDisplayName, String newDisplayFullName,  boolean isTiny, boolean isHidden) {
         category = category.trim();
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
@@ -3242,7 +3255,7 @@ public class MainActivity extends Activity implements
         mCategoryJustCreated = category;
 
         Log.d(TAG, category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
-        if (db().addCategory(category, newDisplayName, newDisplayFullName, isTiny)) {
+        if (db().addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden)) {
             createIconSheet(category);
 
             switchCategory(category);
@@ -3674,7 +3687,7 @@ public class MainActivity extends Activity implements
 
         final String category = Categories.CAT_DUMB;
         if (db().getCategoryDisplay(category)==null) {
-            db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),100);
+            db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),true, 100);
             createIconSheet(category);
             final List<AppLauncher> appLauncherss = processActivities();
             List<ComponentName> apps = new ArrayList<>();
@@ -3783,7 +3796,7 @@ public class MainActivity extends Activity implements
 
 
     interface CategoryChangerListener {
-        void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean istiny);
+        void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean istiny, boolean ishidden);
     }
 
 

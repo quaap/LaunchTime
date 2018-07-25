@@ -374,4 +374,5 @@
     <string name="dumbmode_summ">Lock into a special category with a useful subset of apps to reduce distractions. This is an experimental feature.</string>
     <string name="category_Dumb">Dumb</string>
     <string name="category_Dumb_full">Dumb Phone</string>
+    <string name="is_hidden">Is Hidden</string>
 </resources>
