@@ -80,7 +80,7 @@ public class Style {
     }
 
 
-    public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny}
+    public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny, Hidden}
 
     public void styleCategoryStyle(final TextView categoryTab, CategoryTabStyle catstyle, boolean highContrast) {
 
@@ -101,22 +101,33 @@ public class Style {
 
         Rect pad  = new Rect();
 
-        int bgcolor;
+        int bgcolor = 0;
         categoryTab.setBackground(null);
         categoryTab.setShadowLayer(0, 0, 0, 0);
 
         switch (catstyle) {
+            case Hidden:
+                bgcolor = cattabBackground;
+                if (isOnLeft) {
+                    lp.rightMargin = 36;
+                } else {
+                    lp.leftMargin = 36;
+                }
+
             case Tiny:
                 categoryTab.setTextColor(cattabTextColor);
 
-                bgcolor = highContrast?cattabBackgroundHighContrast:cattabBackground;
+                if (bgcolor==0) {
+                    bgcolor = highContrast ? cattabBackgroundHighContrast : cattabBackground;
+                    if (isOnLeft) {
+                        lp.rightMargin = 22;
+                    } else {
+                        lp.leftMargin = 22;
+                    }
+                }
                 pad.set(padLeft, categoryTabPaddingHeight/5, padRight, categoryTabPaddingHeight/5);
                 categoryTab.setTextSize(categoryTabFontSize-3);
-                if (isOnLeft) {
-                    lp.rightMargin = 22;
-                } else {
-                    lp.leftMargin = 22;
-                }
+
                 break;
             case DragHover:
                 categoryTab.setTextColor(cattabTextColor);
@@ -166,6 +177,7 @@ public class Style {
                 lp.leftMargin = 1;
                 lp.rightMargin = 1;
                 break;
+
             case Normal:
             default:
                 categoryTab.setTextColor(cattabTextColor);
@@ -324,6 +336,9 @@ public class Style {
                     break;
                 case DragHover:
                     color = dragoverBackground;
+                    break;
+                case Hidden:
+                    color = cattabBackground;
                     break;
                 case Tiny:
                 case Normal:

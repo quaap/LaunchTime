@@ -2106,6 +2106,8 @@ public class MainActivity extends Activity implements
 
         if (category.equals(mCategory)) {
             catstyle =  Style.CategoryTabStyle.Selected;
+        } else if (db().isHiddenCategory(category) || Categories.isHiddenCategory(category)) {
+            catstyle =  Style.CategoryTabStyle.Hidden;
         } else if (db().isTinyCategory(category)) {
             catstyle =  Style.CategoryTabStyle.Tiny;
         }
