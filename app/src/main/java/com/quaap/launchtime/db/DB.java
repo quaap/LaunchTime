@@ -751,6 +751,10 @@ public class DB extends SQLiteOpenHelper {
             db.beginTransaction();
 
             {
+                //delete the shortcuts we made
+                if (catID.equals(Categories.CAT_DUMB)) {
+                    db.delete(APP_TABLE, CATID + "=? and " + ACTVNAME + " like ?", new String[]{Categories.CAT_DUMB, AppLauncher.OLDSHORTCUT + "%"});
+                }
                 //Update existing apps with the deleted category to category other
                 ContentValues values = new ContentValues();
                 values.put(CATID, Categories.CAT_OTHER);

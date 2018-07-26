@@ -47,7 +47,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     private static final String LINK_SEP = ":IS_APP_LINK:";
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
     private static final String OREOSHORTCUT = "OREOSHORTCUT:";
-    private static final String OLDSHORTCUT = "OLDSHORTCUT:";
+    public static final String OLDSHORTCUT = "OLDSHORTCUT:";
 
 
     public static AppLauncher createAppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {

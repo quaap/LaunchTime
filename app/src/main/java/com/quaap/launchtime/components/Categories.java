@@ -48,7 +48,7 @@ public class Categories {
     public static final String CAT_OTHER = "Other";
     public static final String CAT_SETTINGS = "Settings";
     public static final String CAT_HIDDEN = "Hidden";
-    public static final String CAT_DUMB = "Dumb";
+    public static final String CAT_DUMB = "Dumb__";
 
     //public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
     public static final String[] CAT_TINY = {CAT_HIDDEN, CAT_DUMB};
