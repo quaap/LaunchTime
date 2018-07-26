@@ -997,15 +997,18 @@ public class MainActivity extends Activity implements
 
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
-        if (mAnimationDuration==0) {
-
-            view.setVisibility(View.GONE);
-            if (andBack) {
-                view.setVisibility(View.VISIBLE);
-            }
-            view.clearAnimation();
-            return;
-        }
+//        Log.d(TAG, "animateHide " + view);
+//        if (mAnimationDuration==0) {
+//            view.clearAnimation();
+//
+//            if (andBack) {
+//                view.setVisibility(View.VISIBLE);
+//
+//            } else {
+//                view.setVisibility(View.GONE);
+//            }
+//            return;
+//        }
 
         long now = SystemClock.uptimeMillis();
         float fac = andBack?2.5f:1;
@@ -1013,10 +1016,13 @@ public class MainActivity extends Activity implements
         if (then!=null && now - then < mAnimationDuration*fac) return;
         aniHideStarted.put(view,now);
 
-        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new AccelerateInterpolator())
+        ViewPropertyAnimator animate = view.animate()
+                .setDuration(mAnimationDuration)
+                .setInterpolator(new AccelerateInterpolator())
                 .alpha(0)
                 .scaleY(.6f)
                 .scaleX(.6f)
+
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -1062,13 +1068,17 @@ public class MainActivity extends Activity implements
 
         view.setVisibility(View.VISIBLE);
 
-        if (mAnimationDuration==0) {
-            view.clearAnimation();
+//        if (mAnimationDuration==0 && view.getAnimation()!=null) {
+//            view.clearAnimation();
+//            view.setVisibility(View.VISIBLE);
+//            Log.d(TAG, "animateShow " );
+//
+//            return;
+//        }
 
-            return;
-        }
-
-        ViewPropertyAnimator animate = view.animate().setDuration(mAnimationDuration).setInterpolator(new DecelerateInterpolator())
+        ViewPropertyAnimator animate = view.animate()
+                .setDuration(mAnimationDuration)
+                .setInterpolator(new DecelerateInterpolator())
                 .alpha(1)
                 .scaleY(1)
                 .scaleX(1)
@@ -3588,14 +3598,14 @@ public class MainActivity extends Activity implements
 
     //initialize the form members
 
-    private void showButtonBar(boolean visible, boolean hideCats) {
+    private void showButtonBar(boolean makevisible, boolean hideCats) {
         if (mChildLock) return;
 
-//        StackTraceElement from = Thread.currentThread().getStackTrace()[3];
-//
-//        Log.d(TAG,"showButtonBar(" + visible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
+        StackTraceElement from = Thread.currentThread().getStackTrace()[3];
 
-        if (visible) {
+        Log.d(TAG,"showButtonBar(" + makevisible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
+
+        if (makevisible) {
             showHiddenCategories();
             if (mCategory.equals(Categories.CAT_SEARCH)) {
                 mSortCategoryButton.setVisibility(View.INVISIBLE);
@@ -3607,6 +3617,7 @@ public class MainActivity extends Activity implements
 
 
             animateDownHide(mShowButtons);
+
             animateUpShow(mHideButtons);
 
             animateUpShow(mIconSheetBottomFrame);
