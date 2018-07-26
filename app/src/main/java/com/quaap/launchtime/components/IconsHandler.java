@@ -166,7 +166,7 @@ public class IconsHandler {
                         app_icon = pm.getActivityIcon(baseComponentName);
                     }
                 } catch (NameNotFoundException | IndexOutOfBoundsException | OutOfMemoryError e) {
-                    Log.e(TAG, "Unable to found component " + baseComponentName.toString() + e);
+                    Log.e(TAG, "Unable to find component " + baseComponentName.toString() + e);
                     return null;
                 }
             }

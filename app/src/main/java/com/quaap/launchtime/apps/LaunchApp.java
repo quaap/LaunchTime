@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.db.DB;
 
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,6 +63,8 @@ public class LaunchApp {
 
             if (app.isOreoShortcut()) {
                 launchOreoShortcut(app);
+            } else if (app.isShortcut()) {
+                launchShortcut(app);
             } else {
                 Intent intent = getAppIntent(app);
 
@@ -91,8 +94,28 @@ public class LaunchApp {
         //showButtonBar(false, true);
     }
 
+
+    private void launchShortcut(final AppLauncher app) {
+
+        try {
+            Intent launchIntent = Intent.parseUri(app.getLinkUri(),0);
+            Log.d(TAG, "Launching " + app.getComponentName());
+            if (isValidActivity(launchIntent)) {
+                // actually start it
+                activity.startActivity(launchIntent);
+            } else {
+                Toast.makeText(activity, "Could not launch item", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     //Thanks to KISS: https://github.com/Neamar/KISS/blob/0e654be99665294f601c58991dd20ae8595572bd/app/src/main/java/fr/neamar/kiss/result/ShortcutsResult.java
-    public void launchOreoShortcut(final AppLauncher app) {
+    private void launchOreoShortcut(final AppLauncher app) {
         if (Build.VERSION.SDK_INT >= 26) {
             final LauncherApps launcherApps = activity.getSystemService(LauncherApps.class);
             // Only the default launcher is allowed to start shortcuts
@@ -123,39 +146,47 @@ public class LaunchApp {
         String activityname = app.getLinkBaseActivityName();
         String packagename = app.getPackageName();
 
-        String uristr = app.getLinkUri();
-        Uri uri = null;
         Intent intent;
-        if (uristr != null && !uristr.equals("")) {
-            uri = Uri.parse(uristr);
-        }
-
-        if (app.isActionLink()) {
-            //Change "CALL" to "DIAL" so we can avoid needing the
-            // android.permission.CALL_PHONE permission
-            if (activityname.startsWith("android.intent.action.CALL")) {
-                activityname = "android.intent.action.DIAL";
+        try {
+            String uristr = app.getLinkUri();
+            Uri uri = null;
+            if (uristr != null && !uristr.equals("")) {
+                uri = Uri.parse(uristr);
             }
 
-            if (uri==null) {
-                intent = new Intent(activityname);
+            if (app.isShortcut()) {
+                intent = Intent.parseUri(app.getLinkUri(), 0);
+            } else if (app.isActionLink()) {
+                //Change "CALL" to "DIAL" so we can avoid needing the
+                // android.permission.CALL_PHONE permission
+                if (activityname.startsWith("android.intent.action.CALL")) {
+                    activityname = "android.intent.action.DIAL";
+                }
+
+                if (uri == null) {
+                    intent = new Intent(activityname);
+                } else {
+                    intent = new Intent(activityname, uri);
+                }
+
+
             } else {
-                intent = new Intent(activityname, uri);
+                intent = new Intent();
+                intent.setClassName(packagename, activityname);
+                if (uri != null) {
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setData(uri);
+                } else {
+                    intent.setAction(Intent.ACTION_MAIN);
+                }
             }
-        } else {
+            // Log.d("launch", activityname + "  " + uristr);
+            //needed to place in the open apps list
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } catch (Exception e) {
+            Log.d(TAG, "Could not launch " + activityname, e);
             intent = new Intent();
-            intent.setClassName(packagename, activityname);
-            if (uri!=null) {
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(uri);
-            } else {
-                intent.setAction(Intent.ACTION_MAIN);
-            }
         }
-       // Log.d("launch", activityname + "  " + uristr);
-        //needed to place in the open apps list
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
         return intent;
 
     }

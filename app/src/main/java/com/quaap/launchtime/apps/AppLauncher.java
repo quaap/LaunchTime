@@ -2,6 +2,7 @@ package com.quaap.launchtime.apps;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -43,9 +44,10 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
 
     private static Map<ComponentName,AppLauncher> mAppLaunchers = Collections.synchronizedMap(new HashMap<ComponentName,AppLauncher>());
-    public static final String LINK_SEP = ":IS_APP_LINK:";
+    private static final String LINK_SEP = ":IS_APP_LINK:";
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
-    public static final String OREOSHORTCUT = "OREOSHORTCUT:";
+    private static final String OREOSHORTCUT = "OREOSHORTCUT:";
+    private static final String OLDSHORTCUT = "OLDSHORTCUT:";
 
 
     public static AppLauncher createAppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {
@@ -80,19 +82,31 @@ public class AppLauncher implements Comparable<AppLauncher> {
     }
 
 
-    public static AppLauncher createActionLink(String activityName, Uri linkUri, String packageName, String label, String category) {
-        activityName = makeLink(activityName, linkUri);
-        AppLauncher app = mAppLaunchers.get(new ComponentName(packageName, activityName));
-        if (app == null) {
-            app = new AppLauncher(activityName, packageName, label, category, false);
-            mAppLaunchers.put(app.getComponentName(), app);
-        }
-        return app;
-    }
+//    public static AppLauncher createActionLink(String activityName, Uri linkUri, String packageName, String label, String category) {
+//        activityName = makeLink(activityName, linkUri);
+//        AppLauncher app = mAppLaunchers.get(new ComponentName(packageName, activityName));
+//        if (app == null) {
+//            app = new AppLauncher(activityName, packageName, label, category, false);
+//            mAppLaunchers.put(app.getComponentName(), app);
+//        }
+//        return app;
+//    }
+//
+//    public static AppLauncher createActionLink(String actionName, Uri linkUri, String label, String category) {
+//
+//        actionName = makeLink(actionName, linkUri);
+//        AppLauncher app = mAppLaunchers.get(new ComponentName(ACTION_PACKAGE, actionName));
+//        if (app == null) {
+//            app = new AppLauncher(actionName, ACTION_PACKAGE, label, category, false);
+//            mAppLaunchers.put(app.getComponentName(), app);
+//        }
+//        return app;
+//    }
 
-    public static AppLauncher createActionLink(String actionName, Uri linkUri, String label, String category) {
+    public static AppLauncher createActionShortcut(Intent launchintent, String label, String category) {
+        launchintent.putExtra("_LT__LINK_",  Math.random());  //so we can have multiple shortcuts
+        String actionName = makeLink(OLDSHORTCUT, launchintent.toUri(0));
 
-        actionName = makeLink(actionName, linkUri);
         AppLauncher app = mAppLaunchers.get(new ComponentName(ACTION_PACKAGE, actionName));
         if (app == null) {
             app = new AppLauncher(actionName, ACTION_PACKAGE, label, category, false);
@@ -102,12 +116,25 @@ public class AppLauncher implements Comparable<AppLauncher> {
     }
 
 
-    public static AppLauncher createOreoShortcut(String shortcutid, String mPackageName, String label, String category) {
+    public static AppLauncher createShortcut(Intent launchintent, String packageName, String label, String category) {
+        launchintent.putExtra("_LT__LINK_",  Math.random());  //so we can have multiple shortcuts
+        String actionName = makeLink(OLDSHORTCUT, launchintent.toUri(0));
+
+        AppLauncher app = mAppLaunchers.get(new ComponentName(packageName, actionName));
+        if (app == null) {
+            app = new AppLauncher(actionName, packageName, label, category, false);
+            mAppLaunchers.put(app.getComponentName(), app);
+        }
+        return app;
+    }
+
+
+    public static AppLauncher createOreoShortcut(String shortcutid, String packageName, String label, String category) {
 
         String actionName = makeLink(OREOSHORTCUT, shortcutid);
-        AppLauncher app = mAppLaunchers.get(new ComponentName(mPackageName, actionName));
+        AppLauncher app = mAppLaunchers.get(new ComponentName(packageName, actionName));
         if (app == null) {
-            app = new AppLauncher(actionName, mPackageName, label, category, false);
+            app = new AppLauncher(actionName, packageName, label, category, false);
             mAppLaunchers.put(app.getComponentName(), app);
         }
         return app;
@@ -220,7 +247,12 @@ public class AppLauncher implements Comparable<AppLauncher> {
     private static final String linkuri = "_link";
 
     public AppLauncher makeAppLink() {
-        return AppLauncher.createActionLink(getLinkBaseActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), getPackageName(), getLabel(), getCategory());
+        //return AppLauncher.createActionLink(getLinkBaseActivityName(), new Uri.Builder().scheme(linkuri).path(linkuri + Math.random()).build(), getPackageName(), getLabel(), getCategory());
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClassName(getPackageName(), getLinkBaseActivityName());
+        intent.setPackage(getPackageName());
+
+        return AppLauncher.createShortcut(intent, intent.getPackage(), getLabel(), null);
     }
 
     public boolean isAppLink() {
@@ -254,6 +286,9 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
     public boolean isOreoShortcut() {
         return mActivityName.contains(OREOSHORTCUT);
+    }
+    public boolean isShortcut() {
+        return mActivityName.contains(OLDSHORTCUT);
     }
 
     public String getLabel() {

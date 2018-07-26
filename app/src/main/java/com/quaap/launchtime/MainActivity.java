@@ -1450,7 +1450,7 @@ public class MainActivity extends Activity implements
     private void addAppToIconSheet(GridLayout iconSheet, AppLauncher app, int pos, boolean reuse) {
         if (app != null) {
             try {
-                if (((app.isWidget() || app.isOreoShortcut()) && isAppInstalled(app.getPackageName())) || mLaunchApp.isValidActivity(app)) {
+                if (((app.isWidget() || app.isLink()) && isAppInstalled(app.getPackageName())) || mLaunchApp.isValidActivity(app)) {
                     ViewGroup item = getLauncherView(app, false, reuse);
                     if (item != null) {
                         if (!app.iconLoaded()) {
@@ -1464,7 +1464,7 @@ public class MainActivity extends Activity implements
                     }
                 } else {
                     db().deleteApp(app.getComponentName());
-                    Log.d(TAG, "removed " + app.getPackageName() + " " + app.getActivityName() + ":activity not valid.");
+                    Log.d(TAG, "removed " + app.getPackageName() + " " + app.getActivityName() + ": activity not valid.");
                 }
             } catch (Exception e) {
                 Log.e(TAG, "exception adding icon to sheet", e);
