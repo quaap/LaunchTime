@@ -1539,7 +1539,7 @@ public class MainActivity extends Activity implements
 
         if (appwid != null) {
 
-            lp.width = (int)(cellwidth*wcells*1.1);
+            lp.width = (int)(cellwidth*wcells*1.16);
 
             int calcHeight = (int)(cellheight*hcells*(hcells/(hcells-.2)));
             lp.height = calcHeight;
