@@ -1017,7 +1017,29 @@ public class MainActivity extends Activity implements
                 .alpha(0)
                 .scaleY(.6f)
                 .scaleX(.6f)
-                .setListener(null);
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+
+                        if (andBack) {
+                            animateShow(view, towards);
+                        } else {
+                            view.setVisibility(View.GONE);
+                        }
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        if (andBack) {
+                            animateShow(view, towards);
+                        } else {
+                            view.setVisibility(View.GONE);
+                        }
+                    }
+                });
 
         switch(towards) {
             case Down:
@@ -1050,27 +1072,7 @@ public class MainActivity extends Activity implements
                 .alpha(1)
                 .scaleY(1)
                 .scaleX(1)
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animator) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-                        view.clearAnimation();
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animator) {
-                        view.clearAnimation();
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animator) {
-
-                    }
-                });
+                .setListener(null);
 
         switch(from) {
             case Down:
