@@ -2789,6 +2789,12 @@ public class MainActivity extends Activity implements
             //setForceShowIcon(mShortcutActionsPopup);
             mShortcutActionsPopup.removeAllViews();
 
+            mShortcutActionsPopup.setBackgroundColor(Color.argb(128, 255, 255, 255));
+
+            if (mStyle.isRoundedTabs()) {
+                mShortcutActionsPopup.setBackground(mStyle.getBgDrawableFor(mShortcutActionsPopup, Style.CategoryTabStyle.White,true));
+            }
+
             if (appitem.isWidget()) {
                 AppWidgetHostView appwid = mLoadedWidgets.get(appitem.getActivityName());
                 if (appwid!=null) {
@@ -2801,14 +2807,14 @@ public class MainActivity extends Activity implements
                     });
                 }
 
-            } else {
-                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
-                    @Override
-                    public void run() {
-                        mLaunchApp.launchApp(appitem);
-                        showButtonBar(false, true);
-                    }
-                });
+//            } else {
+//                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mLaunchApp.launchApp(appitem);
+//                        showButtonBar(false, true);
+//                    }
+//                });
             }
 
             if (Build.VERSION.SDK_INT >= 25) {
@@ -2897,7 +2903,7 @@ public class MainActivity extends Activity implements
         TextView itemText = item.findViewById(R.id.action_menu_text);
 
         itemText.setTextColor(mStyle.getCattabTextColor());
-        itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize());
+        itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize()-1);
 
         if (label!=null && label.length()>30) label = label.substring(0,28) + "...";
         itemText.setText(label);
@@ -2914,7 +2920,7 @@ public class MainActivity extends Activity implements
         });
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)getResources().getDimension(R.dimen.action_menu_width), ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.bottomMargin = 28;
+        lp.setMargins(12,12,12,12);
 
         item.setLayoutParams(lp);
         mShortcutActionsPopup.addView(item);

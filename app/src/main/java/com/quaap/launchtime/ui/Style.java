@@ -80,7 +80,7 @@ public class Style {
     }
 
 
-    public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny, Hidden}
+    public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny, Hidden, None, White}
 
     public void styleCategoryStyle(final TextView categoryTab, CategoryTabStyle catstyle, boolean highContrast) {
 
@@ -330,7 +330,7 @@ public class Style {
 
             Drawable base = mContext.getResources().getDrawable(R.drawable.rounded);
             newbg = base.getConstantState().newDrawable().mutate();
-            int color = cattabBackground;
+            int color = -1;
 
             switch (catstyle) {
                 case Selected:
@@ -346,9 +346,17 @@ public class Style {
                 case Normal:
                 case Default:
                     color = isHighContrast ? cattabBackgroundHighContrast : cattabBackground;
+                    break;
+                case White:
+                    color = Color.argb(128, 255, 255, 255);
+                    break;
+                case None:
+                default:
 
             }
-            newbg.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+            if (color!=-1) {
+                newbg.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+            }
             bgDrawables.put(key, newbg);
         }
 
