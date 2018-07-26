@@ -76,7 +76,11 @@ public class LaunchApp {
 
             //log the launch
             if (app.isAppLink()) {
-                db().appLaunched(new ComponentName(app.getPackageName(), app.getLinkBaseActivityName()));
+                if (app.isActionLink()) {
+                    db().appLaunched(new ComponentName(app.getPackageName(), app.getLinkBaseActivityName()));
+                } else {
+                    db().appLaunched(app.getBaseComponentName());
+                }
             } else {
                 db().appLaunched(app.getComponentName());
             }
