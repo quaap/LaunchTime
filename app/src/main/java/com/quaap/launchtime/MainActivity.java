@@ -147,6 +147,7 @@ public class MainActivity extends Activity implements
     private Map<View, String> mRevCategoryMap;
     private volatile String mCategory;
     private ImageView mShowButtons;
+    private ImageView mHideButtons;
     private ImageView mShowCats;
 
 
@@ -268,7 +269,7 @@ public class MainActivity extends Activity implements
 
         GlobState.getBadger(this).setBadgerCountChangeListener(this);
 
-        showButtonBar(false, true);
+        //showButtonBar(false, true);
 
 //        for (int i=0; i<100; i++) {
 //            ComponentName cn = db().getAppNames().get(1);
@@ -901,6 +902,10 @@ public class MainActivity extends Activity implements
             mShowButtons.setColorFilter(mStyle.getCattabTextColor());
             mShowButtons.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
 
+            mHideButtons.setBackgroundColor(mStyle.getCattabBackground());
+            mHideButtons.setColorFilter(mStyle.getCattabTextColor());
+            mHideButtons.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
+
             mShowCats.setBackgroundColor(mStyle.getCattabBackground());
             mShowCats.setColorFilter(mStyle.getCattabTextColor());
             mShowCats.setMinimumHeight(mStyle.getCategoryTabPaddingHeight()*3);
@@ -967,7 +972,9 @@ public class MainActivity extends Activity implements
         if (!show && cats.getVisibility() == View.VISIBLE) {
             animateDownHide(cats);
             animateUpShow(mShowCats);
-        } else if (show && cats.getVisibility() == View.GONE) {
+        } else if (show) {
+            //mShowCats.clearAnimation();
+            //cats.clearAnimation();
             animateDownHide(mShowCats);
             animateUpShow(cats);
         }
@@ -985,6 +992,7 @@ public class MainActivity extends Activity implements
     enum AnimateDirection {Left, Up, Right, Down}
 
     private Map<View,Long> aniHideStarted = new HashMap<>();
+
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
         if (mAnimationDuration==0) {
@@ -993,6 +1001,7 @@ public class MainActivity extends Activity implements
             if (andBack) {
                 view.setVisibility(View.VISIBLE);
             }
+            view.clearAnimation();
             return;
         }
 
@@ -1053,6 +1062,7 @@ public class MainActivity extends Activity implements
 
         if (mAnimationDuration==0) {
             view.clearAnimation();
+
             return;
         }
 
@@ -3017,6 +3027,7 @@ public class MainActivity extends Activity implements
         animateUpShow(mRemoveDropzone);
         //mRemoveDropzone.setVisibility(View.VISIBLE);
         animateDownHide(mShowButtons);
+        animateUpShow(mHideButtons);
         //mShowButtons.setVisibility(View.GONE);
     }
 
@@ -3030,6 +3041,7 @@ public class MainActivity extends Activity implements
 //        mLinkDropzonePeek.setVisibility(View.GONE);
         //mShowButtons.setVisibility(View.VISIBLE);
         animateUpShow(mShowButtons);
+        animateDownHide(mHideButtons);
     }
 
     private void launchUninstallIntent(String packageName) {
@@ -3476,16 +3488,29 @@ public class MainActivity extends Activity implements
         mRevCategoryMap = new HashMap<>();
         mRevCategoryMap.put(mQuickRow.getGridLayout(), QuickRow.QUICK_ROW_CAT);
 
-        mShowButtons = findViewById(R.id.settings_button);
+        mShowButtons = findViewById(R.id.show_buttonbar);
 
         mShowButtons.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cancelHide();
-                toggleButtonBar();
+                showButtonBar(true, !isAutohide());
                 hideCatsIfAutoHide(false);
             }
         });
+
+
+        mHideButtons = findViewById(R.id.hide_buttonbar);
+
+        mHideButtons.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelHide();
+                showButtonBar(false, !isAutohide());
+                hideCatsIfAutoHide(false);
+            }
+        });
+
 
         mShowCats = findViewById(R.id.show_cats_buttom);
         mShowCats.setOnClickListener(new View.OnClickListener() {
@@ -3557,16 +3582,16 @@ public class MainActivity extends Activity implements
         activity.startActivity(settingsIntent);
     }
 
-    private void toggleButtonBar() {
-        int vis = mIconSheetBottomFrame.getVisibility();
-        if (!isAutohide()) showButtonBar(vis != View.VISIBLE, true);
-    }
 
 
     //initialize the form members
 
     private void showButtonBar(boolean visible, boolean hideCats) {
         if (mChildLock) return;
+
+//        StackTraceElement from = Thread.currentThread().getStackTrace()[3];
+//
+//        Log.d(TAG,"showButtonBar(" + visible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
 
         if (visible) {
             showHiddenCategories();
@@ -3577,14 +3602,20 @@ public class MainActivity extends Activity implements
                 mSortCategoryButton.setVisibility(View.VISIBLE);
                 mEditWidgetsButton.setVisibility(View.VISIBLE);
             }
-            //mIconSheetBottomFrame.setVisibility(View.VISIBLE);
+
+
+            animateDownHide(mShowButtons);
+            animateUpShow(mHideButtons);
+
             animateUpShow(mIconSheetBottomFrame);
-            mShowButtons.setImageResource(android.R.drawable.arrow_down_float);
+
         } else {
             if (hideCats) {hideHiddenCategories();}
             animateDownHide(mIconSheetBottomFrame);
-            //mIconSheetBottomFrame.setVisibility(View.GONE);
-            if (!isAutohide()) mShowButtons.setImageResource(android.R.drawable.arrow_up_float);
+
+            animateDownHide(mHideButtons);
+            animateUpShow(mShowButtons);
+
         }
     }
 
@@ -3638,6 +3669,8 @@ public class MainActivity extends Activity implements
 
                 mIconSheetBottomFrame.setVisibility(View.GONE);
                 mShowButtons.setVisibility(View.GONE);
+                mHideButtons.setVisibility(View.GONE);
+                mShowCats.setVisibility(View.GONE);
                 kid_escape_area.setVisibility(View.VISIBLE);
 
                 TextView kid_code_txt = findViewById(R.id.kid_code_txt);
