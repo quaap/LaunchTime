@@ -160,7 +160,8 @@ public class Style {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     super.onAnimationEnd(animation);
-                                    categoryTab.animate().scaleX(1).scaleY(1).setStartDelay(50)
+                                    categoryTab.animate().setListener(null)
+                                            .scaleX(1).scaleY(1).setStartDelay(50)
                                             .setDuration(aniDuration)
                                             .setInterpolator(new LinearInterpolator());
                                 }
@@ -168,7 +169,8 @@ public class Style {
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
                                     super.onAnimationCancel(animation);
-                                    categoryTab.animate().scaleX(1).scaleY(1).setStartDelay(50)
+                                    categoryTab.animate().setListener(null)
+                                            .scaleX(1).scaleY(1).setStartDelay(50)
                                             .setDuration(aniDuration)
                                             .setInterpolator(new LinearInterpolator());
                                 }
