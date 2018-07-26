@@ -877,7 +877,7 @@ public class MainActivity extends Activity implements
 
                 float wr = (mScreenDim.x - (autohideCats ? 0 : catwidth)) / launcherw;
 
-                Log.d(TAG, "density=" + getResources().getDisplayMetrics().density + " wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
+                //Log.d(TAG, "density=" + getResources().getDisplayMetrics().density + " wr=" + wr + " x=" + mScreenDim.x + " catwidth=" + catwidth + " launcherw=" + launcherw);
                 if (wr < 3) mColumns = 2;
                 else if (wr < 4.16) mColumns = 3;
                 else if (wr < 5.4) mColumns = 4;
@@ -3601,9 +3601,9 @@ public class MainActivity extends Activity implements
     private void showButtonBar(boolean makevisible, boolean hideCats) {
         if (mChildLock) return;
 
-        StackTraceElement from = Thread.currentThread().getStackTrace()[3];
-
-        Log.d(TAG,"showButtonBar(" + makevisible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
+//        StackTraceElement from = Thread.currentThread().getStackTrace()[3];
+//
+//        Log.d(TAG,"showButtonBar(" + makevisible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
 
         if (makevisible) {
             showHiddenCategories();
