@@ -969,14 +969,16 @@ public class MainActivity extends Activity implements
         final View cats = findViewById(R.id.category_tabs_wrap);
         showButtonBar(false,false);
 
-        if (!show && cats.getVisibility() == View.VISIBLE) {
-            animateDownHide(cats);
-            animateUpShow(mShowCats);
+        if (!show) {
+          if (cats.getVisibility() == View.VISIBLE) {
+              animateDownHide(cats);
+          }
+          animateUpShow(mShowCats);
         } else if (show) {
-            //mShowCats.clearAnimation();
-            //cats.clearAnimation();
             animateDownHide(mShowCats);
-            animateUpShow(cats);
+            if (cats.getVisibility() == View.GONE) {
+                animateUpShow(cats);
+            }
         }
         dismissActionPopup();
     }
@@ -1015,29 +1017,7 @@ public class MainActivity extends Activity implements
                 .alpha(0)
                 .scaleY(.6f)
                 .scaleX(.6f)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-
-                        if (andBack) {
-                            animateShow(view, towards);
-                        } else {
-                            view.setVisibility(View.GONE);
-                        }
-
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        super.onAnimationCancel(animation);
-                        if (andBack) {
-                            animateShow(view, towards);
-                        } else {
-                            view.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                .setListener(null);
 
         switch(towards) {
             case Down:
@@ -1070,7 +1050,27 @@ public class MainActivity extends Activity implements
                 .alpha(1)
                 .scaleY(1)
                 .scaleX(1)
-                .setListener(null);
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        view.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                        view.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                });
 
         switch(from) {
             case Down:
