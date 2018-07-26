@@ -1042,7 +1042,7 @@ public class DB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(
-                true,
+                false,
                 APP_HISTORY_TABLE,
                 new String[]{ACTVNAME, PKGNAME},
                 null, null, null, null, TIME + " desc", null);
@@ -1050,7 +1050,10 @@ public class DB extends SQLiteOpenHelper {
         try {
             while (cursor.moveToNext()) {
                 if (!cursor.isNull(0) && !cursor.isNull(1) ) {
-                    activitynames.add(new ComponentName(cursor.getString(cursor.getColumnIndex(PKGNAME)), cursor.getString(cursor.getColumnIndex(ACTVNAME))));
+                    ComponentName cn = new ComponentName(cursor.getString(cursor.getColumnIndex(PKGNAME)), cursor.getString(cursor.getColumnIndex(ACTVNAME)));
+                    if (!activitynames.contains(cn)) {
+                        activitynames.add(cn);
+                    }
                 }
             }
         } finally {
