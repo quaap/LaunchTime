@@ -38,6 +38,7 @@ import android.content.pm.ShortcutInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -66,6 +67,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewPropertyAnimator;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -842,6 +844,7 @@ public class MainActivity extends Activity implements
 
     private void readAnimationDuration() {
         mAnimationDuration = Integer.parseInt(mAppPreferences.getString("pref_animate_duration", "250"));
+        if (mAnimationDuration==0) mAnimationDuration=1; //small hack to make everything still work
     }
 
     //This is run on switchcategory and screen rotation, etc.
@@ -933,10 +936,65 @@ public class MainActivity extends Activity implements
             setAllIconSheetsLayout();
             showButtonBar(false, true);
 
+            setWindowOpts();
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
     }
+
+
+    private void setWindowOpts() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                boolean full = mAppPreferences.getBoolean("pref_use_fullscreen", false);
+                if (full) {
+                    //hard to get correct.
+                    getWindow().getDecorView().setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+                    // retrieve the position of the DecorView
+                    Rect visibleFrame = new Rect();
+                    getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleFrame);
+
+                    DisplayMetrics dm = getResources().getDisplayMetrics();
+                    // check if the DecorView takes the whole screen vertically or horizontally
+                    boolean isRight = dm.heightPixels == visibleFrame.bottom;
+                    boolean isBelow  = dm.widthPixels  == visibleFrame.right;
+
+
+                    int status = 70;
+                    int statusresourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                    if (statusresourceId > 0) {
+                        status = getResources().getDimensionPixelSize(statusresourceId) + 8;
+                    }
+                    int nav = 125;
+                    int navresourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+                    if (navresourceId > 0) {
+                        nav = getResources().getDimensionPixelSize(navresourceId);
+                    }
+                    findViewById(R.id.whole_thing).setPadding(0, status, isRight?nav:0, isRight?0:nav);
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    if (full) {
+                        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
 
     private int mOkToAutohide;
 
@@ -1010,7 +1068,7 @@ public class MainActivity extends Activity implements
 //            return;
 //        }
 
-        long now = SystemClock.uptimeMillis();
+        long now = System.currentTimeMillis();
         float fac = andBack?2.5f:1;
         Long then = aniHideStarted.get(view);
         if (then!=null && now - then < mAnimationDuration*fac) return;

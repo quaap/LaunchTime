@@ -32,5 +32,5 @@
     <dimen name="appinfo_width">450dp</dimen>
 
     <dimen name="widget_resize_width">350dp</dimen>
-    <dimen name="widget_resize_height">350dp</dimen>
+    <dimen name="widget_resize_height">260dp</dimen>
 </resources>
