@@ -3669,6 +3669,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onPositionChanged(float percentUp, float percentDown, int distFromTop, int distFromBottom) {
                 dismissActionPopup();
+                hideCatsIfAutoHide(false);
             }
         });
 
@@ -3680,6 +3681,7 @@ public class MainActivity extends Activity implements
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 dismissActionPopup();
                 dismissAppinfo();
+                hideCatsIfAutoHide(false);
             }
             return false;
         }
