@@ -104,9 +104,9 @@ public class QuickRow {
         mQuickRow.postDelayed(new Runnable() {
             @Override
             public void run() {
-                float num = mMainActivity.getScreenDimensions().x / mStyle.getLauncherSize();
+                float num = mMainActivity.getScreenDimensions().x / mStyle.getLauncherSize() - 1;
 
-                Log.d("Quick", "cols = " + num);
+                //Log.d("Quick", "cols = " + num);
                 FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mQuickRow.getLayoutParams();
                 if (center && mQuickRow.getChildCount()<=num) {
                     lp.gravity = Gravity.CENTER_HORIZONTAL;

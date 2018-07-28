@@ -167,6 +167,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/quickbar_height"
                     android:alignmentMode="alignBounds"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="12dp"
                     android:useDefaultMargins="false">
 
 
