@@ -172,6 +172,7 @@ public class MainActivity extends Activity implements
     private View mBeingUninstalled;
     private Widget mWidgetHelper;
 
+    private PopupWindow mAppinfoWindow;
 
     private Animation itemClickedAnim;
 
@@ -753,6 +754,7 @@ public class MainActivity extends Activity implements
                     @Override
                     public void run() {
                         try {
+                            dismissAppinfo();
                             mSearchBox.setSearchText("");
                             mCategoriesScroller.smoothScrollTo(0, 0);
                             showButtonBar(false, true);
@@ -2891,7 +2893,13 @@ public class MainActivity extends Activity implements
             addActionMenuItem(getString(R.string.appinfo_label), android.R.drawable.ic_menu_info_details, new Runnable() {
                 @Override
                 public void run() {
-                    AppInfo.showAppinfo(MainActivity.this, view, appitem);
+                    mAppinfoWindow = AppInfo.showAppinfo(MainActivity.this, view, appitem);
+                    mAppinfoWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            dismissAppinfo();
+                        }
+                    });
                 }
             });
 
@@ -2943,6 +2951,13 @@ public class MainActivity extends Activity implements
 
 
         return false;
+    }
+
+    private void dismissAppinfo() {
+        if (mAppinfoWindow!=null) {
+            if (mAppinfoWindow.isShowing()) mAppinfoWindow.dismiss();
+            mAppinfoWindow = null;
+        }
     }
 
     private void addActionMenuItem(String label, int iconResource, final Runnable action) {
@@ -3649,7 +3664,27 @@ public class MainActivity extends Activity implements
             }
         });
 
+        mIconSheetScroller.setOnTouchListener(mDismissClick);
+        mIconSheetScroller.setOnPositionChangedListener(new InteractiveScrollView.OnPositionChangedListener() {
+            @Override
+            public void onPositionChanged(float percentUp, float percentDown, int distFromTop, int distFromBottom) {
+                dismissActionPopup();
+            }
+        });
+
     }
+
+    private View.OnTouchListener mDismissClick = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                dismissActionPopup();
+                dismissAppinfo();
+            }
+            return false;
+        }
+    };
+
 
     public static void openSettings(Activity activity) {
         Intent settingsIntent = new Intent(activity, SettingsActivity.class);

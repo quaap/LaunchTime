@@ -31,8 +31,8 @@ import java.util.Date;
 
 public class AppInfo {
 
-    public static void showAppinfo(final MainActivity main, View view, AppLauncher appitem) {
-        if (appitem == null) return;
+    public static PopupWindow showAppinfo(final MainActivity main, View view, AppLauncher appitem) {
+        if (appitem == null) return null;
 
         ViewGroup item = (ViewGroup) LayoutInflater.from(main).inflate(R.layout.appinfo_view, null);
 
@@ -216,6 +216,7 @@ public class AppInfo {
                     intent.setData(Uri.parse("package:" + packagename));
                     main.startActivity(intent);
 
+                    pw.dismiss();
                 } catch ( ActivityNotFoundException e ) {
                     Toast.makeText(main, "Package not found", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
@@ -229,6 +230,7 @@ public class AppInfo {
 
         pw.showAtLocation(main.findViewById(R.id.icon_and_cat_wrap), Gravity.CENTER, 0, 25);
 
+        return pw;
     }
 
     public static String getCategoryFromPiCat(ApplicationInfo appinfo) {
