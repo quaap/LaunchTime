@@ -60,7 +60,7 @@ public class MsgBox {
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {
-        final int newsnum = 80;
+        final int newsnum = 82;
         final int news = prefs.getInt("seennews", 0);
         if (news<newsnum) {
             new Handler().postDelayed(new Runnable() {
@@ -70,7 +70,18 @@ public class MsgBox {
                     String msg = "";
 
                     msg += "" +
-                            "In 0.8.0:\n" +
+                            "In 0.8.2:\n" +
+                            " * Resizable widgets!\n" +
+                            " * Better default widget sizes.\n" +
+                            " * Shortcuts from other apps should work.\n" +
+                            " * Experimental \"dumbphone\" mode.\n" +
+                            " * Any category is now hideable.\n" +
+                            " * Better action menu.\n" +
+                            " * Detailed appinfo on action menu.\n";
+
+
+                    msg += "\n" +
+                            "In 0.8.1:\n" +
                             " * Autohide the menu!\n" +
                             " * Better menu appearence.\n" +
                             " * Animated transitions.\n" +
