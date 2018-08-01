@@ -131,14 +131,32 @@ public class LaunchApp {
 
             List<UserHandle> userHandles = launcherApps.getProfiles();
 
+            Log.d(TAG, "launching " + app.getLinkUri());
+
             // Find the correct UserHandle, and launch the shortcut.
+            boolean disabled = false;
             for (UserHandle userHandle : userHandles) {
                 List<ShortcutInfo> shortcuts = launcherApps.getShortcuts(query, userHandle);
-                if (shortcuts != null && shortcuts.size() > 0 && shortcuts.get(0).isEnabled()) {
-                    launcherApps.startShortcut(shortcuts.get(0), null, null);
-                    return;
+                if (shortcuts != null) {
+                    for (ShortcutInfo s: shortcuts) {
+                        if (s!=null && s.isEnabled()) {
+                            launcherApps.startShortcut(s, null, null);
+                            return;
+                        } else {
+                            disabled = true;
+                        }
+                    }
                 }
             }
+            Log.d(TAG, "failed to launch " + app.getLinkUri());
+            if (app.getLinkUri().matches("^https?://.*")) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getLinkUri()));
+                //intent.setPackage(app.getPackageName());
+                activity.startActivity(intent);
+            } else {
+                Toast.makeText(activity, "Failed to launch shortcut. " + (disabled?"Shortcut seems to be disabled.": "May be expired."), Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
