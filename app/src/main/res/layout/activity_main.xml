@@ -141,6 +141,14 @@
 
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
     </FrameLayout>
 
     <FrameLayout
@@ -179,7 +187,8 @@
                 android:id="@+id/link_dropzone"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:background="#056605">
+                android:background="#056605"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -196,7 +205,8 @@
                 android:id="@+id/link_dropzone_peek"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="#056605">
+                android:background="#056605"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -215,7 +225,8 @@
                 android:layout_gravity="end"
                 android:background="#ddff3333"
                 android:fadingEdge="horizontal|vertical"
-                android:fadingEdgeLength="8dp">
+                android:fadingEdgeLength="8dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/remove_dz_txt"

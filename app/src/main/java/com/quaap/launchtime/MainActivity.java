@@ -89,6 +89,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -198,6 +199,9 @@ public class MainActivity extends Activity implements
 
     private QuickRow mQuickRow;
 
+    private ProgressBar mProgressBar;
+
+
     //private DB db();
 
     private SearchBox mSearchBox;
@@ -231,14 +235,11 @@ public class MainActivity extends Activity implements
             actionBar.hide();
         }
 
-        // test this here in case db is reopened by something later.
-        boolean isFirstRun = GlobState.getGlobState(this).getDB().isFirstRun();
 
         //Setup some of our globals utils
 
         mPackageMan = getApplicationContext().getPackageManager();
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        mAppPreferences.registerOnSharedPreferenceChangeListener(this);
         mWidgetHelper = new Widget(this);
 
         mQuickRow = new QuickRow(mMainDragListener, this);
@@ -246,32 +247,21 @@ public class MainActivity extends Activity implements
         mScreenDim = getScreenDimensions();
 
         //Load resources and init the form members
-
         initUI();
-
 
         mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
 
         mIconsArea.setOnDragListener(iconSheetDropRedirector);
 
-
         mSearchBox = new SearchBox(this, mIconSheetScroller);
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
-        mCategory = mPrefs.getString("category", getTopCategory());
-        latestCategory = mCategory;
-
-        mStyle = GlobState.getStyle(this);
-
-        readPrefs();
 
         mLaunchApp = new LaunchApp(this);
 
         iconHandler = new AddIconHandler(this);
 
-        // get all the apps installed and process them
-        loadApplications();
 
-        GlobState.getBadger(this).setBadgerCountChangeListener(this);
+
 
         //showButtonBar(false, true);
 
@@ -376,51 +366,9 @@ public class MainActivity extends Activity implements
         super.onResume();
         Log.d(TAG, "onResume");
 
-
-        //Check how long we've been gone
-        long pausetime = mPrefs.getLong("pausetime", -1);
-        int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
-
-        //We go "home" if it's been longer than the timeout
-        boolean skiphome = false;
-        if (pausetime>-1 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
-            mCategory = getTopCategory();
-            skiphome = true;
-            mQuickRow.scrollToStart();
-            mCategoriesScroller.smoothScrollTo(0, 0);
-        } else {
-            mCategory = mPrefs.getString("category", getTopCategory());
-        }
-
-        // If the category has been deleted, pick a known-good category
-        if (mCategory==null || db().getCategoryDisplay(mCategory)==null) {
-            mCategory = Categories.CAT_TALK;
-        }
-        switchCategory(mCategory);
-
-        if (!skiphome) {
-            //move the page to the right scroll position
-            mIconSheetScroller.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
-                    scrollToCategoryTab();
-                    showButtonBar(false, true);
-
-                }
-            }, 100);
-        }
-
-        //rerun our query if needed
-        if (mCategory.equals(Categories.CAT_SEARCH)) {
-            mSearchBox.refreshSearch(false);
-        }
-        hideRemoveDropzone();
-
-        hideCatsIfAutoHide(true);
-        showButtonBar(false, true);
-        //lock things up if it was in toddler mode
-        checkChildLock();
+        // get all the apps installed and process them
+        ProcessActivitiesTask processActivities = new ProcessActivitiesTask(this, true);
+        processActivities.execute();
 
     }
 
@@ -1240,16 +1188,79 @@ public class MainActivity extends Activity implements
         return mLaunchApp;
     }
 
-    // runs at create time to read all apps and add them to our db, if not there already
-    private void loadApplications() {
 
+    private void showProgressBar(final int max) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (max>0) {
+                    mProgressBar.setMax(max);
+                }
+                mProgressBar.setProgress(0);
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void hideProgressBar() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void setProgressBarMax(final int max) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBar.setMax(max);
+            }
+        });
+    }
+
+    private void setProgressBar(final int progress) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBar.setProgress(progress);
+            }
+        });
+    }
+
+    private void incProgressBar(final int progressDiff) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBar.incrementProgressBy(progressDiff);
+            }
+        });
+    }
+
+
+    private void init(boolean progress) {
+
+        if (progress) setProgressBarMax(10);
+
+        mCategory = mPrefs.getString("category", getTopCategory());
+        latestCategory = mCategory;
+
+        mStyle = GlobState.getStyle(this);
+        GlobState.getBadger(this).setBadgerCountChangeListener(this);
+
+        mAppPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        if (progress) incProgressBar(1);
+
+        readPrefs();
         //create the grids for each existing category.
+        if (progress) incProgressBar(1);
 
         for (final String category : db().getCategories()) {
-
             createIconSheet(category);
         }
-
+        if (progress) incProgressBar(1);
         if (!db().isFirstRun()) {
             //Make sure the displayed icons load first
             //Load the quickrow icons first
@@ -1261,7 +1272,7 @@ public class MainActivity extends Activity implements
                     }
                 }
             }
-
+            if (progress) incProgressBar(1);
             //Load the selected category icons
             for (ComponentName actvname : db().getAppCategoryOrder(mCategory)) {
                 if (db().isAppInstalled(actvname)) {
@@ -1271,46 +1282,172 @@ public class MainActivity extends Activity implements
                     }
                 }
             }
+            if (progress) incProgressBar(1);
+        }
+    }
+
+
+    private void myResume() {
+        //Check how long we've been gone
+        long pausetime = mPrefs.getLong("pausetime", -1);
+        int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
+
+
+        //We go "home" if it's been longer than the timeout
+        boolean skiphome = false;
+        if (pausetime>-1 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
+            mCategory = getTopCategory();
+            skiphome = true;
+            mQuickRow.scrollToStart();
+            mCategoriesScroller.smoothScrollTo(0, 0);
+        } else {
+            mCategory = mPrefs.getString("category", getTopCategory());
         }
 
-        ProcessActivitiesTask processActivities = new ProcessActivitiesTask(this);
-        processActivities.execute();
-
-        //Look for new apps
-        //final List<AppLauncher> launchers = processActivities();
-
-        //loads the quickrow or adds default apps if it is empty
-       // processQuickApps(launchers);
+        // If the category has been deleted, pick a known-good category
+        if (mCategory==null || db().getCategoryDisplay(mCategory)==null) {
+            mCategory = Categories.CAT_TALK;
+        }
+        switchCategory(mCategory);
 
 
-//        iconHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                final List<AppLauncher> appLauncherss = processActivities();
-//
-//                mQuickRow.processQuickApps(appLauncherss, mPackageMan);
-//                db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow.getGridLayout()), mQuickRow.getGridLayout());
-//
-//                if (mCategory.equals(Categories.CAT_SEARCH)) {
-//                    populateRecentApps();
-//                } else {
-//                    repopulateIconSheet(mCategory);
-//                }
-//
-//
-//                firstRunPostApps();
-//            }
-//        });
+        if (!skiphome) {
+            //move the page to the right scroll position
+            mIconSheetScroller.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
+                    scrollToCategoryTab();
+                    showButtonBar(false, true);
 
+                }
+            }, 100);
+        }
+
+        //rerun our query if needed
+        if (mCategory.equals(Categories.CAT_SEARCH)) {
+            mSearchBox.refreshSearch(false);
+        }
+
+        hideRemoveDropzone();
+
+        hideCatsIfAutoHide(true);
+        showButtonBar(false, true);
+        //lock things up if it was in toddler mode
+        checkChildLock();
     }
+
+
+    private List<AppLauncher> processActivities(boolean showProgress) {
+        final List<AppLauncher> launchers = new ArrayList<>();
+
+        final List<ComponentName> dbactvnames = db().getAppNames();
+
+        Set<ComponentName> pmactvnames = new HashSet<>();
+        List<AppLauncher> newapps = new ArrayList<>();
+
+        // Set MAIN and LAUNCHER filters, so we only get activities with that defined on their manifest
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        if (showProgress) setProgressBarMax(dbactvnames.size()+2);
+
+        // Get all activities that have those filters
+        final List<ResolveInfo> activities;
+
+        try {
+            if (showProgress) incProgressBar(1);
+            activities = mPackageMan.queryIntentActivities(intent, PackageManager.GET_META_DATA);
+            if (showProgress) incProgressBar(1);
+        } catch (final Exception e) {
+            Log.e(TAG, "Problem getting app list: " + e.getLocalizedMessage(), e);
+            iconHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, "Problem getting app list: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            return launchers;
+        }
+
+        if (showProgress) setProgressBarMax(activities.size() + dbactvnames.size()+2);
+
+        for (int i = 0; i < activities.size(); i++) {
+
+            if (showProgress && i%5==0) {
+                incProgressBar(5);
+            }
+            try {
+                AppLauncher app;
+
+                ResolveInfo ri = activities.get(i);
+                String actvname = ri.activityInfo.name;
+                ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
+
+                if (!pmactvnames.contains(appcn)) {
+                    pmactvnames.add(appcn);
+
+                    app = db().getApp(appcn);
+
+                    if (dbactvnames.contains(appcn) && app != null) {
+                        app.loadAppIconAsync(this, mPackageMan);
+                        String label = ri.loadLabel(mPackageMan).toString();
+                        if (app.getLabel()==null || !app.getLabel().equals(label)) {
+                            db().updateAppLabel(ri.activityInfo.packageName, actvname, label);
+                            app.setLabel(label);
+                        }
+
+                        //  Log.d(TAG, "app was in db " + actvname + " " +  ri.activityInfo.packageName);
+                    } else {
+                        //  Log.d(TAG, "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
+                        app = AppLauncher.createAppLauncher(this, mPackageMan, ri);
+                        newapps.add(app);
+                    }
+
+                    launchers.add(app);
+
+
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+
+        }
+        if (showProgress) setProgressBar(activities.size());
+
+        //remove launchers if they are not in the system
+        for (Iterator<ComponentName> it = dbactvnames.iterator(); it.hasNext(); ) {
+            ComponentName dbactv = it.next();
+            if (!pmactvnames.contains(dbactv)) {
+                AppLauncher app = db().getApp(dbactv);
+                if (app==null || !isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
+                    Log.d(TAG, "Removing " + dbactv);
+                    it.remove();
+                    db().deleteApp(dbactv);
+                    // removeFromQuickApps(dbactv);
+                }
+            }
+            if (showProgress) incProgressBar(1);
+        }
+
+        db().addApps(newapps);
+
+
+        return launchers;
+    }
+
+
+    private boolean initCalled = false;
 
 
     private static class ProcessActivitiesTask extends AsyncTask<Void,Integer,List<AppLauncher>> {
 
         WeakReference<MainActivity> mMain;
+        boolean mShowProgress;
 
-        ProcessActivitiesTask(MainActivity main) {
+        ProcessActivitiesTask(MainActivity main, boolean showProgress) {
             mMain = new WeakReference<>(main);
+            mShowProgress = showProgress;
         }
 
         @Override
@@ -1319,26 +1456,72 @@ public class MainActivity extends Activity implements
             final MainActivity main = mMain.get();
             if (main == null) return null;
 
-            return main.processActivities();
+            if (main.initCalled) return null;
+            main.initCalled = true;
+
+            if (mShowProgress) {
+                main.showProgressBar(100);
+                main.incProgressBar(1);
+            }
+
+            GlobState.getGlobState(main).getDB();
+
+            if (mShowProgress) main.incProgressBar(1);
+
+            main.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    main.init(mShowProgress);
+                }
+            });
+
+            return main.processActivities(mShowProgress);
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            final MainActivity main = mMain.get();
+            if (main == null) return;
+            main.hideProgressBar();
         }
 
         @Override
         protected void onPostExecute(List<AppLauncher> launchers) {
-
             final MainActivity main = mMain.get();
             if (main == null) return;
 
-            main.mQuickRow.processQuickApps(launchers, main.mPackageMan);
-            main.db().setAppCategoryOrder(main.mRevCategoryMap.get(main.mQuickRow.getGridLayout()), main.mQuickRow.getGridLayout());
+            try {
 
-            if (main.mCategory.equals(Categories.CAT_SEARCH)) {
-                main.populateRecentApps();
-            } else {
-                main.repopulateIconSheet(main.mCategory);
+                if (launchers != null) {
+                    if (mShowProgress) main.showProgressBar(5);
+
+                    main.mQuickRow.processQuickApps(launchers, main.mPackageMan);
+                    main.db().setAppCategoryOrder(main.mRevCategoryMap.get(main.mQuickRow.getGridLayout()), main.mQuickRow.getGridLayout());
+
+                    if (mShowProgress) main.incProgressBar(1);
+
+                    if (main.mCategory.equals(Categories.CAT_SEARCH)) {
+                        main.populateRecentApps();
+                    } else {
+                        main.repopulateIconSheet(main.mCategory);
+                    }
+                    if (mShowProgress) main.incProgressBar(1);
+
+                    main.firstRunPostApps();
+                    if (mShowProgress) main.incProgressBar(1);
+                }
+
+                if (mShowProgress) main.incProgressBar(1);
+
+                main.myResume();
+
+                if (mShowProgress) main.incProgressBar(1);
+
+            } finally {
+                main.hideProgressBar();
             }
-
-
-            main.firstRunPostApps();
 
         }
     }
@@ -1893,99 +2076,9 @@ public class MainActivity extends Activity implements
 //        }
 //    }
 
-    private List<AppLauncher> processActivities() {
-        final List<AppLauncher> launchers = new ArrayList<>();
-
-        List<ComponentName> dbactvnames = db().getAppNames();
-
-        Set<ComponentName> pmactvnames = new HashSet<>();
-        List<AppLauncher> newapps = new ArrayList<>();
-
-        // Set MAIN and LAUNCHER filters, so we only get activities with that defined on their manifest
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        // Get all activities that have those filters
-        List<ResolveInfo> activities;
-
-        try {
-            activities = mPackageMan.queryIntentActivities(intent, PackageManager.GET_META_DATA);
-        } catch (final Exception e) {
-            Log.e(TAG, "Problem getting app list: " + e.getLocalizedMessage(), e);
-            iconHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(MainActivity.this, "Problem getting app list: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-            return launchers;
-        }
-
-
-        for (int i = 0; i < activities.size(); i++) {
-
-            try {
-                AppLauncher app;
-
-                ResolveInfo ri = activities.get(i);
-                String actvname = ri.activityInfo.name;
-                ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
-
-                if (!pmactvnames.contains(appcn)) {
-                    pmactvnames.add(appcn);
-
-                    app = db().getApp(appcn);
-
-                    if (dbactvnames.contains(appcn) && app != null) {
-                        app.loadAppIconAsync(this, mPackageMan);
-                        String label = ri.loadLabel(mPackageMan).toString();
-                        if (app.getLabel()==null || !app.getLabel().equals(label)) {
-                            db().updateAppLabel(ri.activityInfo.packageName, actvname, label);
-                            app.setLabel(label);
-                        }
-
-                        //  Log.d(TAG, "app was in db " + actvname + " " +  ri.activityInfo.packageName);
-                    } else {
-                        //  Log.d(TAG, "app was not in db " + actvname + " " +  ri.activityInfo.packageName);
-                        app = AppLauncher.createAppLauncher(this, mPackageMan, ri);
-                        newapps.add(app);
-                    }
-
-                    launchers.add(app);
-
-
-                }
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
-            }
-
-        }
-
-        //remove launchers if they are not in the system
-        for (Iterator<ComponentName> it = dbactvnames.iterator(); it.hasNext(); ) {
-            ComponentName dbactv = it.next();
-            if (!pmactvnames.contains(dbactv)) {
-                AppLauncher app = db().getApp(dbactv);
-                if (app==null || !isAppInstalled(app.getPackageName())) {  //might be a widget, check packagename
-                    Log.d(TAG, "Removing " + dbactv);
-                    it.remove();
-                    db().deleteApp(dbactv);
-                   // removeFromQuickApps(dbactv);
-                }
-            }
-        }
-
-        db().addApps(newapps);
-
-        return launchers;
-    }
-
-    
     public ViewGroup getLauncherView(final AppLauncher app, boolean smallIcon) {
         return getLauncherView(app, smallIcon, true);
     }
-
-
 
     public ViewGroup getLauncherView(final AppLauncher app, boolean smallIcon, boolean reuse) {
 
@@ -3614,6 +3707,8 @@ public class MainActivity extends Activity implements
         mIconSheetScroller.setHSwipeListener(mHSwipeListener);
         mCategoriesScroller.setHSwipeListener(mHSwipeListener);
 
+        mProgressBar = findViewById(R.id.progressBar);
+
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
         mRevCategoryMap = new HashMap<>();
@@ -3892,7 +3987,7 @@ public class MainActivity extends Activity implements
         if (db().getCategoryDisplay(category)==null) {
             db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),true, 100);
             createIconSheet(category);
-            final List<AppLauncher> appLauncherss = processActivities();
+            final List<AppLauncher> appLauncherss = processActivities(false);
             List<ComponentName> apps = new ArrayList<>();
             List<String> onlyTypes = new ArrayList<>();
             onlyTypes.add("camera");
