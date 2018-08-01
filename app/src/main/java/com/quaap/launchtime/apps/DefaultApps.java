@@ -12,6 +12,7 @@ import android.view.View;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -101,18 +102,9 @@ public class DefaultApps {
 
     public static Map<String, List<String>> getDefaultActivities(Context context) {
 
-        Map<String, List<String>> activities = new TreeMap<>();
+        Map<String, List<String>> activities = new LinkedHashMap<>();
 
         try {
-
-            ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://www", null);
-            activities.put("browser", Arrays.asList(browseapp.getPackageName(),
-                    "duckduckgo", "web.browser", "webbrowser", "opera.", "dolphin", "firefox", "mozilla", "chromium",
-                    "uc.browser", "brave.browser", "TunnyBrowser", "emmx", "chrome",
-                    ".browser", "browser"));
-
-            ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
-            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms", "messen", "mms", "chat", "irc" ));
 
             ComponentName camapp = getpkg(context, MediaStore.ACTION_IMAGE_CAPTURE, null, null);
             //Log.d("DefApps", camapp.getPackageName() + " " + camapp.getClassName());
@@ -121,9 +113,13 @@ public class DefaultApps {
             ComponentName phoneapp = getpkg(context, Intent.ACTION_DIAL, "tel:411", null);
             activities.put("phone", Arrays.asList(phoneapp.getClassName(), phoneapp.getPackageName(), "DialtactsActivity", "dialer", "dial", "phone", "fone", "contacts"));
 
+            ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
+            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms", "messen", "mms", "chat", "irc" ));
+
+
             ComponentName emailapp = getpkg(context, Intent.ACTION_SENDTO, "mailto:", null);
             activities.put("email", Arrays.asList(emailapp.getPackageName(),
-                    "k9", "inbox", "outlook", "email", "mail", "com.google.android.gm"));
+                    "k9", "inbox", "outlook", "com.google.android.gm", "mail"));
 
             ComponentName musicapp = getpkg(context, Intent.ACTION_VIEW, "file:", "audio/*");
             activities.put("music", Arrays.asList(musicapp.getPackageName(),
@@ -136,6 +132,12 @@ public class DefaultApps {
                     "com.rhapsody",
                     "musicplayer",  "music.player",
                     "mp3", "music", "tunein", "radio", "song"));
+
+            ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://www", null);
+            activities.put("browser", Arrays.asList(browseapp.getPackageName(),
+                    "duckduckgo", "web.browser", "webbrowser", "opera.", ".firefox", "mozilla.fennec", "mozilla.focus", "chromium",
+                    "uc.browser", "brave.browser", "TunnyBrowser", "emmx", ".bing", "chrome",
+                    ".browser", "browser"));
 
 
         } catch (Exception e) {
