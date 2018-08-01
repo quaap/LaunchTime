@@ -108,18 +108,21 @@ public class DefaultApps {
 
             ComponentName camapp = getpkg(context, MediaStore.ACTION_IMAGE_CAPTURE, null, null);
             //Log.d("DefApps", camapp.getPackageName() + " " + camapp.getClassName());
-            activities.put("camera", Arrays.asList(camapp.getClassName(), "cameraApp", "CameraActivity", "camera.Camera", ".camera", "kamera", "camera", "kam", "cam", "photo", "foto"));
+            activities.put("camera", Arrays.asList(camapp.getClassName(),
+                    "cameraApp", "CameraActivity", "camera.Camera", ".camera2", ".camera", "kamera", "camera", "photo", "foto", "kam", "cam"));
 
             ComponentName phoneapp = getpkg(context, Intent.ACTION_DIAL, "tel:411", null);
-            activities.put("phone", Arrays.asList(phoneapp.getClassName(), phoneapp.getPackageName(), "DialtactsActivity", "dialer", "dial", "phone", "fone", "contacts"));
+            activities.put("phone", Arrays.asList(phoneapp.getClassName(), phoneapp.getPackageName(),
+                    "DialtactsActivity", "dialer", "dial", "phone", "fone", "contacts"));
 
             ComponentName msgapp = getpkg(context, Intent.ACTION_MAIN, null, Intent.CATEGORY_APP_MESSAGING);
-            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(), "messag", "msg", "sms", "messen", "mms", "chat", "irc" ));
+            activities.put("msg", Arrays.asList(msgapp.getClassName(), msgapp.getPackageName(),
+                    "messag", "msg", "sms", "mms", "messen", "chat", "irc" ));
 
 
             ComponentName emailapp = getpkg(context, Intent.ACTION_SENDTO, "mailto:", null);
             activities.put("email", Arrays.asList(emailapp.getPackageName(),
-                    "k9", "inbox", "outlook", "com.google.android.gm", "mail"));
+                    "k9", "inbox", "outlook", ".email", ".mail", "com.google.android.gm", "mail"));
 
             ComponentName musicapp = getpkg(context, Intent.ACTION_VIEW, "file:", "audio/*");
             activities.put("music", Arrays.asList(musicapp.getPackageName(),
@@ -136,7 +139,7 @@ public class DefaultApps {
             ComponentName browseapp = getpkg(context, Intent.ACTION_VIEW, "http://www", null);
             activities.put("browser", Arrays.asList(browseapp.getPackageName(),
                     "duckduckgo", "web.browser", "webbrowser", "opera.", ".firefox", "mozilla.fennec", "mozilla.focus", "chromium",
-                    "uc.browser", "brave.browser", "TunnyBrowser", "emmx", ".bing", "chrome",
+                    "uc.browser", "brave.browser", "TunnyBrowser", "emmx", ".bing.", "chrome",
                     ".browser", "browser"));
 
 
