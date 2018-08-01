@@ -44,6 +44,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -1272,38 +1273,78 @@ public class MainActivity extends Activity implements
             }
         }
 
+        ProcessActivitiesTask processActivities = new ProcessActivitiesTask(this);
+        processActivities.execute();
+
         //Look for new apps
         //final List<AppLauncher> launchers = processActivities();
-
-        //new LoadAppsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         //loads the quickrow or adds default apps if it is empty
        // processQuickApps(launchers);
 
 
-        iconHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                final List<AppLauncher> appLauncherss = processActivities();
-
-                mQuickRow.processQuickApps(appLauncherss, mPackageMan);
-                db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow.getGridLayout()), mQuickRow.getGridLayout());
-
-                if (mCategory.equals(Categories.CAT_SEARCH)) {
-                    populateRecentApps();
-                } else {
-                    repopulateIconSheet(mCategory);
-                }
-
-
-                firstRunPostApps();
-            }
-        });
-
-
-
+//        iconHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                final List<AppLauncher> appLauncherss = processActivities();
+//
+//                mQuickRow.processQuickApps(appLauncherss, mPackageMan);
+//                db().setAppCategoryOrder(mRevCategoryMap.get(mQuickRow.getGridLayout()), mQuickRow.getGridLayout());
+//
+//                if (mCategory.equals(Categories.CAT_SEARCH)) {
+//                    populateRecentApps();
+//                } else {
+//                    repopulateIconSheet(mCategory);
+//                }
+//
+//
+//                firstRunPostApps();
+//            }
+//        });
 
     }
+
+
+    private static class ProcessActivitiesTask extends AsyncTask<Void,Integer,List<AppLauncher>> {
+
+        WeakReference<MainActivity> mMain;
+
+        ProcessActivitiesTask(MainActivity main) {
+            mMain = new WeakReference<>(main);
+        }
+
+        @Override
+        protected List<AppLauncher> doInBackground(Void... voids) {
+
+            final MainActivity main = mMain.get();
+            if (main == null) return null;
+
+            return main.processActivities();
+        }
+
+        @Override
+        protected void onPostExecute(List<AppLauncher> launchers) {
+
+            final MainActivity main = mMain.get();
+            if (main == null) return;
+
+            main.mQuickRow.processQuickApps(launchers, main.mPackageMan);
+            main.db().setAppCategoryOrder(main.mRevCategoryMap.get(main.mQuickRow.getGridLayout()), main.mQuickRow.getGridLayout());
+
+            if (main.mCategory.equals(Categories.CAT_SEARCH)) {
+                main.populateRecentApps();
+            } else {
+                main.repopulateIconSheet(main.mCategory);
+            }
+
+
+            main.firstRunPostApps();
+
+        }
+    }
+
+
+
 
     private void firstRunPostApps() {
         if (db().isFirstRun()) {
@@ -1314,7 +1355,7 @@ public class MainActivity extends Activity implements
             db().updateAppCategory(selfAct, this.getPackageName(), Categories.CAT_HIDDEN);
 
 
-            //Take a backup no that things are pre-sorted.
+            //Take a backup now that things are pre-sorted.
             db().backup("After install");
 
             mAppPreferences.edit().putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25).apply();
@@ -1939,7 +1980,6 @@ public class MainActivity extends Activity implements
         return launchers;
     }
 
-    
     
     public ViewGroup getLauncherView(final AppLauncher app, boolean smallIcon) {
         return getLauncherView(app, smallIcon, true);
