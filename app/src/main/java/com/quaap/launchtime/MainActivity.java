@@ -261,16 +261,73 @@ public class MainActivity extends Activity implements
     }
 
     private StartupTask mStartupTask;
+    private boolean mInitCalled = false;
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
 
-        mStartupTask = new StartupTask(this, true);
-        mStartupTask.execute();
+        if (mInitCalled) {
+            myResume();
+        } else {
+            mStartupTask = new StartupTask(this, true);
+            mStartupTask.execute();
+        }
 
     }
+
+
+    private void myResume() {
+        //Check how long we've been gone
+        long pausetime = mPrefs.getLong("pausetime", -1);
+        int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
+
+
+        //We go "home" if it's been longer than the timeout
+        boolean skiphome = false;
+        if (pausetime>-1 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
+            mCategory = getTopCategory();
+            skiphome = true;
+            mQuickRow.scrollToStart();
+            mCategoriesScroller.smoothScrollTo(0, 0);
+        } else {
+            mCategory = mPrefs.getString("category", getTopCategory());
+        }
+
+        // If the category has been deleted, pick a known-good category
+        if (mCategory==null || db().getCategoryDisplay(mCategory)==null) {
+            mCategory = Categories.CAT_TALK;
+        }
+        switchCategory(mCategory);
+
+
+        if (!skiphome) {
+            //move the page to the right scroll position
+            mIconSheetScroller.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
+                    scrollToCategoryTab();
+                    showButtonBar(false, true);
+
+                }
+            }, 100);
+        }
+
+        //rerun our query if needed
+        if (mCategory.equals(Categories.CAT_SEARCH)) {
+            mSearchBox.refreshSearch(false);
+        }
+
+        hideRemoveDropzone();
+
+        hideCatsIfAutoHide(true);
+        showButtonBar(false, true);
+        //lock things up if it was in toddler mode
+        checkChildLock();
+    }
+
 
 
     private long mPauseTime = 0;
@@ -283,7 +340,7 @@ public class MainActivity extends Activity implements
         checkChildLock();
 
         try {
-            if (mStartupTask!=null) {
+            if (mStartupTask!=null && !mStartupTask.isCancelled()) {
                 mStartupTask.cancel(true);
                 mStartupTask = null;
             }
@@ -307,9 +364,6 @@ public class MainActivity extends Activity implements
         super.onPause();
     }
 
-
-    private boolean initCalled = false;
-
     private static class StartupTask extends AsyncTask<Void,Integer,List<AppLauncher>> {
 
         WeakReference<MainActivity> mMain;
@@ -326,8 +380,8 @@ public class MainActivity extends Activity implements
                 final MainActivity main = mMain.get();
                 if (main == null) return null;
 
-                if (main.initCalled) return null;
-                main.initCalled = true;
+                if (main.mInitCalled) return null;
+                main.mInitCalled = true;
 
                 if (mShowProgress) {
                     main.showProgressBar(100);
@@ -453,57 +507,6 @@ public class MainActivity extends Activity implements
             }
             if (progress) incProgressBar(1);
         }
-    }
-
-
-    private void myResume() {
-        //Check how long we've been gone
-        long pausetime = mPrefs.getLong("pausetime", -1);
-        int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
-
-
-        //We go "home" if it's been longer than the timeout
-        boolean skiphome = false;
-        if (pausetime>-1 && System.currentTimeMillis() - pausetime > homesetting*1000 && !mChildLock) {
-            mCategory = getTopCategory();
-            skiphome = true;
-            mQuickRow.scrollToStart();
-            mCategoriesScroller.smoothScrollTo(0, 0);
-        } else {
-            mCategory = mPrefs.getString("category", getTopCategory());
-        }
-
-        // If the category has been deleted, pick a known-good category
-        if (mCategory==null || db().getCategoryDisplay(mCategory)==null) {
-            mCategory = Categories.CAT_TALK;
-        }
-        switchCategory(mCategory);
-
-
-        if (!skiphome) {
-            //move the page to the right scroll position
-            mIconSheetScroller.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
-                    scrollToCategoryTab();
-                    showButtonBar(false, true);
-
-                }
-            }, 100);
-        }
-
-        //rerun our query if needed
-        if (mCategory.equals(Categories.CAT_SEARCH)) {
-            mSearchBox.refreshSearch(false);
-        }
-
-        hideRemoveDropzone();
-
-        hideCatsIfAutoHide(true);
-        showButtonBar(false, true);
-        //lock things up if it was in toddler mode
-        checkChildLock();
     }
 
 
