@@ -258,10 +258,13 @@ public class MainActivity extends Activity implements
 
         iconHandler = new AddIconHandler(this);
 
+        mInitCalled = false;
+        mInitCalling = false;
     }
 
     private StartupTask mStartupTask;
     private boolean mInitCalled = false;
+    private boolean mInitCalling = false;
 
     @Override
     protected void onResume() {
@@ -372,6 +375,7 @@ public class MainActivity extends Activity implements
         StartupTask(MainActivity main, boolean showProgress) {
             mMain = new WeakReference<>(main);
             mShowProgress = showProgress;
+            main.mInitCalling = true;
         }
 
         @Override
@@ -413,6 +417,7 @@ public class MainActivity extends Activity implements
             final MainActivity main = mMain.get();
             if (main == null) return;
             main.hideProgressBar();
+            main.mInitCalling = false;
         }
 
         @Override
@@ -451,6 +456,7 @@ public class MainActivity extends Activity implements
                 Log.e(TAG, t.getMessage(), t);
             } finally {
                 try {
+                    main.mInitCalling = false;
                     main.mStartupTask = null;
                     main.hideProgressBar();
                 } catch (Throwable t) {
@@ -973,35 +979,39 @@ public class MainActivity extends Activity implements
     private int mBackPressedSessionCount;
     @Override
     public void onBackPressed() {
+        if (mInitCalling) return;
+        try {
+            hideCatsIfAutoHide(false);
 
-        hideCatsIfAutoHide(false);
-
-        //back does nothign if in toddler mode
-        if (mChildLock) {
-            if (++mBackPressedSessionCount==17) {
-                deactivateChildLock();
+            //back does nothign if in toddler mode
+            if (mChildLock) {
+                if (++mBackPressedSessionCount == 17) {
+                    deactivateChildLock();
+                }
+                return;
             }
-            return;
-        }
 
 
-        String topCat = getTopCategory();
-        if (mIconSheetBottomFrame.getVisibility()==View.VISIBLE) {
-            showButtonBar(false, true);
-        } else if (mQuickRow.getScrollPos()>0) {
-            mQuickRow.scrollToStart();
-        } else if (mIconSheetScroller.getScrollY()>0) {
-            //Otherwise, scroll to top
-            mIconSheetScroller.smoothScrollTo(0, 0);
-        } else if (mCategory.equals(Categories.CAT_SEARCH) && mSearchBox.getSeachText().length()!=0) {
-            //If search is open, clear the searchbox
-            mSearchBox.setSearchText("");
-        } else if (!mCategory.equals(topCat)){
-            //Otherwise, switch to known-good category
-            switchCategory(topCat);
-            mCategoriesScroller.smoothScrollTo(0, 0);
-        } else if (mCategoriesScroller.getScrollY()>0) {
-            mCategoriesScroller.smoothScrollTo(0, 0);
+            String topCat = getTopCategory();
+            if (mIconSheetBottomFrame.getVisibility() == View.VISIBLE) {
+                showButtonBar(false, true);
+            } else if (mQuickRow.getScrollPos() > 0) {
+                mQuickRow.scrollToStart();
+            } else if (mIconSheetScroller.getScrollY() > 0) {
+                //Otherwise, scroll to top
+                mIconSheetScroller.smoothScrollTo(0, 0);
+            } else if (mCategory.equals(Categories.CAT_SEARCH) && mSearchBox.getSeachText().length() != 0) {
+                //If search is open, clear the searchbox
+                mSearchBox.setSearchText("");
+            } else if (!mCategory.equals(topCat)) {
+                //Otherwise, switch to known-good category
+                switchCategory(topCat);
+                mCategoriesScroller.smoothScrollTo(0, 0);
+            } else if (mCategoriesScroller.getScrollY() > 0) {
+                mCategoriesScroller.smoothScrollTo(0, 0);
+            }
+        } catch (Exception e){
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -1019,6 +1029,8 @@ public class MainActivity extends Activity implements
     //Catch home key press
     @Override
     protected void onNewIntent(Intent intent) {
+        if (mInitCalling) return;
+
         super.onNewIntent(intent);
 
 
