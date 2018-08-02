@@ -29,8 +29,19 @@ Features
 * Can hide apps you don't want but can't uninstall.
 * Back up and restore your settings.
 
+New features in 0.8.2
+-----------
+* Resizable widgets!
+* Better default widget sizes.
+* Completely redone shortcuts so they now work.
+* Better action menu function and appearance.
+* Detailed appinfo on action menu.
+* Experimental "dumbphone" mode for less distraction.
+* Any category is now hideable.
+* Hopefully fixed errant configuration bar appearances.
+* A few other fixes.
 
-New features in 0.8.0+
+New features in 0.8.1
 -----------
 * Autohide the menu!
 * Better menu appearence.
