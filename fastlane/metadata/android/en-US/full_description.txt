@@ -1,39 +1,23 @@
-Alternative homescreen/launcher which features a side menu used to automatically and/or manually organize your apps into common-sense and customizable categories. It also includes appwidget support, text search for apps, a QuickBar, homescreen shortcuts/links, recent apps list, UI color configurations, Adw/Nova/Apex iconpacks, icon and app label customization, icon tinting, built-in themes, Android 7.1+ action and pinned shortcuts, and portrait and landscape support.
+Highly configurable alternative homescreen/launcher which features a side menu to automatically and/or manually organize your apps into common-sense and customizable categories. 
 
-Version 0.8 introduces a hideable menu, animated transitions, some new config options, and speed-ups and bugfixes
+Latest features: Resizable widgets, hideable menu, action menus, appinfo, better appearance, animated transitions.
 
-Version 0.8.2 introduces resizeable widgets, appinfo, better action menus, and shortcuts that work.
-
-Features:
-Configurable app categories in a scrollable/hideable side menu.
-
-Scrolling QuickBar on the bottom for easy access to your favorite apps.
-
-Text search to find apps.
-
-List of recent apps.
-
-Multiple widget support.
-
-Rearrange/sort icons and menu items.
-
-Shortcut/link and Oreo Pinned shortcut support.
-
-Android 7.1+ shortcut actions.
-
-Unread badges.
-
-Adw/nova/apex icon-packs.
-
-Supports both portrait and landscape mode.
-
-Can hide apps you don't want but can't uninstall.
-
-Back up and restore your settings.
-
-Configurable colors.
-
-Customize icons and labels.
-
-Built-in themes.
-
+More features:
+* Configurable app categories in a scrollable/hideable side menu.
+* Scrolling QuickBar on the bottom for easy access to your favorite apps.
+* Text search to find apps.
+* List of recent apps.
+* Quick access to settings.
+* Multiple widget support.
+* Rearrange/sort icons and menu items.
+* Toddler/child mode
+* Shortcut/link and Oreo Pinned shortcut support.
+* Android 7.1+ shortcut actions / menus.
+* Unread badges.
+* Adw/nova/apex icon-packs.
+* Supports both portrait and landscape mode.
+* Can hide apps you don't want but can't uninstall.
+* Back up and restore your settings.
+* Configurable colors.
+* Customize icons and labels.
+* Built-in themes.
