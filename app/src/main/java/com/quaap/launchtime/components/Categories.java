@@ -54,7 +54,7 @@ public class Categories {
     public static final String[] CAT_TINY = {CAT_HIDDEN, CAT_DUMB};
     public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
     public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
-    //public static final String[] CAT_NODROP = {CAT_SEARCH, CAT_DUMB};
+    public static final String[] CAT_NODROP = {CAT_SEARCH};
 
 
     public static final String[] DefCategoryOrder = {
@@ -257,6 +257,10 @@ public class Categories {
 
     public static boolean isSpeacialCategory(String category) {
         return Arrays.asList(Categories.CAT_SPECIALS).contains(category);
+    }
+
+    public static boolean isNoDropCategory(String category) {
+        return Arrays.asList(Categories.CAT_NODROP).contains(category);
     }
 
     public static String getCatLabel(Context context, String category) {

@@ -179,6 +179,21 @@
             android:key="pref_show_action_menus" />
 
         <CheckBoxPreference
+            android:dependency="pref_show_action_menus"
+            android:defaultValue="false"
+            android:title="Extra actions"
+            android:key="pref_show_action_extra"
+            android:summaryOn="Uninstall, Remove, and Shortcut on action menu."/>
+
+        <CheckBoxPreference
+            android:dependency="pref_show_action_extra"
+            android:defaultValue="true"
+            android:title="Show dropzones"
+            android:key="pref_show_dropzones"
+            android:summary="Make Uninstall, Remove, and Shortcut as dropzones"/>
+
+        <CheckBoxPreference
+            android:dependency="pref_show_action_menus"
             android:defaultValue="false"
             android:title="DEV activities on action menus"
             android:key="pref_show_action_activities"

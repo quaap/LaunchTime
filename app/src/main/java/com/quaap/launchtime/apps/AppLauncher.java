@@ -324,7 +324,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     }
 
     public boolean isNormalApp() {
-        return !(isWidget() || isLink() || isActionLink() || isAppLink());
+        return !(isWidget() || isLink() || isActionLink() || isAppLink() || isShortcut() || isOreoShortcut());
     }
 
     public boolean iconLoaded() {

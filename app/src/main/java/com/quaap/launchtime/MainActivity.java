@@ -203,6 +203,9 @@ public class MainActivity extends Activity implements
     private ScrollView mShortcutActionsPopup;
     private LinearLayout mShortcutActionsList;
 
+    private boolean mDevModeActivities = true;
+    private boolean mUseDropZones = true;
+    private boolean mUseExtraActions = false;
 
 
     //private DB db();
@@ -223,7 +226,6 @@ public class MainActivity extends Activity implements
 
     private int mAnimationDuration = 250;
 
-    private boolean mDevModeActivities = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -837,6 +839,9 @@ public class MainActivity extends Activity implements
                     if (key.equals("pref_show_action_activities")) {
                         readDevModeAvtivities();
                     }
+                    if (key.equals("pref_show_dropzones") || key.equals("pref_show_action_extra")) {
+                        readDevModeAvtivities();
+                    }
 
                 }
             }
@@ -846,6 +851,17 @@ public class MainActivity extends Activity implements
     private void readDevModeAvtivities() {
         mDevModeActivities = mAppPreferences.getBoolean("pref_show_action_activities", false);
     }
+
+    private void readUseDropzone() {
+        mUseDropZones = mAppPreferences.getBoolean("pref_show_dropzones", true);
+        mUseExtraActions = mAppPreferences.getBoolean("pref_show_action_extra", false);
+
+        if (!mUseExtraActions && !mUseDropZones) {
+            mUseDropZones = true;
+        }
+    }
+
+
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -1097,6 +1113,7 @@ public class MainActivity extends Activity implements
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
             readAnimationDuration();
             readDevModeAvtivities();
+            readUseDropzone();
 
             WindowManager wm = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE));
 
@@ -2583,12 +2600,14 @@ public class MainActivity extends Activity implements
                         scrollOnDrag(droppedOn, event, mIconSheetScroller);
                         hscrollOnDrag(droppedOn, event, mQuickRow.getScroller());
 
-                        if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility()!=View.VISIBLE && (droppedOn==mRemoveDropzone || droppedOn==mLinkDropzonePeek) && System.currentTimeMillis()-mDropZoneHover > 400) {
-                            //mLinkDropzone.setVisibility(View.VISIBLE);
-                            animateShow(mLinkDropzone, AnimateDirection.Right);
-                            //mLinkDropzonePeek.setVisibility(View.GONE);
-                            animateDownHide(mLinkDropzonePeek);
-                           // Log.d(TAG, "mLinkDropzone.setVisibility(View.VISIBLE)");
+                        if (mUseDropZones) {
+                            if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility() != View.VISIBLE && (droppedOn == mRemoveDropzone || droppedOn == mLinkDropzonePeek) && System.currentTimeMillis() - mDropZoneHover > 400) {
+                                //mLinkDropzone.setVisibility(View.VISIBLE);
+                                animateShow(mLinkDropzone, AnimateDirection.Right);
+                                //mLinkDropzonePeek.setVisibility(View.GONE);
+                                animateDownHide(mLinkDropzonePeek);
+                                // Log.d(TAG, "mLinkDropzone.setVisibility(View.VISIBLE)");
+                            }
                         }
                     }
                     break;
@@ -2673,11 +2692,7 @@ public class MainActivity extends Activity implements
                 hideCatsIfAutoHide(false);
                 if (isLauncher) {
                     AppLauncher app = (AppLauncher)dragObj.getTag();
-                    Log.d(TAG, "Making link: " + app.getActivityName() + " " + app.getPackageName());
-                    AppLauncher applauncher = app.makeAppLink();
-                    applauncher.setCategory(mCategory);
-                    db().addApp(applauncher);
-                    repopulateIconSheet(mCategory);
+                    makeAppLink(app);
                 } else {
                     Log.d(TAG, "non-launcher dropped on linker: " + dragObj + " tag=" + dragObj.getTag());
                 }
@@ -2799,12 +2814,7 @@ public class MainActivity extends Activity implements
                 }
 
                 if (mBeingDragged.isWidget()) {
-
-                    db().deleteApp(mBeingDragged.getComponentName());
-                    AppWidgetHostView wid = mLoadedWidgets.remove(mBeingDragged.getActivityName());
-                    if (wid != null) {
-                        mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
-                    }
+                    removeWidget(mBeingDragged);
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -2812,6 +2822,27 @@ public class MainActivity extends Activity implements
         }
 
     };
+
+    private void makeAppLink(AppLauncher app) {
+        Log.d(TAG, "Making link: " + app.getActivityName() + " " + app.getPackageName());
+        AppLauncher applauncher = app.makeAppLink();
+        String category = mCategory;
+        if (Categories.isNoDropCategory(category)) {
+            category = Categories.CAT_OTHER;
+        }
+        applauncher.setCategory(category);
+        db().addApp(applauncher);
+        repopulateIconSheet(category);
+    }
+
+    private void removeWidget(AppLauncher app) {
+        db().deleteApp(app.getComponentName());
+        AppWidgetHostView wid = mLoadedWidgets.remove(app.getActivityName());
+        if (wid != null) {
+            mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
+        }
+    }
+
 
     private boolean isAncestor(ViewGroup potentialParent, View potentialChild) {
 
@@ -3189,6 +3220,56 @@ public class MainActivity extends Activity implements
                 }
             });
 
+            if (mUseExtraActions) {
+
+                if (isAncestor(mQuickRow.getGridLayout(), view)) {
+                    addActionMenuItem(getString(R.string.remove), R.drawable.recycle, new Runnable() {
+                        @Override
+                        public void run() {
+                            mQuickRow.getGridLayout().removeView(view);
+                            //mQuickRow.removeFromQuickApps(appitem.getComponentName());
+                            db().setAppCategoryOrder(QuickRow.QUICK_ROW_CAT, mQuickRow.getGridLayout());
+                        }
+                    });
+                } else if (mCategory.equals(Categories.CAT_SEARCH) && !isAncestor(mSearchBox.getSearchView(), view)) {
+                    addActionMenuItem(getString(R.string.remove), R.drawable.recycle, new Runnable() {
+                        @Override
+                        public void run() {
+                            db().deleteAppLaunchedRecord(appitem.getComponentName());
+                            populateRecentApps();
+                        }
+                    });
+                } else if (appitem.isNormalApp()) {
+                    if (!Categories.isNoDropCategory(mCategory)) {
+                        addActionMenuItem(getString(R.string.link), R.drawable.linkicon, new Runnable() {
+                            @Override
+                            public void run() {
+                                makeAppLink(appitem);
+                            }
+                        });
+                    }
+                    addActionMenuItem(getString(R.string.uninstall_app), R.drawable.trash, new Runnable() {
+                        @Override
+                        public void run() {
+                            launchUninstallIntent(appitem.getPackageName());
+                        }
+                    });
+                } else {
+                    addActionMenuItem(getString(R.string.remove), R.drawable.recycle, new Runnable() {
+                        @Override
+                        public void run() {
+                            if (appitem.isWidget()) {
+                                removeWidget(appitem);
+                            } else {
+                                db().deleteApp(appitem.getComponentName());
+                            }
+                            repopulateIconSheet(mCategory);
+                        }
+                    });
+                }
+
+            }
+
             addActionMenuItem(getString(android.R.string.cancel), android.R.drawable.ic_menu_close_clear_cancel, new Runnable() {
                 @Override
                 public void run() {
@@ -3376,32 +3457,33 @@ public class MainActivity extends Activity implements
 
         showButtonBar(false, false);
 
-        if (mDragDropSource == mQuickRow.getGridLayout()
-            || mDragDropSource == mCategoriesLayout
-            || mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)
-            || (mBeingDragged!=null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
-        ) ) {
-            mRemoveDropzone.setBackgroundColor(Color.YELLOW);
-            //mRemoveAppText.setText(getString(R.string.remove_launcher) + "\n\u267B");
-            mRemoveAppText.setText(R.string.remove_launcher);
-            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.recycle);
-            mRemoveAppText.setTextColor(Color.BLACK);
-            //mLinkDropzonePeek.setVisibility(View.GONE);
-            animateDownHide(mLinkDropzonePeek);
-        } else {
-            mRemoveDropzone.setBackgroundColor(Color.RED);
-           // mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
-            mRemoveAppText.setText(R.string.uninstall_app);
-            mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.trash);
-            //mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showy, 0,0,R.drawable.trash);
-            mRemoveAppText.setTextColor(Color.WHITE);
-            if (!Categories.CAT_SEARCH.equals(mCategory)) {
-                //mLinkDropzonePeek.setVisibility(View.VISIBLE);
-                animateUpShow(mLinkDropzonePeek);
+        if (mUseDropZones) {
+            if (mDragDropSource == mQuickRow.getGridLayout()
+                    || mDragDropSource == mCategoriesLayout
+                    || mDragDropSource == mIconSheets.get(Categories.CAT_SEARCH)
+                    || (mBeingDragged != null && (mBeingDragged.isWidget() || mBeingDragged.isLink())
+            )) {
+                mRemoveDropzone.setBackgroundColor(Color.YELLOW);
+                //mRemoveAppText.setText(getString(R.string.remove_launcher) + "\n\u267B");
+                mRemoveAppText.setText(R.string.remove_launcher);
+                mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.recycle);
+                mRemoveAppText.setTextColor(Color.BLACK);
+                //mLinkDropzonePeek.setVisibility(View.GONE);
+                animateDownHide(mLinkDropzonePeek);
+            } else {
+                mRemoveDropzone.setBackgroundColor(Color.RED);
+                // mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
+                mRemoveAppText.setText(R.string.uninstall_app);
+                mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.trash);
+                //mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showy, 0,0,R.drawable.trash);
+                mRemoveAppText.setTextColor(Color.WHITE);
+                if (!Categories.CAT_SEARCH.equals(mCategory)) {
+                    //mLinkDropzonePeek.setVisibility(View.VISIBLE);
+                    animateUpShow(mLinkDropzonePeek);
+                }
             }
+            animateUpShow(mRemoveDropzone);
         }
-
-        animateUpShow(mRemoveDropzone);
         //mRemoveDropzone.setVisibility(View.VISIBLE);
         animateDownHide(mShowButtons);
         animateUpShow(mHideButtons);
