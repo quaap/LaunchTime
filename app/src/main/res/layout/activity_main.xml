@@ -400,11 +400,17 @@
     </FrameLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:id="@+id/action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:orientation="vertical"/>
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/action_menu_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="vertical"/>
+    </ScrollView>
 
 </FrameLayout>

@@ -26,6 +26,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 
@@ -51,6 +52,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -198,6 +200,9 @@ public class MainActivity extends Activity implements
     private QuickRow mQuickRow;
 
     private ProgressBar mProgressBar;
+    private ScrollView mShortcutActionsPopup;
+    private LinearLayout mShortcutActionsList;
+
 
 
     //private DB db();
@@ -218,6 +223,7 @@ public class MainActivity extends Activity implements
 
     private int mAnimationDuration = 250;
 
+    private boolean mDevModeActivities = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -559,6 +565,7 @@ public class MainActivity extends Activity implements
                 AppLauncher app;
 
                 ResolveInfo ri = activities.get(i);
+
                 String actvname = ri.activityInfo.name;
                 ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
 
@@ -823,9 +830,17 @@ public class MainActivity extends Activity implements
                         setAllIconSheetsLayout();
                     }
 
+                    if (key.equals("pref_show_action_activities")) {
+                        readDevModeAvtivities();
+                    }
+
                 }
             }
         }
+    }
+
+    private void readDevModeAvtivities() {
+        mDevModeActivities = mAppPreferences.getBoolean("pref_show_action_activities", false);
     }
 
     @Override
@@ -1077,6 +1092,7 @@ public class MainActivity extends Activity implements
             mDumbMode = mAppPreferences.getBoolean("prefs_dumbmode", false);
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
             readAnimationDuration();
+            readDevModeAvtivities();
 
             WindowManager wm = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE));
 
@@ -2964,10 +2980,8 @@ public class MainActivity extends Activity implements
     }
 
 
-    private LinearLayout mShortcutActionsPopup;
 
     private boolean handle25Shortcuts(final View view, final AppLauncher appitem) {
-
 
         List<ShortcutInfo> shortcutInfos = null;
         if (Build.VERSION.SDK_INT>=25) {
@@ -2996,8 +3010,9 @@ public class MainActivity extends Activity implements
             dismissActionPopup();
 
             mShortcutActionsPopup = findViewById(R.id.action_menu);
+            mShortcutActionsList = findViewById(R.id.action_menu_items);
             //setForceShowIcon(mShortcutActionsPopup);
-            mShortcutActionsPopup.removeAllViews();
+            mShortcutActionsList.removeAllViews();
 
             mShortcutActionsPopup.setBackgroundColor(Color.argb(128, 255, 255, 255));
 
@@ -3016,15 +3031,16 @@ public class MainActivity extends Activity implements
                         }
                     });
                 }
+            }
 
-//            } else {
-//                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mLaunchApp.launchApp(appitem);
-//                        showButtonBar(false, true);
-//                    }
-//                });
+            if (!appitem.isWidget()) {
+                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
+                    @Override
+                    public void run() {
+                        mLaunchApp.launchApp(appitem);
+                        showButtonBar(false, true);
+                    }
+                });
             }
 
             if (Build.VERSION.SDK_INT >= 25) {
@@ -3036,6 +3052,122 @@ public class MainActivity extends Activity implements
 
                         addShortcutToActionPopup(launcherApps, shortcutInfo);
                     }
+                }
+            }
+
+            if (mDevModeActivities) {
+
+                class Record implements Comparable<Record>{
+                    String label;
+                    ComponentName component;
+                    Drawable icon;
+
+                    @Override
+                    public int compareTo(@NonNull Record other) {
+                        return this.label.compareTo(other.label);
+                    }
+                }
+
+                List<Record> activityItems = new ArrayList<>();
+
+                try {
+                    Intent intent = new Intent(Intent.ACTION_MAIN, null);
+                    intent.setPackage(appitem.getPackageName());
+                    //intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    final List<ResolveInfo> activities = getPackageManager().queryIntentActivities(intent, PackageManager.GET_META_DATA | PackageManager.GET_RESOLVED_FILTER);
+
+                    //ActivityInfo[] list = getPackageManager().getPackageInfo(appitem.getPackageName(), PackageManager.GET_ACTIVITIES).activities;
+
+                    List<String> names = new ArrayList<>();
+                    names.add(appitem.getLabel());
+
+                    List<String> bannedActivities = Arrays.asList(
+                            "com.android.settings.BandMode",
+                            "com.android.settings.sim.SimDialogActivity",
+                            "com.android.settings.FallbackHome"
+                    );
+                    for (ResolveInfo ri : activities) {
+
+                        try {
+                            if (ri == null || ri.activityInfo == null || !ri.activityInfo.exported) {
+                                continue;
+                            }
+
+                            if (ri.activityInfo.name.equals(appitem.getActivityName())) continue;
+
+                            if (ri.activityInfo.permission != null
+                                    && ContextCompat.checkSelfPermission(getApplicationContext(), ri.activityInfo.permission)
+                                    == PackageManager.PERMISSION_DENIED) {
+                                continue;
+                            }
+
+                            if (bannedActivities.contains(ri.activityInfo.name)) continue;
+
+
+                            CharSequence label = ri.activityInfo.loadLabel(getPackageManager());
+
+                            ComponentName cn = new ComponentName(ri.activityInfo.packageName, ri.activityInfo.name);
+
+                            Log.d(TAG, label + " " + ri.activityInfo.packageName + " " + ri.activityInfo.name + " " + ri.activityInfo.permission);
+
+                            if (label == null || label.toString().trim().equals("") || names.contains(label.toString().trim())) {
+                                label = ri.activityInfo.name
+                                        .replaceAll("^.*[.$]|Activity", "")
+                                        .replaceAll("(\\P{Lu})(\\p{Lu})", "$1 $2");
+                            }
+
+                            names.add(label.toString().trim());
+
+                            label = "{ } " + label;
+
+//                        IntentFilter fi = ri.filter;
+//                        if (fi != null) {
+//                            for (Iterator<String> it = fi.actionsIterator(); it != null && it.hasNext(); ) {
+//                                Log.d(TAG, "  action: " + it.next());
+//                            }
+//                            for (Iterator<String> it = fi.categoriesIterator(); it != null && it.hasNext(); ) {
+//                                Log.d(TAG, "  cat: " + it.next());
+//                            }
+//                            for (Iterator<String> it = fi.schemesIterator(); it != null && it.hasNext(); ) {
+//                                Log.d(TAG, "  scheme: " + it.next());
+//                            }
+//
+//                        }
+
+
+                            Record item = new Record();
+                            item.label = label.toString();
+                            item.component = cn;
+                            item.icon = ri.activityInfo.loadIcon(getPackageManager());
+                            activityItems.add(item);
+
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage(), e);
+                            Toast.makeText(MainActivity.this, "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    Collections.sort(activityItems);
+
+                    for (Record item: activityItems) {
+                        final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
+                        launchIntent.setComponent(item.component);
+                        addActionMenuItem(item.label, item.icon, new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    startActivity(launchIntent);
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.getMessage(), e);
+                                    Toast.makeText(MainActivity.this, "Error: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
+                    }
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Couldn't query activities", e);
                 }
             }
 
@@ -3067,7 +3199,7 @@ public class MainActivity extends Activity implements
             int width = mShortcutActionsPopup.getWidth();
             if (width==0) width = (int)(getResources().getDimension(R.dimen.action_menu_width));
 
-            int height = (int)(mShortcutActionsPopup.getChildCount()
+            int height = (int)(mShortcutActionsList.getChildCount()
                             * (getResources().getDimension(R.dimen.action_icon_width)*1.4 + 28));
 
             int [] viewpos = new int[2];
@@ -3146,7 +3278,7 @@ public class MainActivity extends Activity implements
         lp.setMargins(12,12,12,12);
 
         item.setLayoutParams(lp);
-        mShortcutActionsPopup.addView(item);
+        mShortcutActionsList.addView(item);
     }
 
     private void addShortcutToActionPopup(final LauncherApps launcherApps, final ShortcutInfo shortcutInfo) {

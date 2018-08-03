@@ -178,6 +178,12 @@
             android:title="@string/pref_show_action"
             android:key="pref_show_action_menus" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="DEV activities on action menus"
+            android:key="pref_show_action_activities"
+            android:summary="Dev option. { } Could be DANGEROUS: Show ACTION_MAIN activites as action menu items on apps."/>
+
         <ListPreference
             android:defaultValue="3600"
             android:title="@string/pref_returnhome"
