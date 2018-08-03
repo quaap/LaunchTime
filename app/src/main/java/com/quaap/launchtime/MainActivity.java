@@ -279,6 +279,8 @@ public class MainActivity extends Activity implements
         super.onResume();
         Log.d(TAG, "onResume");
 
+        if (mInitCalling) return;
+
         if (mInitCalled) {
             myResume();
         } else {
@@ -388,9 +390,9 @@ public class MainActivity extends Activity implements
 
         @Override
         protected List<AppLauncher> doInBackground(Void... voids) {
+            final MainActivity main = mMain.get();
+            if (main == null) return null;
             try {
-                final MainActivity main = mMain.get();
-                if (main == null) return null;
 
                 if (main.mInitCalled) return null;
 
@@ -405,13 +407,14 @@ public class MainActivity extends Activity implements
                 if (mShowProgress) main.incProgressBar(1);
 
                 main.init(mShowProgress);
-                main.mInitCalled = true;
 
                 Thread.yield();
 
                 return main.processActivities(mShowProgress);
             } catch (Throwable t) {
                 Log.e(TAG, t.getMessage(), t);
+            } finally {
+                main.mInitCalled = true;
             }
             return null;
         }
@@ -421,8 +424,8 @@ public class MainActivity extends Activity implements
             super.onCancelled();
             final MainActivity main = mMain.get();
             if (main == null) return;
-            main.hideProgressBar();
             main.mInitCalling = false;
+            main.hideProgressBar();
         }
 
         @Override
