@@ -391,7 +391,6 @@ public class MainActivity extends Activity implements
                 if (main == null) return null;
 
                 if (main.mInitCalled) return null;
-                main.mInitCalled = true;
 
                 if (mShowProgress) {
                     main.showProgressBar(100);
@@ -403,12 +402,10 @@ public class MainActivity extends Activity implements
 
                 if (mShowProgress) main.incProgressBar(1);
 
-                main.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        main.init(mShowProgress);
-                    }
-                });
+                main.init(mShowProgress);
+                main.mInitCalled = true;
+
+                Thread.yield();
 
                 return main.processActivities(mShowProgress);
             } catch (Throwable t) {
@@ -493,8 +490,15 @@ public class MainActivity extends Activity implements
         if (progress) incProgressBar(1);
 
         for (final String category : db().getCategories()) {
-            createIconSheet(category);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    createIconSheet(category);
+                }
+            });
+            Thread.yield();
         }
+
         if (progress) incProgressBar(1);
         if (!db().isFirstRun()) {
             //Make sure the displayed icons load first
