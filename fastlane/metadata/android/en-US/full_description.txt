@@ -1,6 +1,6 @@
 Highly configurable alternative homescreen/launcher which features a side menu to automatically and/or manually organize your apps into common-sense and customizable categories. 
 
-Latest features: Resizable widgets, hideable menu, action menus, appinfo, better appearance, animated transitions.
+Latest features: Resizable widgets, hideable menu, action menus, appinfo, better appearance, animated transitions, and an experimental "dumbphone" mode.
 
 More features:
 * Configurable app categories in a scrollable/hideable side menu.
