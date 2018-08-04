@@ -113,6 +113,7 @@ import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
 import java.lang.ref.WeakReference;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -3021,24 +3022,42 @@ public class MainActivity extends Activity implements
 
     private boolean handle25Shortcuts(final View view, final AppLauncher appitem) {
 
+        //Log.d(TAG, appitem.getPackageName() + " " +  appitem.getBaseComponentName());
+
         List<ShortcutInfo> shortcutInfos = null;
         if (Build.VERSION.SDK_INT>=25) {
             final LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
-            if (launcherApps==null) return false;
 
-            if (launcherApps.hasShortcutHostPermission()) {
+            if (launcherApps!=null && launcherApps.hasShortcutHostPermission()) {
                 try {
 
                     LauncherApps.ShortcutQuery q = new LauncherApps.ShortcutQuery();
                     q.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC | LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST);
-                    q.setPackage(appitem.getPackageName());
-                    q.setActivity(appitem.getBaseComponentName());
+
+                    if (appitem.isShortcut()) {
+                        Intent launchIntent = Intent.parseUri(appitem.getLinkUri(), 0);
+                        q.setPackage(launchIntent.getPackage());
+                        q.setActivity(launchIntent.getComponent());
+                    } else if (appitem.isOreoShortcut()) {
+                        LauncherApps.ShortcutQuery query = new LauncherApps.ShortcutQuery();
+                        query.setPackage(appitem.getPackageName());
+                        query.setShortcutIds(Collections.singletonList(appitem.getLinkUri()));
+                        query.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED);
+                        List<ShortcutInfo> shortcuts = launcherApps.getShortcuts(query,android.os.Process.myUserHandle());
+                        if (shortcuts!=null && shortcuts.size()>0) {
+                            q.setPackage(appitem.getPackageName());
+                            q.setActivity(shortcuts.get(0).getActivity());
+                        }
+                    } else {
+                        q.setPackage(appitem.getPackageName());
+                        q.setActivity(appitem.getBaseComponentName());
+                    }
 
                     shortcutInfos = launcherApps.getShortcuts(q, android.os.Process.myUserHandle());
 
                     //Log.d(TAG, "Queried shortcuts");
 
-                } catch (SecurityException | IllegalStateException e) {
+                } catch (Exception e) {
                     Log.e(TAG, "Couldn't query shortcuts", e);
                 }
             }
