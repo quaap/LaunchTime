@@ -35,9 +35,9 @@ import java.lang.ref.WeakReference;
  * See the GNU General Public License for more details.
  */
 public class AppCursorAdapter extends ResourceCursorAdapter implements StaticListView.OnItemClickListener {
-    private MainActivity mMain;
+    private final MainActivity mMain;
 
-    private EditText mTextHolder;
+    private final EditText mTextHolder;
 
 
     //private DB mDB;
@@ -201,9 +201,10 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
 
 
     private static class ListLoaderTask extends  AsyncTask<String,Void,AppLauncher> {
-        ViewHolder viewholder;
-        WeakReference<AppCursorAdapter> appadaptref;
+        final ViewHolder viewholder;
+        final WeakReference<AppCursorAdapter> appadaptref;
         @SuppressLint("StaticFieldLeak")
+        final
         Context context;
 
         ListLoaderTask(AppCursorAdapter appadapt, ViewHolder viewholder, Context context) {

@@ -130,12 +130,12 @@ public class ChooseIconFromPackActivity extends Activity {
 
 
     private class ImageAdapter extends BaseAdapter {
-        private Context mContext;
-        private ArrayList<String> mDrawableNames;
-        private SparseArray<Drawable> mDrawables  = new SparseArray<>();
-        private IconPack mIconPack;
+        private final Context mContext;
+        private final ArrayList<String> mDrawableNames;
+        private final SparseArray<Drawable> mDrawables  = new SparseArray<>();
+        private final IconPack mIconPack;
 
-        private int mIconSize;
+        private final int mIconSize;
 
         ImageAdapter(Context c, IconPack iconPack) {
             mContext = c;
@@ -183,10 +183,10 @@ public class ChooseIconFromPackActivity extends Activity {
 
     private class MapAdapter<K,V> extends ArrayAdapter<V> {
 
-        private LinkedHashMap<K,V> mMap;
-        private List<K> mKeys = new ArrayList<>();
+        private final LinkedHashMap<K,V> mMap;
+        private final List<K> mKeys = new ArrayList<>();
 
-        public MapAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull LinkedHashMap<K,V> map) {
+        MapAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull LinkedHashMap<K, V> map) {
             super(context, resource, new ArrayList<>(map.values()));
 
             mMap = map;
@@ -210,7 +210,7 @@ public class ChooseIconFromPackActivity extends Activity {
             return v;
         }
 
-        public K getKey(int position) {
+        K getKey(int position) {
             return mKeys.get(position);
         }
 

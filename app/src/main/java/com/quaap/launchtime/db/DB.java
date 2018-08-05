@@ -71,8 +71,8 @@ public class DB extends SQLiteOpenHelper {
     private static final String LEVEL = "level";
 
 
-    private static int FLAGS_ISTINY = 1;
-    private static int FLAGS_ISHIDDEN = 2;
+    private static final int FLAGS_ISTINY = 1;
+    private static final int FLAGS_ISHIDDEN = 2;
 
 
     private static final String APP_TABLE_OLD = "apps";
@@ -124,9 +124,9 @@ public class DB extends SQLiteOpenHelper {
 
     private boolean firstRun;
 
-    private Context mContext;
+    private final Context mContext;
 
-    private DBClosedListener mDBClosedListener;
+    private final DBClosedListener mDBClosedListener;
 
     private ComponentName latestInstall;
     private long latestInstallTime;
@@ -602,7 +602,7 @@ public class DB extends SQLiteOpenHelper {
 //        return deleteApp(actvorpkgname, false);
 //    }
 
-    public boolean deleteApp(ComponentName appname) {
+    public void deleteApp(ComponentName appname) {
 
         String actvname = appname.getClassName();
 
@@ -616,15 +616,14 @@ public class DB extends SQLiteOpenHelper {
                 db.delete(APP_TABLE, ACTVNAME + "=? and " + PKGNAME + "=?", new String[]{actvname, pkgname});
                 AppLauncher.removeAppLauncher(actvname,pkgname);
 
-                return true;
+                return;
             }
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't delete app " + actvname, e);
         }
 
 
-
-        return deleteApp(actvname,pkgname);
+        deleteApp(actvname, pkgname);
     }
 
     public boolean deleteApp(String actvname, String pkgname) {

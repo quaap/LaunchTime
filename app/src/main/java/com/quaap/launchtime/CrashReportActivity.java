@@ -32,8 +32,8 @@ import com.quaap.launchtime.components.HttpUtils;
 import java.util.HashMap;
 
 public class CrashReportActivity extends Activity {
-    String error;
-    String appname;
+    private String error;
+    private String appname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

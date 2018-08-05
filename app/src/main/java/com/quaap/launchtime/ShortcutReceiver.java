@@ -1,11 +1,9 @@
 package com.quaap.launchtime;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -75,7 +73,7 @@ public class ShortcutReceiver extends BroadcastReceiver {
         }
     }
 
-    public void addLink(Context context, Intent intent, String label, Bitmap bitmap) {
+    private void addLink(Context context, Intent intent, String label, Bitmap bitmap) {
 
         DB db = GlobState.getGlobState(context).getDB();
 

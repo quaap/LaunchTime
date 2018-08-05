@@ -41,7 +41,7 @@ public class Theme {
     private final String [] COLOR_PREFS = {"icon_tint", "cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
             "wallpapercolor",  "textcolor"};
 
-    private Thing [] THING_MAP = {Thing.Mask, Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
+    private final Thing [] THING_MAP = {Thing.Mask, Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
 
 
     private int [] getColorDefaultsClassic()  {
@@ -57,14 +57,14 @@ public class Theme {
     }
 
 
-    private Context ctx;
+    private final Context ctx;
 
 
-    private Map<String, BuiltinTheme> builtinThemes = new LinkedHashMap<>();
+    private final Map<String, BuiltinTheme> builtinThemes = new LinkedHashMap<>();
 
-    private IconsHandler iconsHandler;
+    private final IconsHandler iconsHandler;
 
-    private SharedPreferences prefs;
+    private final SharedPreferences prefs;
 
     public Theme(Context ctx, IconsHandler ich) {
         this.ctx = ctx;
@@ -290,10 +290,10 @@ public class Theme {
 
     abstract class BuiltinTheme {
 
-        private String mKey;
-        private String mName;
+        private final String mKey;
+        private final String mName;
 
-        private Map<Thing,Integer> mColors = new HashMap<>();
+        private final Map<Thing,Integer> mColors = new HashMap<>();
 
         BuiltinTheme(String key, String name) {
             this(key, name, null);
@@ -424,8 +424,8 @@ public class Theme {
     }
 
     public class PolychromeTheme extends BuiltinTheme {
-        private int [] mFGColors;
-        private int mBGColor;
+        private final int [] mFGColors;
+        private final int mBGColor;
 
         public PolychromeTheme(String key, String name, int [] color, int bgcolor) {
             super(key, name);

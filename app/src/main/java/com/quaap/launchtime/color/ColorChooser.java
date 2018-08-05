@@ -246,7 +246,7 @@ public class ColorChooser extends FrameLayout {
         return Color.argb(alpha, red, green, blue);
     }
 
-    private SeekBar.OnSeekBarChangeListener colorChange = new SeekBar.OnSeekBarChangeListener() {
+    private final SeekBar.OnSeekBarChangeListener colorChange = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
             doPreview();
@@ -263,7 +263,7 @@ public class ColorChooser extends FrameLayout {
         }
     };
 
-    private View.OnClickListener setColorListener = new View.OnClickListener() {
+    private final View.OnClickListener setColorListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             setColor((int) view.getTag());
@@ -271,7 +271,7 @@ public class ColorChooser extends FrameLayout {
         }
     };
 
-    int numpresets = 64;
+    private final int numpresets = 64;
 
     private void addPreset(int color) {
         SharedPreferences.Editor edit = prefs.edit();

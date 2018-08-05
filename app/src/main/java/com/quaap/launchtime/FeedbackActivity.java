@@ -33,7 +33,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,13 +52,13 @@ import java.util.Map;
 
 public class FeedbackActivity extends Activity {
 
-    private LinkedHashMap<String,String> scrubbednames = new LinkedHashMap<>();
-    private Map<String,Boolean> includes = new HashMap<>();
-    List<AppLauncher> apps = new ArrayList<>();
-    Map<String,AppLauncher> appMap = new HashMap<>();
-    String version;
-    String appname;
-    ListView itemsList;
+    private final LinkedHashMap<String,String> scrubbednames = new LinkedHashMap<>();
+    private final Map<String,Boolean> includes = new HashMap<>();
+    private final List<AppLauncher> apps = new ArrayList<>();
+    private final Map<String,AppLauncher> appMap = new HashMap<>();
+    private String version;
+    private String appname;
+    private ListView itemsList;
 
 
     @Override
@@ -166,7 +165,7 @@ public class FeedbackActivity extends Activity {
         return componentName.getPackageName() + "/" + componentName.getClassName();
     }
 
-    private void loadData() throws PackageManager.NameNotFoundException {
+    private void loadData() {
 
 
         TextView txtappname = findViewById(R.id.info_app_name);
@@ -310,7 +309,7 @@ public class FeedbackActivity extends Activity {
 
     class PackageAdapter extends ArrayAdapter<String> {
 
-        public PackageAdapter(Context context, List<String> objects) {
+        PackageAdapter(Context context, List<String> objects) {
             super(context, 0, objects);
         }
 

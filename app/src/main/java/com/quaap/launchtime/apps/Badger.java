@@ -26,9 +26,9 @@ public class Badger {
 
     private BadgerCountChangeListener badgerCountChangeListener;
 
-    private Map<ComponentName,Integer> unreadCount = new HashMap<>();
+    private final Map<ComponentName,Integer> unreadCount = new HashMap<>();
 
-    private SharedPreferences prefs;
+    private final SharedPreferences prefs;
 
     public Badger(Context context) {
         prefs = context.getSharedPreferences("badges", Context.MODE_PRIVATE);
@@ -42,7 +42,7 @@ public class Badger {
         setUnreadCount(compName,count);
     }
 
-    public void setUnreadCount(ComponentName compName, int count) {
+    private void setUnreadCount(ComponentName compName, int count) {
         unreadCount.put(compName, count);
         if (count==0) {
             prefs.edit().remove(compName.flattenToString()).apply();

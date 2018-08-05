@@ -21,7 +21,7 @@ import android.os.Handler;
 public class MsgBox {
 
 
-    public static void show(Context context, String title, String message) {
+    private static void show(Context context, String title, String message) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);

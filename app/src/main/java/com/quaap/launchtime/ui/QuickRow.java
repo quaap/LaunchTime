@@ -2,7 +2,6 @@ package com.quaap.launchtime.ui;
 
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
@@ -37,12 +36,12 @@ import java.util.List;
 public class QuickRow {
 
     public static final String QUICK_ROW_CAT = "QuickRow";
-    private GridLayout mQuickRow;
-    private HorizontalScrollView mQuickRowScroller;
+    private final GridLayout mQuickRow;
+    private final HorizontalScrollView mQuickRowScroller;
 
-    private MainActivity mMainActivity;
+    private final MainActivity mMainActivity;
 
-    private Style mStyle;
+    private final Style mStyle;
 
     public QuickRow(final View.OnDragListener dragListener, MainActivity mainActivity) {
 

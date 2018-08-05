@@ -44,7 +44,7 @@ public class Widget {
     final private int REQUEST_BIND_APPWIDGET = 5645;
     private AppWidgetManager mAppWidgetManager;
     private LaunchAppWidgetHost mAppWidgetHost;
-    private Activity mParent;
+    private final Activity mParent;
 
 
     public Widget(Activity parent) {
@@ -158,7 +158,7 @@ public class Widget {
         return hostView;
     }
 
-    public boolean checkBindPermission(final int appWidgetId, final ComponentName cn) {
+    private boolean checkBindPermission(final int appWidgetId, final ComponentName cn) {
         try {
             boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
 

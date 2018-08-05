@@ -46,7 +46,7 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
         this.mLongClickListener = listener;
     }
 
-    boolean wasLong = false;
+    private boolean wasLong = false;
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mLongClickListener == null) return false;

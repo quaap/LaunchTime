@@ -32,8 +32,8 @@ import android.widget.ScrollView;
 
 
 public class InteractiveScrollView extends ScrollView {
-    OnPositionChangedListener mListener;
-    OnSwipeHorizontalListener mHSwipeListener;
+    private OnPositionChangedListener mListener;
+    private OnSwipeHorizontalListener mHSwipeListener;
 
     public InteractiveScrollView(Context context, AttributeSet attrs,
                                  int defStyle) {

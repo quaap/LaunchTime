@@ -156,7 +156,7 @@ public class SettingsActivity extends PreferenceActivity {
         finish();
     }
 
-    protected static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
+    private static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
         IconsHandler iph = GlobState.getIconsHandler(context);
 
         iph.loadAvailableIconsPacks();

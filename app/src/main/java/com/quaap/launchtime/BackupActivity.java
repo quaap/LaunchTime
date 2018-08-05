@@ -50,15 +50,15 @@ public class BackupActivity extends Activity {
     private String selectedBackup;
     private boolean selected;
 
-    LinearLayout backupsLayout;
-    Button newbk;
-    Button restorebk;
-    Button delbk;
-    Button savebk;
-    Button loadbk;
-    Button resetdb;
-    TextView showExt;
-    View btnbar;
+    private LinearLayout backupsLayout;
+    private Button newbk;
+    private Button restorebk;
+    private Button delbk;
+    private Button savebk;
+    private Button loadbk;
+    private Button resetdb;
+    private TextView showExt;
+    private View btnbar;
     //DB db;
 
     @Override
@@ -254,7 +254,7 @@ public class BackupActivity extends Activity {
         builder.show();
     }
 
-    public void restartApp() {
+    private void restartApp() {
         backupsLayout.postDelayed(new Runnable() {
             @Override
             public void run() {

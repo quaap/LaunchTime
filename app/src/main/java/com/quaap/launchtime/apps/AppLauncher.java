@@ -43,7 +43,7 @@ import java.util.Map;
 public class AppLauncher implements Comparable<AppLauncher> {
 
 
-    private static Map<ComponentName,AppLauncher> mAppLaunchers = Collections.synchronizedMap(new HashMap<ComponentName,AppLauncher>());
+    private static final Map<ComponentName,AppLauncher> mAppLaunchers = Collections.synchronizedMap(new HashMap<ComponentName,AppLauncher>());
     private static final String LINK_SEP = ":IS_APP_LINK:";
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
     private static final String OREOSHORTCUT = "OREOSHORTCUT:";
@@ -144,17 +144,16 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return mAppLaunchers.get(activityName);
     }
 
-    public static AppLauncher removeAppLauncher(ComponentName activityName) {
-        return mAppLaunchers.remove(activityName);
+    public static void removeAppLauncher(ComponentName activityName) {
+        mAppLaunchers.remove(activityName);
     }
 
-    public static AppLauncher removeAppLauncher(String activityName, String packageName) {
+    public static void removeAppLauncher(String activityName, String packageName) {
         try {
             if (activityName==null) activityName = "";
-            return mAppLaunchers.remove(new ComponentName(packageName, activityName));
+            mAppLaunchers.remove(new ComponentName(packageName, activityName));
         } catch (Exception e) {
             Log.e("AppLauncher", e.getMessage(), e);
-            return null;
         }
     }
 
@@ -166,13 +165,13 @@ public class AppLauncher implements Comparable<AppLauncher> {
     }
 
 
-    private String mPackageName;
-    private String mActivityName;
+    private final String mPackageName;
+    private final String mActivityName;
     private String mLabel;
 
 
     private String mCategory;
-    private boolean mWidget;
+    private final boolean mWidget;
 
     private volatile Drawable mIconDrawable;
     private volatile ImageView mIconImage;
@@ -405,11 +404,11 @@ public class AppLauncher implements Comparable<AppLauncher> {
     private static class IconLoaderTask extends AsyncTask<Context, Void, Drawable> {
 
         // Keep track of all the exceptions
-        private Exception exception = null;
+        private final Exception exception = null;
 
-        private WeakReference<AppLauncher> instref;
+        private final WeakReference<AppLauncher> instref;
 
-        private PackageManager pm;
+        private final PackageManager pm;
 
         IconLoaderTask(AppLauncher inst, PackageManager pm) {
             super();

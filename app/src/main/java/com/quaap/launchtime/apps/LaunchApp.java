@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.db.DB;
 
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,9 +35,9 @@ import java.util.List;
 public class LaunchApp {
 
 
-    private static String TAG = "LT LaunchApp";
+    private static final String TAG = "LT LaunchApp";
 
-    private Activity activity;
+    private final Activity activity;
 
     public LaunchApp(Activity activity) {
         this.activity = activity;
@@ -213,7 +212,7 @@ public class LaunchApp {
         return isValidActivity(getAppIntent(app));
     }
 
-    public boolean isValidActivity(Intent intent) {
+    private boolean isValidActivity(Intent intent) {
         List<ResolveInfo> list = activity.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
     }

@@ -20,7 +20,7 @@ import android.content.Context;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-public class LaunchAppWidgetHost extends AppWidgetHost {
+class LaunchAppWidgetHost extends AppWidgetHost {
 
     //private List<Integer> mAppIds = new ArrayList<>();
 

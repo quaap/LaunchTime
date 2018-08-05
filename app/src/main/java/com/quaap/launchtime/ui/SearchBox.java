@@ -34,15 +34,15 @@ import com.quaap.launchtime.db.DB;
  */
 
 public class SearchBox {
-    private ViewGroup mSearchView;
+    private final ViewGroup mSearchView;
 
     private int mSearchRememberScrollPos;
 
-    private AppCursorAdapter mSearchAdapter;
-    private EditText mSearchbox;
+    private final AppCursorAdapter mSearchAdapter;
+    private final EditText mSearchbox;
 
-    private MainActivity mMainActivity;
-    private InteractiveScrollView mIconSheetScroller;
+    private final MainActivity mMainActivity;
+    private final InteractiveScrollView mIconSheetScroller;
 
     public SearchBox(final MainActivity mainActivity, InteractiveScrollView iconSheetScroller) {
 

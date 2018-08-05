@@ -22,8 +22,8 @@ import android.widget.LinearLayout;
  * See the GNU General Public License for more details.
  */
 public class StaticListView extends LinearLayout {
-    protected Adapter mAdapter;
-    protected Observer mObserver = new Observer(this);
+    private Adapter mAdapter;
+    private final Observer mObserver = new Observer(this);
     private OnItemClickListener mOnItemClickListener;
     private OnLoadCompleteListener mOnLoadCompleteListener;
 
@@ -57,15 +57,15 @@ public class StaticListView extends LinearLayout {
         }
     }
 
-    void hideAll() {
+    private void hideAll() {
         for (int i = 0; i < getChildCount(); i++)
             getChildAt(i).setVisibility(GONE);
     }
 
     private class Observer extends DataSetObserver {
-        private StaticListView staticListView;
+        private final StaticListView staticListView;
 
-        public Observer(StaticListView staticListView) {
+        Observer(StaticListView staticListView) {
             this.staticListView = staticListView;
         }
 

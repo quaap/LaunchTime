@@ -8,14 +8,12 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes
@@ -94,13 +92,13 @@ public class DefaultApps {
         }
     }
 
-    public static boolean contains(AppLauncher app, String test) {
+    private static boolean contains(AppLauncher app, String test) {
         return app.getActivityName().toLowerCase().contains(test.toLowerCase())
                 || app.getPackageName().toLowerCase().contains(test.toLowerCase());
     }
 
 
-    public static Map<String, List<String>> getDefaultActivities(Context context) {
+    private static Map<String, List<String>> getDefaultActivities(Context context) {
 
         Map<String, List<String>> activities = new LinkedHashMap<>();
 
@@ -150,11 +148,11 @@ public class DefaultApps {
         return activities;
     }
 
-    public static ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory) {
+    private static ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory) {
         return getpkg(context, intentaction, intenturi, intentcategory, null);
     }
 
-    public static ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory, String intenttype) {
+    private static ComponentName getpkg(Context context, String intentaction, String intenturi, String intentcategory, String intenttype) {
 
         ComponentName cn = new ComponentName("_fakename", "_fakename");
 

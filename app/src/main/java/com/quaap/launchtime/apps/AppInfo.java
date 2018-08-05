@@ -233,7 +233,7 @@ public class AppInfo {
         return pw;
     }
 
-    public static String getCategoryFromPiCat(ApplicationInfo appinfo) {
+    private static String getCategoryFromPiCat(ApplicationInfo appinfo) {
         String cat = null;
         if (Build.VERSION.SDK_INT >= 26) {
             int category = appinfo.category;

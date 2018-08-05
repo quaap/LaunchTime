@@ -63,12 +63,12 @@ public class IconsHandler {
     // map with available icons packs
     private Map<String, String> iconsPacks = new HashMap<>();
 
-    private PackageManager pm;
-    private Context ctx;
+    private final PackageManager pm;
+    private final Context ctx;
 
     public static final String DEFAULT_PACK = "default";
 
-    private Theme theme;
+    private final Theme theme;
 
     public IconsHandler(Context ctx) {
         super();
@@ -135,7 +135,7 @@ public class IconsHandler {
         return getDefaultAppDrawable(app, false);
     }
 
-    public Drawable getDefaultAppDrawable(AppLauncher app, boolean nodefault) {
+    private Drawable getDefaultAppDrawable(AppLauncher app, boolean nodefault) {
 
         Drawable app_icon = null;
 
@@ -284,7 +284,7 @@ public class IconsHandler {
         return drawableFile.isFile();
     }
 
-    private boolean cacheStoreDrawable(String key, Drawable drawable) {
+    private void cacheStoreDrawable(String key, Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             File drawableFile = cacheGetFileName(key);
             FileOutputStream fos;
@@ -293,12 +293,10 @@ public class IconsHandler {
                 ((BitmapDrawable) drawable).getBitmap().compress(CompressFormat.PNG, 100, fos);
                 fos.flush();
                 fos.close();
-                return true;
             } catch (Exception e) {
                 Log.e(TAG, "Unable to store drawable in cache " + e);
             }
         }
-        return false;
     }
 
     private Drawable cacheGetDrawable(String key) {

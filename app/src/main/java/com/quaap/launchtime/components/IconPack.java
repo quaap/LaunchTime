@@ -56,13 +56,13 @@ public class IconPack {
 
     private static final String TAG = "IconPack";
 
-    private Map<String, String> packagesDrawables = new LinkedHashMap<>();
+    private final Map<String, String> packagesDrawables = new LinkedHashMap<>();
     // instance of a resource object of an icon pack
     private Resources iconPackres;
     // package name of the icons pack
-    private volatile String iconsPackPackageName;
+    private final String iconsPackPackageName;
     // list of back images available on an icons pack
-    private List<Bitmap> backImages = new ArrayList<>();
+    private final List<Bitmap> backImages = new ArrayList<>();
     // bitmap mask of an icons pack
     private Bitmap maskImage = null;
     // front image of an icons pack
@@ -72,7 +72,7 @@ public class IconPack {
 
     private static final int MAX_DRAWABLE_DIM = 257;
 
-    private Resources.Theme theme;
+    private final Resources.Theme theme;
 
 
     public IconPack(Context ctx, String packageName) {
@@ -243,7 +243,7 @@ public class IconPack {
         return d;
     }
 
-    public static boolean isOkSize(Resources res, int id, String drawable) {
+    private static boolean isOkSize(Resources res, int id, String drawable) {
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
@@ -331,7 +331,7 @@ public class IconPack {
 
 
 
-    private static  String [] packs = {"org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME", "com.anddoes.launcher.THEME" };
+    private static final String [] packs = {"org.adw.launcher.THEMES", "fr.neamar.kiss.THEMES", "com.novalauncher.THEME", "com.anddoes.launcher.THEME" };
 
     /**
      * Scan for installed icons packs

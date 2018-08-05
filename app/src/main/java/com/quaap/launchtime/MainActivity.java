@@ -26,7 +26,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 
@@ -113,7 +112,6 @@ import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 
 import java.lang.ref.WeakReference;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -133,8 +131,9 @@ public class MainActivity extends Activity implements
         View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener,
         Badger.BadgerCountChangeListener {
 
+    // Things are getting very messy.  That's what happens when you figure it out as you go along.
     //TODO: everything needs a major refactor.
-    // custom views or fragments?
+
 
     private static final int UNINSTALL_RESULT = 3454;
 
@@ -188,8 +187,8 @@ public class MainActivity extends Activity implements
 
     private SharedPreferences mAppPreferences;
 
-    private Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
-    public Map<AppLauncher,ViewGroup> mAppLauncherViews = Collections.synchronizedMap(new HashMap<AppLauncher,ViewGroup>());
+    private final Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
+    private final Map<AppLauncher,ViewGroup> mAppLauncherViews = Collections.synchronizedMap(new HashMap<AppLauncher,ViewGroup>());
 
     private boolean mChildLock;
     private boolean mChildLockSetup;
@@ -380,8 +379,8 @@ public class MainActivity extends Activity implements
 
     private static class StartupTask extends AsyncTask<Void,Integer,List<AppLauncher>> {
 
-        WeakReference<MainActivity> mMain;
-        boolean mShowProgress;
+        final WeakReference<MainActivity> mMain;
+        final boolean mShowProgress;
 
         StartupTask(MainActivity main, boolean showProgress) {
             mMain = new WeakReference<>(main);
@@ -670,14 +669,14 @@ public class MainActivity extends Activity implements
         return GlobState.getGlobState(this).getDB();
     }
 
-    private View.OnDragListener iconSheetDropRedirector = new View.OnDragListener() {
+    private final View.OnDragListener iconSheetDropRedirector = new View.OnDragListener() {
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
             return mMainDragListener.onDrag(mIconSheet, dragEvent);
         }
     };
 
-    private InteractiveScrollView.OnSwipeHorizontalListener mHSwipeListener = new InteractiveScrollView.OnSwipeHorizontalListener() {
+    private final InteractiveScrollView.OnSwipeHorizontalListener mHSwipeListener = new InteractiveScrollView.OnSwipeHorizontalListener() {
 
         @Override
         public void onLeftSwipe(float absDist) {
@@ -1387,7 +1386,7 @@ public class MainActivity extends Activity implements
     
     enum AnimateDirection {Left, Up, Right, Down}
 
-    private Map<View,Long> aniHideStarted = new HashMap<>();
+    private final Map<View,Long> aniHideStarted = new HashMap<>();
 
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
@@ -1644,7 +1643,7 @@ public class MainActivity extends Activity implements
     }
 
     @NonNull
-    private GridLayout createIconSheet(String category) {
+    private void createIconSheet(String category) {
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
         mIconSheets.put(category, iconSheet);
         mRevCategoryMap.put(iconSheet, category);
@@ -1657,7 +1656,6 @@ public class MainActivity extends Activity implements
 
         mCategoryTabs.put(category, categoryTab);
         mRevCategoryMap.put(categoryTab, category);
-        return iconSheet;
     }
 
     public void populateRecentApps() {
@@ -2059,12 +2057,12 @@ public class MainActivity extends Activity implements
 
 
 
-    public int pxToDip(float pixel){
+    private int pxToDip(float pixel){
         float scale = getResources().getDisplayMetrics().density;
         return (int)((pixel - 0.5f)/scale);
     }
 
-    public float dipToPx(float dip){
+    private float dipToPx(float dip){
         if (dip==0) return 0;
 
         float scale = getResources().getDisplayMetrics().density;
@@ -2074,7 +2072,7 @@ public class MainActivity extends Activity implements
        // return (int)((pixel - 0.5f)/scale);
     }
 
-    public void changeColumnCount(GridLayout gridLayout, int columnCount) {
+    private void changeColumnCount(GridLayout gridLayout, int columnCount) {
         if (gridLayout.getColumnCount() != columnCount) {
 
             List<View> childViews = new ArrayList<>();
@@ -2548,7 +2546,7 @@ public class MainActivity extends Activity implements
     }
 
     private long mDropZoneHover=0;
-    private View.OnDragListener mMainDragListener = new View.OnDragListener() {
+    private final View.OnDragListener mMainDragListener = new View.OnDragListener() {
         @Override
         public boolean onDrag(View droppedOn, DragEvent event) {
             if (mChildLock) return false;
@@ -2974,7 +2972,7 @@ public class MainActivity extends Activity implements
         }
     }
 
-    public void startDrag() {
+    private void startDrag() {
 
         if (mDragPotential==null) return;
 
@@ -4067,7 +4065,7 @@ public class MainActivity extends Activity implements
 
     }
 
-    private View.OnTouchListener mDismissClick = new View.OnTouchListener() {
+    private final View.OnTouchListener mDismissClick = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
@@ -4128,7 +4126,7 @@ public class MainActivity extends Activity implements
     private String kidaccumecode = "";
     private String kidcode = "";
 
-    private View.OnClickListener kidescape = new View.OnClickListener() {
+    private final View.OnClickListener kidescape = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             view.startAnimation(itemClickedAnim);
@@ -4155,7 +4153,7 @@ public class MainActivity extends Activity implements
     }
 
 
-    private boolean checkChildLock() {
+    private void checkChildLock() {
         View kid_escape_area = findViewById(R.id.kid_escape_area);
         View decorView = getWindow().getDecorView();
        // View catswrap = findViewById(R.id.category_tabs_wrap);
@@ -4221,7 +4219,6 @@ public class MainActivity extends Activity implements
 
 
             }
-            return true;
         } else {
 
             mChildLockSetup = false;
@@ -4232,7 +4229,6 @@ public class MainActivity extends Activity implements
             int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
             decorView.setSystemUiVisibility(uiOptions);
         }
-        return false;
     }
 
 
@@ -4300,7 +4296,7 @@ public class MainActivity extends Activity implements
     }
 
 
-    public boolean isAppInstalled(String packageName) {
+    private boolean isAppInstalled(String packageName) {
         if (packageName.equals(AppLauncher.ACTION_PACKAGE)) return true;
         try {
             getPackageManager().getApplicationInfo(packageName, 0);
@@ -4311,7 +4307,7 @@ public class MainActivity extends Activity implements
     }
 
 
-    public boolean isLandscape() {
+    private boolean isLandscape() {
         int orientation = getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
@@ -4325,7 +4321,7 @@ public class MainActivity extends Activity implements
 
 
     private static class AddIconHandler extends Handler {
-        private WeakReference<MainActivity> instref;
+        private final WeakReference<MainActivity> instref;
         AddIconHandler(MainActivity inst) {
             super();
             instref = new WeakReference<>(inst);

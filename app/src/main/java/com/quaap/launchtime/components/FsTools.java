@@ -46,7 +46,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class FsTools {
 
-    private Context mContext;
+    private final Context mContext;
 
     public FsTools(Context context) {
         mContext = context;
@@ -119,7 +119,7 @@ public class FsTools {
     }
 
 
-    public void selectExternalLocation(final SelectionMadeListener listener, final String title, String startdir, final boolean chooseDir, final String matchRE) {
+    private void selectExternalLocation(final SelectionMadeListener listener, final String title, String startdir, final boolean chooseDir, final String matchRE) {
         final File currentDir = startdir==null ? Environment.getExternalStorageDirectory() :  new File(startdir);
 
         final String [] items = listDirsInDir(currentDir, matchRE, chooseDir);
@@ -187,7 +187,7 @@ public class FsTools {
 
 
 
-    public static File copyFile(File srcFile, File destFile, boolean compress, boolean decompress){
+    private static File copyFile(File srcFile, File destFile, boolean compress, boolean decompress){
         if (destFile.exists() && !destFile.isFile()) throw new IllegalArgumentException("Destination must be a normal file");
         try {
 
@@ -378,7 +378,7 @@ public class FsTools {
 
 
     @SuppressWarnings({"unchecked"})
-    public static boolean loadSharedPreferencesFromFile(SharedPreferences pref, File src) {
+    public static void loadSharedPreferencesFromFile(SharedPreferences pref, File src) {
         boolean res = false;
         ObjectInputStream input = null;
         try {
@@ -423,7 +423,6 @@ public class FsTools {
                 Log.e("FsTools", e.getMessage(), e);
             }
         }
-        return res;
     }
 
 }

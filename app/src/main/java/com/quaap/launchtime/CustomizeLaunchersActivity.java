@@ -292,7 +292,7 @@ public class CustomizeLaunchersActivity extends Activity {
     }
 
 
-    public boolean pickingIcon;
+    private boolean pickingIcon;
 
 
     private static final int PICK_CUSTOM_ICON=1;
@@ -400,14 +400,14 @@ public class CustomizeLaunchersActivity extends Activity {
         }
     }
 
-    protected class IconTypeDialog implements DialogInterface.OnClickListener,
+    class IconTypeDialog implements DialogInterface.OnClickListener,
             DialogInterface.OnCancelListener, DialogInterface.OnDismissListener,
             DialogInterface.OnShowListener {
 
         private ArrayAdapter<String> mAdapter;
 
 
-        public  Dialog createDialog() {
+        Dialog createDialog() {
             mAdapter = new ArrayAdapter<>(CustomizeLaunchersActivity.this, R.layout.add_list_item);
             mAdapter.add(getString(R.string.custom_icon_select_picture));
             mAdapter.add(getString(R.string.custom_icon_icon_packs));

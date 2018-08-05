@@ -43,7 +43,7 @@ public class Style {
     private int dragoverBackground;
     private int textColor;
 
-    private int backgroundDefault = Color.TRANSPARENT;
+    private final int backgroundDefault = Color.TRANSPARENT;
 
     private int wallpaperColor = Color.TRANSPARENT;
 
@@ -63,9 +63,9 @@ public class Style {
 
     private int aniDuration;
 
-    private SharedPreferences mAppPreferences;
+    private final SharedPreferences mAppPreferences;
 
-    private Context mContext;
+    private final Context mContext;
 
     public Style(Context context, SharedPreferences appPreferences) {
 
@@ -318,7 +318,7 @@ public class Style {
     }
 
 
-    private Map<String,Drawable> bgDrawables = new WeakHashMap<>();
+    private final Map<String,Drawable> bgDrawables = new WeakHashMap<>();
 
     public Drawable getBgDrawableFor(View view, CategoryTabStyle catstyle, boolean isHighContrast) {
 
@@ -379,7 +379,7 @@ public class Style {
         return minPixWidth * getRatio();
     }
 
-    public float getRatio() {
+    private float getRatio() {
         float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
 
         return iconsize / launcherIconSize;

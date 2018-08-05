@@ -45,7 +45,7 @@ public class ColorPreference extends DialogPreference {
         setPersistent(true);
     }
 
-    TextView tc;
+    private TextView tc;
     @Override
     protected View onCreateView(ViewGroup parent) {
         ViewGroup view = (ViewGroup)super.onCreateView(parent);

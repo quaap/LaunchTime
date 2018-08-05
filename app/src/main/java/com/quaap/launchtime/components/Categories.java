@@ -40,21 +40,21 @@ public class Categories {
     //Don't change these values here.  Change their displays in strings.xml
     public static final String CAT_SEARCH = "Search";
     public static final String CAT_TALK = "Communicate";
-    public static final String CAT_GAMES = "Games";
-    public static final String CAT_INTERNET = "Internet";
-    public static final String CAT_MEDIA = "Media";
-    public static final String CAT_GRAPHICS = "Graphics";
-    public static final String CAT_Utilities = "Utilities";
+    private static final String CAT_GAMES = "Games";
+    private static final String CAT_INTERNET = "Internet";
+    private static final String CAT_MEDIA = "Media";
+    private static final String CAT_GRAPHICS = "Graphics";
+    private static final String CAT_Utilities = "Utilities";
     public static final String CAT_OTHER = "Other";
-    public static final String CAT_SETTINGS = "Settings";
+    private static final String CAT_SETTINGS = "Settings";
     public static final String CAT_HIDDEN = "Hidden";
     public static final String CAT_DUMB = "Dumb__";
 
     //public static final String[] CAT_TINY = {CAT_OTHER, CAT_SETTINGS, CAT_HIDDEN};
-    public static final String[] CAT_TINY = {CAT_HIDDEN, CAT_DUMB};
-    public static final String[] CAT_HIDDENS = {CAT_HIDDEN};
-    public static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
-    public static final String[] CAT_NODROP = {CAT_SEARCH};
+    private static final String[] CAT_TINY = {CAT_HIDDEN, CAT_DUMB};
+    private static final String[] CAT_HIDDENS = {CAT_HIDDEN};
+    private static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
+    private static final String[] CAT_NODROP = {CAT_SEARCH};
 
 
     public static final String[] DefCategoryOrder = {
@@ -117,7 +117,7 @@ public class Categories {
         return checkCat(context, category);
     }
 
-    public static String getCategoryForActivity(Context context, String actvname, boolean guess) {
+    private static String getCategoryForActivity(Context context, String actvname, boolean guess) {
         DB db = GlobState.getGlobState(context).getDB();
 
         String category = db.getCategoryForActivity(actvname);
@@ -214,7 +214,7 @@ public class Categories {
     }
 
 
-    public static String guessCategoryForPackage(Context context, String pkgname) {
+    private static String guessCategoryForPackage(Context context, String pkgname) {
         String category = null;
         OUTER:
         for (String cat : mCategorKeywords.keySet()) {
@@ -295,7 +295,7 @@ public class Categories {
         return context.getString(catmap.get(category));
     }
 
-    public static Map<String, String[]> getCategoryKeywords() {
+    private static Map<String, String[]> getCategoryKeywords() {
         Map<String, String[]> keywordsDict = new LinkedHashMap<>();
         
         keywordsDict.put(CAT_TALK, resources.getStringArray(R.array.CAT_TALK));
