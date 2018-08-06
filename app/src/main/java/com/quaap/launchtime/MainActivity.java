@@ -3088,19 +3088,19 @@ public class MainActivity extends Activity implements
                 }
             }
 
-            if (!appitem.isWidget()) {
-                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
-                    @Override
-                    public void run() {
-                        mLaunchApp.launchApp(appitem);
-                        showButtonBar(false, true);
-                    }
-                });
-            }
+//            if (!appitem.isWidget()) {
+//                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mLaunchApp.launchApp(appitem);
+//                        showButtonBar(false, true);
+//                    }
+//                });
+//            }
 
             if (Build.VERSION.SDK_INT >= 25) {
                 if (shortcutInfos != null && shortcutInfos.size()>0) {
-                    final LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
+                    final LauncherApps launcherApps = getSystemService(LauncherApps.class);
                     if (launcherApps == null) return false;
 
                     Collections.sort(shortcutInfos, new Comparator<ShortcutInfo>() {
