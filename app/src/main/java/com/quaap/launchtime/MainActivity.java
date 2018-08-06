@@ -3103,9 +3103,26 @@ public class MainActivity extends Activity implements
                     final LauncherApps launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
                     if (launcherApps == null) return false;
 
-                    for (final ShortcutInfo shortcutInfo : shortcutInfos) {
+                    Collections.sort(shortcutInfos, new Comparator<ShortcutInfo>() {
+                        @Override
+                        public int compare(ShortcutInfo a, ShortcutInfo b) {
+                            if (Build.VERSION.SDK_INT >= 25) {
+                                return Integer.compare(a.getRank(), b.getRank());
+                            }
+                            return 0;
+                        }
+                    });
 
-                        addShortcutToActionPopup(launcherApps, shortcutInfo);
+                    for (final ShortcutInfo shortcutInfo : shortcutInfos) {
+                        if (shortcutInfo.isDynamic()) {
+                            addShortcutToActionPopup(launcherApps, shortcutInfo);
+                        }
+                    }
+
+                    for (final ShortcutInfo shortcutInfo : shortcutInfos) {
+                        if (shortcutInfo.isDeclaredInManifest()) {
+                            addShortcutToActionPopup(launcherApps, shortcutInfo);
+                        }
                     }
                 }
             }
