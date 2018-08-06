@@ -1750,7 +1750,12 @@ public class MainActivity extends Activity implements
         String category = data.getString("category");
         GridLayout iconSheet = mIconSheets.get(category);
         if (iconSheet!=null) {
-            iconSheet.removeAllViews();
+            try {
+                iconSheet.removeAllViews();
+            } catch (Throwable t) {
+                Log.e(TAG, t.getMessage(), t);
+                Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
