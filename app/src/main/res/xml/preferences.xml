@@ -179,17 +179,17 @@
             android:key="pref_show_action_menus" />
 
         <CheckBoxPreference
-            android:dependency="pref_show_action_menus"
-            android:defaultValue="false"
-            android:title="Extra menu actions"
             android:key="pref_show_action_extra"
-            android:summary="Put Uninstall, Remove, and Shortcut on action menu, and the category configuration bar will not be shown."/>
+            android:dependency="pref_show_action_menus"
+            android:defaultValue="true"
+            android:title="Extra menu actions"
+            android:summary="Put Uninstall, Remove, and Shortcut on action menu for apps and categories"/>
 
         <CheckBoxPreference
-            android:dependency="pref_show_action_extra"
-            android:defaultValue="true"
-            android:title="Show dropzones"
             android:key="pref_show_dropzones"
+            android:dependency="pref_show_action_extra"
+            android:defaultValue="false"
+            android:title="Show dropzones"
             android:summary="Uninstall, Remove, and Shortcut are dropzones."/>
 
         <CheckBoxPreference

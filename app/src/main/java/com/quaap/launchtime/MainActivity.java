@@ -646,7 +646,10 @@ public class MainActivity extends Activity implements
             //Take a backup now that things are pre-sorted.
             db().backup("After install");
 
-            mAppPreferences.edit().putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25).apply();
+            mAppPreferences.edit()
+                    .putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25)
+                    .putBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25)
+                    .apply();
 
             //Show the help screen on very first run.
             mCategoriesScroller.postDelayed(new Runnable() {
@@ -864,9 +867,9 @@ public class MainActivity extends Activity implements
         mUseDropZones = true;
 
         if (mUseMenus) {
-            mUseExtraActions = mAppPreferences.getBoolean("pref_show_action_extra", false);
+            mUseExtraActions = mAppPreferences.getBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25);
             if (mUseExtraActions) {
-                mUseDropZones = mAppPreferences.getBoolean("pref_show_dropzones", true);
+                mUseDropZones = mAppPreferences.getBoolean("pref_show_dropzones", false);
             }
         }
 
