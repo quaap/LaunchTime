@@ -859,15 +859,16 @@ public class MainActivity extends Activity implements
 
     private void readMenuConfig() {
         mUseMenus = mAppPreferences.getBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25);
+        mUseExtraActions = false;
+        mUseDropZones = true;
+
         if (mUseMenus) {
             mUseExtraActions = mAppPreferences.getBoolean("pref_show_action_extra", false);
-            mUseDropZones = mAppPreferences.getBoolean("pref_show_dropzones", true);
-        } else {
-            mUseDropZones = true;
+            if (mUseExtraActions) {
+                mUseDropZones = mAppPreferences.getBoolean("pref_show_dropzones", true);
+            }
         }
-        if (!mUseMenus && !mUseExtraActions) {
-            mUseDropZones = true;
-        }
+
     }
 
 
@@ -2462,7 +2463,7 @@ public class MainActivity extends Activity implements
                 if (mChildLock) return true;
 
 
-                if (mUseMenus || !mUseDropZones) {
+                if (mUseExtraActions || !mUseDropZones) {
                     initializeActionMenu();
                     addExtraActionsToMenu(view, categoryTab);
                     showBuiltActionMenu(view);
@@ -3163,8 +3164,7 @@ public class MainActivity extends Activity implements
 
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
 
-        int width = mShortcutActionsPopup.getWidth();
-        if (width==0) width = (int)(getResources().getDimension(R.dimen.action_menu_width));
+        int width = (int)(getResources().getDimension(R.dimen.action_menu_width));
 
         int height = (int)(mShortcutActionsList.getChildCount()
                         * (getResources().getDimension(R.dimen.action_icon_width)*1.4 + 28));
@@ -3183,24 +3183,76 @@ public class MainActivity extends Activity implements
         if (left <= 0) {
             left = viewpos[0]+4;
         } else if (left + width >= mScreenDim.x) {
-            left = mScreenDim.x - (int)(width*1.05);
+            left = mScreenDim.x - (int)(width*1.2);
         }
 
         lp.topMargin = top;
         lp.leftMargin = left;
+       // lp.width = width;
+
 
         mShortcutActionsPopup.setLayoutParams(lp);
     }
 
     private void addExtraActionsToMenu(final View view, final TextView categoryTab) {
-        if (!Categories.isSpeacialCategory((String)categoryTab.getTag())) {
-            addActionMenuItem(getString(R.string.remove), R.drawable.recycle, new Runnable() {
+        final String category = (String)categoryTab.getTag();
+
+        if (!mCategory.equals(category)) {
+            addActionMenuItem(categoryTab.getText().toString(), android.R.drawable.ic_menu_compass, new Runnable() {
                 @Override
                 public void run() {
-                    promptDeleteCategory((String)categoryTab.getTag());
+                    switchCategory(category);
                 }
             });
         }
+
+        if (mUseExtraActions) {
+            addActionMenuItem(getString(R.string.rename_category), android.R.drawable.ic_menu_edit, new Runnable() {
+                @Override
+                public void run() {
+                    promptRenameCategory(category);
+                }
+            });
+            if (!Categories.isNoDropCategory((String) categoryTab.getTag())) {
+                addActionMenuItem(getString(R.string.sort_category), android.R.drawable.ic_menu_sort_alphabetically, new Runnable() {
+                    @Override
+                    public void run() {
+                        promptSortCategory(category);
+                    }
+                });
+
+                addActionMenuItem(getString(R.string.add_widgets), android.R.drawable.ic_input_add, new Runnable() {
+                    @Override
+                    public void run() {
+                        setupWidget();
+                    }
+                });
+            }
+
+            if (!Categories.isSpeacialCategory((String) categoryTab.getTag())) {
+                addActionMenuItem(getString(R.string.remove), R.drawable.trash, new Runnable() {
+                    @Override
+                    public void run() {
+                        promptDeleteCategory(category);
+                    }
+                });
+            }
+
+            addActionMenuItem(getString(R.string.add_category), android.R.drawable.ic_menu_add, new Runnable() {
+                @Override
+                public void run() {
+                    promptAddCategory();
+                }
+            });
+
+            addActionMenuItem(getString(R.string.go_to_settings), android.R.drawable.ic_menu_preferences, new Runnable() {
+                @Override
+                public void run() {
+                    openSettings(MainActivity.this);
+                }
+            });
+        }
+
     }
 
 
@@ -3461,6 +3513,11 @@ public class MainActivity extends Activity implements
     }
 
     private void addActionMenuItem(String label, Drawable icon, final Runnable action) {
+
+        if (label==null) return;
+
+        label = label.replaceAll("\\s+|\\r|\\n", " ");
+
         ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.action_menu_entry, null);
 
         item.setBackgroundColor(mStyle.getCattabSelectedBackground());
@@ -4201,32 +4258,36 @@ public class MainActivity extends Activity implements
     private void showButtonBar(boolean makevisible, boolean hideCats) {
         if (mChildLock) return;
 
+
 //        StackTraceElement from = Thread.currentThread().getStackTrace()[3];
 //
 //        Log.d(TAG,"showButtonBar(" + makevisible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
 
+
         if (makevisible) {
             showHiddenCategories();
-            if (mCategory.equals(Categories.CAT_SEARCH)) {
-                mSortCategoryButton.setVisibility(View.INVISIBLE);
-                mEditWidgetsButton.setVisibility(View.INVISIBLE);
-            } else {
-                mSortCategoryButton.setVisibility(View.VISIBLE);
-                mEditWidgetsButton.setVisibility(View.VISIBLE);
+            if (!mUseExtraActions) {
+                if (mCategory.equals(Categories.CAT_SEARCH)) {
+                    mSortCategoryButton.setVisibility(View.INVISIBLE);
+                    mEditWidgetsButton.setVisibility(View.INVISIBLE);
+                } else {
+                    mSortCategoryButton.setVisibility(View.VISIBLE);
+                    mEditWidgetsButton.setVisibility(View.VISIBLE);
+                }
+
+                animateUpShow(mIconSheetBottomFrame);
             }
-
-
             animateDownHide(mShowButtons);
 
             animateUpShow(mHideButtons);
 
-            animateUpShow(mIconSheetBottomFrame);
 
         } else {
             if (hideCats) {hideHiddenCategories();}
             animateDownHide(mIconSheetBottomFrame);
 
             animateDownHide(mHideButtons);
+
             animateUpShow(mShowButtons);
 
         }
