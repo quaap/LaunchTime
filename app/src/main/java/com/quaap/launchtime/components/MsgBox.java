@@ -68,8 +68,14 @@ public class MsgBox {
                 public void run() {
 
                     String msg = "";
-
                     msg += "" +
+                            "In 0.8.3:\n" +
+                            " * Option to add Uninstall/Remove on action menus.\n" +
+                            " * Option to add extra activities on action menus.\n" +
+                            " * Improved start-up and install behavior.\n"
+                    ;
+
+                    msg += "\n" +
                             "In 0.8.2:\n" +
                             " * Resizable widgets!\n" +
                             " * Better default widget sizes.\n" +
