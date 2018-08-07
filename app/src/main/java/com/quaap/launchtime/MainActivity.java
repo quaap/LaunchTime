@@ -161,6 +161,7 @@ public class MainActivity extends Activity implements
     private TextView mRenameCategoryButton;
     private TextView mEditWidgetsButton;
     private ImageView mOpenPrefsButton;
+    private ImageView mOpenPrefs2Button;
 
 
     private LinearLayout mCategoriesLayout;
@@ -3245,12 +3246,12 @@ public class MainActivity extends Activity implements
                 }
             });
 
-            addActionMenuItem(getString(R.string.go_to_settings), android.R.drawable.ic_menu_preferences, new Runnable() {
-                @Override
-                public void run() {
-                    openSettings(MainActivity.this);
-                }
-            });
+//            addActionMenuItem(getString(R.string.go_to_settings), android.R.drawable.ic_menu_preferences, new Runnable() {
+//                @Override
+//                public void run() {
+//                    openSettings(MainActivity.this);
+//                }
+//            });
         }
 
     }
@@ -4177,6 +4178,8 @@ public class MainActivity extends Activity implements
 
         mEditWidgetsButton = findViewById(R.id.btn_widgets);
         mOpenPrefsButton = findViewById(R.id.btn_prefs);
+        mOpenPrefs2Button = findViewById(R.id.btn_prefs2);
+
 
 
         mSortCategoryButton.setOnClickListener(new View.OnClickListener() {
@@ -4212,13 +4215,17 @@ public class MainActivity extends Activity implements
             }
         });
 
-        mOpenPrefsButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener prefsclick = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openSettings(MainActivity.this);
                 showButtonBar(false, true);
             }
-        });
+        };
+
+        mOpenPrefsButton.setOnClickListener(prefsclick);
+        mOpenPrefs2Button.setOnClickListener(prefsclick);
+
 
         mIconSheetScroller.setOnTouchListener(mDismissClick);
         mIconSheetScroller.setOnPositionChangedListener(new InteractiveScrollView.OnPositionChangedListener() {
@@ -4276,6 +4283,8 @@ public class MainActivity extends Activity implements
                 }
 
                 animateUpShow(mIconSheetBottomFrame);
+            } else {
+                animateUpShow(mOpenPrefs2Button);
             }
             animateDownHide(mShowButtons);
 
@@ -4284,7 +4293,12 @@ public class MainActivity extends Activity implements
 
         } else {
             if (hideCats) {hideHiddenCategories();}
-            animateDownHide(mIconSheetBottomFrame);
+
+            //if (!mUseExtraActions) {
+                animateDownHide(mIconSheetBottomFrame);
+            //} else {
+                animateDownHide(mOpenPrefs2Button);
+            //}
 
             animateDownHide(mHideButtons);
 

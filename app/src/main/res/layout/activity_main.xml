@@ -183,6 +183,24 @@
                 </GridLayout>
             </HorizontalScrollView>
 
+            <ImageView
+                android:id="@+id/btn_prefs2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
+                android:background="@color/btn_background"
+                android:clickable="true"
+                android:contentDescription="@string/config"
+                android:focusable="true"
+                android:paddingBottom="4dp"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:visibility="gone"
+                android:src="@android:drawable/ic_menu_preferences"
+                app:srcCompat="@android:drawable/ic_menu_preferences" />
+
             <FrameLayout
                 android:id="@+id/link_dropzone"
                 android:layout_width="60dp"
