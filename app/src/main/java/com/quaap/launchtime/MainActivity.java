@@ -501,7 +501,7 @@ public class MainActivity extends Activity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    createIconSheet(category);
+                    createIconSheet(category, db().isFirstRun()?-1:-2);
                 }
             });
             Thread.yield();
@@ -742,6 +742,21 @@ public class MainActivity extends Activity implements
         }
         // If the category has been deleted, pick a known-good category
         return Categories.CAT_TALK;
+    }
+
+
+    private int getCategoryPos(String category) {
+        View cattab = mCategoryTabs.get(category);
+        int pos = -1;
+        if (cattab!=null) {
+            for (int i = 0; i < mCategoriesLayout.getChildCount(); i++) {
+                if (mCategoriesLayout.getChildAt(i) == cattab) {
+                    pos = i;
+                    break;
+                }
+            }
+        }
+        return pos;
     }
 
     //private List<String> prefsChanging = Collections.synchronizedList(new ArrayList<String>());
@@ -1654,7 +1669,7 @@ public class MainActivity extends Activity implements
     }
 
     @NonNull
-    private void createIconSheet(String category) {
+    private void createIconSheet(String category, int pos) {
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
         mIconSheets.put(category, iconSheet);
         mRevCategoryMap.put(iconSheet, category);
@@ -1662,7 +1677,7 @@ public class MainActivity extends Activity implements
         iconSheet.setOnDragListener(mMainDragListener);
         setIconSheetLayout(iconSheet);
 
-        final TextView categoryTab = createCategoryTab(category, iconSheet);
+        final TextView categoryTab = createCategoryTab(category, iconSheet, pos);
 
 
         mCategoryTabs.put(category, categoryTab);
@@ -2415,7 +2430,7 @@ public class MainActivity extends Activity implements
 
     }
 
-    private TextView createCategoryTab(final String category, final GridLayout iconSheet) {
+    private TextView createCategoryTab(final String category, final GridLayout iconSheet, int pos) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(db().getCategoryDisplay(category));
         categoryTab.setTag(category);
@@ -2564,7 +2579,17 @@ public class MainActivity extends Activity implements
                 return true;
             }
         });
-        mCategoriesLayout.addView(categoryTab);
+
+        if (pos == -1 && !category.equals(Categories.CAT_HIDDEN)) {
+            pos = getCategoryPos(Categories.CAT_SEARCH);
+        }
+
+        if (pos>-1) {
+            mCategoriesLayout.addView(categoryTab, pos);
+        } else {
+
+            mCategoriesLayout.addView(categoryTab);
+        }
 
         return categoryTab;
     }
@@ -3245,7 +3270,7 @@ public class MainActivity extends Activity implements
             addActionMenuItem(getString(R.string.add_category), android.R.drawable.ic_menu_add, new Runnable() {
                 @Override
                 public void run() {
-                    promptAddCategory();
+                    promptAddCategory(category);
                 }
             });
 
@@ -3888,7 +3913,7 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void promptAddCategory() {
+    private void promptAddCategory(final String clickedCategory) {
 
         promptGetCategoryName(getString(R.string.add_cat),
                 getString(R.string.add_cat2),
@@ -3901,7 +3926,7 @@ public class MainActivity extends Activity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny, boolean isHidden) {
                         try {
-                            addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden);
+                            addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden, clickedCategory);
                         } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
@@ -3910,7 +3935,7 @@ public class MainActivity extends Activity implements
                 });
     }
 
-    private void addCategory(String category, String newDisplayName, String newDisplayFullName,  boolean isTiny, boolean isHidden) {
+    private void addCategory(String category, String newDisplayName, String newDisplayFullName,  boolean isTiny, boolean isHidden, String clickedCategory) {
         category = category.trim();
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
@@ -3933,7 +3958,7 @@ public class MainActivity extends Activity implements
 
         Log.d(TAG, category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
         if (db().addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden)) {
-            createIconSheet(category);
+            createIconSheet(category, getCategoryPos(clickedCategory));
 
             switchCategory(category);
 
@@ -3953,8 +3978,9 @@ public class MainActivity extends Activity implements
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteCategory(category);
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        if (deleteCategory(category)) {
+                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                 })
@@ -3995,7 +4021,7 @@ public class MainActivity extends Activity implements
         readPrefs();
     }
 
-    private void deleteCategory(final String category) {
+    private boolean deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);
 
         boolean appsInCat = db().getAppCount(category) > 0;
@@ -4016,6 +4042,7 @@ public class MainActivity extends Activity implements
             if (category.equals(mCategory) && appsInCat) {
                 switchCategory(Categories.CAT_OTHER);
                 mCategoryTabs.get(Categories.CAT_OTHER).setVisibility(View.VISIBLE);
+                return true;
             } else if (category.equals(mCategory)) {
                 switchCategory(getTopCategory());
             }
@@ -4023,6 +4050,7 @@ public class MainActivity extends Activity implements
         } else {
             Toast.makeText(MainActivity.this, R.string.no_delete_cat, Toast.LENGTH_SHORT).show();
         }
+        return false;
     }
 
 
@@ -4204,7 +4232,7 @@ public class MainActivity extends Activity implements
         mAddCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                promptAddCategory();
+                promptAddCategory(mCategory);
                 showButtonBar(false, true);
             }
         });
@@ -4426,7 +4454,7 @@ public class MainActivity extends Activity implements
         final String category = Categories.CAT_DUMB;
         if (db().getCategoryDisplay(category)==null) {
             db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),true, 100);
-            createIconSheet(category);
+            createIconSheet(category, -2);
             final List<AppLauncher> appLauncherss = processActivities(false);
             List<ComponentName> apps = new ArrayList<>();
             List<String> onlyTypes = new ArrayList<>();
