@@ -2505,11 +2505,11 @@ public class MainActivity extends Activity implements
                     return true;
                 }
                 boolean isAppLauncher = dragObj.getTag() instanceof AppLauncher;
-                boolean isSearch = category.equals(Categories.CAT_SEARCH);
+                boolean isNoDrop = Categories.isNoDropCategory(category);
                 boolean isCurrent = category.equals(mCategory);
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        if (!isCurrent && !isSearch && isAppLauncher) {
+                        if (!isCurrent && !isNoDrop) {
                             styleCategorySpecial(categoryTab, Style.CategoryTabStyle.DragHover);
                         }
                         //Log.d(TAG, "DRAG_ENTERED: " + category + ((AppLauncher)dragObj.getTag()).getActivityName());
@@ -2535,7 +2535,7 @@ public class MainActivity extends Activity implements
 
                     case DragEvent.ACTION_DROP:
                         if (isAppLauncher) {
-                            if (!isSearch && !isCurrent) {
+                            if (!isNoDrop && !isCurrent) {
                                 mBeingDragged.setCategory(category);
                                 db().updateAppCategory(mBeingDragged.getActivityName(), mBeingDragged.getPackageName(), category);
                                 mMainDragListener.onDrag(iconSheet, event);
