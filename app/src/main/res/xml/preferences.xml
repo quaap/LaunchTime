@@ -18,14 +18,14 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:title="@string/pref_todd_lock"
-            android:key="prefs_toddler_lock"
+            android:key="@string/pref_key_toddler_lock"
             android:summary="@string/pref_todd_lock_summ"
             android:paddingBottom="6dp" />
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:title="@string/activate_dumbmode"
-            android:key="prefs_dumbmode"
+            android:key="@string/pref_key_dumbmode"
             android:summary="@string/dumbmode_summ"
             android:paddingBottom="6dp" />
 
@@ -56,7 +56,7 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/prefs_new_apps_cat"
-            android:key="prefs_autocat"
+            android:key="@string/pref_key_autocat"
             android:summaryOn="@string/prefs_cat_apps"
             android:summaryOff="@string/prefs_cat_no" />
 
@@ -71,14 +71,14 @@
             android:entries="@array/pref_cat_location_strings"
             android:entryValues="@array/pref_cat_location_values"
             android:summary="@string/pref_cat_loc"
-            android:key="pref_categories_loc" />
+            android:key="@string/pref_key_categories_loc" />
 
         <ListPreference
             android:defaultValue="1"
             android:title="@string/pref_tabsize"
             android:entries="@array/pref_size_strings"
             android:entryValues="@array/pref_tab_size_values"
-            android:key="preference_tabsize"
+            android:key="@string/pref_key_tabsize"
             android:summary="%s" />
 
         <ListPreference
@@ -86,59 +86,59 @@
             android:title="@string/pref_iconsize"
             android:entries="@array/pref_size_strings"
             android:entryValues="@array/pref_tab_size_values"
-            android:key="preference_iconsize"
+            android:key="@string/pref_key_iconsize"
             android:summary="%s" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/pref_rounded"
-            android:key="pref_rounded_tabs"/>
+            android:key="@string/pref_key_rounded_tabs"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/pref_center"
-            android:key="pref_center_sheet"/>
+            android:key="@string/pref_key_center_sheet"/>
 
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icontext"
-            android:key="textcolor"
+            android:key="@string/pref_key_textcolor"
             android:defaultValue="@color/textcolor"/>
         <com.quaap.launchtime.color.ColorPreference
             android:title="Background color"
-            android:key="wallpapercolor"
+            android:key="@string/pref_key_wallpapercolor"
             android:defaultValue="@color/wallpaper_color"/>
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabtext"
-            android:key="cattabtextcolor"
+            android:key="@string/pref_key_cattabtextcolor"
             android:defaultValue="@color/textcolor"/>
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabback"
-            android:key="cattab_background"
+            android:key="@string/pref_key_cattab_background"
             android:defaultValue="@color/cattab_background" />
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabsel_text"
-            android:key="cattabselected_text"
+            android:key="@string/pref_key_cattabselected_text"
             android:defaultValue="@color/cattabselected_text" />
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabsel"
-            android:key="cattabselected_background"
+            android:key="@string/pref_key_cattabselected_background"
             android:defaultValue="@color/cattabselected_background" />
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_drag"
-            android:key="dragover_background"
+            android:key="@string/pref_key_dragover_background"
             android:defaultValue="@color/dragover_background" />
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icon_tint"
-            android:key="icon_tint"
+            android:key="@string/pref_key_icon_tint"
             android:defaultValue="@color/icon_tint" />
 
         <Preference android:title="@string/reset_colors_title"
-            android:key="reset_colors"
+            android:key="@string/pref_key_reset_colors"
             android:summary="@string/reset_color_summ"/>
 
         <ListPreference
             android:defaultValue="@string/pref_iconpack_def"
-            android:key="icons-pack"
+            android:key="@string/pref_key_icons_pack"
             android:summary="%s"
             android:title="@string/icons_pack_name" />
     </PreferenceCategory>
@@ -160,34 +160,34 @@
             android:title="@string/pref_hide_menu"
             android:entries="@array/pref_autohide_cat_strings"
             android:entryValues="@array/pref_autohide_cat_values"
-            android:key="pref_autohide_cats_timeout"
+            android:key="@string/pref_key_autohide_cats_timeout"
             android:summary="@string/pref_hide_menu_summ" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/pref_show_catlabel"
-            android:key="prefs_cat_label"
+            android:key="@string/pref_key_cat_label"
             android:summary="@string/pref_show_catlabel_summ"/>
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:title="@string/pref_show_badges"
-            android:key="pref_show_badges" />
+            android:key="@string/pref_key_show_badges" />
 
         <CheckBoxPreference
             android:title="@string/pref_show_action"
-            android:key="pref_show_action_menus"
+            android:key="@string/pref_key_show_action_menus"
             android:defaultValue="false" />
 
         <CheckBoxPreference
-            android:key="pref_show_action_extra"
+            android:key="@string/pref_key_show_action_extra"
             android:dependency="pref_show_action_menus"
             android:defaultValue="true"
             android:title="Extra menu actions"
             android:summary="Put Uninstall, Remove, and Shortcut on action menu for apps and categories"/>
 
         <CheckBoxPreference
-            android:key="pref_show_dropzones"
+            android:key="@string/pref_key_show_dropzones"
             android:dependency="pref_show_action_extra"
             android:defaultValue="false"
             android:title="Show dropzones"
@@ -197,7 +197,7 @@
             android:dependency="pref_show_action_menus"
             android:defaultValue="false"
             android:title="DEV activities on action menus"
-            android:key="pref_show_action_activities"
+            android:key="@string/pref_key_show_action_activities"
             android:summary="Dev option. { } Could be DANGEROUS: Show ACTION_MAIN activites as action menu items on apps."/>
 
         <ListPreference
@@ -205,7 +205,7 @@
             android:title="@string/pref_returnhome"
             android:entries="@array/pref_return_home_strings"
             android:entryValues="@array/pref_return_home_values"
-            android:key="pref_return_home"
+            android:key="@string/pref_key_return_home"
             android:summary="@string/pref_returnhome_summ" />
 
         <ListPreference
@@ -213,7 +213,7 @@
             android:title="@string/pref_orient"
             android:entries="@array/pref_orientation_strings"
             android:entryValues="@array/pref_orientation_values"
-            android:key="preference_orientation"
+            android:key="@string/pref_key_orientation"
             android:summary="%s" />
 
         <ListPreference
@@ -221,7 +221,7 @@
             android:title="@string/pref_numcolspor_label"
             android:entries="@array/pref_columns_values"
             android:entryValues="@array/pref_columns_values"
-            android:key="pref_columns_portrait"
+            android:key="@string/pref_key_columns_portrait"
             android:summary="@string/pref_animation_speed_summ" />
 
         <ListPreference
@@ -229,7 +229,7 @@
             android:title="@string/pref_numcolsland_label"
             android:entries="@array/pref_columns_values"
             android:entryValues="@array/pref_columns_values"
-            android:key="pref_columns_landscape"
+            android:key="@string/pref_key_columns_landscape"
             android:summary="@string/pref_animation_speed_summ" />
 
         <ListPreference
@@ -237,7 +237,7 @@
             android:title="@string/pref_amimation_speed"
             android:entries="@array/pref_animate_values"
             android:entryValues="@array/pref_animate_values"
-            android:key="pref_animate_duration"
+            android:key="@string/pref_key_animate_duration"
             android:summary="@string/pref_animation_speed_summ" />
 
     </PreferenceCategory>

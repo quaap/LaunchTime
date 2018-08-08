@@ -255,8 +255,8 @@ public class MainActivity extends Activity implements
         String key = "current";
         if (mPrefs.getInt(key,0) < 830) {
 
-            if (mAppPreferences.getString("pref_animate_duration", "150").equals("250")) {
-                mAppPreferences.edit().putString("pref_animate_duration", "150").apply();
+            if (mAppPreferences.getString(getString(R.string.pref_key_animate_duration), "150").equals("250")) {
+                mAppPreferences.edit().putString(getString(R.string.pref_key_animate_duration), "150").apply();
             }
 
             mPrefs.edit().putInt(key,BuildConfig.VERSION_CODE).apply();
@@ -312,7 +312,7 @@ public class MainActivity extends Activity implements
     private void myResume() {
         //Check how long we've been gone
         long pausetime = mPrefs.getLong("pausetime", -1);
-        int homesetting = Integer.parseInt(mAppPreferences.getString("pref_return_home", "9999999"));
+        int homesetting = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_return_home), "9999999"));
 
 
         //We go "home" if it's been longer than the timeout
@@ -423,8 +423,8 @@ public class MainActivity extends Activity implements
                 DB db = GlobState.getGlobState(main).getDB();
                 if (db.isFirstRun()) {
                     main.mAppPreferences.edit()
-                            .putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25)
-                            .putBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25)
+                            .putBoolean(main.getString(R.string.pref_key_show_action_menus), Build.VERSION.SDK_INT >= 25)
+                            .putBoolean(main.getString(R.string.pref_key_show_action_extra), Build.VERSION.SDK_INT >= 25)
                             .apply();
                 }
 
@@ -811,23 +811,23 @@ public class MainActivity extends Activity implements
                 boolean repop = false;
 
                 //Delete our icon cache so the labels can be regenerated.
-                if (key.equals("textcolor") || key.equals("preference_iconsize") || key.equals("icon-update")) {
+                if (key.equals(getString(R.string.pref_key_textcolor)) || key.equals(getString(R.string.pref_key_iconsize)) || key.equals("icon-update")) {
                     mAppLauncherViews.clear();
                     repop = true;
                 }
-                if (key.equals("icon_tint") || key.equals("prefsUpdate")) {
+                if (key.equals(getString(R.string.pref_key_icon_tint)) || key.equals("prefsUpdate")) {
                     AppLauncher.clearIcons();
                     mAppLauncherViews.clear();
                     repop = true;
                 }
-                if (key.equals("icons-pack")) {
+                if (key.equals(getString(R.string.pref_key_icons_pack))) {
                     AppLauncher.clearIcons();
                     mAppLauncherViews.clear();
 
                     //mIconSheet.removeAllViews();
                     IconsHandler ich = GlobState.getIconsHandler(this);
 
-                    ich.loadIconsPack(sharedPreferences.getString("icons-pack", IconsHandler.DEFAULT_PACK));
+                    ich.loadIconsPack(sharedPreferences.getString(getString(R.string.pref_key_icons_pack), IconsHandler.DEFAULT_PACK));
                     //ich.updateStyles(mStyle);
 
                 } else {
@@ -843,15 +843,15 @@ public class MainActivity extends Activity implements
                     }, 200);
 
 
-                    if (key.equals("prefs_toddler_lock")) {
-                        mChildLock = sharedPreferences.getBoolean("prefs_toddler_lock", false);
+                    if (key.equals(getString(R.string.pref_key_toddler_lock))) {
+                        mChildLock = sharedPreferences.getBoolean(getString(R.string.pref_key_toddler_lock), false);
                         if (mChildLock) mChildLockSetup = false;
                         checkChildLock();
                         hideCatsIfAutoHide(false);
                     }
 
-                    if (key.equals("prefs_dumbmode")) {
-                        mDumbMode = sharedPreferences.getBoolean("prefs_dumbmode", false);
+                    if (key.equals(getString(R.string.pref_key_dumbmode))) {
+                        mDumbMode = sharedPreferences.getBoolean(getString(R.string.pref_key_dumbmode), false);
                         if (mDumbMode) {
                             startDumbMode();
                         }
@@ -859,26 +859,26 @@ public class MainActivity extends Activity implements
 
 
 
-                    if (key.equals("pref_show_badges")) {
-                        if (!sharedPreferences.getBoolean("pref_show_badges", true)) {
+                    if (key.equals(getString(R.string.pref_key_show_badges))) {
+                        if (!sharedPreferences.getBoolean(getString(R.string.pref_key_show_badges), true)) {
                             GlobState.getBadger(this).clearAll();
                         }
                     }
-                    if (key.equals("pref_autohide_cats_timeout")) {
+                    if (key.equals(getString(R.string.pref_key_autohide_cats_timeout))) {
                         handleAutohide();
                     }
-                    if (key.equals("pref_animate_duration")) {
-                       readAnimationDuration();
+                    if (key.equals(getString(R.string.pref_key_animate_duration))) {
+                        readAnimationDuration();
                     }
 
-                    if (key.equals("pref_center_sheet")) {
+                    if (key.equals(getString(R.string.pref_key_center_sheet))) {
                         setAllIconSheetsLayout();
                     }
 
-                    if (key.equals("pref_show_action_menus")
-                            || key.equals("pref_show_dropzones")
-                            || key.equals("pref_show_action_extra")
-                            || key.equals("pref_show_action_activities")) {
+                    if (key.equals(getString(R.string.pref_key_show_action_menus))
+                            || key.equals(getString(R.string.pref_key_show_dropzones))
+                            || key.equals(getString(R.string.pref_key_show_action_extra))
+                            || key.equals(getString(R.string.pref_key_show_action_activities))) {
                         readActionMenuConfig();
                     }
 
@@ -893,13 +893,13 @@ public class MainActivity extends Activity implements
         mUseExtraActions = false;
         mDevModeActivities = false;
 
-        mUseActionMenus = mAppPreferences.getBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25);
+        mUseActionMenus = mAppPreferences.getBoolean(getString(R.string.pref_key_show_action_menus), Build.VERSION.SDK_INT >= 25);
 
         if (mUseActionMenus) {
-            mUseExtraActions = mAppPreferences.getBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25);
-            mDevModeActivities = mAppPreferences.getBoolean("pref_show_action_activities", false);
+            mUseExtraActions = mAppPreferences.getBoolean(getString(R.string.pref_key_show_action_extra), Build.VERSION.SDK_INT >= 25);
+            mDevModeActivities = mAppPreferences.getBoolean(getString(R.string.pref_key_show_action_activities), false);
             if (mUseExtraActions) {
-                mUseDropZones = mAppPreferences.getBoolean("pref_show_dropzones", false);
+                mUseDropZones = mAppPreferences.getBoolean(getString(R.string.pref_key_show_dropzones), false);
             }
         }
 
@@ -981,7 +981,7 @@ public class MainActivity extends Activity implements
                         // not the search page: close the cursor
                         mSearchBox.closeSeachAdapter();
 
-                        if (isAutohide() && mAppPreferences.getBoolean("prefs_cat_label", true)) {
+                        if (isAutohide() && mAppPreferences.getBoolean(getString(R.string.pref_key_cat_label), true)) {
                             // not the search page: close the cursor
                             mSearchBox.closeSeachAdapter();
 
@@ -1014,7 +1014,7 @@ public class MainActivity extends Activity implements
                                 @Override
                                 public void onClick(View view) {
                                     view.setVisibility(View.GONE);
-                                    mAppPreferences.edit().putBoolean("prefs_dumbmode", true).apply();
+                                    mAppPreferences.edit().putBoolean(getString(R.string.pref_key_dumbmode), true).apply();
                                 }
                             });
                             mIconSheetTopFrame.addView(dumbmode);
@@ -1097,7 +1097,7 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-       // Log.d(TAG, keyCode + "");
+        // Log.d(TAG, keyCode + "");
         if (!mChildLock &&keyCode == KeyEvent.KEYCODE_MENU) {
             openSettings(this);
         }
@@ -1153,15 +1153,15 @@ public class MainActivity extends Activity implements
 
             mStyle.readPrefs();
 
-            mDumbMode = mAppPreferences.getBoolean("prefs_dumbmode", false);
-            mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
+            mDumbMode = mAppPreferences.getBoolean(getString(R.string.pref_key_dumbmode), false);
+            mChildLock = mAppPreferences.getBoolean(getString(R.string.pref_key_toddler_lock), false);
             readAnimationDuration();
             readActionMenuConfig();
 
             WindowManager wm = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE));
 
 
-            int orientationPref = Integer.parseInt(mAppPreferences.getString("preference_orientation", "-1"));
+            int orientationPref = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_orientation), "-1"));
             if (orientationPref==-1 && wm!=null) {
 
                 Display display = wm.getDefaultDisplay();
@@ -1191,7 +1191,7 @@ public class MainActivity extends Activity implements
                 }
 
 
-                mAppPreferences.edit().putString("preference_orientation", orientationPref + "").apply();
+                mAppPreferences.edit().putString(getString(R.string.pref_key_orientation), orientationPref + "").apply();
             }
 
 
@@ -1218,7 +1218,7 @@ public class MainActivity extends Activity implements
 
 
     private void readAnimationDuration() {
-        mAnimationDuration = Integer.parseInt(mAppPreferences.getString("pref_animate_duration", "150"));
+        mAnimationDuration = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_animate_duration), "150"));
         if (mAnimationDuration==0) mAnimationDuration=1; //small hack to make everything still work
     }
 
@@ -1246,7 +1246,7 @@ public class MainActivity extends Activity implements
         boolean autohideCats = isAutohide();
         try {
 
-            String force = mAppPreferences.getString(isLandscape()?"pref_columns_landscape":"pref_columns_portrait", "0");
+            String force = mAppPreferences.getString(isLandscape()?getString(R.string.pref_key_columns_landscape):getString(R.string.pref_key_columns_portrait), "0");
             if (force.equals("0")) {
                 mScreenDim = getScreenDimensions();
                 //float launcherw = getResources().getDimension(R.dimen.launcher_width);
@@ -1323,7 +1323,7 @@ public class MainActivity extends Activity implements
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                boolean full = mAppPreferences.getBoolean("pref_use_fullscreen", false);
+                boolean full = mAppPreferences.getBoolean(getString(R.string.pref_key_use_fullscreen), false);
                 if (full) {
                     //hard to get correct.
                     getWindow().getDecorView().setSystemUiVisibility(
@@ -1403,10 +1403,10 @@ public class MainActivity extends Activity implements
         showButtonBar(false,false);
 
         if (!show) {
-          if (cats.getVisibility() == View.VISIBLE) {
-              animateDownHide(cats);
-          }
-          animateUpShow(mShowCats);
+            if (cats.getVisibility() == View.VISIBLE) {
+                animateDownHide(cats);
+            }
+            animateUpShow(mShowCats);
         } else if (show) {
             animateDownHide(mShowCats);
             if (cats.getVisibility() == View.GONE) {
@@ -1419,11 +1419,11 @@ public class MainActivity extends Activity implements
     private void animateUpShow(View view) {
         animateShow(view,AnimateDirection.Down);
     }
-    
+
     private void animateDownHide(View view) {
         animateHide(view, AnimateDirection.Down,false);
     }
-    
+
     enum AnimateDirection {Left, Up, Right, Down}
 
     private final Map<View,Long> aniHideStarted = new HashMap<>();
@@ -1496,7 +1496,7 @@ public class MainActivity extends Activity implements
         }
         animate.setStartDelay(0).start();
     }
-    
+
     private void animateShow(final View view, AnimateDirection from) {
 
         view.setVisibility(View.VISIBLE);
@@ -1601,11 +1601,11 @@ public class MainActivity extends Activity implements
     }
 
     private boolean isAutohide() {
-        return !mAppPreferences.getString("pref_autohide_cats_timeout", "-1").equals("-1");
+        return !mAppPreferences.getString(getString(R.string.pref_key_autohide_cats_timeout), "-1").equals("-1");
     }
 
     private int getAutohideTimeout() {
-        return Integer.parseInt(mAppPreferences.getString("pref_autohide_cats_timeout", "1500"));
+        return Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_autohide_cats_timeout), "1500"));
     }
 
     public LaunchApp getAppLauncher() {
@@ -1664,7 +1664,7 @@ public class MainActivity extends Activity implements
 
 
     private void setAllIconSheetsLayout() {
-        mQuickRow.setCenterIcons(mAppPreferences.getBoolean("pref_center_sheet", true));
+        mQuickRow.setCenterIcons(mAppPreferences.getBoolean(getString(R.string.pref_key_center_sheet), true));
         for (GridLayout sheet: mIconSheets.values()) {
             setIconSheetLayout(sheet);
         }
@@ -1673,7 +1673,7 @@ public class MainActivity extends Activity implements
     private void setIconSheetLayout(GridLayout iconSheet) {
 
         FrameLayout.LayoutParams lp;
-        if (mAppPreferences.getBoolean("pref_center_sheet", true)) {
+        if (mAppPreferences.getBoolean(getString(R.string.pref_key_center_sheet), true)) {
             lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.CENTER_HORIZONTAL;
         } else {
@@ -1740,7 +1740,7 @@ public class MainActivity extends Activity implements
 
         for (AppLauncher app : apps) {
             addAppToIconSheet(category, app, true);
-           // Log.d(TAG, app.getActivityName());
+            // Log.d(TAG, app.getActivityName());
         }
 
         if (apps.size()>0) {
@@ -2114,7 +2114,7 @@ public class MainActivity extends Activity implements
         return (int)(dip * scale + .5f);
 //        Resources r = getResources();
 //        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, r.getDisplayMetrics());
-       // return (int)((pixel - 0.5f)/scale);
+        // return (int)((pixel - 0.5f)/scale);
     }
 
     private void changeColumnCount(GridLayout gridLayout, int columnCount) {
@@ -2198,7 +2198,7 @@ public class MainActivity extends Activity implements
                 appwid = mWidgetHelper.loadWidget(app);
                 if (appwid==null) {
                     Log.d(TAG, "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
-                   // db().deleteApp(app.getActivityName());
+                    // db().deleteApp(app.getActivityName());
                     return null;
                 }
             }
@@ -2290,7 +2290,7 @@ public class MainActivity extends Activity implements
         if (item!=null) {
             TextView badge = item.findViewById(R.id.launcher_badge);
             if (badge!=null) {
-                if (bcount <= 0 || !mAppPreferences.getBoolean("pref_show_badges", true)) {
+                if (bcount <= 0 || !mAppPreferences.getBoolean(getString(R.string.pref_key_show_badges), true)) {
                     badge.setVisibility(View.GONE);
                 } else {
                     badge.setVisibility(View.VISIBLE);
@@ -2485,7 +2485,7 @@ public class MainActivity extends Activity implements
             @Override
             public void onClick(View view) {
                 if (mChildLock) return;
-               // view.startAnimation(itemClickedAnim);
+                // view.startAnimation(itemClickedAnim);
                 switchCategory(category);
                 hideCatsIfAutoHide(true);
 
@@ -2559,7 +2559,7 @@ public class MainActivity extends Activity implements
 
                         styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default);
                         if (isAutohide()) {
-                           // f
+                            // f
                         }
                         break;
 
@@ -2938,7 +2938,7 @@ public class MainActivity extends Activity implements
 
         ViewParent parent = potentialChild.getParent();
 
-         do {
+        do {
 
             if (parent == potentialParent) {
                 return true;
@@ -3088,9 +3088,9 @@ public class MainActivity extends Activity implements
             Log.d(TAG, "Drag started: " + dragitem.getActivityName() +  ", source = " + mDragDropSource);
             showCats(true);
             showHiddenCategories();
-           // Log.d(TAG, "source = " + mDragDropSource);
+            // Log.d(TAG, "source = " + mDragDropSource);
             //if (mDragDropSource.getId()!=R.id.icontarget) {
-                showRemoveDropzone();
+            showRemoveDropzone();
             //}
         }
         mDragPotential = null;
@@ -3211,7 +3211,7 @@ public class MainActivity extends Activity implements
         int width = (int)(getResources().getDimension(R.dimen.action_menu_width) * 1.1);
 
         int height = (int)(mShortcutActionsList.getChildCount()
-                        * (getResources().getDimension(R.dimen.action_icon_width)*1.4 + 28)) + 28;
+                * (getResources().getDimension(R.dimen.action_icon_width)*1.4 + 28)) + 28;
 
         int [] viewpos = new int[2];
         view.getLocationOnScreen(viewpos);
@@ -3244,7 +3244,7 @@ public class MainActivity extends Activity implements
 
         lp.topMargin = top;
         lp.leftMargin = left;
-       // lp.width = width;
+        // lp.width = width;
 
 
         mShortcutActionsPopup.setLayoutParams(lp);
@@ -3798,7 +3798,7 @@ public class MainActivity extends Activity implements
                     addWidget(appwid);
                 }
             }
-          //  setCategoryTabStyles();
+            //  setCategoryTabStyles();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
@@ -4052,7 +4052,7 @@ public class MainActivity extends Activity implements
 
     private void enableAutoHide(boolean enable) {
 
-        mAppPreferences.edit().putString("pref_autohide_cats_timeout", enable?"1500":"-1").apply();
+        mAppPreferences.edit().putString(getString(R.string.pref_key_autohide_cats_timeout), enable?"1500":"-1").apply();
         readPrefs();
     }
 
@@ -4361,9 +4361,9 @@ public class MainActivity extends Activity implements
             if (hideCats) {hideHiddenCategories();}
 
             //if (!mUseExtraActions) {
-                animateDownHide(mIconSheetBottomFrame);
+            animateDownHide(mIconSheetBottomFrame);
             //} else {
-                animateDownHide(mOpenPrefs2Button);
+            animateDownHide(mOpenPrefs2Button);
             //}
 
             animateDownHide(mHideButtons);
@@ -4395,8 +4395,8 @@ public class MainActivity extends Activity implements
         boolean oldDumbMode = mDumbMode;
         mChildLock = false;
         mDumbMode = false;
-        mAppPreferences.edit().putBoolean("prefs_toddler_lock", false).apply();
-        mAppPreferences.edit().putBoolean("prefs_dumbmode", false).apply();
+        mAppPreferences.edit().putBoolean(getString(R.string.pref_key_toddler_lock), false).apply();
+        mAppPreferences.edit().putBoolean(getString(R.string.pref_key_dumbmode), false).apply();
         kidaccumecode = "";
         checkChildLock();
         if (oldDumbMode) switchCategory(getTopCategory());
@@ -4406,7 +4406,7 @@ public class MainActivity extends Activity implements
     private void checkChildLock() {
         View kid_escape_area = findViewById(R.id.kid_escape_area);
         View decorView = getWindow().getDecorView();
-       // View catswrap = findViewById(R.id.category_tabs_wrap);
+        // View catswrap = findViewById(R.id.category_tabs_wrap);
         if (mDumbMode) {
             switchCategory(Categories.CAT_DUMB);
         }
@@ -4534,7 +4534,7 @@ public class MainActivity extends Activity implements
             }
         }
 
-        mAppPreferences.edit().putBoolean("prefs_toddler_lock", true).apply();
+        mAppPreferences.edit().putBoolean(getString(R.string.pref_key_toddler_lock), true).apply();
 
         //switchCategory(Categories.CAT_DUMB);
 //        mChildLock=true;

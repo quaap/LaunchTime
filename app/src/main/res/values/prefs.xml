@@ -133,4 +133,42 @@
     <string translatable="false" name="pref_iconpack_def">default</string>
 
 
+
+    <!-- keys -->
+
+    <string name="pref_key_toddler_lock" translatable="false">prefs_toddler_lock</string>
+    <string name="pref_key_dumbmode" translatable="false">prefs_dumbmode</string>
+    <string name="pref_key_autocat" translatable="false">prefs_autocat</string>
+    <string name="pref_key_categories_loc" translatable="false">pref_categories_loc</string>
+    <string name="pref_key_tabsize" translatable="false">preference_tabsize</string>
+    <string name="pref_key_iconsize" translatable="false">preference_iconsize</string>
+    <string name="pref_key_rounded_tabs" translatable="false">pref_rounded_tabs</string>
+    <string name="pref_key_center_sheet" translatable="false">pref_center_sheet</string>
+    <string name="pref_key_textcolor" translatable="false">textcolor</string>
+    <string name="pref_key_wallpapercolor" translatable="false">wallpapercolor</string>
+    <string name="pref_key_cattabtextcolor" translatable="false">cattabtextcolor</string>
+    <string name="pref_key_cattab_background" translatable="false">cattab_background</string>
+    <string name="pref_key_cattabtextcolorinv" translatable="false">cattabtextcolorinv</string>
+    <string name="pref_key_cattabselected_text" translatable="false">cattabselected_text</string>
+    <string name="pref_key_cattabselected_background" translatable="false">cattabselected_background</string>
+    <string name="pref_key_icons_pack" translatable="false">icons-pack</string>
+
+    <string name="pref_key_dragover_background" translatable="false">dragover_background</string>
+    <string name="pref_key_icon_tint" translatable="false">icon_tint</string>
+    <string name="pref_key_reset_colors" translatable="false">reset_colors</string>
+    <string name="pref_key_autohide_cats_timeout" translatable="false">pref_autohide_cats_timeout</string>
+    <string name="pref_key_cat_label" translatable="false">prefs_cat_label</string>
+    <string name="pref_key_show_badges" translatable="false">pref_show_badges</string>
+    <string name="pref_key_show_action_menus" translatable="false">pref_show_action_menus</string>
+    <string name="pref_key_show_action_extra" translatable="false">pref_show_action_extra</string>
+    <string name="pref_key_show_dropzones" translatable="false">pref_show_dropzones</string>
+    <string name="pref_key_show_action_activities" translatable="false">pref_show_action_activities</string>
+    <string name="pref_key_return_home" translatable="false">pref_return_home</string>
+    <string name="pref_key_orientation" translatable="false">preference_orientation</string>
+    <string name="pref_key_columns_portrait" translatable="false">pref_columns_portrait</string>
+    <string name="pref_key_columns_landscape" translatable="false">pref_columns_landscape</string>
+    <string name="pref_key_animate_duration" translatable="false">pref_animate_duration</string>
+    <string name="pref_key_use_fullscreen" translatable="false">pref_use_fullscreen</string>
+
+
 </resources>

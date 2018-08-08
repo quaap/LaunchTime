@@ -84,7 +84,7 @@ public class LaunchReceiver extends BroadcastReceiver {
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
                     AppLauncher.removeAppLauncher(cn);
-                    AppLauncher app = AppLauncher.createAppLauncher(context, context.getPackageManager(), ri, category, prefs.getBoolean("prefs_autocat", true));
+                    AppLauncher app = AppLauncher.createAppLauncher(context, context.getPackageManager(), ri, category, prefs.getBoolean(context.getString(R.string.pref_key_autocat), true));
 
 
                     if (db.addApp(app)) {

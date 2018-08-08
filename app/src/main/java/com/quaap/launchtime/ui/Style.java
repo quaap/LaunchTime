@@ -229,14 +229,14 @@ public class Style {
     public void readPrefs() {
         //Checks application preferences and adjust accordingly
 
-        leftHandCategories = mAppPreferences.getString("pref_categories_loc", "right").equals("left");
+        leftHandCategories = mAppPreferences.getString(mContext.getString(R.string.pref_key_categories_loc), "right").equals("left");
 
         float density = mContext.getResources().getDisplayMetrics().density / 2.0f;
 
         if (density<.75f) density = .75f;
         if (density>1.5f) density = 1.5f;
 
-        int tabsizePref = Integer.parseInt(mAppPreferences.getString("preference_tabsize", "1"));
+        int tabsizePref = Integer.parseInt(mAppPreferences.getString(mContext.getString(R.string.pref_key_tabsize), "1"));
         switch (tabsizePref) {
             case 0:  //small
                 categoryTabPaddingHeight = (int)(16 * density);
@@ -256,14 +256,14 @@ public class Style {
                 break;
         }
 
-        aniDuration = Integer.parseInt(mAppPreferences.getString("pref_animate_duration", "250"));
+        aniDuration = Integer.parseInt(mAppPreferences.getString(mContext.getString(R.string.pref_key_animate_duration), "150"));
 
 
         float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
         float iconfontsize = mContext.getResources().getDimension(R.dimen.launcher_fontsize);
 
 
-        int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));
+        int iconsizePref = Integer.parseInt(mAppPreferences.getString(mContext.getString(R.string.pref_key_iconsize), "1"));
         switch (iconsizePref) {
             case 0:  //small
                 launcherIconSize = (int)(iconsize*.74);
@@ -288,20 +288,20 @@ public class Style {
         }
         //Log.d("style", "launcherFontSize = " + launcherFontSize);
 
-        cattabBackground = mAppPreferences.getInt("cattab_background", getResColor(R.color.cattab_background));
-        cattabSelectedBackground = mAppPreferences.getInt("cattabselected_background", getResColor(R.color.cattabselected_background));
-        cattabSelectedText = mAppPreferences.getInt("cattabselected_text", getResColor(R.color.cattabselected_text));
+        cattabBackground = mAppPreferences.getInt(mContext.getString(R.string.pref_key_cattab_background), getResColor(R.color.cattab_background));
+        cattabSelectedBackground = mAppPreferences.getInt(mContext.getString(R.string.pref_key_cattabselected_background), getResColor(R.color.cattabselected_background));
+        cattabSelectedText = mAppPreferences.getInt(mContext.getString(R.string.pref_key_cattabselected_text), getResColor(R.color.cattabselected_text));
 
-        dragoverBackground = mAppPreferences.getInt("dragover_background", getResColor(R.color.dragover_background));
+        dragoverBackground = mAppPreferences.getInt(mContext.getString(R.string.pref_key_dragover_background), getResColor(R.color.dragover_background));
 
-        cattabTextColor =  mAppPreferences.getInt("cattabtextcolor", getResColor(R.color.textcolor));
-        cattabTextColorInvert = mAppPreferences.getInt("cattabtextcolorinv", getResColor(R.color.textcolorinv));
+        cattabTextColor =  mAppPreferences.getInt(mContext.getString(R.string.pref_key_cattabtextcolor), getResColor(R.color.textcolor));
+        cattabTextColorInvert = mAppPreferences.getInt(mContext.getString(R.string.pref_key_cattabtextcolorinv), getResColor(R.color.textcolorinv));
 
-        textColor = mAppPreferences.getInt("textcolor", getResColor(R.color.textcolor));
+        textColor = mAppPreferences.getInt(mContext.getString(R.string.pref_key_textcolor), getResColor(R.color.textcolor));
 
-        wallpaperColor = mAppPreferences.getInt("wallpapercolor", getResColor(R.color.wallpaper_color));
+        wallpaperColor = mAppPreferences.getInt(mContext.getString(R.string.pref_key_wallpapercolor), getResColor(R.color.wallpaper_color));
 
-        iconTint = mAppPreferences.getInt("icon_tint", Color.TRANSPARENT);
+        iconTint = mAppPreferences.getInt(mContext.getString(R.string.pref_key_icon_tint), Color.TRANSPARENT);
 
         cattabBackgroundHighContrast = cattabBackground;
 
@@ -364,11 +364,11 @@ public class Style {
     }
 
     public boolean isRoundedTabs() {
-        return mAppPreferences.getBoolean("pref_rounded_tabs", true);
+        return mAppPreferences.getBoolean(mContext.getString(R.string.pref_key_rounded_tabs), true);
     }
 
     public int getMaxWCells() {
-        int iconsizePref = Integer.parseInt(mAppPreferences.getString("preference_iconsize", "1"));
+        int iconsizePref = Integer.parseInt(mAppPreferences.getString(mContext.getString(R.string.pref_key_iconsize), "1"));
 
         return 6-iconsizePref;
 

@@ -18,6 +18,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.LaunchApp;
 
@@ -76,7 +77,7 @@ public class IconsHandler {
         this.pm = ctx.getPackageManager();
         theme = new Theme(ctx, this);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
-        iconsPackPackageName = prefs.getString("icons-pack", DEFAULT_PACK);
+        iconsPackPackageName = prefs.getString(ctx.getString(R.string.pref_key_icons_pack), DEFAULT_PACK);
         loadAvailableIconsPacks();
         loadIconsPack();
     }

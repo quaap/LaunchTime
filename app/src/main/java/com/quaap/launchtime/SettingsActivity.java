@@ -70,7 +70,7 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-            Preference colorbutton = findPreference("reset_colors");
+            Preference colorbutton = findPreference(getString(R.string.pref_key_reset_colors));
             colorbutton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
