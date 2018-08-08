@@ -176,7 +176,8 @@
 
         <CheckBoxPreference
             android:title="@string/pref_show_action"
-            android:key="pref_show_action_menus" />
+            android:key="pref_show_action_menus"
+            android:defaultValue="false" />
 
         <CheckBoxPreference
             android:key="pref_show_action_extra"
