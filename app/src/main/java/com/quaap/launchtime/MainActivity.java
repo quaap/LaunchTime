@@ -205,7 +205,7 @@ public class MainActivity extends Activity implements
     private ScrollView mShortcutActionsPopup;
     private LinearLayout mShortcutActionsList;
 
-    private boolean mUseMenus = false;
+    private boolean mUseActionMenus = false;
     private boolean mDevModeActivities = true;
     private boolean mUseDropZones = true;
     private boolean mUseExtraActions = false;
@@ -254,6 +254,8 @@ public class MainActivity extends Activity implements
         mQuickRow = new QuickRow(mMainDragListener, this);
 
         mScreenDim = getScreenDimensions();
+
+        readActionMenuConfig();
 
         //Load resources and init the form members
         initUI();
@@ -860,11 +862,11 @@ public class MainActivity extends Activity implements
                         setAllIconSheetsLayout();
                     }
 
-                    if (key.equals("pref_show_action_activities")) {
-                        readDevModeAvtivities();
-                    }
-                    if (key.equals("pref_show_action_menus") || key.equals("pref_show_dropzones") || key.equals("pref_show_action_extra")) {
-                        readMenuConfig();
+                    if (key.equals("pref_show_action_menus")
+                            || key.equals("pref_show_dropzones")
+                            || key.equals("pref_show_action_extra")
+                            || key.equals("pref_show_action_activities")) {
+                        readActionMenuConfig();
                     }
 
                 }
@@ -872,17 +874,17 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private void readDevModeAvtivities() {
-        mDevModeActivities = mAppPreferences.getBoolean("pref_show_action_activities", false);
-    }
 
-    private void readMenuConfig() {
-        mUseMenus = mAppPreferences.getBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25);
-        mUseExtraActions = false;
+    private void readActionMenuConfig() {
         mUseDropZones = true;
+        mUseExtraActions = false;
+        mDevModeActivities = false;
 
-        if (mUseMenus) {
+        mUseActionMenus = mAppPreferences.getBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25);
+
+        if (mUseActionMenus) {
             mUseExtraActions = mAppPreferences.getBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25);
+            mDevModeActivities = mAppPreferences.getBoolean("pref_show_action_activities", false);
             if (mUseExtraActions) {
                 mUseDropZones = mAppPreferences.getBoolean("pref_show_dropzones", false);
             }
@@ -1141,8 +1143,7 @@ public class MainActivity extends Activity implements
             mDumbMode = mAppPreferences.getBoolean("prefs_dumbmode", false);
             mChildLock = mAppPreferences.getBoolean("prefs_toddler_lock", false);
             readAnimationDuration();
-            readDevModeAvtivities();
-            readMenuConfig();
+            readActionMenuConfig();
 
             WindowManager wm = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE));
 
@@ -2974,7 +2975,7 @@ public class MainActivity extends Activity implements
         mDragPotential = view;
         final boolean iswidget = dragitem.isWidget();
 
-        if ((mUseMenus || iswidget) && displayActionShortcuts(view, dragitem)) {
+        if ((mUseActionMenus || iswidget) && displayActionShortcuts(view, dragitem)) {
 
             setMenuOnTouchListener(view, iswidget, new Runnable() {
                 @Override
@@ -3120,15 +3121,15 @@ public class MainActivity extends Activity implements
                 }
             }
 
-//            if (!appitem.isWidget()) {
-//                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mLaunchApp.launchApp(appitem);
-//                        showButtonBar(false, true);
-//                    }
-//                });
-//            }
+            if (!appitem.isWidget()) {
+                addActionMenuItem(appitem.getLabel(), appitem.getIconDrawable(), new Runnable() {
+                    @Override
+                    public void run() {
+                        mLaunchApp.launchApp(appitem);
+                        showButtonBar(false, true);
+                    }
+                });
+            }
 
 
             addOreoShortcutsToMenu(shortcutInfos);
@@ -3194,22 +3195,34 @@ public class MainActivity extends Activity implements
 
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
 
-        int width = (int)(getResources().getDimension(R.dimen.action_menu_width));
+        int width = (int)(getResources().getDimension(R.dimen.action_menu_width) * 1.1);
 
         int height = (int)(mShortcutActionsList.getChildCount()
-                        * (getResources().getDimension(R.dimen.action_icon_width)*1.4 + 28));
+                        * (getResources().getDimension(R.dimen.action_icon_width)*1.4 + 28)) + 28;
 
         int [] viewpos = new int[2];
         view.getLocationOnScreen(viewpos);
 
-        int top = viewpos[1] - height - 10;
+        int top = viewpos[1] - height - 20;
+        int left = viewpos[0] + view.getWidth()/2 - width/2;
+
         if (top <= 0) {
             top = viewpos[1] + view.getHeight()*2/3;
-        } else if (top+height>=mScreenDim.y) {
-            top = mScreenDim.y - height - 10;
         }
 
-        int left = viewpos[0] + view.getWidth()/2 - width/2;
+        if (top+height>=mScreenDim.y) {
+            top = mScreenDim.y - height - 10;
+            if (left>mScreenDim.x/2) {
+                left = viewpos[0] - width;
+            } else if (left<mScreenDim.x/2) {
+                left = viewpos[0] + view.getWidth();
+            }
+        }
+
+        if (height>=mScreenDim.y || top <= 0) {
+            top = 10;
+        }
+
         if (left <= 0) {
             left = viewpos[0]+4;
         } else if (left + width >= mScreenDim.x) {
