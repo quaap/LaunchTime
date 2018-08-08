@@ -255,6 +255,7 @@ public class MainActivity extends Activity implements
 
         mScreenDim = getScreenDimensions();
 
+
         readActionMenuConfig();
 
         //Load resources and init the form members
@@ -407,7 +408,16 @@ public class MainActivity extends Activity implements
                     Thread.yield();
                 }
 
-                GlobState.getGlobState(main).getDB();
+                DB db = GlobState.getGlobState(main).getDB();
+
+                if (db.isFirstRun()) {
+                    main.mAppPreferences.edit()
+                            .putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25)
+                            .putBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25)
+                            .apply();
+
+                    main.readActionMenuConfig();
+                }
 
                 if (mShowProgress) main.incProgressBar(1);
 
@@ -644,14 +654,8 @@ public class MainActivity extends Activity implements
             //Move self icon to hidden
             db().updateAppCategory(selfAct, this.getPackageName(), Categories.CAT_HIDDEN);
 
-
             //Take a backup now that things are pre-sorted.
-            db().backup("After install");
-
-            mAppPreferences.edit()
-                    .putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25)
-                    .putBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25)
-                    .apply();
+            //db().backup("After install");
 
             //Show the help screen on very first run.
             mCategoriesScroller.postDelayed(new Runnable() {
