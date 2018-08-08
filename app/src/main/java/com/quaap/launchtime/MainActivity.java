@@ -2487,8 +2487,8 @@ public class MainActivity extends Activity implements
                 if (mUseExtraActions || !mUseDropZones) {
                     initializeActionMenu();
                     addExtraActionsToMenu(view, categoryTab);
-                    showBuiltActionMenu(view);
                     addCancelToMenu();
+                    showBuiltActionMenu(view);
                     setMenuOnTouchListener(categoryTab, false, new Runnable() {
                         @Override
                         public void run() {
@@ -3191,7 +3191,7 @@ public class MainActivity extends Activity implements
     }
 
     private void showBuiltActionMenu(View view) {
-        mShortcutActionsPopup.setVisibility(View.VISIBLE);
+        //mShortcutActionsPopup.setVisibility(View.VISIBLE);
 
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
 
@@ -3235,6 +3235,7 @@ public class MainActivity extends Activity implements
 
 
         mShortcutActionsPopup.setLayoutParams(lp);
+        animateUpShow(mShortcutActionsPopup);
     }
 
     private String mActionCategory;
@@ -3635,7 +3636,8 @@ public class MainActivity extends Activity implements
 
     private void dismissActionPopup() {
         if (mShortcutActionsPopup!=null) {
-            mShortcutActionsPopup.setVisibility(View.GONE);
+            animateDownHide(mShortcutActionsPopup);
+            //mShortcutActionsPopup.setVisibility(View.GONE);
             mShortcutActionsPopup = null;
 
         }
