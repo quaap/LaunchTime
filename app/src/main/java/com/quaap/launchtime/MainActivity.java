@@ -2333,7 +2333,8 @@ public class MainActivity extends Activity implements
         String pkgname = cn.getPackageName();
 
         String catId = db().getAppCategory(cn);
-        if (catId == null || catId.equals(mCategory)) {
+        if (mActionCategory==null) mActionCategory = mCategory;
+        if (catId == null || catId.equals(mActionCategory)) {
 
             //Log.d(TAG, actvname + " " + pkgname);
 
@@ -2342,10 +2343,10 @@ public class MainActivity extends Activity implements
             String label = pkgname;
 
             AppLauncher.removeAppLauncher(cn);
-            AppLauncher app = AppLauncher.createAppLauncher(actvname, pkgname, label, mCategory, true);
+            AppLauncher app = AppLauncher.createAppLauncher(actvname, pkgname, label, mActionCategory, true);
 
             db().addApp(app);
-            db().addAppCategoryOrder(mCategory, app.getComponentName());
+            db().addAppCategoryOrder(mActionCategory, app.getComponentName());
         } else {
             Toast.makeText(this, getString(R.string.widget_alreay,db().getCategoryDisplay(catId)), Toast.LENGTH_LONG).show();
         }
@@ -3223,8 +3224,12 @@ public class MainActivity extends Activity implements
         mShortcutActionsPopup.setLayoutParams(lp);
     }
 
+    private String mActionCategory;
+
     private void addExtraActionsToMenu(final View view, final TextView categoryTab) {
         final String category = (String)categoryTab.getTag();
+
+        mActionCategory = category;
 
         if (!mCategory.equals(category)) {
             addActionMenuItem(categoryTab.getText().toString(), android.R.drawable.ic_menu_compass, new Runnable() {
@@ -3270,7 +3275,7 @@ public class MainActivity extends Activity implements
             addActionMenuItem(getString(R.string.add_category), android.R.drawable.ic_menu_add, new Runnable() {
                 @Override
                 public void run() {
-                    promptAddCategory(category);
+                    promptAddCategory();
                 }
             });
 
@@ -3913,7 +3918,7 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void promptAddCategory(final String clickedCategory) {
+    private void promptAddCategory() {
 
         promptGetCategoryName(getString(R.string.add_cat),
                 getString(R.string.add_cat2),
@@ -3926,7 +3931,7 @@ public class MainActivity extends Activity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which, String category, String newDisplayName, String newDisplayFullName, boolean isTiny, boolean isHidden) {
                         try {
-                            addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden, clickedCategory);
+                            addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden);
                         } catch (IllegalArgumentException e) {
 
                             Toast.makeText(MainActivity.this, R.string.need_name, Toast.LENGTH_SHORT).show();
@@ -3935,7 +3940,7 @@ public class MainActivity extends Activity implements
                 });
     }
 
-    private void addCategory(String category, String newDisplayName, String newDisplayFullName,  boolean isTiny, boolean isHidden, String clickedCategory) {
+    private void addCategory(String category, String newDisplayName, String newDisplayFullName,  boolean isTiny, boolean isHidden) {
         category = category.trim();
         newDisplayName = newDisplayName.trim();
         newDisplayFullName = newDisplayFullName.trim();
@@ -3958,7 +3963,9 @@ public class MainActivity extends Activity implements
 
         Log.d(TAG, category +", " + newDisplayName +", " +  newDisplayFullName +", " +  isTiny);
         if (db().addCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden)) {
-            createIconSheet(category, getCategoryPos(clickedCategory));
+            if (mActionCategory==null) mActionCategory = mCategory;
+
+            createIconSheet(category, getCategoryPos(mActionCategory));
 
             switchCategory(category);
 
@@ -4232,7 +4239,7 @@ public class MainActivity extends Activity implements
         mAddCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                promptAddCategory(mCategory);
+                promptAddCategory();
                 showButtonBar(false, true);
             }
         });
@@ -4301,8 +4308,8 @@ public class MainActivity extends Activity implements
 //
 //        Log.d(TAG,"showButtonBar(" + makevisible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
 
-
         if (makevisible) {
+            mActionCategory = mCategory;
             showHiddenCategories();
             if (!mUseExtraActions) {
                 if (mCategory.equals(Categories.CAT_SEARCH)) {
