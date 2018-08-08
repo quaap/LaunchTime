@@ -233,7 +233,7 @@
             android:summary="@string/pref_animation_speed_summ" />
 
         <ListPreference
-            android:defaultValue="250"
+            android:defaultValue="150"
             android:title="@string/pref_amimation_speed"
             android:entries="@array/pref_animate_values"
             android:entryValues="@array/pref_animate_values"

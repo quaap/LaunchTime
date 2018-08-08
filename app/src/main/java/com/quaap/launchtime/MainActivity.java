@@ -227,7 +227,7 @@ public class MainActivity extends Activity implements
 
     private static String latestCategory;
 
-    private int mAnimationDuration = 250;
+    private int mAnimationDuration = 150;
 
 
     @Override
@@ -249,6 +249,19 @@ public class MainActivity extends Activity implements
 
         mPackageMan = getApplicationContext().getPackageManager();
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        mPrefs = getSharedPreferences("default", MODE_PRIVATE);
+
+        String key = "current";
+        if (mPrefs.getInt(key,0) < 830) {
+
+            if (mAppPreferences.getString("pref_animate_duration", "150").equals("250")) {
+                mAppPreferences.edit().putString("pref_animate_duration", "150").apply();
+            }
+
+            mPrefs.edit().putInt(key,BuildConfig.VERSION_CODE).apply();
+        }
+
         mWidgetHelper = new Widget(this);
 
         mQuickRow = new QuickRow(mMainDragListener, this);
@@ -266,7 +279,6 @@ public class MainActivity extends Activity implements
         mIconsArea.setOnDragListener(iconSheetDropRedirector);
 
         mSearchBox = new SearchBox(this, mIconSheetScroller);
-        mPrefs = getSharedPreferences("default", MODE_PRIVATE);
 
         mLaunchApp = new LaunchApp(this);
 
@@ -409,14 +421,11 @@ public class MainActivity extends Activity implements
                 }
 
                 DB db = GlobState.getGlobState(main).getDB();
-
                 if (db.isFirstRun()) {
                     main.mAppPreferences.edit()
                             .putBoolean("pref_show_action_menus", Build.VERSION.SDK_INT >= 25)
                             .putBoolean("pref_show_action_extra", Build.VERSION.SDK_INT >= 25)
                             .apply();
-
-                    main.readActionMenuConfig();
                 }
 
                 if (mShowProgress) main.incProgressBar(1);
@@ -1209,7 +1218,7 @@ public class MainActivity extends Activity implements
 
 
     private void readAnimationDuration() {
-        mAnimationDuration = Integer.parseInt(mAppPreferences.getString("pref_animate_duration", "250"));
+        mAnimationDuration = Integer.parseInt(mAppPreferences.getString("pref_animate_duration", "150"));
         if (mAnimationDuration==0) mAnimationDuration=1; //small hack to make everything still work
     }
 
@@ -3424,7 +3433,7 @@ public class MainActivity extends Activity implements
 
                         names.add(label.toString().trim());
 
-                        label = "{ } " + label;
+                        label = "{" + label + "}";
 
 //                        IntentFilter fi = ri.filter;
 //                        if (fi != null) {
