@@ -702,14 +702,14 @@ public class MainActivity extends Activity implements
         @Override
         public void onLeftSwipe(float absDist) {
             if (mChildLock) return;
-            switchCategory(getNextCategory(mCategory, -1), AnimateDirection.Right);
+            switchCategory(getNextCategory(mCategory, -1), AnimateDirection.Right, false);
             scrollToCategoryTab();
         }
 
         @Override
         public void onRightSwipe(float absDist) {
             if (mChildLock) return;
-            switchCategory(getNextCategory(mCategory, 1), AnimateDirection.Left);
+            switchCategory(getNextCategory(mCategory, 1), AnimateDirection.Left, false);
             scrollToCategoryTab();
         }
     };
@@ -935,11 +935,16 @@ public class MainActivity extends Activity implements
     }
 
     private synchronized void switchCategory(String category, AnimateDirection dir) {
+        switchCategory(category, dir, true);
+    }
+
+
+    private synchronized void switchCategory(String category, AnimateDirection dir, boolean bounce) {
         try {
             dismissActionPopup();
             if (category == null) return;
             if (mCategory!=null && !mCategory.equals(category)) {
-                animateHide(mIconsArea, dir, true);
+                animateHide(mIconsArea, dir, true, bounce);
             }
             mCategory = category;
             latestCategory = mCategory;
@@ -1421,7 +1426,7 @@ public class MainActivity extends Activity implements
     }
 
     private void animateDownHide(View view) {
-        animateHide(view, AnimateDirection.Down,false);
+        animateHide(view, AnimateDirection.Down,false, true);
     }
 
     enum AnimateDirection {Left, Up, Right, Down}
@@ -1429,6 +1434,10 @@ public class MainActivity extends Activity implements
     private final Map<View,Long> aniHideStarted = new HashMap<>();
 
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
+        animateHide(view,towards,andBack, true);
+    }
+
+    private void animateHide(final View view, final AnimateDirection towards, final boolean andBack, final boolean bounce) {
 
 //        Log.d(TAG, "animateHide " + view);
         if (mAnimationDuration==0) {
@@ -1462,7 +1471,7 @@ public class MainActivity extends Activity implements
                         super.onAnimationEnd(animation);
 
                         if (andBack) {
-                            animateShow(view, towards);
+                            animateShow(view, towards, !bounce);
                         } else {
                             view.setVisibility(View.GONE);
                         }
@@ -1507,6 +1516,11 @@ public class MainActivity extends Activity implements
     }
 
     private void animateShow(final View view, AnimateDirection from) {
+        animateShow(view, from,false);
+    }
+
+
+    private void animateShow(final View view, AnimateDirection from, boolean reverse) {
 
         if (mAnimationDuration==0) {
             view.clearAnimation();
@@ -1514,6 +1528,23 @@ public class MainActivity extends Activity implements
             //Log.d(TAG, "animateShow " + view);
 
             return;
+        }
+
+        if (reverse) {
+            switch(from) {
+                case Down:
+                    view.setTranslationY(-view.getHeight());
+                    break;
+                case Up:
+                    view.setTranslationY(view.getHeight());
+                    break;
+                case Right:
+                    view.setTranslationX(-view.getWidth());
+                    break;
+                case Left:
+                    view.setTranslationX(view.getWidth());
+                    break;
+            }
         }
 
         view.setVisibility(View.VISIBLE);
