@@ -147,6 +147,7 @@ public class QuickRow {
 
     }
 
+
     public void processQuickApps(List<AppLauncher> launchers, PackageManager packageMan) {
         List<AppLauncher> quickRowApps = new ArrayList<>();
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
@@ -158,27 +159,35 @@ public class QuickRow {
 
             if (quickRowOrder.contains(app.getComponentName())) {
                 AppLauncher qapp = AppLauncher.createAppLauncher(app);
-                qapp.loadAppIconAsync(mQuickRow.getContext(), packageMan);
                 quickRowApps.add(qapp);
+                app.loadAppIconAsync(mQuickRow.getContext(), packageMan);
             }
         }
-
-
-        mQuickRow.removeAllViews();
-        for (ComponentName actvname : quickRowOrder) {
-            for (AppLauncher app : quickRowApps) {
-                if (app.getComponentName().equals(actvname)) {
-                    ViewGroup item = mMainActivity.getLauncherView(app, true);
-                    if (item!=null) {
-                        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-                        lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
-                        mQuickRow.addView(item, lp);
-                    }
-                }
-            }
-        }
-
+        db().setAppCategoryOrder(QUICK_ROW_CAT, quickRowApps);
     }
+
+
+//    public void fillQuickApps(List<AppLauncher> quickRowApps, PackageManager packageMan) {
+//
+//        final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
+//
+//
+//        mQuickRow.removeAllViews();
+//        for (ComponentName actvname : quickRowOrder) {
+//            for (AppLauncher app : quickRowApps) {
+//                if (app.getComponentName().equals(actvname)) {
+//                    ViewGroup item = mMainActivity.getLauncherView(app, true);
+//                    if (item!=null) {
+//                        app.loadAppIconAsync(mQuickRow.getContext(), packageMan);
+//                        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+//                        lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.TOP);
+//                        mQuickRow.addView(item, lp);
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 
     public void removeFromQuickApps(ComponentName actvname) {
         for (int i = mQuickRow.getChildCount()-1; i>=0; i--) {

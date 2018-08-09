@@ -297,12 +297,21 @@ public class MainActivity extends Activity implements
         super.onResume();
         Log.d(TAG, "onResume");
 
-        if (mInitCalling) return;
 
+        //in case the task didn't complete
+        int startat = 0;
+        if (mStartupTask!=null && mStartupTask.isCancelled() && !mStartupTask.isCompleted()) {
+            startat = mStartupTask.mCompletedStage;
+            mInitCalled = false;
+            mInitCalling = false;
+        }
+
+
+        if (mInitCalling) return;
         if (mInitCalled) {
             myResume();
         } else {
-            mStartupTask = new StartupTask(this, true);
+            mStartupTask = new StartupTask(this, true, startat);
             mStartupTask.execute();
         }
 
@@ -370,14 +379,14 @@ public class MainActivity extends Activity implements
         mBackPressedSessionCount=0;
         checkChildLock();
 
-        try {
-            if (mStartupTask!=null && !mStartupTask.isCancelled()) {
-                mStartupTask.cancel(true);
-                mStartupTask = null;
-            }
-        } catch (Throwable t) {
-            Log.e(TAG, t.getMessage(), t);
-        }
+//        try {
+//            if (mStartupTask!=null && !mStartupTask.isCancelled()) {
+//                mStartupTask.cancel(true);
+//                //mStartupTask = null;
+//            }
+//        } catch (Throwable t) {
+//            Log.e(TAG, t.getMessage(), t);
+//        }
 
         //save a few items
         mPrefs.edit()
@@ -397,13 +406,27 @@ public class MainActivity extends Activity implements
 
     private static class StartupTask extends AsyncTask<Void,Integer,List<AppLauncher>> {
 
-        final WeakReference<MainActivity> mMain;
-        final boolean mShowProgress;
+        private final WeakReference<MainActivity> mMain;
+        private final boolean mShowProgress;
+
+        final private int mStartAtStage;
+        int mCompletedStage = 0;
+        final int mStages = 6;
 
         StartupTask(MainActivity main, boolean showProgress) {
+            this(main,showProgress,0);
+        }
+
+        StartupTask(MainActivity main, boolean showProgress, int startAtStage) {
             mMain = new WeakReference<>(main);
             mShowProgress = showProgress;
             main.mInitCalling = true;
+            mStartAtStage = startAtStage;
+
+        }
+
+        public boolean isCompleted() {
+            return mCompletedStage == mStages;
         }
 
         @Override
@@ -420,19 +443,15 @@ public class MainActivity extends Activity implements
                     Thread.yield();
                 }
 
-                DB db = GlobState.getGlobState(main).getDB();
-                if (db.isFirstRun()) {
-                    main.mAppPreferences.edit()
-                            .putBoolean(main.getString(R.string.pref_key_show_action_menus), Build.VERSION.SDK_INT >= 25)
-                            .putBoolean(main.getString(R.string.pref_key_show_action_extra), Build.VERSION.SDK_INT >= 25)
-                            .apply();
+                if (mStartAtStage<1) {
+                    stage1(main);
+                    mCompletedStage = 1;
                 }
 
-                if (mShowProgress) main.incProgressBar(1);
-
-                main.init(mShowProgress);
-
-                Thread.yield();
+                if (mStartAtStage<2) {
+                    stage2(main);
+                    mCompletedStage = 2;
+                }
 
                 return main.processActivities(mShowProgress);
             } catch (Throwable t) {
@@ -441,6 +460,23 @@ public class MainActivity extends Activity implements
                 main.mInitCalled = true;
             }
             return null;
+        }
+
+        private void stage1(MainActivity main) {
+            DB db = GlobState.getGlobState(main).getDB();
+            if (db.isFirstRun()) {
+                main.mAppPreferences.edit()
+                        .putBoolean(main.getString(R.string.pref_key_show_action_menus), Build.VERSION.SDK_INT >= 25)
+                        .putBoolean(main.getString(R.string.pref_key_show_action_extra), Build.VERSION.SDK_INT >= 25)
+                        .apply();
+            }
+        }
+
+        private void stage2(MainActivity main) {
+            if (mShowProgress) main.incProgressBar(1);
+
+            main.init(mShowProgress);
+            Thread.yield();
         }
 
         @Override
@@ -457,13 +493,20 @@ public class MainActivity extends Activity implements
             final MainActivity main = mMain.get();
             if (main == null) return;
 
+            mCompletedStage = 3;
+
             try {
 
                 if (launchers != null) {
                     if (mShowProgress) main.showProgressBar(5);
 
-                    main.mQuickRow.processQuickApps(launchers, main.mPackageMan);
-                    main.db().setAppCategoryOrder(main.mRevCategoryMap.get(main.mQuickRow.getGridLayout()), main.mQuickRow.getGridLayout());
+                    if (mStartAtStage<4) {
+                        main.mQuickRow.processQuickApps(launchers, main.mPackageMan);
+                        main.mQuickRow.repopulate();
+
+                        //main.db().setAppCategoryOrder(main.mRevCategoryMap.get(main.mQuickRow.getGridLayout()), main.mQuickRow.getGridLayout());
+                        mCompletedStage = 4;
+                    }
 
                     if (mShowProgress) main.incProgressBar(1);
 
@@ -475,14 +518,18 @@ public class MainActivity extends Activity implements
                     if (mShowProgress) main.incProgressBar(1);
 
                     main.firstRunPostApps();
+                    mCompletedStage = 5;
+
                     if (mShowProgress) main.incProgressBar(1);
                 }
 
                 if (mShowProgress) main.incProgressBar(1);
 
                 main.myResume();
-
+                mCompletedStage = 6;
                 if (mShowProgress) main.incProgressBar(1);
+
+                main.mStartupTask = null;
 
             } catch (Throwable t) {
                 Log.e(TAG, t.getMessage(), t);
@@ -495,7 +542,6 @@ public class MainActivity extends Activity implements
                     Log.e(TAG, t.getMessage(), t);
                 }
             }
-
         }
     }
 
@@ -518,6 +564,7 @@ public class MainActivity extends Activity implements
         //create the grids for each existing category.
         if (progress) incProgressBar(1);
 
+        mCategoriesLayout.removeAllViews();
         for (final String category : db().getCategories()) {
             runOnUiThread(new Runnable() {
                 @Override

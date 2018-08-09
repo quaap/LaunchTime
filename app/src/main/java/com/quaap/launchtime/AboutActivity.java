@@ -58,6 +58,8 @@ public class AboutActivity extends Activity {
     @Override
     public void onBackPressed() {
         setResult(RESULT_OK);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
         //super.onBackPressed();
     }
