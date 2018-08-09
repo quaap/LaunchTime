@@ -3287,10 +3287,8 @@ public class MainActivity extends Activity implements
     }
 
     private void initializeActionMenu() {
-        dismissActionPopup();
+        //dismissActionPopup();
 
-        mShortcutActionsPopup = findViewById(R.id.action_menu);
-        mShortcutActionsList = findViewById(R.id.action_menu_items);
         //setForceShowIcon(mShortcutActionsPopup);
         mShortcutActionsList.removeAllViews();
 
@@ -3304,7 +3302,7 @@ public class MainActivity extends Activity implements
     private void showBuiltActionMenu(View view) {
         //mShortcutActionsPopup.setVisibility(View.VISIBLE);
 
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
+        //FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
 
         int width = (int)(getResources().getDimension(R.dimen.action_menu_width) * 1.1);
 
@@ -3340,14 +3338,56 @@ public class MainActivity extends Activity implements
             left = mScreenDim.x - (int)(width*1.2);
         }
 
-        lp.topMargin = top;
-        lp.leftMargin = left;
-        // lp.width = width;
+        //mShortcutActionsPopup.setTop(0);
+        //mShortcutActionsPopup.setLeft(0);
+
+        mShortcutActionsPopup.setVisibility(View.VISIBLE);
+        if (mAnimationDuration>0) {
+            mShortcutActionsPopup.animate()
+                    .x(left)
+                    .y(top)
+                    .alpha(1)
+                    .setDuration(mAnimationDuration)
+                    .setListener(null)
+                    .start();
+        } else {
+            mShortcutActionsPopup.setX(left);
+            mShortcutActionsPopup.setY(top);
+            mShortcutActionsPopup.setAlpha(1f);
+        }
 
 
-        mShortcutActionsPopup.setLayoutParams(lp);
-        animateUpShow(mShortcutActionsPopup);
     }
+
+
+    private void dismissActionPopup() {
+        if (mAnimationDuration>0) {
+            mShortcutActionsPopup.animate()
+                    .x(mScreenDim.x)
+                    .y(mScreenDim.y)
+                    .alpha(0)
+                    .setDuration(mAnimationDuration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                            mShortcutActionsPopup.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mShortcutActionsPopup.setVisibility(View.GONE);
+                        }
+                    });
+        } else {
+            mShortcutActionsPopup.setVisibility(View.GONE);
+        }
+//        if (mShortcutActionsPopup!=null) {
+//            //mShortcutActionsPopup.setVisibility(View.GONE);
+//            mShortcutActionsPopup = null;
+//
+//        }
+    }
+
 
     private String mActionCategory;
 
@@ -3709,6 +3749,11 @@ public class MainActivity extends Activity implements
 
         item.setLayoutParams(lp);
         mShortcutActionsList.addView(item);
+        if (mAnimationDuration>0) {
+            //item.setScaleX(.3f);
+            item.setScaleY(.1f);
+            item.animate().scaleY(1f).setDuration(mAnimationDuration).setStartDelay(mShortcutActionsList.getChildCount() * 10 + 10);
+        }
     }
 
     private void addShortcutToActionPopup(final LauncherApps launcherApps, final ShortcutInfo shortcutInfo) {
@@ -3742,15 +3787,6 @@ public class MainActivity extends Activity implements
 
                 }
             }
-        }
-    }
-
-    private void dismissActionPopup() {
-        if (mShortcutActionsPopup!=null) {
-            animateDownHide(mShortcutActionsPopup);
-            //mShortcutActionsPopup.setVisibility(View.GONE);
-            mShortcutActionsPopup = null;
-
         }
     }
 
@@ -4294,6 +4330,9 @@ public class MainActivity extends Activity implements
         mCategoriesScroller.setHSwipeListener(mHSwipeListener);
 
         mProgressBar = findViewById(R.id.progressBar);
+
+        mShortcutActionsPopup = findViewById(R.id.action_menu);
+        mShortcutActionsList = findViewById(R.id.action_menu_items);
 
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
