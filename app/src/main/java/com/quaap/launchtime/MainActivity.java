@@ -15,6 +15,7 @@ package com.quaap.launchtime;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -228,6 +229,7 @@ public class MainActivity extends Activity implements
     private static String latestCategory;
 
     private int mAnimationDuration = 150;
+
 
 
     @Override
@@ -3792,11 +3794,23 @@ public class MainActivity extends Activity implements
 
     private void showHiddenCategories() {
         for (String cat: db().getCategories()) {
-            if (mCategoryTabs!=null && cat!=null && mCategoryTabs.get(cat)!=null) {
-                mCategoryTabs.get(cat).setVisibility(View.VISIBLE);
+            final View cattab = mCategoryTabs.get(cat);
+            if (mCategoryTabs!=null && cat!=null && cattab!=null) {
+                if (mAnimationDuration>0 && cattab.getVisibility() == View.GONE) {
+
+                    animateChangingSize(cattab, 0, mStyle.getCategoryTabPaddingHeight()*2, new Runnable() {
+                        @Override
+                        public void run() {
+                            cattab.setVisibility(View.VISIBLE);
+                        }
+                    }, null);
+                } else {
+                    cattab.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
+
     private void hideHiddenCategories() {
 
         if (isAutohide()) {
@@ -3806,32 +3820,63 @@ public class MainActivity extends Activity implements
         for (String cat : db().getCategories()) {
             boolean isNewCat = mCategoryJustCreated!=null && cat.equals(mCategoryJustCreated);
 
-            TextView cattab = mCategoryTabs.get(cat);
+            final TextView cattab = mCategoryTabs.get(cat);
 
             if (cattab!=null) {
                 if (mCategory.equals(cat)) {
                     cattab.setVisibility(View.VISIBLE);
-                } else if (Categories.isHiddenCategory(cat) || db().isHiddenCategory(cat)) {
-                    cattab.setVisibility(View.GONE);
-                } else  if (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0 && !isNewCat) {
-                    cattab.setVisibility(View.GONE);
+                } else if ((Categories.isHiddenCategory(cat) || db().isHiddenCategory(cat))
+                        || (!cat.equals(Categories.CAT_SEARCH) && !mCategory.equals(cat) && db().getAppCount(cat) == 0 && !isNewCat)) {
+
+                    if (mAnimationDuration>0 && cattab.getVisibility() != View.GONE) {
+                        int h = cattab.getHeight();
+                        animateChangingSize(cattab, h, 0, null, new Runnable() {
+                            @Override
+                            public void run() {
+                                cattab.setVisibility(View.GONE);
+                            }
+                        });
+                    } else {
+                        cattab.setVisibility(View.GONE);
+                    }
                 } else {
                     cattab.setVisibility(View.VISIBLE);
                 }
             }
         }
 
-//        for (String cat: Categories.CAT_HIDDENS) {
-//            TextView cattab = mCategoryTabs.get(cat);
-//
-//            if (cattab!=null) {
-//                if (mCategory.equals(cat)) {
-//                    cattab.setVisibility(View.VISIBLE);
-//                } else {
-//                    cattab.setVisibility(View.GONE);
-//                }
-//            }
-//        }
+    }
+
+    private void animateChangingSize(final View view, int startsize, int newsize, final Runnable before, final Runnable after) {
+        final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)view.getLayoutParams();
+        lp.height = startsize;
+        view.setLayoutParams(lp);
+
+        ValueAnimator o = ValueAnimator.ofInt(startsize,newsize);
+        o.setDuration(mAnimationDuration);
+        o.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                lp.height = (int)valueAnimator.getAnimatedValue();
+                view.setLayoutParams(lp);
+            }
+        });
+        o.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (before!=null) before.run();
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                view.setLayoutParams(lp);
+                if (after!=null) after.run();
+            }
+        });
+
+
+        o.start();
     }
 
     private void showRemoveDropzone() {
