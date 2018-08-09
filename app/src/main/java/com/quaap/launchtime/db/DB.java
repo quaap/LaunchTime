@@ -673,7 +673,7 @@ public class DB extends SQLiteOpenHelper {
     }
 
     public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, boolean isHidden) {
-        return addCategory(catID, displayName, displayNameFull, isTiny, false, -1);
+        return addCategory(catID, displayName, displayNameFull, isTiny, isHidden, -1);
     }
 
     public boolean addCategory(String catID, String displayName, String displayNameFull, boolean isTiny, boolean isHidden, int index) {
