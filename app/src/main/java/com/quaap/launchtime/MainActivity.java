@@ -1219,7 +1219,7 @@ public class MainActivity extends Activity implements
 
     private void readAnimationDuration() {
         mAnimationDuration = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_animate_duration), "150"));
-        if (mAnimationDuration==0) mAnimationDuration=1; //small hack to make everything still work
+        //if (mAnimationDuration==0) mAnimationDuration=1; //small hack to make everything still work
     }
 
     //This is run on switchcategory and screen rotation, etc.
@@ -1431,17 +1431,17 @@ public class MainActivity extends Activity implements
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
 
 //        Log.d(TAG, "animateHide " + view);
-//        if (mAnimationDuration==0) {
-//            view.clearAnimation();
-//
-//            if (andBack) {
-//                view.setVisibility(View.VISIBLE);
-//
-//            } else {
-//                view.setVisibility(View.GONE);
-//            }
-//            return;
-//        }
+        if (mAnimationDuration==0) {
+            view.clearAnimation();
+
+            if (andBack) {
+                ensureVisibleNoAni(view);
+
+            } else {
+                view.setVisibility(View.GONE);
+            }
+            return;
+        }
 
         long now = System.currentTimeMillis();
         float fac = andBack?2.5f:1;
@@ -1473,7 +1473,7 @@ public class MainActivity extends Activity implements
                     public void onAnimationCancel(Animator animation) {
                         super.onAnimationCancel(animation);
                         if (andBack) {
-                            animateShow(view, towards);
+                            ensureVisibleNoAni(view);
                         } else {
                             view.setVisibility(View.GONE);
                         }
@@ -1497,17 +1497,26 @@ public class MainActivity extends Activity implements
         animate.setStartDelay(0).start();
     }
 
+    private void ensureVisibleNoAni(View view) {
+        view.setAlpha(1);
+        view.setScaleX(1);
+        view.setScaleY(1);
+        view.setTranslationX(0);
+        view.setTranslationY(0);
+        view.setVisibility(View.VISIBLE);
+    }
+
     private void animateShow(final View view, AnimateDirection from) {
 
-        view.setVisibility(View.VISIBLE);
+        if (mAnimationDuration==0) {
+            view.clearAnimation();
+            ensureVisibleNoAni(view);
+            //Log.d(TAG, "animateShow " + view);
 
-//        if (mAnimationDuration==0 && view.getAnimation()!=null) {
-//            view.clearAnimation();
-//            view.setVisibility(View.VISIBLE);
-//            Log.d(TAG, "animateShow " );
-//
-//            return;
-//        }
+            return;
+        }
+
+        view.setVisibility(View.VISIBLE);
 
         ViewPropertyAnimator animate = view.animate()
                 .setDuration(mAnimationDuration)
@@ -1515,7 +1524,18 @@ public class MainActivity extends Activity implements
                 .alpha(1)
                 .scaleY(1)
                 .scaleX(1)
-                .setListener(null);
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        ensureVisibleNoAni(view);
+                    }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        ensureVisibleNoAni(view);
+                    }
+                });
 
         switch(from) {
             case Down:

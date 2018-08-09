@@ -160,21 +160,21 @@ public class Style {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     super.onAnimationEnd(animation);
-                                    categoryTab.animate().setListener(null)
-                                            .scaleX(1).scaleY(1).setStartDelay(50)
-                                            .setDuration(aniDuration)
-                                            .setInterpolator(new LinearInterpolator());
+                                    categoryTab.setScaleX(1);
+                                    categoryTab.setScaleY(1);
                                 }
 
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
                                     super.onAnimationCancel(animation);
-                                    categoryTab.animate().setListener(null)
-                                            .scaleX(1).scaleY(1).setStartDelay(50)
-                                            .setDuration(aniDuration)
-                                            .setInterpolator(new LinearInterpolator());
+                                    categoryTab.setScaleX(1);
+                                    categoryTab.setScaleY(1);
                                 }
                             }).start();
+                } else {
+                    categoryTab.clearAnimation();
+                    categoryTab.setScaleX(1);
+                    categoryTab.setScaleY(1);
                 }
                 lp.leftMargin = 1;
                 lp.rightMargin = 1;
