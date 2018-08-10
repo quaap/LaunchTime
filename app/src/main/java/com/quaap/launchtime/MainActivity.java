@@ -2869,8 +2869,7 @@ public class MainActivity extends Activity implements
                 } else {
                     //uninstall app
                     if (mBeingDragged!=null) {
-                        mBeingUninstalled = dragObj;
-                        launchUninstallIntent(mBeingDragged.getPackageName());
+                        launchUninstallIntent(mBeingDragged, mDragDropSource, dragObj);
                     }
                     hideCatsIfAutoHide(true);
                 }
@@ -3489,7 +3488,7 @@ public class MainActivity extends Activity implements
                 addActionMenuItem(getString(R.string.uninstall_app), R.drawable.trash, new Runnable() {
                     @Override
                     public void run() {
-                        launchUninstallIntent(appitem.getPackageName());
+                        launchUninstallIntent(appitem, mIconSheet, view);
                     }
                 });
             } else {
@@ -3930,11 +3929,13 @@ public class MainActivity extends Activity implements
         animateDownHide(mHideButtons);
     }
 
-    private void launchUninstallIntent(String packageName) {
+    private void launchUninstallIntent(AppLauncher app, ViewGroup parent, View launcher) {
         if (mChildLock) return;
 
-        Log.d(TAG, "Uninstalling " + packageName);
-        Uri packageUri = Uri.parse("package:" + packageName);
+        mDragDropSource = parent;
+        mBeingUninstalled = launcher;
+        Log.d(TAG, "Uninstalling " + app.getPackageName());
+        Uri packageUri = Uri.parse("package:" + app.getPackageName());
         Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
         uninstallIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
         startActivityForResult(uninstallIntent, UNINSTALL_RESULT);
