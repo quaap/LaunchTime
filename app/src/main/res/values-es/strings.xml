@@ -376,4 +376,7 @@
  <string name="category_Dumb">Dumb</string>
  <string name="category_Dumb_full">Dumb Phone</string>
     <string name="is_hidden">Is Hidden</string>
+    <string name="pref_extra_actions_title">Extra menu actions</string>
+ <string name="pref_key_show_action_menus_summ">Show popup menu actions on long-click of an app.</string>
+    <string name="prompt_config_features">Configure new features?</string>
 </resources>

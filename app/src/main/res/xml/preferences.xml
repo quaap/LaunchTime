@@ -177,14 +177,15 @@
         <CheckBoxPreference
             android:title="@string/pref_show_action"
             android:key="@string/pref_key_show_action_menus"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            android:summary="@string/pref_key_show_action_menus_summ"/>
 
         <CheckBoxPreference
             android:key="@string/pref_key_show_action_extra"
             android:dependency="pref_show_action_menus"
             android:defaultValue="true"
-            android:title="Extra menu actions"
-            android:summary="Put Uninstall, Remove, and Shortcut on action menu for apps and categories"/>
+            android:title="@string/pref_extra_actions_title"
+            android:summary="@string/pref_extra_actions_summ"/>
 
         <CheckBoxPreference
             android:key="@string/pref_key_show_dropzones"

@@ -36,6 +36,10 @@ import java.util.Map;
 public class Theme {
 
 
+    public final static String NEW_SYS = "newish";
+
+    private enum Thing {Mask, Text, AltText, Background, AltBackground}
+
 
     private final String [] COLOR_PREFS = {"icon_tint", "cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
             "wallpapercolor",  "textcolor"};
@@ -78,6 +82,17 @@ public class Theme {
 
     private void initBuiltinIconThemes() {
         builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
+
+        int[] defcolors = getColorDefaults();
+        BuiltinTheme newish = new MonochromeTheme(NEW_SYS, ctx.getString(R.string.icons_pack_default_name) + " 2")
+                .setColor(Thing.Mask, defcolors[0])
+                .setColor(Thing.Text, defcolors[4])
+                .setColor(Thing.AltText, defcolors[3])
+                .setColor(Thing.Background, defcolors[1])
+                .setColor(Thing.AltBackground, defcolors[2]);
+
+        builtinThemes.put(newish.getPackKey(), newish);
+
 
         BuiltinTheme classic = new MonochromeTheme("classic", ctx.getString(R.string.theme_classic))
                 .setColor(Thing.Mask, Color.TRANSPARENT)
@@ -284,7 +299,6 @@ public class Theme {
     }
 
 
-    private enum Thing {Mask, Text, AltText, Background, AltBackground}
 
 
     abstract class BuiltinTheme {

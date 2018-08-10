@@ -1,0 +1,58 @@
+In 0.8.3: 
+ * Translation help wanted! 
+ * Option to add Uninstall/Remove on action menus. 
+ * Ability to remove dropzone 
+ * Action menus on categories. 
+ * Improved start-up and install behavior.
+
+ 
+In 0.8.2: 
+ * Resizable widgets! 
+ * Better default widget sizes. 
+ * Shortcuts from other apps should work. 
+ * Experimental "dumbphone" mode. 
+ * Any category is now hideable. 
+ * Better action menu. 
+ * Detailed appinfo on action menu.
+
+
+ 
+In 0.8.1: 
+ * Autohide the menu! 
+ * Better menu appearence. 
+ * Animated transitions. 
+ * Quick settings access on search. 
+ * Turn off/on unread badges. 
+ * New pref options 
+ * Better default apps in Quickbar. 
+ * Many appearance tweaks. 
+ * Some speed-ups. 
+ * Fix Oreo crash loading iconpacks. 
+ * Fix a few bugs and crashes.
+
+ 
+In 0.7.6: 
+ * Enable pinned shortcuts on Oreo (Android 8). 
+ * Fix unread counts on Oreo (Android 8). 
+ * Prevent a few rare crashes. 
+ * More apps categorized.
+
+ 
+In 0.7.5: 
+ * More apps categorized. 
+ * Updated German translations. 
+ * Recognize new apps installed on Oreo.
+
+ 
+In 0.7.4: 
+ * Fix crashes and other bugs.
+
+ 
+In 0.7.3: 
+ * Better widgets support. 
+ * Swipe left and right to switch categories. 
+ * Better large screen/tablet support. 
+ * Fixes and speedups. 
+
+
+Go to Settings->Help for links to submit feature requests, bugs, and pull requests.

@@ -92,7 +92,7 @@ public class ActionMenu {
     }
 
     public void setAnimationDuration(int animationDuration) {
-        mAnimationDuration = animationDuration;
+        mAnimationDuration = animationDuration*2/3;
     }
 
     public boolean useActionMenus() {

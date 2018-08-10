@@ -359,6 +359,7 @@ public class MainActivity extends Activity implements
         showButtonBar(false, true);
         //lock things up if it was in toddler mode
         checkChildLock();
+
     }
 
 
@@ -3617,37 +3618,7 @@ public class MainActivity extends Activity implements
 
     }
 
-//    private void promptAutoHide() {
-//
-//        final String message = getString(R.string.pref_hide_menu);
-//        new AlertDialog.Builder(MainActivity.this)
-//                .setIcon(android.R.drawable.ic_menu_manage)
-//                .setTitle("Autohide menu?")
-//                .setMessage(message)
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        enableAutoHide(true);
-//                    }
-//
-//                })
-//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        enableAutoHide(false);
-//                    }
-//
-//                })
-//                .show();
-//
-//    }
 
-
-//    private void enableAutoHide(boolean enable) {
-//
-//        mAppPreferences.edit().putString(getString(R.string.pref_key_autohide_cats_timeout), enable?"1500":"-1").apply();
-//        readPrefs();
-//    }
 
     private boolean deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_trans"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="Enable some new features?"
+        android:textColor="@android:color/black"
+        android:textSize="22sp" />
+
+    <CheckBox
+        android:id="@+id/hide_cats_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/pref_hide_menu"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/hide_cats_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:text="Auto-hide the side menu after a timeout."
+        android:textColor="@android:color/black" />
+
+    <CheckBox
+        android:id="@+id/action_menu_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/pref_show_action"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/action_menu_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:text="@string/pref_key_show_action_menus_summ"
+        android:textColor="@android:color/black" />
+
+    <CheckBox
+        android:id="@+id/extra_menu_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/pref_extra_actions_title"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/extra_menu_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:text="@string/pref_extra_actions_summ"
+        android:textColor="@android:color/black" />
+
+    <CheckBox
+        android:id="@+id/reset_colors_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="18dp"
+        android:text="Update colors on default theme"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/reset_colors_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:text="Switch to default theme and update to new colors"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>
