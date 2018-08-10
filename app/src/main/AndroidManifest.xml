@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.quaap.launchtime"
-    android:versionCode="824"
+    android:versionCode="825"
     android:versionName="0.8.3">
 
     <uses-permission
@@ -93,7 +93,8 @@
         <activity android:name=".ChooseIconFromPackActivity" />
         <activity android:name=".PinShortcutActivity"
             android:excludeFromRecents="true"
-            android:autoRemoveFromRecents="true">
+            android:autoRemoveFromRecents="true"
+            tools:targetApi="lollipop">
             <intent-filter>
                 <action android:name="android.content.pm.action.CONFIRM_PIN_SHORTCUT" />
                 <action android:name="android.content.pm.action.CONFIRM_PIN_APPWIDGET" />
