@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -329,7 +330,12 @@ public class Style {
         if (newbg==null) {
 
             Drawable base = mContext.getResources().getDrawable(R.drawable.rounded);
-            newbg = base.getConstantState().newDrawable().mutate();
+            if (base.getConstantState()==null) {
+                newbg = base.mutate();  //shouldn't ever get here
+                Log.d("Style", "base drawable had a null getConstantState");
+            } else {
+                newbg = base.getConstantState().newDrawable().mutate();
+            }
             int color = -1;
 
             switch (catstyle) {
@@ -374,16 +380,16 @@ public class Style {
 
     }
 
-    public float getWidgetWidth(float minPixWidth) {
+//    public float getWidgetWidth(float minPixWidth) {
+//
+//        return minPixWidth * getRatio();
+//    }
 
-        return minPixWidth * getRatio();
-    }
-
-    private float getRatio() {
-        float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
-
-        return iconsize / launcherIconSize;
-    }
+//    private float getRatio() {
+//        float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
+//
+//        return iconsize / launcherIconSize;
+//    }
 
     private int getResColor(int res) {
         if (Build.VERSION.SDK_INT >= 23) {

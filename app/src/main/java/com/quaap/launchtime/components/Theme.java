@@ -15,7 +15,6 @@ import android.util.Log;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppLauncher;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -44,11 +43,11 @@ public class Theme {
     private final Thing [] THING_MAP = {Thing.Mask, Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
 
 
-    private int [] getColorDefaultsClassic()  {
-        return new int [] {getResColor(R.color.icon_tint), getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
-                getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
-                Color.TRANSPARENT,  getResColor(R.color.textcolor)};
-    }
+//    private int [] getColorDefaultsClassic()  {
+//        return new int [] {getResColor(R.color.icon_tint), getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
+//                getResColor(R.color.cattabselected_text),  getResColor(R.color.textcolor), getResColor(R.color.textcolorinv),
+//                Color.TRANSPARENT,  getResColor(R.color.textcolor)};
+//    }
 
     private int [] getColorDefaults()  {
         return new int [] {getResColor(R.color.icon_tint), getResColor(R.color.cattab_background), getResColor(R.color.cattabselected_background),
@@ -66,7 +65,7 @@ public class Theme {
 
     private final SharedPreferences prefs;
 
-    public Theme(Context ctx, IconsHandler ich) {
+    Theme(Context ctx, IconsHandler ich) {
         this.ctx = ctx;
         prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
         iconsHandler = ich;
@@ -219,10 +218,10 @@ public class Theme {
         try {
 
             int max = COLOR_PREFS.length;
-            for (int i=0; i<max; i++) {
-                appedit.putInt(COLOR_PREFS[i],  getCurrentThemeColor(COLOR_PREFS[i]));
+            for (String COLOR_PREF : COLOR_PREFS) {
+                appedit.putInt(COLOR_PREF, getCurrentThemeColor(COLOR_PREF));
                 //themeedit.putInt(getThemePrefName(COLOR_PREFS[i]),  getCurrentThemeColor(COLOR_PREFS[i]));
-                themeedit.remove(getThemePrefName(COLOR_PREFS[i]));
+                themeedit.remove(getThemePrefName(COLOR_PREF));
             }
 
         } finally {
@@ -241,8 +240,8 @@ public class Theme {
         try {
 
             int max = COLOR_PREFS.length;
-            for (int i=0; i<max; i++) {
-                themeedit.putInt(getThemePrefName(COLOR_PREFS[i]),  appprefs.getInt(COLOR_PREFS[i], getCurrentThemeColor(COLOR_PREFS[i])));
+            for (String COLOR_PREF : COLOR_PREFS) {
+                themeedit.putInt(getThemePrefName(COLOR_PREF), appprefs.getInt(COLOR_PREF, getCurrentThemeColor(COLOR_PREF)));
             }
 
         } finally {
@@ -262,8 +261,8 @@ public class Theme {
         try {
 
             int max = COLOR_PREFS.length;
-            for (int i=0; i<max; i++) {
-                appedit.putInt(COLOR_PREFS[i],  themeprefs.getInt(getThemePrefName(COLOR_PREFS[i]), getCurrentThemeColor(COLOR_PREFS[i])));
+            for (String COLOR_PREF : COLOR_PREFS) {
+                appedit.putInt(COLOR_PREF, themeprefs.getInt(getThemePrefName(COLOR_PREF), getCurrentThemeColor(COLOR_PREF)));
             }
         } finally {
             appedit.apply();
@@ -371,9 +370,9 @@ public class Theme {
             super(key, name);
         }
 
-        public DefaultTheme(String key, String name, Map<Thing, Integer> colors) {
-            super(key, name, colors);
-        }
+//        public DefaultTheme(String key, String name, Map<Thing, Integer> colors) {
+//            super(key, name, colors);
+//        }
         @Override
         public Drawable getDrawable(AppLauncher app) {
             return iconsHandler.getDefaultAppDrawable(app);
@@ -388,9 +387,9 @@ public class Theme {
             super(key, name);
         }
 
-        public MonochromeTheme(String key, String name, Map<Thing, Integer> colors) {
-            super(key, name, colors);
-        }
+//        public MonochromeTheme(String key, String name, Map<Thing, Integer> colors) {
+//            super(key, name, colors);
+//        }
 
         @Override
         public Drawable getDrawable(AppLauncher app) {
@@ -423,36 +422,36 @@ public class Theme {
 
     }
 
-    public class PolychromeTheme extends BuiltinTheme {
-        private final int [] mFGColors;
-        private final int mBGColor;
-
-        public PolychromeTheme(String key, String name, int [] color, int bgcolor) {
-            super(key, name);
-            mFGColors = Arrays.copyOf(color, color.length);
-            mBGColor = bgcolor;
-        }
-
-        @Override
-        public Drawable getDrawable(AppLauncher app) {
-
-            //Log.d(TAG, "getDrawable called for " + componentName.getPackageName());
-
-            Drawable app_icon = iconsHandler.getDefaultAppDrawable(app);
-
-            app_icon = app_icon.mutate();
-
-
-            PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
-
-            int color = Math.abs(app.getComponentName().getPackageName().hashCode()) % mFGColors.length;
-            app_icon.setColorFilter(mFGColors[color], mode);
-
-            return app_icon;
-        }
-
-
-    }
+//    public class PolychromeTheme extends BuiltinTheme {
+//        private final int [] mFGColors;
+//        private final int mBGColor;
+//
+//        public PolychromeTheme(String key, String name, int [] color, int bgcolor) {
+//            super(key, name);
+//            mFGColors = Arrays.copyOf(color, color.length);
+//            mBGColor = bgcolor;
+//        }
+//
+//        @Override
+//        public Drawable getDrawable(AppLauncher app) {
+//
+//            //Log.d(TAG, "getDrawable called for " + componentName.getPackageName());
+//
+//            Drawable app_icon = iconsHandler.getDefaultAppDrawable(app);
+//
+//            app_icon = app_icon.mutate();
+//
+//
+//            PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
+//
+//            int color = Math.abs(app.getComponentName().getPackageName().hashCode()) % mFGColors.length;
+//            app_icon.setColorFilter(mFGColors[color], mode);
+//
+//            return app_icon;
+//        }
+//
+//
+//    }
 
     private Drawable convertToGrayscale(Drawable drawable) {
         ColorMatrix matrix = new ColorMatrix();

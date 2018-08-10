@@ -227,11 +227,7 @@ public class FsTools {
         return null;
     }
 
-    /**
-     *
-     * @param files first files are source, last file is destination file.
-     * @return
-     */
+
     public static File compressFiles(File destFile, File ... files) {
 
         if (files.length<1) throw new IllegalArgumentException("Need at least one source file and exactly one destination file.");
@@ -241,11 +237,11 @@ public class FsTools {
             ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(destFile));
             try {
 
-                for (int i=0; i< files.length; i++) {
-                    InputStream fis = new FileInputStream(files[i]);
+                for (File file : files) {
+                    InputStream fis = new FileInputStream(file);
                     try {
 
-                        zout.putNextEntry(new ZipEntry(files[i].getName()));
+                        zout.putNextEntry(new ZipEntry(file.getName()));
 
                         byte[] buffer = new byte[1024];
                         int length;
@@ -257,7 +253,11 @@ public class FsTools {
                         zout.closeEntry();
 
                     } finally {
-                        try {fis.close();} catch (Exception e) {Log.e("Fs",e.getMessage(),e);}
+                        try {
+                            fis.close();
+                        } catch (Exception e) {
+                            Log.e("Fs", e.getMessage(), e);
+                        }
                     }
 
                 }
@@ -379,7 +379,7 @@ public class FsTools {
 
     @SuppressWarnings({"unchecked"})
     public static void loadSharedPreferencesFromFile(SharedPreferences pref, File src) {
-        boolean res = false;
+
         ObjectInputStream input = null;
         try {
             input = new ObjectInputStream(new FileInputStream(src));
@@ -411,7 +411,7 @@ public class FsTools {
             if (prefEdit.commit()) {
                 Log.d("FsTools", "prefs updated");
             }
-            res = true;
+
         } catch (IOException | ClassNotFoundException e) {
             Log.e("FsTools", e.getMessage(), e);
         } finally {

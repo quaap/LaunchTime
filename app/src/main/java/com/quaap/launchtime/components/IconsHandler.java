@@ -115,9 +115,9 @@ public class IconsHandler {
         iconPack = new IconPack(ctx,iconsPackPackageName);
     }
 
-    public boolean isIconTintable() {
-        return theme.isBuiltinThemeIconTintable(iconsPackPackageName);
-    }
+//    public boolean isIconTintable() {
+//        return theme.isBuiltinThemeIconTintable(iconsPackPackageName);
+//    }
 
     public boolean isIconTintable(String packageName) {
         return theme.isBuiltinThemeIconTintable(packageName);
@@ -309,10 +309,8 @@ public class IconsHandler {
         FileInputStream fis=null;
         try {
             fis = new FileInputStream(cacheGetFileName(key));
-            BitmapDrawable drawable =
-                    new BitmapDrawable(this.ctx.getResources(), BitmapFactory.decodeStream(fis));
 
-            return drawable;
+            return new BitmapDrawable(this.ctx.getResources(), BitmapFactory.decodeStream(fis));
         } catch (Exception e) {
             Log.e(TAG, "Unable to get drawable from cache " + e);
         } finally {

@@ -63,37 +63,43 @@ public class UnreadReceiver extends BroadcastReceiver{
             String badgeActivity = null;
 
 
-            if (action.equals(DEFAULT_ACTION)) {
-                badgeCount = intent.getIntExtra(DEFAULT_BADGE_COUNT, 0);
-                badgeActivity = intent.getStringExtra(DEFAULT_BADGE_ACTIVITY_NAME);
-                badgePackage = intent.getStringExtra(DEFAULT_BADGE_PACKAGENAME);
+            switch (action) {
+                case DEFAULT_ACTION:
+                    badgeCount = intent.getIntExtra(DEFAULT_BADGE_COUNT, 0);
+                    badgeActivity = intent.getStringExtra(DEFAULT_BADGE_ACTIVITY_NAME);
+                    badgePackage = intent.getStringExtra(DEFAULT_BADGE_PACKAGENAME);
 
-            } else if (action.equals(APEX_ACTION)) {
-                badgeCount = intent.getIntExtra(APEX_BADGE_COUNT, 0);
-                badgeActivity = intent.getStringExtra(APEX_BADGE_ACTIVITY_NAME);
-                badgePackage = intent.getStringExtra(APEX_BADGE_PACKAGENAME);
+                    break;
+                case APEX_ACTION:
+                    badgeCount = intent.getIntExtra(APEX_BADGE_COUNT, 0);
+                    badgeActivity = intent.getStringExtra(APEX_BADGE_ACTIVITY_NAME);
+                    badgePackage = intent.getStringExtra(APEX_BADGE_PACKAGENAME);
 
-            } else if (action.equals(ADW_ACTION)) {
-                badgeCount = intent.getIntExtra(ADW_BADGE_COUNT, 0);
-                badgeActivity = intent.getStringExtra(ADW_BADGE_ACTIVITY_NAME);
-                badgePackage = intent.getStringExtra(ADW_BADGE_PACKAGENAME);
+                    break;
+                case ADW_ACTION:
+                    badgeCount = intent.getIntExtra(ADW_BADGE_COUNT, 0);
+                    badgeActivity = intent.getStringExtra(ADW_BADGE_ACTIVITY_NAME);
+                    badgePackage = intent.getStringExtra(ADW_BADGE_PACKAGENAME);
 
-            } else if (action.equals(SONY_ACTION)) {
-                if (intent.getBooleanExtra(SONY_BADGE_SHOW, false)) {
-                    String bc = intent.getStringExtra(SONY_BADGE_COUNT);
-                    if (bc!=null) {
-                        try {
-                            badgeCount = Integer.parseInt(bc);
-                        } catch (NumberFormatException e) {
-                            badgeCount = 0;
+                    break;
+                case SONY_ACTION:
+                    if (intent.getBooleanExtra(SONY_BADGE_SHOW, false)) {
+                        String bc = intent.getStringExtra(SONY_BADGE_COUNT);
+                        if (bc != null) {
+                            try {
+                                badgeCount = Integer.parseInt(bc);
+                            } catch (NumberFormatException e) {
+                                badgeCount = 0;
+                            }
                         }
                     }
-                }
-                badgeActivity = intent.getStringExtra(SONY_BADGE_ACTIVITY_NAME);
-                badgePackage = intent.getStringExtra(SONY_BADGE_PACKAGENAME);
+                    badgeActivity = intent.getStringExtra(SONY_BADGE_ACTIVITY_NAME);
+                    badgePackage = intent.getStringExtra(SONY_BADGE_PACKAGENAME);
 
-            } else {
-                Log.e("UnreadReceiver", "Unknown badge action '" + action + "' " + intent.toString());
+                    break;
+                default:
+                    Log.e("UnreadReceiver", "Unknown badge action '" + action + "' " + intent.toString());
+                    break;
             }
 
 

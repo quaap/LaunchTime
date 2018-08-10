@@ -139,12 +139,12 @@ public class Categories {
         String category = catact;
         if (category==null || category.equals(CAT_OTHER)) category = catpack;
 
-        if (guess && (category == null || category.equals(CAT_OTHER))) {
-            category = guessCategoryForPackage(context,pkgname);
-        }
-
         if (category==null || category.equals(CAT_OTHER)) {
             category = getCategoryFromPiCat(ai);
+        }
+
+        if (guess && (category == null || category.equals(CAT_OTHER))) {
+            category = guessCategoryForPackage(context,pkgname);
         }
 
 
