@@ -19,6 +19,7 @@ import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.MainActivity;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.db.DB;
+import com.quaap.launchtime.ui.StaticListView;
 
 import java.lang.ref.WeakReference;
 

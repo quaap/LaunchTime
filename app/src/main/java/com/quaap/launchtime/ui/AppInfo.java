@@ -1,4 +1,4 @@
-package com.quaap.launchtime.apps;
+package com.quaap.launchtime.ui;
 
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.quaap.launchtime.MainActivity;
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.apps.AppLauncher;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
