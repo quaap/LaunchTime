@@ -553,7 +553,12 @@ public class MainActivity extends Activity implements
         //create the grids for each existing category.
         if (progress) incProgressBar(1);
 
-        mCategoriesLayout.removeAllViews();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mCategoriesLayout.removeAllViews();
+            }
+        });
         for (final String category : db().getCategories()) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -1244,6 +1249,7 @@ public class MainActivity extends Activity implements
 
     private void readAnimationDuration() {
         mAnimationDuration = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_animate_duration), "150"));
+        mActionMenu.setAnimationDuration(mAnimationDuration);
         //if (mAnimationDuration==0) mAnimationDuration=1; //small hack to make everything still work
     }
 
@@ -2577,10 +2583,7 @@ public class MainActivity extends Activity implements
 
                 if (mActionMenu.useExtraActions() || !mActionMenu.useDropZones()) {
                     mActionCategory = category;
-                    mActionMenu.initializeActionMenu();
-                    mActionMenu.addExtraActionsToMenu(categoryTab);
-                    mActionMenu.addCancelToMenu();
-                    mActionMenu.showBuiltActionMenu(view);
+                    mActionMenu.showCatagoryActionMenu(categoryTab);
                     setMenuOnTouchListener(categoryTab, false, new Runnable() {
                         @Override
                         public void run() {

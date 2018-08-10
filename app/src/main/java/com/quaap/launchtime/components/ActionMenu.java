@@ -58,7 +58,10 @@ public class ActionMenu {
     private ScrollView mShortcutActionsPopup;
     private LinearLayout mShortcutActionsList;
     private Style mStyle;
-    private int mAnimationDuration = 150;
+    private int mAnimationDuration = 100;
+
+    private int mOldNum = 0;
+    private int mOldHeight = 0;
     
     private Point mScreenDim;
     
@@ -89,12 +92,12 @@ public class ActionMenu {
 
     }
 
-    public boolean useActionMenus() {
-        return mUseActionMenus;
+    public void setAnimationDuration(int animationDuration) {
+        mAnimationDuration = animationDuration;
     }
 
-    public boolean useDevModeActivities() {
-        return mDevModeActivities;
+    public boolean useActionMenus() {
+        return mUseActionMenus;
     }
 
     public boolean useDropZones() {
@@ -181,6 +184,14 @@ public class ActionMenu {
         });
     }
 
+    public void showCatagoryActionMenu(TextView categoryTab) {
+        initializeActionMenu();
+        addExtraActionsToMenu(categoryTab);
+        addCancelToMenu();
+        showBuiltActionMenu(categoryTab);
+    }
+
+
     public void initializeActionMenu() {
         mScreenDim = mMain.getScreenDimensions();
 
@@ -232,6 +243,14 @@ public class ActionMenu {
             left = mScreenDim.x - (int)(width*1.2);
         }
 
+        if (mShortcutActionsPopup.getVisibility()!=View.VISIBLE) {
+            mShortcutActionsPopup.setX(left);
+            mShortcutActionsPopup.setY(viewpos[1]);
+            mShortcutActionsPopup.setScaleY(0f);
+            mShortcutActionsPopup.setAlpha(0f);
+
+
+        }
         //mShortcutActionsPopup.setTop(0);
         //mShortcutActionsPopup.setLeft(0);
 
@@ -241,6 +260,7 @@ public class ActionMenu {
                     .x(left)
                     .y(top)
                     .alpha(1)
+                    .scaleY(1)
                     .setDuration(mAnimationDuration)
                     .setListener(null)
                     .start();
@@ -248,17 +268,18 @@ public class ActionMenu {
             mShortcutActionsPopup.setX(left);
             mShortcutActionsPopup.setY(top);
             mShortcutActionsPopup.setAlpha(1f);
+            mShortcutActionsPopup.setScaleY(1f);
         }
 
-
+        mOldNum = mShortcutActionsList.getChildCount();
     }
 
 
     public void dismissActionPopup() {
         if (mAnimationDuration>0) {
             mShortcutActionsPopup.animate()
-                    .x(mScreenDim.x)
-                    .y(mScreenDim.y)
+                    //.yBy(-mShortcutActionsPopup.getHeight())
+                    .scaleY(0)
                     .alpha(0)
                     .setDuration(mAnimationDuration)
                     .setListener(new AnimatorListenerAdapter() {
@@ -603,7 +624,7 @@ public class ActionMenu {
 
         label = label.replaceAll("\\s+|\\r|\\n", " ");
 
-        ViewGroup item = (ViewGroup) LayoutInflater.from(mMain).inflate(R.layout.action_menu_entry, null);
+        final ViewGroup item = (ViewGroup) LayoutInflater.from(mMain).inflate(R.layout.action_menu_entry, null);
 
         item.setBackgroundColor(mStyle.getCattabSelectedBackground());
 
@@ -636,9 +657,21 @@ public class ActionMenu {
         item.setLayoutParams(lp);
         mShortcutActionsList.addView(item);
         if (mAnimationDuration>0) {
-            //item.setScaleX(.3f);
+
+            if (mShortcutActionsList.getChildCount() > mOldNum) {
+                item.setVisibility(View.GONE);
+            }
             item.setScaleY(.1f);
-            item.animate().scaleY(1f).setDuration(mAnimationDuration).setStartDelay(mShortcutActionsList.getChildCount() * 10 + 10);
+            item.animate()
+                    .scaleY(1f)
+                    .setDuration(mAnimationDuration)
+                    .setStartDelay(mShortcutActionsList.getChildCount() * 10 + 10)
+                    .withStartAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            item.setVisibility(View.VISIBLE);
+                        }
+                    });
         }
     }
 
