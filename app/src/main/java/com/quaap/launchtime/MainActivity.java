@@ -1,6 +1,6 @@
 package com.quaap.launchtime;
 
-/**
+/*
  * Copyright (C) 2017   Tom Kliethermes
  *
  * This file is part of LaunchTime and is is free software; you can redistribute it and/or
@@ -415,10 +415,6 @@ public class MainActivity extends Activity implements
         int mCompletedStage = 0;
         final int mStages = 6;
 
-        StartupTask(MainActivity main, boolean showProgress) {
-            this(main,showProgress,0);
-        }
-
         StartupTask(MainActivity main, boolean showProgress, int startAtStage) {
             mMain = new WeakReference<>(main);
             mShowProgress = showProgress;
@@ -427,7 +423,7 @@ public class MainActivity extends Activity implements
 
         }
 
-        public boolean isCompleted() {
+        boolean isCompleted() {
             return mCompletedStage == mStages;
         }
 
@@ -1394,7 +1390,7 @@ public class MainActivity extends Activity implements
                     DisplayMetrics dm = getResources().getDisplayMetrics();
                     // check if the DecorView takes the whole screen vertically or horizontally
                     boolean isRight = dm.heightPixels == visibleFrame.bottom;
-                    boolean isBelow  = dm.widthPixels  == visibleFrame.right;
+                    //boolean isBelow  = dm.widthPixels  == visibleFrame.right;
 
 
                     int status = 70;
@@ -1461,7 +1457,7 @@ public class MainActivity extends Activity implements
                 animateDownHide(cats);
             }
             animateUpShow(mShowCats);
-        } else if (show) {
+        } else {
             animateDownHide(mShowCats);
             if (cats.getVisibility() == View.GONE) {
                 animateUpShow(cats);
@@ -1482,8 +1478,8 @@ public class MainActivity extends Activity implements
 
     private final Map<View,Long> aniHideStarted = new HashMap<>();
 
-    private void animateHide(final View view, final AnimateDirection towards, final boolean andBack) {
-        animateHide(view,towards,andBack, true);
+    private void animateHide(final View view, final AnimateDirection towards) {
+        animateHide(view,towards, false, true);
     }
 
     private void animateHide(final View view, final AnimateDirection towards, final boolean andBack, final boolean bounce) {
@@ -1782,7 +1778,7 @@ public class MainActivity extends Activity implements
         iconSheet.setLayoutParams(lp);
     }
 
-    @NonNull
+
     private void createIconSheet(String category, int pos) {
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
         mIconSheets.put(category, iconSheet);
@@ -1945,7 +1941,6 @@ public class MainActivity extends Activity implements
                         if (parent != null) parent.removeView(item);
                         GridLayout.LayoutParams lp = getAppLauncherLayoutParams(iconSheet, app);
                         iconSheet.addView(item, pos, lp);
-                        return;
                     }
                 } else {
                     db().deleteApp(app.getComponentName());
@@ -2064,6 +2059,7 @@ public class MainActivity extends Activity implements
         return lp;
     }
 
+    @SuppressLint("RtlHardcoded")
     private void showWidgetResize(final AppLauncher appitem) {
 
         AppWidgetHostView appwid = mLoadedWidgets.get(appitem.getActivityName());
@@ -2129,11 +2125,11 @@ public class MainActivity extends Activity implements
             height.setProgress(hcells-1);
 
             TextView widthLab = item.findViewById(R.id.width_num);
-            bindSeek(width, widthLab, wcells, 1, mStyle.getMaxWCells(), resize);
+            bindSeek(width, widthLab, wcells,  mStyle.getMaxWCells(), resize);
 
 
             TextView heightLab = item.findViewById(R.id.height_num);
-            bindSeek(height, heightLab, hcells,1, 8, resize);
+            bindSeek(height, heightLab, hcells,8, resize);
 
 
             int xpos = 0;
@@ -2169,8 +2165,9 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void bindSeek(SeekBar seekBar, final TextView seekLabel, int start, final int min, int max, final Runnable onChange) {
+    private void bindSeek(SeekBar seekBar, final TextView seekLabel, int start, int max, final Runnable onChange) {
 
+        final int min = 1;
         if (start<min) start = min;
         if (start>max) max = start;
         //seekLabel.setText(start+"");
@@ -2320,14 +2317,18 @@ public class MainActivity extends Activity implements
             appwid.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (mChildLock) return false;
+                    if (mChildLock) {
+                        return false;
+                    }
                     return MainActivity.this.onLongClick(wrap);
                 }
             });
             appwid.setOnDragListener(new View.OnDragListener() {
                 @Override
                 public boolean onDrag(View view, DragEvent dragEvent) {
-                    if (mChildLock) return false;
+                    if (mChildLock) {
+                        return false;
+                    }
                     return mMainDragListener.onDrag(wrap, dragEvent);
                 }
             });
@@ -2454,10 +2455,8 @@ public class MainActivity extends Activity implements
 
             mLoadedWidgets.put(actvname, appwid);
 
-            String label = pkgname;
-
             AppLauncher.removeAppLauncher(cn);
-            AppLauncher app = AppLauncher.createAppLauncher(actvname, pkgname, label, mActionCategory, true);
+            AppLauncher app = AppLauncher.createAppLauncher(actvname, pkgname, pkgname, mActionCategory, true);
 
             db().addApp(app);
             db().addAppCategoryOrder(mActionCategory, app.getComponentName());
@@ -2491,9 +2490,9 @@ public class MainActivity extends Activity implements
     }
 
     private int getWidgetHCells(AppLauncher app) {
-        int cells =mPrefs.getInt(app.getComponentName() + "_hcells", 0);
+
         //Log.d(TAG, "in getWidgetHCells " + cells);
-        return cells;
+        return mPrefs.getInt(app.getComponentName() + "_hcells", 0);
     }
 
 
@@ -2545,6 +2544,7 @@ public class MainActivity extends Activity implements
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private TextView createCategoryTab(final String category, final GridLayout iconSheet, int pos) {
         final TextView categoryTab = new TextView(this);
         categoryTab.setText(db().getCategoryDisplay(category));
@@ -2599,7 +2599,7 @@ public class MainActivity extends Activity implements
 
                 if (mUseExtraActions || !mUseDropZones) {
                     initializeActionMenu();
-                    addExtraActionsToMenu(view, categoryTab);
+                    addExtraActionsToMenu(categoryTab);
                     addCancelToMenu();
                     showBuiltActionMenu(view);
                     setMenuOnTouchListener(categoryTab, false, new Runnable() {
@@ -2658,9 +2658,7 @@ public class MainActivity extends Activity implements
                         //Log.d(TAG, "DRAG_EXITED: " + category + ((AppLauncher)dragObj.getTag()).getActivityName());
 
                         styleCategorySpecial(categoryTab, Style.CategoryTabStyle.Default);
-                        if (isAutohide()) {
-                            // f
-                        }
+
                         break;
 
                     case DragEvent.ACTION_DROP:
@@ -3201,7 +3199,7 @@ public class MainActivity extends Activity implements
         if (mDragPotential!=null) {
             mDragPotential.setOnTouchListener(null);
             if (mDragPotential instanceof ViewGroup) {
-                setTouchListener((ViewGroup) mDragPotential, null);
+                setTouchListener(mDragPotential, null);
             }
         }
         if (nullit) {
@@ -3392,7 +3390,7 @@ public class MainActivity extends Activity implements
 
     private String mActionCategory;
 
-    private void addExtraActionsToMenu(final View view, final TextView categoryTab) {
+    private void addExtraActionsToMenu(final TextView categoryTab) {
         final String category = (String)categoryTab.getTag();
 
         mActionCategory = category;
@@ -3513,7 +3511,7 @@ public class MainActivity extends Activity implements
 
             class Record implements Comparable<Record>{
                 String label;
-                ComponentName component;
+                private ComponentName component;
                 Drawable icon;
 
                 @Override
@@ -3632,15 +3630,7 @@ public class MainActivity extends Activity implements
                 final LauncherApps launcherApps = getSystemService(LauncherApps.class);
                 if (launcherApps == null) return;
 
-                Collections.sort(shortcutInfos, new Comparator<ShortcutInfo>() {
-                    @Override
-                    public int compare(ShortcutInfo a, ShortcutInfo b) {
-                        if (Build.VERSION.SDK_INT >= 25) {
-                            return Integer.compare(a.getRank(), b.getRank());
-                        }
-                        return 0;
-                    }
-                });
+                sortShorcutsByRank(shortcutInfos);
 
                 for (final ShortcutInfo shortcutInfo : shortcutInfos) {
                     if (shortcutInfo.isDynamic()) {
@@ -3656,6 +3646,18 @@ public class MainActivity extends Activity implements
             }
         }
 
+    }
+
+    private void sortShorcutsByRank(List<ShortcutInfo> shortcutInfos) {
+        Collections.sort(shortcutInfos, new Comparator<ShortcutInfo>() {
+            @Override
+            public int compare(ShortcutInfo a, ShortcutInfo b) {
+                if (Build.VERSION.SDK_INT >= 25) {
+                    return Integer.compare(a.getRank(), b.getRank());
+                }
+                return 0;
+            }
+        });
     }
 
     @Nullable
@@ -3919,7 +3921,7 @@ public class MainActivity extends Activity implements
     private void hideRemoveDropzone() {
 
         animateDownHide(mRemoveDropzone);
-        animateHide(mLinkDropzone, AnimateDirection.Right, false);
+        animateHide(mLinkDropzone, AnimateDirection.Right);
         animateDownHide(mLinkDropzonePeek);
 //        mRemoveDropzone.setVisibility(View.GONE);
 //        mLinkDropzone.setVisibility(View.GONE);
@@ -4204,37 +4206,37 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void promptAutoHide() {
+//    private void promptAutoHide() {
+//
+//        final String message = getString(R.string.pref_hide_menu);
+//        new AlertDialog.Builder(MainActivity.this)
+//                .setIcon(android.R.drawable.ic_menu_manage)
+//                .setTitle("Autohide menu?")
+//                .setMessage(message)
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        enableAutoHide(true);
+//                    }
+//
+//                })
+//                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        enableAutoHide(false);
+//                    }
+//
+//                })
+//                .show();
+//
+//    }
 
-        final String message = getString(R.string.pref_hide_menu);
-        new AlertDialog.Builder(MainActivity.this)
-                .setIcon(android.R.drawable.ic_menu_manage)
-                .setTitle("Autohide menu?")
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        enableAutoHide(true);
-                    }
 
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        enableAutoHide(false);
-                    }
-
-                })
-                .show();
-
-    }
-
-
-    private void enableAutoHide(boolean enable) {
-
-        mAppPreferences.edit().putString(getString(R.string.pref_key_autohide_cats_timeout), enable?"1500":"-1").apply();
-        readPrefs();
-    }
+//    private void enableAutoHide(boolean enable) {
+//
+//        mAppPreferences.edit().putString(getString(R.string.pref_key_autohide_cats_timeout), enable?"1500":"-1").apply();
+//        readPrefs();
+//    }
 
     private boolean deleteCategory(final String category) {
         TextView categoryTab = mCategoryTabs.get(category);
@@ -4276,7 +4278,7 @@ public class MainActivity extends Activity implements
     private static final int APPSORT_INSTALL = 3;
     private static final int APPSORT_PACKAGE = 4;
 
-    private void promptSortCategory(String category) {
+    private void promptSortCategory(final String category) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.sort_prompt_title);
@@ -4286,8 +4288,8 @@ public class MainActivity extends Activity implements
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
 
-                sortCategory(mCategory, i);
-                repopulateIconSheet(mCategory);
+                sortCategory(category, i);
+                repopulateIconSheet(category);
 
             }
         });
@@ -4488,6 +4490,7 @@ public class MainActivity extends Activity implements
     }
 
     private final View.OnTouchListener mDismissClick = new View.OnTouchListener() {
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
