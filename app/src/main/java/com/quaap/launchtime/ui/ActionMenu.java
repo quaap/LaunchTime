@@ -260,7 +260,7 @@ public class ActionMenu {
 
 
         FrameLayout.LayoutParams flp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
-        if (height>=mScreenDim.y-100) {
+        if (height>=mScreenDim.y-top) {
             flp.height = mScreenDim.y-100;
         } else {
             flp.height = ViewGroup.LayoutParams.WRAP_CONTENT;

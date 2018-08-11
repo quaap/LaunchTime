@@ -3125,6 +3125,7 @@ public class MainActivity extends Activity implements
                     //Log.d("movet", event.getX() + "," + event.getY());
                 } else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
                     clearDragPotential(true);
+                    setTouchListener(view, null);
                     //dismissActionPopup();
                 } else {
                     Log.d(TAG, event.getActionMasked() + " event");
