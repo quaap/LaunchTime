@@ -20,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -315,6 +316,22 @@ public class ActionMenu {
         }
 
         mOldNum = mShortcutActionsList.getChildCount();
+
+
+        if (mIconBar != null) {
+            int count = mIconBar.getChildCount();
+            if (count>3) {
+                LinearLayout.LayoutParams ilp = (LinearLayout.LayoutParams)mIconBar.getChildAt(0).getLayoutParams();
+                ilp.weight=.1f;
+                mIconBar.getChildAt(0).setLayoutParams(ilp);
+
+                LinearLayout.LayoutParams ilp2 = (LinearLayout.LayoutParams)mIconBar.getChildAt(count-1).getLayoutParams();
+                ilp2.weight=.1f;
+                mIconBar.getChildAt(count-1).setLayoutParams(ilp2);
+
+
+            }
+        }
     }
 
 
@@ -691,6 +708,8 @@ public class ActionMenu {
                 mMain.clearDragPotential(true);
             }
         };
+
+
 
         if (onIconBar && mShortcutActionsList.getChildCount()>=2) {
             if (mIconBar == null) {
