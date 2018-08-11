@@ -169,6 +169,9 @@
     <string name="pref_key_columns_landscape" translatable="false">pref_columns_landscape</string>
     <string name="pref_key_animate_duration" translatable="false">pref_animate_duration</string>
     <string name="pref_key_use_fullscreen" translatable="false">pref_use_fullscreen</string>
+    <string name="pref_key_conf_new_features" translatable="false">pref_conf_new_features</string>
+
+
 
 
 </resources>

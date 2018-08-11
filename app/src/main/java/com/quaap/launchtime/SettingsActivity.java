@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.quaap.launchtime.components.IconsHandler;
+import com.quaap.launchtime.ui.MsgBox;
 
 import java.util.Map;
 
@@ -69,6 +70,16 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
+
+            Preference newFeatures = findPreference(getString(R.string.pref_key_conf_new_features));
+            newFeatures.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    MsgBox.promptNewFeatures(getActivity(), false);
+
+                    return true;
+                }
+            });
 
             Preference colorbutton = findPreference(getString(R.string.pref_key_reset_colors));
             colorbutton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

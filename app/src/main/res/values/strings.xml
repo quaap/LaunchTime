@@ -377,7 +377,12 @@
     <string name="pref_extra_actions_title">Extra menu actions</string>
     <string name="pref_extra_actions_summ">Put Uninstall, Remove, and Shortcut on action menu for apps and categories</string>
     <string name="pref_key_show_action_menus_summ">Show popup menu actions on long-click of an app.</string>
-    <string name="prompt_config_features">Configure new features?</string>
-    <string name="hide_show">Hide/Show</string>
+    <string name="prompt_config_features">Configure new features</string>
+    <string name="hide">Hide</string>
+    <string name="show">Show</string>
+    <string name="enable_some_new_features">Enable some new features</string>
+    <string name="autohide_side_menu">Auto-hide the side menu after a timeout.</string>
+    <string name="update_colors">Update colors on default theme</string>
+    <string name="switch_default_theme">Switch to default theme and update to new colors</string>
 
 </resources>

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,63 +91,7 @@ public class MsgBox {
                 @Override
                 public void run() {
 
-                    StringWriter sw = new StringWriter();
-                    BufferedReader in = new BufferedReader(new InputStreamReader(context.getResources().openRawResource(R.raw.news)));
-                    try {
-
-                        String line;
-                        while ((line = in.readLine()) != null) {
-                            sw.append(line);
-                            sw.append("\n");
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-
-                    ScrollView scrll = new ScrollView(context);
-                    LinearLayout viewg = new LinearLayout(context);
-                    viewg.setOrientation(LinearLayout.VERTICAL);
-
-                    Button b = new Button(context);
-                    b.setText(R.string.prompt_config_features);
-                    b.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                    b.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            promptNewFeatures(context);
-                        }
-                    });
-
-
-                    viewg.addView(b);
-                    TextView ms = new TextView(context);
-                    ms.setText(sw.toString());
-                    ms.setPadding(10, 10, 10, 10);
-                    viewg.addView(ms);
-
-                    scrll.addView(viewg);
-
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("What's new!");
-                    builder.setView(scrll);
-
-                    builder.setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                    showNews(context);
 
                 }
             }, 3000);
@@ -155,7 +100,70 @@ public class MsgBox {
 
     }
 
-    public static void promptNewFeatures(final Context context) {
+    public static void showNews(final Context context) {
+        StringWriter sw = new StringWriter();
+        BufferedReader in = new BufferedReader(new InputStreamReader(context.getResources().openRawResource(R.raw.news)));
+        try {
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                sw.append(line);
+                sw.append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        ScrollView scrll = new ScrollView(context);
+        LinearLayout viewg = new LinearLayout(context);
+        viewg.setOrientation(LinearLayout.VERTICAL);
+
+        Button b = new Button(context);
+        b.setText(R.string.prompt_config_features);
+        LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        blp.gravity = Gravity.END;
+        b.setLayoutParams(blp);
+
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptNewFeatures(context, true);
+            }
+        });
+
+
+        viewg.addView(b);
+        TextView ms = new TextView(context);
+        ms.setText(sw.toString());
+        ms.setPadding(10, 10, 10, 10);
+        viewg.addView(ms);
+
+        scrll.addView(viewg);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("What's new!");
+        builder.setView(scrll);
+
+        builder.setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public static void promptNewFeatures(final Context context, boolean startup) {
 
 
         ViewGroup content = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.new_features, null);
@@ -170,7 +178,7 @@ public class MsgBox {
         TextView extraMenuText = content.findViewById(R.id.extra_menu_text);
 
         final CheckBox resetColorsCheck = content.findViewById(R.id.reset_colors_check);
-        TextView resetColorsText = content.findViewById(R.id.reset_colors_text);
+        //TextView resetColorsText = content.findViewById(R.id.reset_colors_text);
 
 
         final SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
@@ -179,20 +187,27 @@ public class MsgBox {
 
         if (!appPreferences.getString(context.getString(R.string.pref_key_autohide_cats_timeout), "-1").equals("-1")) {
             hideCatsCheck.setChecked(true);
-            hideCatsCheck.setVisibility(View.GONE);
-            hideCatsText.setVisibility(View.GONE);
+            if (startup) {
+                hideCatsCheck.setVisibility(View.GONE);
+                hideCatsText.setVisibility(View.GONE);
+            }
             hiding++;
         }
 
         if (appPreferences.getBoolean(context.getString(R.string.pref_key_show_action_menus), false)) {
             actionMenuCheck.setChecked(true);
-            actionMenuCheck.setVisibility(View.GONE);
-            actionMenuText.setVisibility(View.GONE);
+            if (startup) {
+                actionMenuCheck.setVisibility(View.GONE);
+                actionMenuText.setVisibility(View.GONE);
+            }
             hiding++;
 
             if (appPreferences.getBoolean(context.getString(R.string.pref_key_show_action_extra), false)) {
-                extraMenuCheck.setVisibility(View.GONE);
-                extraMenuText.setVisibility(View.GONE);
+                extraMenuCheck.setChecked(true);
+                if (startup) {
+                    extraMenuCheck.setVisibility(View.GONE);
+                    extraMenuText.setVisibility(View.GONE);
+                }
                 hiding++;
             }
         }
@@ -201,13 +216,14 @@ public class MsgBox {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 extraMenuCheck.setEnabled(b);
+                extraMenuCheck.setChecked(b);
             }
         });
 
         extraMenuCheck.setEnabled(actionMenuCheck.isChecked());
 
 
-        if (hiding<3) {
+        if (!startup || hiding<3) {
 
             new AlertDialog.Builder(context)
                     .setIcon(android.R.drawable.ic_menu_manage)
@@ -216,15 +232,13 @@ public class MsgBox {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             SharedPreferences.Editor editor = appPreferences.edit();
-                            if (hideCatsCheck.isChecked()) {
-                                editor.putString(context.getString(R.string.pref_key_autohide_cats_timeout), "1500");
-                            }
-                            if (actionMenuCheck.isChecked()) {
-                                editor.putBoolean(context.getString(R.string.pref_key_show_action_menus), true);
-                                if (extraMenuCheck.isChecked()) {
-                                    editor.putBoolean(context.getString(R.string.pref_key_show_action_extra), true);
-                                }
-                            }
+                            editor.putString(context.getString(R.string.pref_key_autohide_cats_timeout), hideCatsCheck.isChecked()?"1500":"-1");
+
+                            editor.putBoolean(context.getString(R.string.pref_key_show_action_menus), actionMenuCheck.isChecked());
+
+                            editor.putBoolean(context.getString(R.string.pref_key_show_action_extra), extraMenuCheck.isChecked());
+
+
                             if (resetColorsCheck.isChecked()) {
                                 editor.putString(context.getString(R.string.pref_key_icons_pack), Theme.NEW_SYS);
                             }
@@ -245,10 +259,5 @@ public class MsgBox {
     }
 
 
-    private static void enableFeatures(final Context context, boolean enable) {
-
-        SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        appPreferences.edit().putString(context.getString(R.string.pref_key_autohide_cats_timeout), enable?"1500":"-1").apply();
-    }
 
 }

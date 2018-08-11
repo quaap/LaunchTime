@@ -15,6 +15,12 @@
 
     <PreferenceCategory android:title="@string/pref_app_system">
 
+        <Preference
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:key="@string/pref_key_conf_new_features"
+            android:title="@string/prompt_config_features"
+            android:summary="@string/enable_some_new_features"/>
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:title="@string/pref_todd_lock"
@@ -132,9 +138,11 @@
             android:key="@string/pref_key_icon_tint"
             android:defaultValue="@color/icon_tint" />
 
-        <Preference android:title="@string/reset_colors_title"
+        <Preference
+            android:icon="@android:drawable/ic_menu_revert"
             android:key="@string/pref_key_reset_colors"
-            android:summary="@string/reset_color_summ"/>
+            android:summary="@string/reset_color_summ"
+            android:title="@string/reset_colors_title" />
 
         <ListPreference
             android:defaultValue="@string/pref_iconpack_def"

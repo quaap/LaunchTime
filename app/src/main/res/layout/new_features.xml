@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:text="Enable some new features?"
+        android:text="@string/enable_some_new_features"
         android:textColor="@android:color/black"
         android:textSize="22sp" />
 
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
-        android:text="Auto-hide the side menu after a timeout."
+        android:text="@string/autohide_side_menu"
         android:textColor="@android:color/black" />
 
     <CheckBox
@@ -78,7 +78,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="18dp"
-        android:text="Update colors on default theme"
+        android:text="@string/update_colors"
         android:textColor="@android:color/black" />
 
     <TextView
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
-        android:text="Switch to default theme and update to new colors"
+        android:text="@string/switch_default_theme"
         android:textColor="@android:color/black" />
 
 </LinearLayout>

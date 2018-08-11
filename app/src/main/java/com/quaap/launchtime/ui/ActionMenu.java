@@ -340,7 +340,9 @@ public class ActionMenu {
             }
 
             if (!Categories.isHiddenCategory((String) categoryTab.getTag())) {
-                addActionMenuItem(mMain.getString(R.string.hide_show), android.R.drawable.ic_menu_view, new Runnable() {
+                int action = R.string.hide;
+                if (mMain.db().isHiddenCategory(category)) action = R.string.show;
+                addActionMenuItem(mMain.getString(action), android.R.drawable.ic_menu_view, new Runnable() {
                     @Override
                     public void run() {
                         mMain.hideCategory(category);
