@@ -75,7 +75,12 @@ public class SettingsActivity extends PreferenceActivity {
             newFeatures.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    MsgBox.promptNewFeatures(getActivity(), false);
+                    MsgBox.promptNewFeatures(getActivity(), false, new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().finish();
+                        }
+                    });
 
                     return true;
                 }

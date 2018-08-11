@@ -135,7 +135,7 @@ public class MsgBox {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                promptNewFeatures(context, true);
+                promptNewFeatures(context, true, null);
             }
         });
 
@@ -163,7 +163,7 @@ public class MsgBox {
         dialog.show();
     }
 
-    public static void promptNewFeatures(final Context context, boolean startup) {
+    public static void promptNewFeatures(final Context context, boolean startup, final Runnable after) {
 
 
         ViewGroup content = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.new_features, null);
@@ -247,6 +247,9 @@ public class MsgBox {
 
                             IconsHandler ich = GlobState.getIconsHandler(context);
                             ich.getTheme().resetUserColors();
+                        }
+                        if (after!=null) {
+                            after.run();
                         }
 
                     }
