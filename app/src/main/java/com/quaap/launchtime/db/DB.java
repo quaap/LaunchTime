@@ -598,6 +598,8 @@ public class DB extends SQLiteOpenHelper {
         // Log.d("LaunchDB", "update " + pkgname + " " + catID);
     }
 
+
+
 //    public boolean deleteApp(ComponentName appname) {
 //        return deleteApp(actvorpkgname, false);
 //    }
@@ -737,6 +739,31 @@ public class DB extends SQLiteOpenHelper {
             return false;
         }
         return true;
+    }
+
+    public void hideCategory(String catID, boolean isHidden) {
+        if (catID==null || catID.isEmpty()) {
+            return;
+        }
+        boolean isTiny = isTinyCategory(catID);
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            // Log.d("DB", "adding catID " + catID);
+            ContentValues values = new ContentValues();
+
+            int flags = 0;
+            if (isTiny) flags |= FLAGS_ISTINY;
+            if (isHidden) flags |= FLAGS_ISHIDDEN;
+
+            values.put(FLAGS, flags);
+
+            db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{catID});
+        } catch (Exception e) {
+            Log.e("LaunchDB", "Can't select catID " + catID, e);
+
+        }
+
     }
 
     public boolean deleteCategory(String catID) {

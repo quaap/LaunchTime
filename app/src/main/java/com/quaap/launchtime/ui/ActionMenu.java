@@ -339,7 +339,18 @@ public class ActionMenu {
                 });
             }
 
+            if (!Categories.isHiddenCategory((String) categoryTab.getTag())) {
+                addActionMenuItem(mMain.getString(R.string.hide_show), android.R.drawable.ic_menu_view, new Runnable() {
+                    @Override
+                    public void run() {
+                        mMain.hideCategory(category);
+
+                    }
+                });
+            }
+
             if (!Categories.isSpeacialCategory((String) categoryTab.getTag())) {
+
                 addActionMenuItem(mMain.getString(R.string.remove), R.drawable.trash, new Runnable() {
                     @Override
                     public void run() {

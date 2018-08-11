@@ -3599,6 +3599,8 @@ public class MainActivity extends Activity implements
 
     public void promptDeleteCategory(final String category) {
 
+        if (Categories.isSpeacialCategory(category)) return;
+
         final String message = getString(R.string.cat_deleted, db().getCategoryDisplay(Categories.CAT_OTHER));
         new AlertDialog.Builder(MainActivity.this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -3621,6 +3623,8 @@ public class MainActivity extends Activity implements
 
 
     private boolean deleteCategory(final String category) {
+        if (Categories.isSpeacialCategory(category)) return false;
+
         TextView categoryTab = mCategoryTabs.get(category);
 
         boolean appsInCat = db().getAppCount(category) > 0;
@@ -3650,6 +3654,13 @@ public class MainActivity extends Activity implements
             Toast.makeText(MainActivity.this, R.string.no_delete_cat, Toast.LENGTH_SHORT).show();
         }
         return false;
+    }
+
+    public void hideCategory(String category) {
+        db().hideCategory(category, !db().isHiddenCategory(category));
+        setCategoryTabStyles();
+        //hideHiddenCategories();
+        showButtonBar(false, true);
     }
 
 
