@@ -437,7 +437,7 @@ public class ActionMenu {
                 });
             } else if (appitem.isNormalApp()) {
                 if (!Categories.isNoDropCategory(mMain.getCurrentCategory())) {
-                    addActionMenuItem(mMain.getString(R.string.link), R.drawable.linkicon, mUseIcons, new Runnable() {
+                    addActionMenuItem(mMain.getString(R.string.link), R.drawable.link, mUseIcons, new Runnable() {
                         @Override
                         public void run() {
                             mMain.makeAppLink(appitem);
