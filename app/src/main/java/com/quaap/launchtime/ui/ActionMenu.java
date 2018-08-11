@@ -92,7 +92,7 @@ public class ActionMenu {
     }
 
     public void setAnimationDuration(int animationDuration) {
-        mAnimationDuration = animationDuration*2/3;
+        mAnimationDuration = animationDuration;
     }
 
     public boolean useActionMenus() {
@@ -216,30 +216,54 @@ public class ActionMenu {
         int [] viewpos = new int[2];
         view.getLocationOnScreen(viewpos);
 
+        boolean islefthand = mStyle.isLeftHandCategories();
+
+        //try to put it above and centered-ish.
         int top = viewpos[1] - height - 20;
         int left = viewpos[0] + view.getWidth()/2 - width/2;
 
+        //if too high, push to side
         if (top <= 0) {
-            top = viewpos[1] + view.getHeight()*2/3;
-        }
 
-        if (top+height>=mScreenDim.y) {
-            top = mScreenDim.y - height - 10;
-            if (left>mScreenDim.x/2) {
-                left = viewpos[0] - width;
-            } else if (left<mScreenDim.x/2) {
-                left = viewpos[0] + view.getWidth();
+            top = viewpos[1] - height/2; //try to center it -ish
+
+            if (top<=0) {
+                top = 10;
+            }
+
+
+            if (islefthand) {
+                if (mScreenDim.x - (viewpos[0] + view.getWidth()) > width || view.getWidth()>mScreenDim.x/2) {
+                    left = viewpos[0] + view.getWidth();
+                } else {
+                    left = viewpos[0] - width;
+                }
+            } else {
+                if (viewpos[0] > width || view.getWidth()>mScreenDim.x/2) {
+                    left = viewpos[0] - width;
+                } else {
+                    left = viewpos[0] + view.getWidth();
+                }
             }
         }
-
-        if (height>=mScreenDim.y || top <= 0) {
-            top = 10;
-        }
+//
+//        if (top+height>=mScreenDim.y) {
+//            top = mScreenDim.y - height - 10;
+//            if (left>mScreenDim.x/2) {
+//                left = viewpos[0] - width;
+//            } else if (left<mScreenDim.x/2) {
+//                left = viewpos[0] + view.getWidth();
+//            }
+//        }
+//
+//        if (height>=mScreenDim.y || top <= 0) {
+//            top = 10;
+//        }
 
         if (left <= 0) {
             left = viewpos[0]+4;
         } else if (left + width >= mScreenDim.x) {
-            left = mScreenDim.x - (int)(width*1.2);
+            left = mScreenDim.x - (int)(width*1.1);
         }
 
         if (mShortcutActionsPopup.getVisibility()!=View.VISIBLE) {
