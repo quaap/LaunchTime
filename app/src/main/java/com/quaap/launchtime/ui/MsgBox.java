@@ -183,7 +183,6 @@ public class MsgBox {
 
         final SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 
-        int hiding = 0;
 
         if (!appPreferences.getString(context.getString(R.string.pref_key_autohide_cats_timeout), "-1").equals("-1")) {
             hideCatsCheck.setChecked(true);
@@ -191,7 +190,7 @@ public class MsgBox {
                 hideCatsCheck.setVisibility(View.GONE);
                 hideCatsText.setVisibility(View.GONE);
             }
-            hiding++;
+
         }
 
         if (appPreferences.getBoolean(context.getString(R.string.pref_key_show_action_menus), false)) {
@@ -200,7 +199,7 @@ public class MsgBox {
                 actionMenuCheck.setVisibility(View.GONE);
                 actionMenuText.setVisibility(View.GONE);
             }
-            hiding++;
+
 
             if (appPreferences.getBoolean(context.getString(R.string.pref_key_show_action_extra), false)) {
                 extraMenuCheck.setChecked(true);
@@ -208,7 +207,7 @@ public class MsgBox {
                     extraMenuCheck.setVisibility(View.GONE);
                     extraMenuText.setVisibility(View.GONE);
                 }
-                hiding++;
+
             }
         }
 
@@ -223,39 +222,39 @@ public class MsgBox {
         extraMenuCheck.setEnabled(actionMenuCheck.isChecked());
 
 
-        if (!startup || hiding<3) {
-
-            new AlertDialog.Builder(context)
-                    .setIcon(android.R.drawable.ic_menu_manage)
-                    .setView(content)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferences.Editor editor = appPreferences.edit();
-                            editor.putString(context.getString(R.string.pref_key_autohide_cats_timeout), hideCatsCheck.isChecked()?"1500":"-1");
-
-                            editor.putBoolean(context.getString(R.string.pref_key_show_action_menus), actionMenuCheck.isChecked());
-
-                            editor.putBoolean(context.getString(R.string.pref_key_show_action_extra), extraMenuCheck.isChecked());
 
 
-                            if (resetColorsCheck.isChecked()) {
-                                editor.putString(context.getString(R.string.pref_key_icons_pack), Theme.NEW_SYS);
-                            }
-                            editor.apply();
+        new AlertDialog.Builder(context)
+                .setIcon(android.R.drawable.ic_menu_manage)
+                .setView(content)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor editor = appPreferences.edit();
+                        editor.putString(context.getString(R.string.pref_key_autohide_cats_timeout), hideCatsCheck.isChecked()?"1500":"-1");
 
-                            if (resetColorsCheck.isChecked()) {
+                        editor.putBoolean(context.getString(R.string.pref_key_show_action_menus), actionMenuCheck.isChecked());
 
-                                IconsHandler ich = GlobState.getIconsHandler(context);
-                                ich.getTheme().resetUserColors();
-                            }
+                        editor.putBoolean(context.getString(R.string.pref_key_show_action_extra), extraMenuCheck.isChecked());
 
+
+                        if (resetColorsCheck.isChecked()) {
+                            editor.putString(context.getString(R.string.pref_key_icons_pack), Theme.NEW_SYS);
+                        }
+                        editor.apply();
+
+                        if (resetColorsCheck.isChecked()) {
+
+                            IconsHandler ich = GlobState.getIconsHandler(context);
+                            ich.getTheme().resetUserColors();
                         }
 
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .show();
-        }
+                    }
+
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+
     }
 
 
