@@ -61,10 +61,13 @@ public class ActionMenu {
     private int mAnimationDuration = 100;
 
     private int mOldNum = 0;
-    private int mOldHeight = 0;
+    private ViewGroup mIconBar = null;
+    private boolean mUseIcons = true;
     
     private Point mScreenDim;
-    
+    final int mIconW;
+
+
     public ActionMenu(MainActivity main) {
         mMain = main;
         mShortcutActionsPopup = mMain.findViewById(R.id.action_menu);
@@ -73,6 +76,7 @@ public class ActionMenu {
 
         mScreenDim = mMain.getScreenDimensions();
         readActionMenuConfig();
+        mIconW = mMain.getResources().getDimensionPixelSize(R.dimen.action_icon_width);
     }
 
     public void readActionMenuConfig() {
@@ -145,7 +149,10 @@ public class ActionMenu {
 
             addDevModeActivitiesToMenu(appitem);
 
-            addActionMenuItem(mMain.getString(R.string.appinfo_label), android.R.drawable.ic_menu_info_details, new Runnable() {
+
+
+
+            addActionMenuItem(mMain.getString(R.string.appinfo_label), android.R.drawable.ic_menu_info_details, mUseIcons, new Runnable() {
                 @Override
                 public void run() {
                     mAppinfoWindow = AppInfo.showAppinfo(mMain, view, appitem);
@@ -176,12 +183,15 @@ public class ActionMenu {
     }
 
     public void addCancelToMenu() {
-        addActionMenuItem(mMain.getString(android.R.string.cancel), android.R.drawable.ic_menu_close_clear_cancel, new Runnable() {
-            @Override
-            public void run() {
-                dismissActionPopup();
-            }
-        });
+        addActionMenuItem(mMain.getString(android.R.string.cancel),
+                android.R.drawable.ic_menu_close_clear_cancel,
+                mUseIcons && mIconBar!=null,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissActionPopup();
+                    }
+                });
     }
 
     public void showCatagoryActionMenu(TextView categoryTab) {
@@ -202,6 +212,7 @@ public class ActionMenu {
         if (mStyle.isRoundedTabs()) {
             mShortcutActionsPopup.setBackground(mStyle.getBgDrawableFor(mShortcutActionsPopup, Style.CategoryTabStyle.White,true));
         }
+        mIconBar = null;
     }
 
     public void showBuiltActionMenu(View view) {
@@ -226,21 +237,21 @@ public class ActionMenu {
         //if too high, push to side
         if (top <= 0) {
 
-            top = 10;
+            top = viewpos[1] + view.getHeight()/2 - height/2;
 
-//            if (top<=0) {
-//                top = 10;
-//            }
+            if (top<=0) {
+                top = 10;
+            }
 
 
             if (islefthand) {
-                if (mScreenDim.x - (viewpos[0] + view.getWidth()) > width || view.getWidth()>mScreenDim.x/2) {
+                if (mScreenDim.x - (viewpos[0] + view.getWidth()) > width || viewpos[0] - width < 0 || view.getWidth()>mScreenDim.x/2) {
                     left = viewpos[0] + view.getWidth();
                 } else {
                     left = viewpos[0] - width;
                 }
             } else {
-                if (viewpos[0] > width || view.getWidth()>mScreenDim.x/2) {
+                if (viewpos[0]+view.getWidth()/3 > width || viewpos[0] + view.getWidth()+width>mScreenDim.x || view.getWidth()>mScreenDim.x/2) {
                     left = viewpos[0] - width;
                 } else {
                     left = viewpos[0] + view.getWidth();
@@ -270,7 +281,7 @@ public class ActionMenu {
 
 
         if (left <= 0) {
-            left = viewpos[0]+4;
+            left = 10;
         } else if (left + width >= mScreenDim.x) {
             left = mScreenDim.x - (int)(width*1.1);
         }
@@ -384,15 +395,6 @@ public class ActionMenu {
                 });
             }
 
-            if (!Categories.isSpeacialCategory((String) categoryTab.getTag())) {
-
-                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.trash, new Runnable() {
-                    @Override
-                    public void run() {
-                        mMain.promptDeleteCategory(category);
-                    }
-                });
-            }
 
             addActionMenuItem(mMain.getString(R.string.add_category), android.R.drawable.ic_menu_add, new Runnable() {
                 @Override
@@ -401,12 +403,15 @@ public class ActionMenu {
                 }
             });
 
-//            addActionMenuItem(getString(R.string.go_to_settings), android.R.drawable.ic_menu_preferences, new Runnable() {
-//                @Override
-//                public void run() {
-//                    openSettings(MainActivity.this);
-//                }
-//            });
+            if (!Categories.isSpeacialCategory((String) categoryTab.getTag())) {
+
+                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.trash, mUseIcons, new Runnable() {
+                    @Override
+                    public void run() {
+                        mMain.promptDeleteCategory(category);
+                    }
+                });
+            }
         }
 
     }
@@ -416,14 +421,14 @@ public class ActionMenu {
         if (mUseExtraActions) {
 
             if (mMain.isOnQuickRow(view)) {
-                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.trash, new Runnable() {
+                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.recycle, mUseIcons, new Runnable() {
                     @Override
                     public void run() {
                         mMain.removeViewFromQuickBar(view);
                     }
                 });
             } else if (mMain.getCurrentCategory().equals(Categories.CAT_SEARCH) && !mMain.isOnSearchView(view)) {
-                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.trash, new Runnable() {
+                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.recycle, mUseIcons, new Runnable() {
                     @Override
                     public void run() {
                         mMain.db().deleteAppLaunchedRecord(appitem.getComponentName());
@@ -432,21 +437,21 @@ public class ActionMenu {
                 });
             } else if (appitem.isNormalApp()) {
                 if (!Categories.isNoDropCategory(mMain.getCurrentCategory())) {
-                    addActionMenuItem(mMain.getString(R.string.link), R.drawable.linkicon, new Runnable() {
+                    addActionMenuItem(mMain.getString(R.string.link), R.drawable.linkicon, mUseIcons, new Runnable() {
                         @Override
                         public void run() {
                             mMain.makeAppLink(appitem);
                         }
                     });
                 }
-                addActionMenuItem(mMain.getString(R.string.uninstall_app), R.drawable.trash, new Runnable() {
+                addActionMenuItem(mMain.getString(R.string.uninstall_app), R.drawable.trash, mUseIcons, new Runnable() {
                     @Override
                     public void run() {
                         mMain.launchUninstallIntent(appitem, view);
                     }
                 });
             } else {
-                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.trash, new Runnable() {
+                addActionMenuItem(mMain.getString(R.string.remove), R.drawable.recycle, mUseIcons, new Runnable() {
                     @Override
                     public void run() {
                         if (appitem.isWidget()) {
@@ -660,44 +665,84 @@ public class ActionMenu {
     }
 
     private void addActionMenuItem(String label, int iconResource, final Runnable action) {
-        addActionMenuItem(label, mMain.getResources().getDrawable(iconResource), action);
+        addActionMenuItem(label, mMain.getResources().getDrawable(iconResource), false, action);
     }
 
-    private void addActionMenuItem(String label, Drawable icon, final Runnable action) {
+    private void addActionMenuItem(String label, int iconResource, boolean onIconBar, final Runnable action) {
+        addActionMenuItem(label, mMain.getResources().getDrawable(iconResource), onIconBar, action);
+    }
 
-        if (label==null) return;
 
-        label = label.replaceAll("\\s+|\\r|\\n", " ");
+    private void addActionMenuItem(String label, Drawable icon,  final Runnable action) {
+        addActionMenuItem(label, icon, false, action);
+    }
 
-        final ViewGroup item = (ViewGroup) LayoutInflater.from(mMain).inflate(R.layout.action_menu_entry, null);
 
-        item.setBackgroundColor(mStyle.getCattabSelectedBackground());
 
-        if (mStyle.isRoundedTabs()) {
-            item.setBackground(mStyle.getBgDrawableFor(item, Style.CategoryTabStyle.Normal,true));
-        }
+    private void addActionMenuItem(String label, Drawable icon, boolean onIconBar, final Runnable action) {
+        final ViewGroup item;
+        ImageView itemIcon;
 
-        TextView itemText = item.findViewById(R.id.action_menu_text);
-
-        itemText.setTextColor(mStyle.getCattabTextColor());
-        itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize()-1);
-
-        if (label!=null && label.length()>30) label = label.substring(0,28) + "...";
-        itemText.setText(label);
-
-        ImageView itemIcon = item.findViewById(R.id.action_menu_icon);
-        itemIcon.setImageDrawable(icon);
-        item.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clickAction = new View.OnClickListener() {
             @Override
             public void onClick(View item) {
                 action.run();
                 dismissActionPopup();
                 mMain.clearDragPotential(true);
             }
-        });
+        };
 
+        if (onIconBar && mShortcutActionsList.getChildCount()>=2) {
+            if (mIconBar == null) {
+                mIconBar = new LinearLayout(mMain);
+
+                initializeMenuline(mIconBar);
+
+            }
+            itemIcon = new ImageView(mMain);
+            LinearLayout.LayoutParams iilp = new LinearLayout.LayoutParams(mIconW, mIconW, 1);
+//            iilp.leftMargin = mIconW;
+//            iilp.rightMargin = mIconW;
+
+            itemIcon.setLayoutParams(iilp);
+            itemIcon.setOnClickListener(clickAction);
+            itemIcon.setImageDrawable(icon);
+
+
+            mIconBar.addView(itemIcon);
+        } else {
+
+            if (label == null) return;
+
+            label = label.replaceAll("\\s+|\\r|\\n", " ");
+            item = (ViewGroup) LayoutInflater.from(mMain).inflate(R.layout.action_menu_entry, null);
+
+
+            TextView itemText = item.findViewById(R.id.action_menu_text);
+
+            itemText.setTextColor(mStyle.getCattabTextColor());
+            itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize()-1);
+
+            if (label!=null && label.length()>30) label = label.substring(0,28) + "...";
+            itemText.setText(label);
+            itemIcon = item.findViewById(R.id.action_menu_icon);
+            itemIcon.setImageDrawable(icon);
+
+            initializeMenuline(item);
+
+            item.setOnClickListener(clickAction);
+        }
+
+
+    }
+
+    private void initializeMenuline(final ViewGroup item) {
+        item.setBackgroundColor(mStyle.getCattabSelectedBackground());
+        if (mStyle.isRoundedTabs()) {
+            item.setBackground(mStyle.getBgDrawableFor(item, Style.CategoryTabStyle.Normal,true));
+        }
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)mMain.getResources().getDimension(R.dimen.action_menu_width), ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(12,12,12,12);
+        lp.setMargins(12,13,12,13);
 
         item.setLayoutParams(lp);
         mShortcutActionsList.addView(item);
