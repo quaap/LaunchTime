@@ -213,15 +213,8 @@ public class AppInfo {
             public void onClick(View view) {
                 try {
                     //Open the specific App Info page:
-                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.parse("package:" + packagename));
-                    main.startActivity(intent);
-
+                    main.openInSettings(packagename);
                     pw.dismiss();
-                } catch ( ActivityNotFoundException e ) {
-                    Toast.makeText(main, "Package not found", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
-                    main.startActivity(intent);
                 } catch (Throwable t) {
                     Log.e("AppInfo", t.getMessage(), t);
                 }

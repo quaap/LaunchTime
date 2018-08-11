@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
@@ -3358,9 +3359,9 @@ public class MainActivity extends Activity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             if (requestCode == UNINSTALL_RESULT) {
+                final ComponentName actvname = ((AppLauncher) mBeingUninstalled.getTag()).getComponentName();
                 switch (resultCode) {
                     case RESULT_OK:
-                        ComponentName actvname = ((AppLauncher) mBeingUninstalled.getTag()).getComponentName();
                         db().deleteApp(actvname);
                         mQuickRow.removeFromQuickApps(actvname);
                         AppLauncher.removeAppLauncher(actvname);
@@ -3375,7 +3376,21 @@ public class MainActivity extends Activity implements
                         Toast.makeText(this, R.string.uninstall_canceled, Toast.LENGTH_LONG).show();
                         break;
                     default:
-                        Toast.makeText(this, R.string.could_not_uninstall, Toast.LENGTH_LONG).show();
+                        AlertDialog.Builder build = new AlertDialog.Builder(this);
+                        build.setMessage(R.string.could_not_uninstall);
+                        build.setPositiveButton(R.string.go_to_settings, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {
+                                    openInSettings(actvname.getPackageName());
+                                } catch (Throwable t) {
+                                    Log.e(TAG, t.getMessage(), t);
+                                }
+                            }
+                        });
+                        build.setNeutralButton(R.string.cancel, null);
+                        build.show();
+                        //Toast.makeText(this, R.string.could_not_uninstall, Toast.LENGTH_LONG).show();
 
                 }
             } else {
@@ -3396,6 +3411,18 @@ public class MainActivity extends Activity implements
             //  setCategoryTabStyles();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    public void openInSettings(String packagename) {
+        try {
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + packagename));
+            startActivity(intent);
+        } catch (ActivityNotFoundException e ) {
+            Toast.makeText(this, "Package not found", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+            startActivity(intent);
         }
     }
 
