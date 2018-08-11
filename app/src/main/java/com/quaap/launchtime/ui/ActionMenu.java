@@ -23,6 +23,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -225,11 +226,11 @@ public class ActionMenu {
         //if too high, push to side
         if (top <= 0) {
 
-            top = viewpos[1] - height/2; //try to center it -ish
+            top = 10;
 
-            if (top<=0) {
-                top = 10;
-            }
+//            if (top<=0) {
+//                top = 10;
+//            }
 
 
             if (islefthand) {
@@ -256,9 +257,17 @@ public class ActionMenu {
 //            }
 //        }
 //
-//        if (height>=mScreenDim.y || top <= 0) {
-//            top = 10;
-//        }
+
+
+        FrameLayout.LayoutParams flp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
+        if (height>=mScreenDim.y-100) {
+            flp.height = mScreenDim.y-100;
+        } else {
+            flp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        mShortcutActionsPopup.setLayoutParams(flp);
+
+
 
         if (left <= 0) {
             left = viewpos[0]+4;
@@ -723,7 +732,7 @@ public class ActionMenu {
                         label += shortcutInfo.getShortLabel();
 
                     if (shortcutInfo.getLongLabel() != null && !label.contentEquals(shortcutInfo.getLongLabel()))
-                        label += " (" + shortcutInfo.getLongLabel() + ")";
+                        label = shortcutInfo.getLongLabel() + "";
 
                     Drawable icon = launcherApps.getShortcutIconDrawable(shortcutInfo, DisplayMetrics.DENSITY_DEFAULT);
                     addActionMenuItem(label.trim(), icon, new Runnable() {
