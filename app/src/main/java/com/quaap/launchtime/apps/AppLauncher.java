@@ -12,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -406,28 +407,35 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
     public void loadAppIconAsync(final Context context) {
         if (iconLoaded() || isWidget()) return;
-        // Create an async task
-        //new IconLoaderTask(this, pm).execute(context);
+
         queueIconLoad(this);
 
         synchronized (iconLoaderSync) {
-            if (iconLoader==null || !iconLoader.isrunning || !iconLoader.isAlive()) {
+            if (iconLoader==null || !iconLoader.isrunning) {
                 if (handler==null) handler = new Handler(Looper.getMainLooper());
                 iconLoader = new IconLoaderTask(context, handler);
-                iconLoader.start();
+                try {
+                    //Probably not much better than AsyncTask, but I kept seeing load failures before switching.
+                    //Borrowing AsyncTask's pool should be safe to do
+                    AsyncTask.THREAD_POOL_EXECUTOR.execute(iconLoader);
+                } catch (Throwable t) {
+                    Log.e("loadAppIconAsync", "AsyncTask.THREAD_POOL_EXECUTOR: " + t.getMessage(), t);
+                    //but if, in the future, non-asyntasks are not allowed, use a normal thread:
+                    new Thread(iconLoader).start();
+                }
             }
         }
 
     }
 
-    void queueIconLoad(AppLauncher app) {
+    private void queueIconLoad(AppLauncher app) {
         iconQueue.offer(app);
     }
 
 
-    private static class IconLoaderTask extends Thread {
+    private static class IconLoaderTask implements Runnable {
 
-        boolean isrunning = true;
+        volatile boolean isrunning = true;
         private WeakReference<Context> mContextRef;
         private WeakReference<Handler> mHandlerRef;
 
@@ -442,6 +450,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
         @Override
         public void run() {
             Log.d("IconLoaderTask", "Starting IconLoad task");
+
             try {
                 do {
                     Context context = mContextRef.get();
@@ -502,87 +511,16 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 } while (isrunning);
 
             } finally {
-                isrunning = false;
-                Log.d("IconLoaderTask", "Completing IconLoad task. Processed " + processed);
-
                 synchronized (iconLoaderSync) {
                     iconLoader = null;
                     handler = null;
+                    isrunning = false;
                 }
+                Log.d("IconLoaderTask", "Completing IconLoad task. Processed " + processed);
+
             }
         }
 
     }
 
-//
-//    private static class IconLoaderTask extends AsyncTask<Context, Void, Drawable> {
-//
-//        // Keep track of all the exceptions
-//        private final Exception exception = null;
-//
-//        private final WeakReference<AppLauncher> instref;
-//
-//        private final PackageManager pm;
-//
-//        IconLoaderTask(AppLauncher inst, PackageManager pm) {
-//            super();
-//            instref = new WeakReference<>(inst);
-//
-//            this.pm = pm;
-//        }
-//        @Override
-//        protected Drawable doInBackground(Context... contexts) {
-//
-//            AppLauncher inst = instref.get();
-//            if (inst==null) return null;
-//
-//            // load the icon
-//            Drawable app_icon = null;
-//            try {
-//
-//                String uristr = null;
-//                if (inst.isActionLink()) {
-//                    uristr = inst.getLinkUri();
-//                    if (uristr == null) uristr = "";
-//                }
-//
-//                if (contexts.length==0 || contexts[0]==null) {
-//                    app_icon = pm.getDefaultActivityIcon();
-//                } else {
-//
-//                    app_icon = GlobState.getIconsHandler(contexts[0]).getDrawableIconForPackage(inst);
-//
-//                    if (app_icon == null) {
-//                        app_icon = pm.getDefaultActivityIcon();
-//                    }
-//                    if (inst.isLink()) {
-//                        app_icon = inst.drawLinkSymbol(app_icon, contexts[0]);
-//                    }
-//                }
-//
-//            } catch (Exception | Error e) {
-//                Log.d("loadAppIconAsync", e.getMessage(), e);
-//                if (app_icon == null) {
-//                    app_icon = pm.getDefaultActivityIcon();
-//                }
-//            }
-//
-//            return app_icon;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Drawable app_icon) {
-//            if (exception == null) {
-//                AppLauncher inst = instref.get();
-//                if (inst==null) return;
-//                inst.mIconDrawable = app_icon;
-//                if (inst.mIconImage != null) {
-//                    inst.mIconImage.setImageDrawable(inst.mIconDrawable);
-//                }
-//            } else {
-//                Log.d("loadAppIconAsync", "ERROR Could not load app icon.");
-//
-//            }
-//        }
-//    }
 }
