@@ -30,11 +30,11 @@ import java.util.Map;
 public class DefaultApps {
 
     //QuickBar
-    public static void checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder) {
-        checkDefaultApps(context,launchers,quickRowOrder,null);
+    public static boolean checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder) {
+        return checkDefaultApps(context,launchers,quickRowOrder,null);
     }
 
-    public static void checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder, List<String> onlyTypes) {
+    public static boolean checkDefaultApps(final Context context, List<AppLauncher> launchers, List<ComponentName> quickRowOrder, List<String> onlyTypes) {
         if (quickRowOrder.isEmpty()) {
             Map<String, List<String>> defactivities = getDefaultActivities(context);
            // boolean addeddefault = false;
@@ -73,23 +73,10 @@ public class DefaultApps {
             if (quickRowOrder.isEmpty() && firstapp != null) { //nothing found? add first app found.
                 quickRowOrder.add(firstapp.getComponentName());
             }
-//            String toastmsg = null;
 
-//            if (addeddefault) {
-//                toastmsg = "Don't like the apps in your Quickbar? Long click and drag them away!";
-//            } else if (quickRowOrder.size() < 3) {
-//                toastmsg = "You can add more apps to your Quickrow at the bottom of the screen.";
-//            }
-//            if (toastmsg != null) {
-//                final String toastmsgfinal = toastmsg;
-//                quickRow.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(context, toastmsgfinal, Toast.LENGTH_LONG).show();
-//                    }
-//                }, 3000);
-//            }
+            return true;
         }
+        return false;
     }
 
     private static boolean contains(AppLauncher app, String test) {

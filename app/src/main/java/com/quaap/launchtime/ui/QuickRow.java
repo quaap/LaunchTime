@@ -142,7 +142,7 @@ public class QuickRow {
                 }
 
             }
-        }, 400);
+        }, 200);
 
     }
 
@@ -151,18 +151,21 @@ public class QuickRow {
         List<AppLauncher> quickRowApps = new ArrayList<>();
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
 
-        DefaultApps.checkDefaultApps(mQuickRow.getContext(), launchers, quickRowOrder);
+        boolean newstuff = DefaultApps.checkDefaultApps(mQuickRow.getContext(), launchers, quickRowOrder);
 
+        for (ComponentName compname: quickRowOrder) {
 
-        for (AppLauncher app : launchers) {
-
-            if (quickRowOrder.contains(app.getComponentName())) {
+            AppLauncher app = AppLauncher.getAppLauncher(compname);
+            if (app==null) {
+              newstuff = true; //app could have been uninstalled
+            } else if (compname.equals(app.getComponentName())) {
                 AppLauncher qapp = AppLauncher.createAppLauncher(app);
                 quickRowApps.add(qapp);
-                app.loadAppIconAsync(mQuickRow.getContext());
+                qapp.loadAppIconAsync(mQuickRow.getContext());
             }
+
         }
-        db().setAppCategoryOrder(QUICK_ROW_CAT, quickRowApps);
+        if (newstuff) db().setAppCategoryOrder(QUICK_ROW_CAT, quickRowApps);
     }
 
 
