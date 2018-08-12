@@ -416,7 +416,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 iconLoader = new IconLoaderTask(context, handler);
                 try {
                     //Probably not much better than AsyncTask, but I kept seeing load failures before switching.
-                    //Borrowing AsyncTask's pool should be safe to do
+                    //Borrowing AsyncTask's pool, should be safe to do
                     AsyncTask.THREAD_POOL_EXECUTOR.execute(iconLoader);
                 } catch (Throwable t) {
                     Log.e("loadAppIconAsync", "AsyncTask.THREAD_POOL_EXECUTOR: " + t.getMessage(), t);

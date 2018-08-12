@@ -150,22 +150,6 @@ public class ActionMenu {
 
             addDevModeActivitiesToMenu(appitem);
 
-
-
-
-            addActionMenuItem(mMain.getString(R.string.appinfo_label), android.R.drawable.ic_menu_info_details, mUseIcons, new Runnable() {
-                @Override
-                public void run() {
-                    mAppinfoWindow = AppInfo.showAppinfo(mMain, view, appitem);
-                    mAppinfoWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            dismissAppinfo();
-                        }
-                    });
-                }
-            });
-
             addExtraActionsToMenu(view, appitem);
 
             addCancelToMenu();
@@ -318,20 +302,20 @@ public class ActionMenu {
         mOldNum = mShortcutActionsList.getChildCount();
 
 
-        if (mIconBar != null) {
-            int count = mIconBar.getChildCount();
-            if (count>3) {
-                LinearLayout.LayoutParams ilp = (LinearLayout.LayoutParams)mIconBar.getChildAt(0).getLayoutParams();
-                ilp.weight=.1f;
-                mIconBar.getChildAt(0).setLayoutParams(ilp);
-
-                LinearLayout.LayoutParams ilp2 = (LinearLayout.LayoutParams)mIconBar.getChildAt(count-1).getLayoutParams();
-                ilp2.weight=.1f;
-                mIconBar.getChildAt(count-1).setLayoutParams(ilp2);
-
-
-            }
-        }
+//        if (mIconBar != null) {
+//            int count = mIconBar.getChildCount();
+//            if (count>3) {
+//                LinearLayout.LayoutParams ilp = (LinearLayout.LayoutParams)mIconBar.getChildAt(0).getLayoutParams();
+//                ilp.weight=.1f;
+//                mIconBar.getChildAt(0).setLayoutParams(ilp);
+//
+//                LinearLayout.LayoutParams ilp2 = (LinearLayout.LayoutParams)mIconBar.getChildAt(count-1).getLayoutParams();
+//                ilp2.weight=.1f;
+//                mIconBar.getChildAt(count-1).setLayoutParams(ilp2);
+//
+//
+//            }
+//        }
     }
 
 
@@ -435,6 +419,8 @@ public class ActionMenu {
 
 
     private void addExtraActionsToMenu(final View view, final AppLauncher appitem) {
+
+
         if (mUseExtraActions) {
 
             if (mMain.isOnQuickRow(view)) {
@@ -453,6 +439,12 @@ public class ActionMenu {
                     }
                 });
             } else if (appitem.isNormalApp()) {
+                addActionMenuItem(mMain.getString(R.string.uninstall_app), R.drawable.trash, new Runnable() {
+                    @Override
+                    public void run() {
+                        mMain.launchUninstallIntent(appitem, view);
+                    }
+                });
                 if (!Categories.isNoDropCategory(mMain.getCurrentCategory())) {
                     addActionMenuItem(mMain.getString(R.string.link), R.drawable.link, mUseIcons, new Runnable() {
                         @Override
@@ -461,12 +453,6 @@ public class ActionMenu {
                         }
                     });
                 }
-                addActionMenuItem(mMain.getString(R.string.uninstall_app), R.drawable.trash, mUseIcons, new Runnable() {
-                    @Override
-                    public void run() {
-                        mMain.launchUninstallIntent(appitem, view);
-                    }
-                });
             } else {
                 addActionMenuItem(mMain.getString(R.string.remove), R.drawable.recycle, mUseIcons, new Runnable() {
                     @Override
@@ -482,6 +468,21 @@ public class ActionMenu {
             }
 
         }
+
+        addActionMenuItem(mMain.getString(R.string.appinfo_label), android.R.drawable.ic_menu_info_details, mUseIcons, new Runnable() {
+            @Override
+            public void run() {
+                mAppinfoWindow = AppInfo.showAppinfo(mMain, view, appitem);
+                mAppinfoWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        dismissAppinfo();
+                    }
+                });
+            }
+        });
+
+
     }
 
     private void addDevModeActivitiesToMenu(AppLauncher appitem) {
