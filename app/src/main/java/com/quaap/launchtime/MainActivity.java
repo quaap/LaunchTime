@@ -492,7 +492,7 @@ public class MainActivity extends Activity implements
                     if (mShowProgress) main.showProgressBar(5);
 
                     if (mStartAtStage<4) {
-                        main.mQuickRow.processQuickApps(launchers, main.mPackageMan);
+                        main.mQuickRow.processQuickApps(launchers);
                         main.mQuickRow.repopulate();
 
                         //main.db().setAppCategoryOrder(main.mRevCategoryMap.get(main.mQuickRow.getGridLayout()), main.mQuickRow.getGridLayout());
@@ -579,7 +579,7 @@ public class MainActivity extends Activity implements
                 if (db().isAppInstalled(actvname)) {
                     AppLauncher app = db().getApp(actvname);
                     if (app != null) {
-                        app.loadAppIconAsync(this, mPackageMan);
+                        app.loadAppIconAsync(this);
                     }
                 }
             }
@@ -589,7 +589,7 @@ public class MainActivity extends Activity implements
                 if (db().isAppInstalled(actvname)) {
                     AppLauncher app = db().getApp(actvname);
                     if (app != null) {
-                        app.loadAppIconAsync(this, mPackageMan);
+                        app.loadAppIconAsync(this);
                     }
                 }
             }
@@ -651,7 +651,7 @@ public class MainActivity extends Activity implements
                     app = db().getApp(appcn);
 
                     if (dbactvnames.contains(appcn) && app != null) {
-                        app.loadAppIconAsync(this, mPackageMan);
+                        app.loadAppIconAsync(this);
                         String label = ri.loadLabel(mPackageMan).toString();
                         if (app.getLabel()==null || !app.getLabel().equals(label)) {
                             db().updateAppLabel(ri.activityInfo.packageName, actvname, label);
@@ -1918,7 +1918,7 @@ public class MainActivity extends Activity implements
                     ViewGroup item = getLauncherView(app, false, reuse);
                     if (item != null) {
                         if (!app.iconLoaded()) {
-                            app.loadAppIconAsync(this, mPackageMan);
+                            app.loadAppIconAsync(this);
                         }
                         ViewGroup parent = (ViewGroup) item.getParent();
                         if (parent != null) parent.removeView(item);
@@ -2352,7 +2352,7 @@ public class MainActivity extends Activity implements
 
             }
             app.setIconImage(iconImage);
-            app.loadAppIconAsync(this,mPackageMan);
+            app.loadAppIconAsync(this);
 
             ComponentName compName = app.getBaseComponentName();
             int bcount = GlobState.getBadger(this).getUnreadCount(compName);

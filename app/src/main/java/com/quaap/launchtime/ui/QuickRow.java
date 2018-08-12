@@ -1,7 +1,6 @@
 package com.quaap.launchtime.ui;
 
 import android.content.ComponentName;
-import android.content.pm.PackageManager;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
@@ -148,7 +147,7 @@ public class QuickRow {
     }
 
 
-    public void processQuickApps(List<AppLauncher> launchers, PackageManager packageMan) {
+    public void processQuickApps(List<AppLauncher> launchers) {
         List<AppLauncher> quickRowApps = new ArrayList<>();
         final List<ComponentName> quickRowOrder = db().getAppCategoryOrder(QUICK_ROW_CAT);
 
@@ -160,7 +159,7 @@ public class QuickRow {
             if (quickRowOrder.contains(app.getComponentName())) {
                 AppLauncher qapp = AppLauncher.createAppLauncher(app);
                 quickRowApps.add(qapp);
-                app.loadAppIconAsync(mQuickRow.getContext(), packageMan);
+                app.loadAppIconAsync(mQuickRow.getContext());
             }
         }
         db().setAppCategoryOrder(QUICK_ROW_CAT, quickRowApps);
