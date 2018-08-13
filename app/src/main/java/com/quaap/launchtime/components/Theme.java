@@ -109,13 +109,22 @@ public class Theme {
         for (int i=1; i<=3; i++) {
             BuiltinTheme u = new MonochromeTheme("user" + i, ctx.getString(R.string.user_theme, i))
                     .setColor(Thing.Mask, Color.TRANSPARENT)
-                    .setColor(Thing.Text, Color.argb(255,220,220,220))
+                    .setColor(Thing.Text, Color.argb(255,230,230,230))
                     .setColor(Thing.AltText, Color.WHITE)
                     .setColor(Thing.Background, ubcolors[i-1])
                     .setColor(Thing.AltBackground, ucolors[i-1]);
 
             builtinThemes.put(u.getPackKey(), u);
         }
+
+        BuiltinTheme transp = new MonochromeTheme("transparent", ctx.getString(R.string.theme_transp))
+                .setColor(Thing.Mask, Color.TRANSPARENT)
+                .setColor(Thing.Text, Color.argb(255,240,240,240))
+                .setColor(Thing.AltText, Color.WHITE)
+                .setColor(Thing.Background, Color.TRANSPARENT)
+                .setColor(Thing.AltBackground, Color.TRANSPARENT);
+
+        builtinThemes.put(transp.getPackKey(), transp);
 
         BuiltinTheme bwicon = new MonochromeTheme("bwicon", ctx.getString(R.string.theme_bw))
                 .setColor(Thing.Mask, Color.WHITE)
