@@ -881,7 +881,10 @@ public class MainActivity extends Activity implements
                         @Override
                         public void run() {
                             switchCategory(mCategory);
-                            if (repop2) mQuickRow.repopulate();
+                            if (repop2) {
+                                mQuickRow.repopulate();
+
+                            }
 
                         }
                     }, 200);
@@ -926,6 +929,9 @@ public class MainActivity extends Activity implements
                         mActionMenu.readActionMenuConfig();
                     }
 
+                }
+                if (key.toLowerCase().contains("cat")) {
+                    setCategoryTabStyles();
                 }
             }
         }
@@ -1079,7 +1085,7 @@ public class MainActivity extends Activity implements
     }
 
     private void setCategoryTabStyles() {
-        Log.d(TAG, "setCategoryTabStyles");
+        //Log.d(TAG, "setCategoryTabStyles");
         //switch all category tabs to their default style and text
         for (TextView catTab : mCategoryTabs.values()) {
             styleCategorySpecial(catTab, Style.CategoryTabStyle.Default);
@@ -3086,12 +3092,12 @@ public class MainActivity extends Activity implements
             if (mCategoryTabs!=null && cat!=null && cattab!=null) {
                 if (mAnimationDuration>0 && cattab.getVisibility() == View.GONE) {
 
-                    Log.d(TAG,"showHiddenCategories " + cat);
+                    //Log.d(TAG,"showHiddenCategories " + cat);
                     int finalheight = cattab.getHeight();
                     if (finalheight<=0) {
                         finalheight = 30;
                     }
-                    mStyle.animateChangingSize(cattab, 0, finalheight, new Runnable() {
+                    mStyle.animateChangingSize(cattab, 1, finalheight, new Runnable() {
                         @Override
                         public void run() {
                             cattab.setVisibility(View.VISIBLE);
@@ -3124,7 +3130,7 @@ public class MainActivity extends Activity implements
 
                     if (mAnimationDuration>0 && cattab.getVisibility() != View.GONE) {
                         int h = cattab.getHeight();
-                        mStyle.animateChangingSize(cattab, h, 0, null, new Runnable() {
+                        mStyle.animateChangingSize(cattab, h, 1, null, new Runnable() {
                             @Override
                             public void run() {
                                 cattab.setVisibility(View.GONE);
