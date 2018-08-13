@@ -930,7 +930,7 @@ public class MainActivity extends Activity implements
                     }
 
                 }
-                if (key.toLowerCase().contains("cat")) {
+                if (key.toLowerCase().contains("cat") || key.equals("prefsUpdate")) {
                     setCategoryTabStyles();
                 }
             }

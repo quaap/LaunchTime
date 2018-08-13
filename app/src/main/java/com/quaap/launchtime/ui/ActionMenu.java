@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -192,10 +193,18 @@ public class ActionMenu {
 
         mShortcutActionsList.removeAllViews();
 
-        mShortcutActionsPopup.setBackgroundColor(Color.argb(128, 255, 255, 255));
+        int bgcolor = Color.argb(128, 255, 255, 255);
+
+        int cbgcolor = mStyle.getCattabBackground();
+        if ((Color.red(cbgcolor) + Color.green(cbgcolor) + Color.blue(cbgcolor))/3 > 128) {
+            bgcolor = Color.argb(128, 128, 128, 128);
+        }
+
+
+        mShortcutActionsPopup.setBackgroundColor(bgcolor);
 
         if (mStyle.isRoundedTabs()) {
-            mShortcutActionsPopup.setBackground(mStyle.getBgDrawableFor(mShortcutActionsPopup, Style.CategoryTabStyle.White,true));
+            mShortcutActionsPopup.setBackground(mStyle.getBgDrawableFor(mShortcutActionsPopup, bgcolor));
         }
         mIconBar = null;
     }
@@ -740,8 +749,23 @@ public class ActionMenu {
 
             TextView itemText = item.findViewById(R.id.action_menu_text);
 
+
+//            int oldbgc = mStyle.getCattabBackground();
+//            int shadowc = Color.BLACK;
+//            if ((Color.red(oldbgc) + Color.green(oldbgc) + Color.blue(oldbgc)/3)<128) shadowc = Color.WHITE;
+//
+//            itemText.setShadowLayer(4,1,1, shadowc);
+//
+
+//            int alpha = Color.alpha(oldbgc);
+//            if (alpha<128) alpha=128;
+//            int newbgc = Color.argb(alpha, Color.red(oldbgc), Color.green(oldbgc), Color.blue(oldbgc));
+
+
+            //itemText.setTypeface(null, Typeface.BOLD);
             itemText.setTextColor(mStyle.getCattabTextColor());
             itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize()-1);
+
 
             if (label!=null && label.length()>30) label = label.substring(0,28) + "...";
             itemText.setText(label);
@@ -756,10 +780,33 @@ public class ActionMenu {
 
     }
 
+
     private void initializeMenuline(final ViewGroup item) {
-        item.setBackgroundColor(mStyle.getCattabSelectedBackground());
+        int bgcolor = mStyle.getCattabBackground();
+
+        int alpha = Color.alpha(bgcolor);
+        int red = Color.red(bgcolor);
+        int green = Color.green(bgcolor);
+        int blue = Color.blue(bgcolor);
+
+//        if (alpha<50) {
+//            red=128;
+//            green=128;
+//            blue=128;
+//        } else
+        if (alpha>50 && alpha<180) {
+            int alphadiff = 180 - alpha;
+            red -= alphadiff / 3;
+            green -= alphadiff / 3;
+            blue -= alphadiff / 3;
+        }
+
+
+        bgcolor = Color.argb(180, red>0?red:0, green>0?green:0, blue>0?blue:0);
+
+        item.setBackgroundColor(bgcolor);
         if (mStyle.isRoundedTabs()) {
-            item.setBackground(mStyle.getBgDrawableFor(item, Style.CategoryTabStyle.Normal,true));
+            item.setBackground(mStyle.getBgDrawableFor(item, bgcolor));
         }
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)mMain.getResources().getDimension(R.dimen.action_menu_width), ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.setMargins(12,13,12,13);

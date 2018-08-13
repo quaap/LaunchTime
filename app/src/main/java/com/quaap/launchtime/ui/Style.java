@@ -86,7 +86,7 @@ public class Style {
     }
 
 
-    public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny, Hidden, None, White}
+    public enum CategoryTabStyle {Default, Normal, Selected, DragHover, Tiny, Hidden, None}
 
     public void styleCategoryStyle(final TextView categoryTab, CategoryTabStyle catstyle, boolean highContrast) {
 
@@ -327,8 +327,35 @@ public class Style {
     private final Map<String,Drawable> bgDrawables = new WeakHashMap<>();
 
     public Drawable getBgDrawableFor(View view, CategoryTabStyle catstyle, boolean isHighContrast) {
+        int color = -1;
 
-        String key = view.toString() + catstyle + isHighContrast;
+        switch (catstyle) {
+            case Selected:
+                color = isHighContrast ? cattabSelectedBackgroundHighContrast : cattabSelectedBackground;
+                break;
+            case DragHover:
+                color = dragoverBackground;
+                break;
+            case Hidden:
+                color = cattabBackground;
+                break;
+            case Tiny:
+            case Normal:
+            case Default:
+                color = isHighContrast ? cattabBackgroundHighContrast : cattabBackground;
+                break;
+
+            case None:
+            default:
+
+        }
+
+        return getBgDrawableFor(view, color);
+    }
+
+    public Drawable getBgDrawableFor(View view, int color) {
+
+        String key = view.toString() + color;
 
         Drawable newbg = bgDrawables.get(key);
 
@@ -341,34 +368,11 @@ public class Style {
             } else {
                 newbg = base.getConstantState().newDrawable().mutate();
             }
-            int color = -1;
-
-            switch (catstyle) {
-                case Selected:
-                    color = isHighContrast ? cattabSelectedBackgroundHighContrast : cattabSelectedBackground;
-                    break;
-                case DragHover:
-                    color = dragoverBackground;
-                    break;
-                case Hidden:
-                    color = cattabBackground;
-                    break;
-                case Tiny:
-                case Normal:
-                case Default:
-                    color = isHighContrast ? cattabBackgroundHighContrast : cattabBackground;
-                    break;
-                case White:
-                    color = Color.argb(128, 255, 255, 255);
-                    break;
-                case None:
-                default:
-
-            }
-            if (color!=-1) {
-                newbg.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-            }
             bgDrawables.put(key, newbg);
+        }
+
+        if (color!=-1) {
+            newbg.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
 
         return newbg;
