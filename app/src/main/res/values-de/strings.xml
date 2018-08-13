@@ -375,5 +375,6 @@
     <string name="prompt_config_features">Configure new features</string>
     <string name="hide">Hide</string>
     <string name="show">Show</string>
+    <string name="theme_transp">Transparent</string>
 
 </resources>
