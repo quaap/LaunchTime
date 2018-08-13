@@ -539,7 +539,7 @@ public class ActionMenu {
 
                         ComponentName cn = new ComponentName(ri.activityInfo.packageName, ri.activityInfo.name);
 
-                        Log.d(TAG, label + " " + ri.activityInfo.packageName + " " + ri.activityInfo.name + " " + ri.activityInfo.permission);
+                        //Log.d(TAG, label + " " + ri.activityInfo.packageName + " " + ri.activityInfo.name + " " + ri.activityInfo.permission);
 
                         if (label == null || label.toString().trim().equals("") || names.contains(label.toString().trim())) {
                             label = ri.activityInfo.name
