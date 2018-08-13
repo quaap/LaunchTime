@@ -53,6 +53,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
     private static final String OREOSHORTCUT = "OREOSHORTCUT:";
     public static final String OLDSHORTCUT = "OLDSHORTCUT:";
+    private static final int THREAD_TIMEOUT = 10;
 
 
     public static AppLauncher createAppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {
@@ -369,6 +370,46 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return this.mLabel.toLowerCase(Locale.getDefault()).compareTo(appLauncher.mLabel.toLowerCase(Locale.getDefault()));
     }
 
+    public void loadIcon(Context context,  Handler handler) {
+        if (iconLoaded()) return;
+        Drawable app_icon = null;
+        try {
+
+            String uristr = null;
+            if (isActionLink()) {
+                uristr = getLinkUri();
+                if (uristr == null) uristr = "";
+            }
+
+            app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(this);
+
+            if (app_icon == null) {
+                app_icon = context.getPackageManager().getDefaultActivityIcon();
+            }
+            if (isLink()) {
+                app_icon = drawLinkSymbol(app_icon, context);
+            }
+
+
+        } catch (Exception | Error e) {
+            Log.d("loadIcon", e.getMessage(), e);
+        }
+
+        if (app_icon == null) {
+            app_icon = context.getPackageManager().getDefaultActivityIcon();
+        }
+
+        mIconDrawable = app_icon;
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mIconImage != null) {
+                    mIconImage.setImageDrawable(mIconDrawable);
+                }
+            }
+        });
+    }
 
     private Drawable drawLinkSymbol(Drawable app_icon, Context context) {
         try {
@@ -415,13 +456,11 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 if (handler==null) handler = new Handler(Looper.getMainLooper());
                 iconLoader = new IconLoaderTask(context, handler);
                 try {
-                    //Probably not much better than AsyncTask, but I kept seeing load failures before switching.
-                    //Borrowing AsyncTask's pool, should be safe to do
-                    AsyncTask.THREAD_POOL_EXECUTOR.execute(iconLoader);
-                } catch (Throwable t) {
-                    Log.e("loadAppIconAsync", "AsyncTask.THREAD_POOL_EXECUTOR: " + t.getMessage(), t);
-                    //but if, in the future, non-asyntasks are not allowed, use a normal thread:
+                    //AsyncTask.THREAD_POOL_EXECUTOR.execute(iconLoader);
                     new Thread(iconLoader).start();
+                } catch (Throwable t) {
+                    Log.e("loadAppIconAsync", t.getMessage(), t);
+
                 }
             }
         }
@@ -460,49 +499,14 @@ public class AppLauncher implements Comparable<AppLauncher> {
                         return;
                     }
                     try {
-                        final AppLauncher inst = iconQueue.poll(5, TimeUnit.SECONDS);
+                        final AppLauncher inst = iconQueue.poll(THREAD_TIMEOUT, TimeUnit.SECONDS);
                         if (inst == null) {
                             isrunning = false;
-                        } else if (!inst.iconLoaded()) {
+                        } else {
+                            inst.loadIcon(context, handler);
                             processed++;
-                            Drawable app_icon = null;
-                            try {
-
-                                String uristr = null;
-                                if (inst.isActionLink()) {
-                                    uristr = inst.getLinkUri();
-                                    if (uristr == null) uristr = "";
-                                }
-
-                                app_icon = GlobState.getIconsHandler(context).getDrawableIconForPackage(inst);
-
-                                if (app_icon == null) {
-                                    app_icon = context.getPackageManager().getDefaultActivityIcon();
-                                }
-                                if (inst.isLink()) {
-                                    app_icon = inst.drawLinkSymbol(app_icon, context);
-                                }
-
-
-                            } catch (Exception | Error e) {
-                                Log.d("loadAppIconAsync", e.getMessage(), e);
-                                if (app_icon == null) {
-                                    app_icon = context.getPackageManager().getDefaultActivityIcon();
-                                }
-                            }
-
-                            inst.mIconDrawable = app_icon;
-
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (inst.mIconImage != null) {
-                                        inst.mIconImage.setImageDrawable(inst.mIconDrawable);
-                                    }
-                                }
-                            });
-
                         }
+
 
                     } catch (InterruptedException e) {
                         Log.d("loadAppIconAsync", e.getMessage(), e);
@@ -522,5 +526,6 @@ public class AppLauncher implements Comparable<AppLauncher> {
         }
 
     }
+
 
 }
