@@ -110,6 +110,7 @@ import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.ui.QuickRow;
 import com.quaap.launchtime.ui.SearchBox;
 import com.quaap.launchtime.ui.Style;
+import com.quaap.launchtime.ui.Style.AnimateDirection;
 import com.quaap.launchtime.widgets.Widget;
 
 import java.lang.ref.WeakReference;
@@ -968,10 +969,11 @@ public class MainActivity extends Activity implements
 
     private synchronized void switchCategory(String category, AnimateDirection dir, boolean bounce) {
         try {
+            String prevCat = mCategory;
             mActionMenu.dismissActionPopup();
             if (category == null) return;
             if (mCategory!=null && !mCategory.equals(category)) {
-                animateHide(mIconsArea, dir, true, bounce);
+                mStyle.animateHide(mIconsArea, dir, true, bounce);
             }
             mCategory = category;
             latestCategory = mCategory;
@@ -980,7 +982,10 @@ public class MainActivity extends Activity implements
             if (db().getCategoryDisplay(mCategory) == null) {
                 mCategory = getTopCategory();
             }
-            setCategoryTabStyles();
+
+            if (prevCat==null || !mCategory.equals(prevCat)) {
+                setCategoryTabStyles();
+            }
 
 
             mIconSheet = mIconSheets.get(mCategory);
@@ -1074,15 +1079,48 @@ public class MainActivity extends Activity implements
     }
 
     private void setCategoryTabStyles() {
+        Log.d(TAG, "setCategoryTabStyles");
         //switch all category tabs to their default style and text
         for (TextView catTab : mCategoryTabs.values()) {
             styleCategorySpecial(catTab, Style.CategoryTabStyle.Default);
-            catTab.setText(db().getCategoryDisplay(mRevCategoryMap.get(catTab)));
+
+            String category = mRevCategoryMap.get(catTab);
+            if (!mCategory.equals(category)) {
+                if (mAnimationDuration>0) {
+                    int oldText = catTab.getText().length();
+                    String newText = db().getCategoryDisplay(category);
+                    if (newText.length() < oldText) {
+                        mStyle.animateChangingSize(catTab, catTab.getHeight(), catTab.getHeight() * 2 / 3, null, null);
+                    }
+                }
+                catTab.setText(db().getCategoryDisplay(category));
+            }
         }
 
         //change the selected tab to the full label name
-        TextView catTab = mCategoryTabs.get(mCategory);
-        catTab.setText(db().getCategoryDisplayFull(mCategory));
+        final TextView catTab = mCategoryTabs.get(mCategory);
+
+        if (mAnimationDuration>0) {
+            int initheight = catTab.getHeight();
+            if (catTab.getVisibility()!=View.VISIBLE) initheight = 0;
+            int finalheight = initheight;
+
+            if (db().getCategoryDisplayFull(mCategory).length()>catTab.getText().length()) {
+                finalheight = (int)(catTab.getHeight()*1.5);
+            }
+            if (finalheight==0) {
+                finalheight = 50;
+            }
+            mStyle.animateChangingSize(catTab, initheight, finalheight, null, new Runnable() {
+                @Override
+                public void run() {
+                    catTab.setText(db().getCategoryDisplayFull(mCategory));
+                }
+            });
+        } else {
+            catTab.setText(db().getCategoryDisplayFull(mCategory));
+        }
+
         catTab.setVisibility(View.VISIBLE);
     }
 
@@ -1437,178 +1475,18 @@ public class MainActivity extends Activity implements
 
         if (!show) {
             if (cats.getVisibility() == View.VISIBLE) {
-                animateDownHide(cats);
+                mStyle.animateDownHide(cats);
             }
-            animateUpShow(mShowCats);
+            mStyle.animateUpShow(mShowCats);
         } else {
-            animateDownHide(mShowCats);
+            mStyle.animateDownHide(mShowCats);
             if (cats.getVisibility() == View.GONE) {
-                animateUpShow(cats);
+                mStyle.animateUpShow(cats);
             }
         }
         mActionMenu.dismissActionPopup();
     }
 
-    private void animateUpShow(View view) {
-        animateShow(view,AnimateDirection.Down);
-    }
-
-    private void animateDownHide(View view) {
-        animateHide(view, AnimateDirection.Down,false, true);
-    }
-
-    enum AnimateDirection {Left, Up, Right, Down}
-
-    private final Map<View,Long> aniHideStarted = new HashMap<>();
-
-    private void animateHide(final View view, final AnimateDirection towards) {
-        animateHide(view,towards, false, true);
-    }
-
-    private void animateHide(final View view, final AnimateDirection towards, final boolean andBack, final boolean bounce) {
-
-//        Log.d(TAG, "animateHide " + view);
-        if (mAnimationDuration==0) {
-            view.clearAnimation();
-
-            if (andBack) {
-                ensureVisibleNoAni(view);
-
-            } else {
-                view.setVisibility(View.GONE);
-            }
-            return;
-        }
-
-        long now = System.currentTimeMillis();
-        float fac = andBack?2.5f:1;
-        Long then = aniHideStarted.get(view);
-        if (then!=null && now - then < mAnimationDuration*fac) return;
-        aniHideStarted.put(view,now);
-
-        ViewPropertyAnimator animate = view.animate()
-                .setDuration(mAnimationDuration)
-                .setInterpolator(new AccelerateInterpolator())
-                .alpha(0)
-                .scaleY(.6f)
-                .scaleX(.6f)
-
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-
-                        if (andBack) {
-                            animateShow(view, towards, !bounce);
-                        } else {
-                            view.setVisibility(View.GONE);
-                        }
-
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        super.onAnimationCancel(animation);
-                        if (andBack) {
-                            ensureVisibleNoAni(view);
-                        } else {
-                            view.setVisibility(View.GONE);
-                        }
-                    }
-                });
-
-        switch(towards) {
-            case Down:
-                animate.translationY(view.getHeight());
-                break;
-            case Up:
-                animate.translationY(-view.getHeight());
-                break;
-            case Right:
-                animate.translationX(view.getWidth());
-                break;
-            case Left:
-                animate.translationX(-view.getHeight());
-                break;
-        }
-        animate.setStartDelay(0).start();
-    }
-
-    private void ensureVisibleNoAni(View view) {
-        view.setAlpha(1);
-        view.setScaleX(1);
-        view.setScaleY(1);
-        view.setTranslationX(0);
-        view.setTranslationY(0);
-        view.setVisibility(View.VISIBLE);
-    }
-
-    private void animateShow(final View view, AnimateDirection from) {
-        animateShow(view, from,false);
-    }
-
-
-    private void animateShow(final View view, AnimateDirection from, boolean reverse) {
-
-        if (mAnimationDuration==0) {
-            view.clearAnimation();
-            ensureVisibleNoAni(view);
-            //Log.d(TAG, "animateShow " + view);
-
-            return;
-        }
-
-        if (reverse) {
-            switch(from) {
-                case Down:
-                    view.setTranslationY(-view.getHeight());
-                    break;
-                case Up:
-                    view.setTranslationY(view.getHeight());
-                    break;
-                case Right:
-                    view.setTranslationX(-view.getWidth());
-                    break;
-                case Left:
-                    view.setTranslationX(view.getWidth());
-                    break;
-            }
-        }
-
-        view.setVisibility(View.VISIBLE);
-
-        ViewPropertyAnimator animate = view.animate()
-                .setDuration(mAnimationDuration)
-                .setInterpolator(new DecelerateInterpolator())
-                .alpha(1)
-                .scaleY(1)
-                .scaleX(1)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        ensureVisibleNoAni(view);
-                    }
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        super.onAnimationCancel(animation);
-                        ensureVisibleNoAni(view);
-                    }
-                });
-
-        switch(from) {
-            case Down:
-            case Up:
-                animate.translationY(0);
-                break;
-            case Right:
-            case Left:
-                animate.translationX(0);
-                break;
-        }
-
-
-    }
 
     @SuppressLint("RtlHardcoded")
     private void handleAutohide() {
@@ -2773,9 +2651,9 @@ public class MainActivity extends Activity implements
                         if (mActionMenu.useDropZones()) {
                             if (!isSpecial && !mCategory.equals(Categories.CAT_SEARCH) && mLinkDropzone.getVisibility() != View.VISIBLE && (droppedOn == mRemoveDropzone || droppedOn == mLinkDropzonePeek) && System.currentTimeMillis() - mDropZoneHover > 400) {
                                 //mLinkDropzone.setVisibility(View.VISIBLE);
-                                animateShow(mLinkDropzone, AnimateDirection.Right);
+                                mStyle.animateShow(mLinkDropzone, AnimateDirection.Right);
                                 //mLinkDropzonePeek.setVisibility(View.GONE);
-                                animateDownHide(mLinkDropzonePeek);
+                                mStyle.animateDownHide(mLinkDropzonePeek);
                                 // Log.d(TAG, "mLinkDropzone.setVisibility(View.VISIBLE)");
                             }
                         }
@@ -3202,17 +3080,24 @@ public class MainActivity extends Activity implements
 
 
     private void showHiddenCategories() {
+        //Log.d(TAG,"showHiddenCategories");
         for (String cat: db().getCategories()) {
             final View cattab = mCategoryTabs.get(cat);
             if (mCategoryTabs!=null && cat!=null && cattab!=null) {
                 if (mAnimationDuration>0 && cattab.getVisibility() == View.GONE) {
 
-                    animateChangingSize(cattab, 0, mStyle.getCategoryTabPaddingHeight()*2, new Runnable() {
+                    Log.d(TAG,"showHiddenCategories " + cat);
+                    int finalheight = cattab.getHeight();
+                    if (finalheight<=0) {
+                        finalheight = 30;
+                    }
+                    mStyle.animateChangingSize(cattab, 0, finalheight, new Runnable() {
                         @Override
                         public void run() {
                             cattab.setVisibility(View.VISIBLE);
                         }
                     }, null);
+
                 } else {
                     cattab.setVisibility(View.VISIBLE);
                 }
@@ -3239,7 +3124,7 @@ public class MainActivity extends Activity implements
 
                     if (mAnimationDuration>0 && cattab.getVisibility() != View.GONE) {
                         int h = cattab.getHeight();
-                        animateChangingSize(cattab, h, 0, null, new Runnable() {
+                        mStyle.animateChangingSize(cattab, h, 0, null, new Runnable() {
                             @Override
                             public void run() {
                                 cattab.setVisibility(View.GONE);
@@ -3256,37 +3141,6 @@ public class MainActivity extends Activity implements
 
     }
 
-    private void animateChangingSize(final View view, int startsize, int newsize, final Runnable before, final Runnable after) {
-        final LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)view.getLayoutParams();
-        lp.height = startsize;
-        view.setLayoutParams(lp);
-
-        ValueAnimator o = ValueAnimator.ofInt(startsize,newsize);
-        o.setDuration(mAnimationDuration);
-        o.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                lp.height = (int)valueAnimator.getAnimatedValue();
-                view.setLayoutParams(lp);
-            }
-        });
-        o.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                if (before!=null) before.run();
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                view.setLayoutParams(lp);
-                if (after!=null) after.run();
-            }
-        });
-
-
-        o.start();
-    }
 
     private void showRemoveDropzone() {
         if (mChildLock) return;
@@ -3305,7 +3159,7 @@ public class MainActivity extends Activity implements
                 mRemoveAppText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.recycle);
                 mRemoveAppText.setTextColor(Color.BLACK);
                 //mLinkDropzonePeek.setVisibility(View.GONE);
-                animateDownHide(mLinkDropzonePeek);
+                mStyle.animateDownHide(mLinkDropzonePeek);
             } else {
                 mRemoveDropzone.setBackgroundColor(Color.RED);
                 // mRemoveAppText.setText(getString(R.string.uninstall_app) + "\n" + new String(Character.toChars(0x1F5D1)));
@@ -3315,28 +3169,28 @@ public class MainActivity extends Activity implements
                 mRemoveAppText.setTextColor(Color.WHITE);
                 if (!Categories.CAT_SEARCH.equals(mCategory)) {
                     //mLinkDropzonePeek.setVisibility(View.VISIBLE);
-                    animateUpShow(mLinkDropzonePeek);
+                    mStyle.animateUpShow(mLinkDropzonePeek);
                 }
             }
-            animateUpShow(mRemoveDropzone);
+            mStyle.animateUpShow(mRemoveDropzone);
         }
         //mRemoveDropzone.setVisibility(View.VISIBLE);
-        animateDownHide(mShowButtons);
-        animateUpShow(mHideButtons);
+        mStyle.animateDownHide(mShowButtons);
+        mStyle.animateUpShow(mHideButtons);
         //mShowButtons.setVisibility(View.GONE);
     }
 
     private void hideRemoveDropzone() {
 
-        animateDownHide(mRemoveDropzone);
-        animateHide(mLinkDropzone, AnimateDirection.Right);
-        animateDownHide(mLinkDropzonePeek);
+        mStyle.animateDownHide(mRemoveDropzone);
+        mStyle.animateHide(mLinkDropzone, AnimateDirection.Right);
+        mStyle.animateDownHide(mLinkDropzonePeek);
 //        mRemoveDropzone.setVisibility(View.GONE);
 //        mLinkDropzone.setVisibility(View.GONE);
 //        mLinkDropzonePeek.setVisibility(View.GONE);
         //mShowButtons.setVisibility(View.VISIBLE);
-        animateUpShow(mShowButtons);
-        animateDownHide(mHideButtons);
+        mStyle.animateUpShow(mShowButtons);
+        mStyle.animateDownHide(mHideButtons);
     }
 
     public void launchUninstallIntent(AppLauncher app, View launcher) {
@@ -3953,27 +3807,27 @@ public class MainActivity extends Activity implements
                     mEditWidgetsButton.setVisibility(View.VISIBLE);
                 }
 
-                animateUpShow(mIconSheetBottomFrame);
+                mStyle.animateUpShow(mIconSheetBottomFrame);
             } else {
-                animateUpShow(mOpenPrefs2Button);
+                mStyle.animateUpShow(mOpenPrefs2Button);
             }
-            animateDownHide(mShowButtons);
+            mStyle.animateDownHide(mShowButtons);
 
-            animateUpShow(mHideButtons);
+            mStyle.animateUpShow(mHideButtons);
 
 
         } else {
             if (hideCats) {hideHiddenCategories();}
 
             //if (!mUseExtraActions) {
-            animateDownHide(mIconSheetBottomFrame);
+            mStyle.animateDownHide(mIconSheetBottomFrame);
             //} else {
-            animateDownHide(mOpenPrefs2Button);
+            mStyle.animateDownHide(mOpenPrefs2Button);
             //}
 
-            animateDownHide(mHideButtons);
+            mStyle.animateDownHide(mHideButtons);
 
-            animateUpShow(mShowButtons);
+            mStyle.animateUpShow(mShowButtons);
 
         }
     }

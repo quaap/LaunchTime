@@ -3,6 +3,7 @@ package com.quaap.launchtime.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -12,13 +13,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.CycleInterpolator;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.quaap.launchtime.R;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -62,7 +67,7 @@ public class Style {
     private int launcherSize = 80;
     private int launcherFontSize = 12;
 
-    private int aniDuration;
+    private int mAnimationDuration;
 
     private final SharedPreferences mAppPreferences;
 
@@ -153,30 +158,30 @@ public class Style {
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
 
-                if (aniDuration>0) {
-                    categoryTab.animate().scaleX(1.3f).scaleY(1.3f)
-                            .setInterpolator(new CycleInterpolator(1))
-                            .setDuration(aniDuration)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    categoryTab.setScaleX(1);
-                                    categoryTab.setScaleY(1);
-                                }
-
-                                @Override
-                                public void onAnimationCancel(Animator animation) {
-                                    super.onAnimationCancel(animation);
-                                    categoryTab.setScaleX(1);
-                                    categoryTab.setScaleY(1);
-                                }
-                            }).start();
-                } else {
-                    categoryTab.clearAnimation();
+//                if (mAnimationDuration >0) {
+//                    categoryTab.animate().scaleX(1.3f).scaleY(1.3f)
+//                            .setInterpolator(new CycleInterpolator(1))
+//                            .setDuration(mAnimationDuration)
+//                            .setListener(new AnimatorListenerAdapter() {
+//                                @Override
+//                                public void onAnimationEnd(Animator animation) {
+//                                    super.onAnimationEnd(animation);
+//                                    categoryTab.setScaleX(1);
+//                                    categoryTab.setScaleY(1);
+//                                }
+//
+//                                @Override
+//                                public void onAnimationCancel(Animator animation) {
+//                                    super.onAnimationCancel(animation);
+//                                    categoryTab.setScaleX(1);
+//                                    categoryTab.setScaleY(1);
+//                                }
+//                            }).start();
+//                } else {
+//                    categoryTab.clearAnimation();
                     categoryTab.setScaleX(1);
                     categoryTab.setScaleY(1);
-                }
+                //}
                 lp.leftMargin = 1;
                 lp.rightMargin = 1;
                 break;
@@ -257,7 +262,7 @@ public class Style {
                 break;
         }
 
-        aniDuration = Integer.parseInt(mAppPreferences.getString(mContext.getString(R.string.pref_key_animate_duration), "150"));
+        mAnimationDuration = Integer.parseInt(mAppPreferences.getString(mContext.getString(R.string.pref_key_animate_duration), "150"));
 
 
         float iconsize = mContext.getResources().getDimension(R.dimen.icon_width);
@@ -445,4 +450,202 @@ public class Style {
     public int getIconTint() {
         return iconTint;
     }
+
+
+
+    public void animateUpShow(View view) {
+        animateShow(view,AnimateDirection.Down);
+    }
+
+    public void animateDownHide(View view) {
+        animateHide(view, AnimateDirection.Down,false, true);
+    }
+
+    public enum AnimateDirection {Left, Up, Right, Down}
+
+    private final Map<View,Long> aniHideStarted = new HashMap<>();
+
+    public void animateHide(final View view, final AnimateDirection towards) {
+        animateHide(view,towards, false, true);
+    }
+
+    public void animateHide(final View view, final AnimateDirection towards, final boolean andBack, final boolean bounce) {
+
+//        Log.d(TAG, "animateHide " + view);
+        if (mAnimationDuration==0) {
+            view.clearAnimation();
+
+            if (andBack) {
+                ensureVisibleNoAni(view);
+
+            } else {
+                view.setVisibility(View.GONE);
+            }
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        float fac = andBack?2.5f:1;
+        Long then = aniHideStarted.get(view);
+        if (then!=null && now - then < mAnimationDuration*fac) return;
+        aniHideStarted.put(view,now);
+
+        ViewPropertyAnimator animate = view.animate()
+                .setDuration(mAnimationDuration)
+                .setInterpolator(new AccelerateInterpolator())
+                .alpha(0)
+                .scaleY(.6f)
+                .scaleX(.6f)
+
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+
+                        if (andBack) {
+                            animateShow(view, towards, !bounce);
+                        } else {
+                            view.setVisibility(View.GONE);
+                        }
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        if (andBack) {
+                            ensureVisibleNoAni(view);
+                        } else {
+                            view.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+        switch(towards) {
+            case Down:
+                animate.translationY(view.getHeight());
+                break;
+            case Up:
+                animate.translationY(-view.getHeight());
+                break;
+            case Right:
+                animate.translationX(view.getWidth());
+                break;
+            case Left:
+                animate.translationX(-view.getHeight());
+                break;
+        }
+        animate.setStartDelay(0).start();
+    }
+
+    public void ensureVisibleNoAni(View view) {
+        view.setAlpha(1);
+        view.setScaleX(1);
+        view.setScaleY(1);
+        view.setTranslationX(0);
+        view.setTranslationY(0);
+        view.setVisibility(View.VISIBLE);
+    }
+
+    public void animateShow(final View view, AnimateDirection from) {
+        animateShow(view, from,false);
+    }
+
+
+    public void animateShow(final View view, AnimateDirection from, boolean reverse) {
+
+        if (mAnimationDuration==0) {
+            view.clearAnimation();
+            ensureVisibleNoAni(view);
+            //Log.d(TAG, "animateShow " + view);
+
+            return;
+        }
+
+        if (reverse) {
+            switch(from) {
+                case Down:
+                    view.setTranslationY(-view.getHeight());
+                    break;
+                case Up:
+                    view.setTranslationY(view.getHeight());
+                    break;
+                case Right:
+                    view.setTranslationX(-view.getWidth());
+                    break;
+                case Left:
+                    view.setTranslationX(view.getWidth());
+                    break;
+            }
+        }
+
+        view.setVisibility(View.VISIBLE);
+
+        ViewPropertyAnimator animate = view.animate()
+                .setDuration(mAnimationDuration)
+                .setInterpolator(new DecelerateInterpolator())
+                .alpha(1)
+                .scaleY(1)
+                .scaleX(1)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        ensureVisibleNoAni(view);
+                    }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        super.onAnimationCancel(animation);
+                        ensureVisibleNoAni(view);
+                    }
+                });
+
+        switch(from) {
+            case Down:
+            case Up:
+                animate.translationY(0);
+                break;
+            case Right:
+            case Left:
+                animate.translationX(0);
+                break;
+        }
+
+
+    }
+
+
+    public void animateChangingSize(final View view, int startsize, int newsize, final Runnable before, final Runnable after) {
+        final ViewGroup.LayoutParams lp = view.getLayoutParams();
+        lp.height = startsize;
+        view.setLayoutParams(lp);
+
+        ValueAnimator o = ValueAnimator.ofInt(startsize,newsize);
+        o.setDuration(mAnimationDuration);
+        o.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                lp.height = (int)valueAnimator.getAnimatedValue();
+                view.setLayoutParams(lp);
+            }
+        });
+        o.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if (before!=null) before.run();
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                view.setLayoutParams(lp);
+                if (after!=null) after.run();
+            }
+        });
+
+
+        o.start();
+    }
+
+
 }
