@@ -3,6 +3,7 @@ package com.quaap.launchtime.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +55,7 @@ public class SearchBox {
         quickasett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchAction("android.settings.SETTINGS", "settings");
+                launchAction(Settings.ACTION_SETTINGS, "settings");
             }
         });
 
@@ -71,7 +72,15 @@ public class SearchBox {
         quickbsett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchActivity("com.android.settings", "com.android.settings.bluetooth.BluetoothSettings", "BluetoothSettings");
+                launchActivity("com.android.settings",
+                        "com.android.settings.bluetooth.BluetoothSettings",
+                        "BluetoothSettings",
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                launchAction(Settings.ACTION_BLUETOOTH_SETTINGS, "BluetoothSettings");
+                            }
+                        });
             }
         });
 
@@ -80,7 +89,15 @@ public class SearchBox {
         quickvsett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchActivity("com.android.settings", "com.android.settings.SoundSettings", "BluetoothSettings");
+                launchActivity("com.android.settings",
+                        "com.android.settings.SoundSettings",
+                        "VolumeSettings",
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                launchAction(Settings.ACTION_SOUND_SETTINGS, "VolumeSettings");
+                            }
+                        });
             }
         });
 
@@ -88,7 +105,15 @@ public class SearchBox {
         quickwisett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchActivity("com.android.settings", "com.android.settings.wifi.WifiSettings", "WifiSettings");
+                launchActivity("com.android.settings",
+                        "com.android.settings.wifi.WifiSettings",
+                        "WifiSettings",
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                launchAction(Settings.ACTION_WIFI_SETTINGS, "WifiSettings");
+                            }
+                        });
             }
         });
 
@@ -100,7 +125,21 @@ public class SearchBox {
                         mMainActivity.getString(R.string.devops_warn), new Runnable() {
                     @Override
                     public void run() {
-                        launchActivity("com.android.settings", "com.android.settings.DevelopmentSettings", "DevOps");
+                        launchActivity("com.android.settings",
+                                "com.android.settings.DevelopmentSettings",
+                                "DevOps",
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        launchAction(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS, "DevOps", new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                launchAction(Settings.ACTION_DEVICE_INFO_SETTINGS, "DevOps");
+                                            }
+                                        });
+                                    }
+                                });
+
                     }
                 });
             }
@@ -160,26 +199,39 @@ public class SearchBox {
 
     }
 
-    private void launchActivity(String packageName, String classname, String name) {
+    private void launchActivity(String packageName, String classname, String name, Runnable failed) {
         try {
             Intent l = new Intent(Intent.ACTION_VIEW);
             l.setClassName(packageName, classname);
+            l.setPackage(packageName);
             l.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mMainActivity.startActivity(l);
         } catch (Throwable t) {
             Log.e("short", t.getMessage(), t);
-            Toast.makeText(mMainActivity, "Couldn't start setting "  + name, Toast.LENGTH_SHORT).show();
+            if (failed!=null) {
+                failed.run();
+            } else {
+                Toast.makeText(mMainActivity, "Couldn't start setting " + name, Toast.LENGTH_SHORT).show();
+            }
         }
     }
-
     private void launchAction(String action, String name) {
+        launchAction(action, name, null);
+    }
+
+    private void launchAction(String action, String name, Runnable failed) {
         try {
             Intent l = new Intent(action);
             l.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             mMainActivity.startActivity(l);
         } catch (Throwable t) {
             Log.e("short", t.getMessage(), t);
-            Toast.makeText(mMainActivity, "Couldn't start setting "  + name, Toast.LENGTH_SHORT).show();
+            if (failed!=null) {
+                failed.run();
+            } else {
+                Toast.makeText(mMainActivity, "Couldn't start setting " + name, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
