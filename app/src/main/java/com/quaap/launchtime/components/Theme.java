@@ -38,13 +38,13 @@ public class Theme {
 
     public final static String NEW_SYS = "newish";
 
-    private enum Thing {Mask, Text, AltText, Background, AltBackground}
+    private enum Thing {Mask, Text, AltText, Background, AltBackground, Wallpaper}
 
 
     private final String [] COLOR_PREFS = {"icon_tint", "cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
             "wallpapercolor",  "textcolor"};
 
-    private final Thing [] THING_MAP = {Thing.Mask, Thing.AltBackground, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Background, Thing.Text};
+    private final Thing [] THING_MAP = {Thing.Mask, Thing.Background, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Wallpaper, Thing.Text};
 
 
 //    private int [] getColorDefaultsClassic()  {
@@ -89,6 +89,7 @@ public class Theme {
                 .setColor(Thing.Text, defcolors[4])
                 .setColor(Thing.AltText, defcolors[3])
                 .setColor(Thing.Background, defcolors[1])
+                .setColor(Thing.Wallpaper, defcolors[6])
                 .setColor(Thing.AltBackground, defcolors[2]);
 
         builtinThemes.put(newish.getPackKey(), newish);
@@ -99,9 +100,42 @@ public class Theme {
                 .setColor(Thing.Text, getResColor(R.color.textcolor_classic))
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.TRANSPARENT)
+                .setColor(Thing.Wallpaper, Color.TRANSPARENT)
                 .setColor(Thing.AltBackground, getResColor(R.color.cattab_background_classic));
 
         builtinThemes.put(classic.getPackKey(), classic);
+
+
+        BuiltinTheme crystal1= new MonochromeTheme("crystal1", "Crystal")
+                .setColor(Thing.Mask, Color.TRANSPARENT)
+                .setColor(Thing.Text, Color.argb(255,240,240,240))
+                .setColor(Thing.AltText, Color.WHITE)
+                .setColor(Thing.Wallpaper, Color.TRANSPARENT)
+                .setColor(Thing.Background, Color.argb(20,250,250,255))
+                .setColor(Thing.AltBackground, Color.argb(90,250,250,255));
+
+        builtinThemes.put(crystal1.getPackKey(), crystal1);
+
+        BuiltinTheme paper= new MonochromeTheme("whitepaper", "White paper")
+                .setColor(Thing.Mask, Color.TRANSPARENT)
+                .setColor(Thing.Text, Color.argb(255,20,20,20))
+                .setColor(Thing.AltText, Color.DKGRAY)
+                .setColor(Thing.Wallpaper, Color.argb(255,250,250,250))
+                .setColor(Thing.Background, Color.argb(255,252,252,252))
+                .setColor(Thing.AltBackground, Color.argb(255,252,255,255));
+
+        builtinThemes.put(paper.getPackKey(), paper);
+
+        BuiltinTheme transp = new MonochromeTheme("transparent", ctx.getString(R.string.theme_transp))
+                .setColor(Thing.Mask, Color.TRANSPARENT)
+                .setColor(Thing.Text, Color.argb(255,240,240,240))
+                .setColor(Thing.AltText, Color.WHITE)
+                .setColor(Thing.Background, Color.TRANSPARENT)
+                .setColor(Thing.Wallpaper, Color.TRANSPARENT)
+                .setColor(Thing.AltBackground, Color.TRANSPARENT);
+
+        builtinThemes.put(transp.getPackKey(), transp);
+
 
 
         int [] ucolors = {Color.argb(127,50,50,50), Color.argb(127,10,10,160), Color.argb(127,170,10,10)};
@@ -112,25 +146,20 @@ public class Theme {
                     .setColor(Thing.Text, Color.argb(255,230,230,230))
                     .setColor(Thing.AltText, Color.WHITE)
                     .setColor(Thing.Background, ubcolors[i-1])
+                    .setColor(Thing.Wallpaper, ubcolors[i-1])
                     .setColor(Thing.AltBackground, ucolors[i-1]);
 
             builtinThemes.put(u.getPackKey(), u);
         }
 
-        BuiltinTheme transp = new MonochromeTheme("transparent", ctx.getString(R.string.theme_transp))
-                .setColor(Thing.Mask, Color.TRANSPARENT)
-                .setColor(Thing.Text, Color.argb(255,240,240,240))
-                .setColor(Thing.AltText, Color.WHITE)
-                .setColor(Thing.Background, Color.TRANSPARENT)
-                .setColor(Thing.AltBackground, Color.TRANSPARENT);
 
-        builtinThemes.put(transp.getPackKey(), transp);
 
         BuiltinTheme bwicon = new MonochromeTheme("bwicon", ctx.getString(R.string.theme_bw))
                 .setColor(Thing.Mask, Color.WHITE)
                 .setColor(Thing.Text, Color.argb(255,220,220,220))
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.BLACK)
+                .setColor(Thing.Wallpaper, Color.BLACK)
                 .setColor(Thing.AltBackground, Color.parseColor("#ff222222"));
 
         builtinThemes.put(bwicon.getPackKey(), bwicon);
@@ -141,6 +170,7 @@ public class Theme {
                 .setColor(Thing.Text, Color.parseColor("#dd22ff22"))
                 .setColor(Thing.AltText, Color.parseColor("#dd22ff22"))
                 .setColor(Thing.Background, Color.BLACK)
+                .setColor(Thing.Wallpaper, Color.BLACK)
                 .setColor(Thing.AltBackground, Color.parseColor("#dd112211"));
 
         builtinThemes.put(termcap.getPackKey(), termcap);
@@ -151,6 +181,7 @@ public class Theme {
                 .setColor(Thing.Text, Color.parseColor("#eeffffff"))
                 .setColor(Thing.AltText, Color.parseColor("#eeffffff"))
                 .setColor(Thing.Background, Color.parseColor("#88000077"))
+                .setColor(Thing.Wallpaper, Color.parseColor("#55000077"))
                 .setColor(Thing.AltBackground, Color.parseColor("#881111ff"));
 
         builtinThemes.put(coolblue.getPackKey(), coolblue);
@@ -160,6 +191,7 @@ public class Theme {
                 .setColor(Thing.Text, Color.parseColor("#eeff2222"))
                 .setColor(Thing.AltText, Color.parseColor("#eeff2222"))
                 .setColor(Thing.Background, Color.parseColor("#77550000"))
+                .setColor(Thing.Wallpaper, Color.parseColor("#33550000"))
                 .setColor(Thing.AltBackground, Color.parseColor("#22121111"));
 
         builtinThemes.put(redplanet.getPackKey(), redplanet);
@@ -169,6 +201,7 @@ public class Theme {
                 .setColor(Thing.Text, Color.parseColor("#eeffffff"))
                 .setColor(Thing.AltText, Color.parseColor("#eeffc0cb"))
                 .setColor(Thing.Background, Color.parseColor("#ffff69b4"))
+                .setColor(Thing.Wallpaper, Color.parseColor("#88ff69b4"))
                 .setColor(Thing.AltBackground, Color.parseColor("#ffff1493"));
 
         builtinThemes.put(ladypink.getPackKey(), ladypink);

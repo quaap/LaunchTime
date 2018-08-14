@@ -311,13 +311,25 @@ public class Style {
 
         cattabBackgroundHighContrast = cattabBackground;
 
-        int alpha = Color.alpha(cattabBackground);
-        if (alpha<220) alpha=220;
-        cattabBackgroundHighContrast = Color.argb(alpha, Color.red(cattabBackground), Color.green(cattabBackground), Color.blue(cattabBackground));
+        int alpha; // = Color.alpha(cattabBackground);
+        //if (alpha<80) alpha=80;
+       // cattabBackgroundHighContrast = Color.argb(alpha, Color.red(cattabBackground), Color.green(cattabBackground), Color.blue(cattabBackground));
+
+        alpha = Color.alpha(cattabBackground);
+        if (alpha<80) {
+            alpha=80;
+            cattabBackgroundHighContrast = Color.argb(alpha, Color.red(cattabBackground)*5/6, Color.green(cattabBackground)*5/6, Color.blue(cattabBackground)*5/6);
+        } else {
+            cattabBackgroundHighContrast = cattabBackground;
+        }
 
         alpha = Color.alpha(cattabSelectedBackground);
-        if (alpha<220) alpha=220;
-        cattabSelectedBackgroundHighContrast = Color.argb(alpha, Color.red(cattabSelectedBackground), Color.green(cattabSelectedBackground), Color.blue(cattabSelectedBackground));
+        if (alpha<80) {
+            alpha=80;
+            cattabSelectedBackgroundHighContrast = Color.argb(alpha, Color.red(cattabSelectedBackground)*5/6, Color.green(cattabSelectedBackground)*5/6, Color.blue(cattabSelectedBackground)*5/6);
+        } else {
+            cattabSelectedBackgroundHighContrast = cattabSelectedBackground;
+        }
 
         bgDrawables.clear();
 

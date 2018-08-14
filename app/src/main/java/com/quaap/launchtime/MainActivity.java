@@ -1536,22 +1536,26 @@ public class MainActivity extends Activity implements
                 iconsarealp.rightMargin = (int) catwidth+1;
             }
         }
-        int origback = mStyle.getCattabBackground();
-
-        if (autohideCats) {
-            GradientDrawable newback = new GradientDrawable(
-                    mStyle.isLeftHandCategories()?
-                            GradientDrawable.Orientation.RIGHT_LEFT:
-                            GradientDrawable.Orientation.LEFT_RIGHT,
-                    new int[] {Color.argb(1, Color.red(origback), Color.green(origback), Color.blue(origback)),
-                            Color.argb(160, Color.red(origback), Color.green(origback), Color.blue(origback))});
-            //  Color.argb(50, Color.red(origback), Color.green(origback), Color.blue(origback));
-            newback.setGradientCenter(.07f, .5f);
-            cats.setBackground(newback);
-        } else {
-            cats.setBackground(null);
-            cats.setBackgroundColor(Color.TRANSPARENT);
-        }
+//        int origback = mStyle.getCattabBackground();
+//
+//        if (autohideCats) {
+////            GradientDrawable newback = new GradientDrawable(
+////                    mStyle.isLeftHandCategories()?
+////                            GradientDrawable.Orientation.RIGHT_LEFT:
+////                            GradientDrawable.Orientation.LEFT_RIGHT,
+////                    new int[] {Color.argb(1, Color.red(origback), Color.green(origback), Color.blue(origback)),
+////                            Color.argb(160, Color.red(origback), Color.green(origback), Color.blue(origback))});
+////            //  Color.argb(50, Color.red(origback), Color.green(origback), Color.blue(origback));
+////            newback.setGradientCenter(.07f, .5f);
+////            cats.setBackground(newback);
+//            if (Color.alpha(origback) < 80) {
+//                //cats.setBackgroundColor(Color.argb(50, 128, 128, 128));
+//                //cats.setBackgroundColor(Color.argb(100, Color.red(origback)/2, Color.green(origback)/2, Color.blue(origback)/2));
+//            }
+//        } else {
+//            cats.setBackground(null);
+//            cats.setBackgroundColor(Color.TRANSPARENT);
+//        }
 
         if (autohideCats) {
             hideCatsIfAutoHide(true);

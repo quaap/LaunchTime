@@ -187,18 +187,42 @@ public class ActionMenu {
         showBuiltActionMenu(categoryTab);
     }
 
+    private int mItemBGColor;
 
     public void initializeActionMenu() {
         mScreenDim = mMain.getScreenDimensions();
 
         mShortcutActionsList.removeAllViews();
 
-        int bgcolor = Color.argb(128, 255, 255, 255);
+        int bgcolor = mStyle.getCattabBackground();
 
-        int cbgcolor = mStyle.getCattabBackground();
-        if ((Color.red(cbgcolor) + Color.green(cbgcolor) + Color.blue(cbgcolor))/3 > 128) {
-            bgcolor = Color.argb(128, 128, 128, 128);
+        int alpha = Color.alpha(bgcolor);
+        int red = Color.red(bgcolor);
+        int green = Color.green(bgcolor);
+        int blue = Color.blue(bgcolor);
+
+        if (alpha<50) {
+            red=128;
+            green=128;
+            blue=128;
+            alpha = 120;
+        } else if (alpha<160) {
+            int alphadiff = 160 - alpha;
+            red -= alphadiff / 2;
+            green -= alphadiff / 2;
+            blue -= alphadiff / 2;
+            alpha = 160;
         }
+
+
+        mItemBGColor = Color.argb(alpha, red>0?red:0, green>0?green:0, blue>0?blue:0);
+
+        bgcolor = Color.argb(128, 255, 255, 255);
+
+//        int cbgcolor = mStyle.getCattabBackground();
+//        if ((Color.red(cbgcolor) + Color.green(cbgcolor) + Color.blue(cbgcolor))/3 > 128) {
+//            bgcolor = Color.argb(128, 128, 128, 128);
+//        }
 
 
         mShortcutActionsPopup.setBackgroundColor(bgcolor);
@@ -782,31 +806,11 @@ public class ActionMenu {
 
 
     private void initializeMenuline(final ViewGroup item) {
-        int bgcolor = mStyle.getCattabBackground();
-
-        int alpha = Color.alpha(bgcolor);
-        int red = Color.red(bgcolor);
-        int green = Color.green(bgcolor);
-        int blue = Color.blue(bgcolor);
-
-//        if (alpha<50) {
-//            red=128;
-//            green=128;
-//            blue=128;
-//        } else
-        if (alpha>50 && alpha<180) {
-            int alphadiff = 180 - alpha;
-            red -= alphadiff / 3;
-            green -= alphadiff / 3;
-            blue -= alphadiff / 3;
-        }
 
 
-        bgcolor = Color.argb(180, red>0?red:0, green>0?green:0, blue>0?blue:0);
-
-        item.setBackgroundColor(bgcolor);
+        item.setBackgroundColor(mItemBGColor);
         if (mStyle.isRoundedTabs()) {
-            item.setBackground(mStyle.getBgDrawableFor(item, bgcolor));
+            item.setBackground(mStyle.getBgDrawableFor(item, mItemBGColor));
         }
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)mMain.getResources().getDimension(R.dimen.action_menu_width), ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.setMargins(12,13,12,13);
