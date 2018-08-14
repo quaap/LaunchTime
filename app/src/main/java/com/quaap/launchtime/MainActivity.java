@@ -13,9 +13,6 @@ package com.quaap.launchtime;
  * See the GNU General Public License for more details.
  */
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -43,7 +40,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -68,12 +64,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.ViewPropertyAnimator;
+
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
+
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
+
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -188,7 +184,7 @@ public class MainActivity extends Activity implements
 
     public SharedPreferences mAppPreferences;
 
-    private final Map<String, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
+    private final Map<ComponentName, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
     private final Map<AppLauncher,ViewGroup> mAppLauncherViews = Collections.synchronizedMap(new HashMap<AppLauncher,ViewGroup>());
 
     private boolean mChildLock;
@@ -1935,7 +1931,7 @@ public class MainActivity extends Activity implements
     @SuppressLint("RtlHardcoded")
     public void showWidgetResize(final AppLauncher appitem) {
 
-        AppWidgetHostView appwid = mLoadedWidgets.get(appitem.getActivityName());
+        AppWidgetHostView appwid = getLoadedAppWidgetHostView(appitem.getComponentName());
         if (appwid!=null) {
             //final int resizeMode = appwid.getAppWidgetInfo().resizeMode;
 
@@ -2163,31 +2159,40 @@ public class MainActivity extends Activity implements
         if (app.isWidget()) {
             item = new FrameLayout(this);
 
-            AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
-            if (appwid == null) {
-                appwid = mWidgetHelper.loadWidget(app);
-                if (appwid==null) {
+            AppWidgetHostView hostView = getLoadedAppWidgetHostView(app.getComponentName());
+            if (hostView == null) {
+                int id = getWidgetId(app.getComponentName());
+                if (id!=-1) {
+                    Log.d(TAG, "loading widget from id " + app.getActivityName() + " " + app.getPackageName());
+                    hostView = mWidgetHelper.createWidgetFromId(id);
+                }
+                if (hostView==null) {
+                    Log.d(TAG, "creating new widget" + app.getActivityName() + " " + app.getPackageName());
+                    hostView = mWidgetHelper.loadWidget(app);
+                    saveLoadedWidget(app.getComponentName(), hostView);
+                }
+
+                if (hostView==null) {
                     Log.d(TAG, "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
                     // db().deleteApp(app.getActivityName());
                     return null;
                 }
             }
 
-            mLoadedWidgets.put(app.getActivityName(), appwid);
-            AppWidgetProviderInfo pinfo = appwid.getAppWidgetInfo();
+            AppWidgetProviderInfo pinfo = hostView.getAppWidgetInfo();
             //Log.d(TAG, "Min: " + pinfo.minWidth + "," + pinfo.minHeight);
             //Log.d(TAG, "MinResize: " + pinfo.minResizeWidth + "," + pinfo.minResizeHeight);
             //Log.d(TAG, "Resizemode: " + pinfo.resizeMode);
 
             storeLauncherDimen(app, pinfo.minWidth, pinfo.minHeight);
 
-            ViewGroup parent = (ViewGroup) appwid.getParent();
+            ViewGroup parent = (ViewGroup) hostView.getParent();
             if (parent != null) {
-                parent.removeView(appwid);
+                parent.removeView(hostView);
             }
-            item.addView(appwid);
+            item.addView(hostView);
             final View wrap = item;
-            appwid.setOnLongClickListener(new View.OnLongClickListener() {
+            hostView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (mChildLock) {
@@ -2196,7 +2201,7 @@ public class MainActivity extends Activity implements
                     return MainActivity.this.onLongClick(wrap);
                 }
             });
-            appwid.setOnDragListener(new View.OnDragListener() {
+            hostView.setOnDragListener(new View.OnDragListener() {
                 @Override
                 public boolean onDrag(View view, DragEvent dragEvent) {
                     if (mChildLock) {
@@ -2329,8 +2334,9 @@ public class MainActivity extends Activity implements
 
             //Log.d(TAG, actvname + " " + pkgname);
 
-            mLoadedWidgets.put(actvname, appwid);
-
+            saveLoadedWidget(cn,appwid);
+//            mLoadedWidgets.put(actvname, appwid);
+//            mPrefs.edit().putInt(actvname, appwid.getAppWidgetId()).apply();
             AppLauncher.removeAppLauncher(cn);
             AppLauncher app = AppLauncher.createAppLauncher(actvname, pkgname, pkgname, mActionCategory, true);
 
@@ -2894,9 +2900,28 @@ public class MainActivity extends Activity implements
         repopulateIconSheet(category);
     }
 
+
+
+    public AppWidgetHostView getAppWidgetHostView(AppLauncher appitem) {
+        return getLoadedAppWidgetHostView(appitem.getComponentName());
+    }
+
+    public AppWidgetHostView getLoadedAppWidgetHostView(ComponentName cn) {
+        return mLoadedWidgets.get(cn);
+    }
+
+    public int getWidgetId(ComponentName cn) {
+        return mPrefs.getInt(cn.toShortString(), -1);
+    }
+
+    public void saveLoadedWidget(ComponentName cn, AppWidgetHostView hostView) {
+        mPrefs.edit().putInt(cn.toShortString(), hostView.getAppWidgetId()).apply();
+        mLoadedWidgets.put(cn, hostView);
+    }
+
     public void removeWidget(AppLauncher app) {
         db().deleteApp(app.getComponentName());
-        AppWidgetHostView wid = mLoadedWidgets.remove(app.getActivityName());
+        AppWidgetHostView wid = mLoadedWidgets.remove(app.getComponentName());
         if (wid != null) {
             mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
         }
@@ -4076,10 +4101,6 @@ public class MainActivity extends Activity implements
 
     public void launchApp(AppLauncher appitem) {
         mLaunchApp.launchApp(appitem);
-    }
-
-    public AppWidgetHostView getAppWidgetHostView(AppLauncher appitem) {
-        return mLoadedWidgets.get(appitem.getActivityName());
     }
 
 

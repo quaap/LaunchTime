@@ -98,10 +98,13 @@ public class Widget {
         return createWidgetFromId(appWidgetId);
     }
 
-    private AppWidgetHostView createWidgetFromId(int widget_id) {
+    public AppWidgetHostView createWidgetFromId(int widget_id) {
         AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(widget_id);
 
-       // if (checkBindPermission(widget_id, appWidgetInfo.provider)) return null;
+        if (appWidgetInfo==null) {
+            return null;
+        }
+        // if (checkBindPermission(widget_id, appWidgetInfo.provider)) return null;
 
         // Create the host view
         AppWidgetHostView hostView = mAppWidgetHost.createView(mParent, widget_id, appWidgetInfo);
