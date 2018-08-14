@@ -158,30 +158,28 @@ public class Style {
                 categoryTab.setTextSize(categoryTabFontSize + 1);
                 categoryTab.setShadowLayer(8, 4, 4, cattabTextColorInvert);
 
-//                if (mAnimationDuration >0) {
-//                    categoryTab.animate().scaleX(1.3f).scaleY(1.3f)
-//                            .setInterpolator(new CycleInterpolator(1))
-//                            .setDuration(mAnimationDuration)
-//                            .setListener(new AnimatorListenerAdapter() {
-//                                @Override
-//                                public void onAnimationEnd(Animator animation) {
-//                                    super.onAnimationEnd(animation);
-//                                    categoryTab.setScaleX(1);
-//                                    categoryTab.setScaleY(1);
-//                                }
-//
-//                                @Override
-//                                public void onAnimationCancel(Animator animation) {
-//                                    super.onAnimationCancel(animation);
-//                                    categoryTab.setScaleX(1);
-//                                    categoryTab.setScaleY(1);
-//                                }
-//                            }).start();
-//                } else {
-//                    categoryTab.clearAnimation();
+                categoryTab.clearAnimation();
+                if (mAnimationDuration >0) {
+                    categoryTab.animate().scaleX(1.3f).scaleY(1.3f)
+                            .setInterpolator(new CycleInterpolator(1))
+                            .setDuration(mAnimationDuration)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    categoryTab.setScaleX(1);
+                                    categoryTab.setScaleY(1);
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                    categoryTab.setScaleX(1);
+                                    categoryTab.setScaleY(1);
+                                }
+                            }).start();
+                } else {
                     categoryTab.setScaleX(1);
                     categoryTab.setScaleY(1);
-                //}
+                }
                 lp.leftMargin = 1;
                 lp.rightMargin = 1;
                 break;

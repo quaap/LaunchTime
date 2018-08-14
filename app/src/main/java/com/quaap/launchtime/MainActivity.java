@@ -1148,7 +1148,9 @@ public class MainActivity extends Activity implements
 
 
             String topCat = getTopCategory();
-            if (mIconSheetBottomFrame.getVisibility() == View.VISIBLE) {
+            if (mIconSheetBottomFrame.getVisibility() == View.VISIBLE
+                    || mOpenPrefs2Button.getVisibility() == View.VISIBLE
+                    || mHideButtons.getVisibility() == View.VISIBLE) {
                 showButtonBar(false, true);
             } else if (mQuickRow.getScrollPos() > 0) {
                 mQuickRow.scrollToStart();

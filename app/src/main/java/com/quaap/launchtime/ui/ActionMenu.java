@@ -195,6 +195,7 @@ public class ActionMenu {
         mShortcutActionsList.removeAllViews();
 
         int bgcolor = mStyle.getCattabBackground();
+        int textcolor = mStyle.getCattabTextColor();
 
         int alpha = Color.alpha(bgcolor);
         int red = Color.red(bgcolor);
@@ -202,10 +203,10 @@ public class ActionMenu {
         int blue = Color.blue(bgcolor);
 
         if (alpha<50) {
-            red=128;
-            green=128;
-            blue=128;
-            alpha = 120;
+            red=255 - Color.red(textcolor);
+            green=255 - Color.green(textcolor);
+            blue=255 - Color.blue(textcolor);
+            alpha = 140;
         } else if (alpha<160) {
             int alphadiff = 160 - alpha;
             red -= alphadiff / 2;
