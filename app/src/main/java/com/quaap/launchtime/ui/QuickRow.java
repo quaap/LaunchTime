@@ -1,6 +1,7 @@
 package com.quaap.launchtime.ui;
 
 import android.content.ComponentName;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
@@ -142,7 +143,7 @@ public class QuickRow {
                 }
 
             }
-        }, 200);
+        }, 400);
 
     }
 
@@ -155,13 +156,23 @@ public class QuickRow {
 
         for (ComponentName compname: quickRowOrder) {
 
-            AppLauncher app = AppLauncher.getAppLauncher(compname);
+            //Log.d("Quick", compname.flattenToString());
+            AppLauncher app = null;
+            for (AppLauncher a: launchers) {
+                if (compname.equals(a.getComponentName())) {
+                    app = a;
+                    break;
+                }
+            }
             if (app==null) {
+                //Log.d("Quick", "Not found: " + compname.flattenToString());
               newstuff = true; //app could have been uninstalled
             } else if (compname.equals(app.getComponentName())) {
-                AppLauncher qapp = AppLauncher.createAppLauncher(app);
+                //Log.d("Quick", "Found: " + compname.flattenToString());
+                AppLauncher qapp = AppLauncher.createAppLauncher(app, true);
                 quickRowApps.add(qapp);
                 qapp.loadAppIconAsync(mQuickRow.getContext());
+
             }
 
         }
