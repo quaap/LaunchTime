@@ -144,17 +144,11 @@
     <string name="transparency">Transparency</string>
     <string name="pref_color_style">Color and Style</string>
     <string name="pref_app_system">App and System</string>
-    <string name="pref_hide_empty_cat">Hide empty categories</string>
     <string name="prefs_new_apps_cat">Auto-categorize new apps</string>
-    <string name="prefs_empty_cats_hid">Empty categories will be hidden</string>
-    <string name="prefs_empty_cats_show">Empty categories will be shown</string>
     <string name="prefs_cat_apps">Apps will be categorized</string>
     <string name="prefs_cat_no">Apps will be placed in \"Other\"</string>
     <string name="pref_cat_loc_text">Categories Location</string>
     <string name="pref_cat_loc">Categories will be on the %s</string>
-    <string name="pref_cat_sort">Category sorting</string>
-    <string name="pref_cat_sort_on">Categories will remember selected sort order</string>
-    <string name="pref_cat_sort_off">Categories will not be sorted</string>
     <string name="pref_todd_lock">Toddler Mode</string>
     <string name="pref_todd_lock_summ">Attempt to limit toddler-related damage by locking into the
         current category and preventing dragging/moving/deleting. Exit by entering the code on
@@ -166,7 +160,6 @@
     <string name="widget_alreay">This widget is already in category \"%s\"</string>
 
 
-    <string name="icons_pack_desc">Choose a theme or iconpack</string>
     <string name="icons_pack_name">Choose iconpack/theme</string>
     <string name="icons_pack_default_name">System icons</string>
 
@@ -337,7 +330,6 @@
 
 
     <string name="custom_icon_select_picture">Select picture</string>
-    <string name="custom_icon_crop_picture">Select and crop picture</string>
     <string name="custom_icon_icon_packs">Select from iconpack</string>
     <string name="custom_icon_clear_icon">Clear custom icon</string>
     <string name="custom_icon_select_icon_type">Select the icon type</string>

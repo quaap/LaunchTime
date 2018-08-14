@@ -144,17 +144,11 @@
     <string name="transparency">Transparencia</string>
     <string name="pref_color_style">Color Y Estilo</string>
     <string name="pref_app_system">App Y Sistema</string>
-    <string name="pref_hide_empty_cat">Escondrijo categorías vacías</string>
     <string name="prefs_new_apps_cat">Coche-categorize nuevo apps</string>
-    <string name="prefs_empty_cats_hid">Las Categorías vacías serán escondidas</string>
-    <string name="prefs_empty_cats_show">Las Categorías vacías serán mostradas</string>
     <string name="prefs_cat_apps">Apps Será categorized</string>
     <string name="prefs_cat_no">Apps Será colocado en \"Otro\"</string>
     <string name="pref_cat_loc_text">Ubicación de categorías</string>
     <string name="pref_cat_loc">Las Categorías serán en el %s</string>
-    <string name="pref_cat_sort">La Categoría que ordena</string>
-    <string name="pref_cat_sort_on">Las Categorías recordarán orden de clase seleccionada</string>
-    <string name="pref_cat_sort_off">Las Categorías no serán ordenadas</string>
     <string name="pref_todd_lock">Toddler Modo</string>
     <string name="pref_todd_lock_summ">Intento de limitar toddler-daño relacionado por cerrar a la
         categoría actual e impidiendo arrastrando/moviendo/eliminando. Salida por introducir el código en
@@ -166,7 +160,6 @@
     <string name="widget_alreay">Este widget es ya en categoría \"%s\"</string>
 
 
-    <string name="icons_pack_desc">Escoger un tema o iconpack</string>
     <string name="icons_pack_name">Escoge iconpack/tema</string>
     <string name="icons_pack_default_name">Iconos de sistema</string>
 
@@ -341,7 +334,6 @@
     <string name="theme_ladypink">Señora En Rosa</string>
     <string name="confirm_reset_colors">¿Desea restablecer los colores para este tema?</string>
     <string name="custom_icon_clear_icon">Borrar icono personalizado</string>
- <string name="custom_icon_crop_picture">Seleccionar y recortar imagen</string>
     <string name="custom_icon_icon_packs">Seleccionar desde el paquete de iconos</string>
  <string name="custom_icon_select_icon_pack">Seleccionar paquete de iconos</string>
  <string name="custom_icon_select_icon_type">Seleccione el tipo de icono</string>

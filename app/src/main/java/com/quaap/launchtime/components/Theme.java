@@ -99,9 +99,9 @@ public class Theme {
                 .setColor(Thing.Mask, Color.TRANSPARENT)
                 .setColor(Thing.Text, getResColor(R.color.textcolor_classic))
                 .setColor(Thing.AltText, Color.WHITE)
-                .setColor(Thing.Background, Color.TRANSPARENT)
+                .setColor(Thing.Background, getResColor(R.color.cattab_background_classic))
                 .setColor(Thing.Wallpaper, Color.TRANSPARENT)
-                .setColor(Thing.AltBackground, getResColor(R.color.cattab_background_classic));
+                .setColor(Thing.AltBackground, getResColor(R.color.cattabselected_background_classic));
 
         builtinThemes.put(classic.getPackKey(), classic);
 
@@ -110,7 +110,7 @@ public class Theme {
                 .setColor(Thing.Mask, Color.TRANSPARENT)
                 .setColor(Thing.Text, Color.argb(255,240,240,240))
                 .setColor(Thing.AltText, Color.WHITE)
-                .setColor(Thing.Wallpaper, Color.parseColor("#FF2955A8"))
+                .setColor(Thing.Wallpaper, Color.parseColor("#772955A8"))
                 .setColor(Thing.Background, Color.argb(20,250,250,255))
                 .setColor(Thing.AltBackground, Color.argb(90,250,250,255));
 

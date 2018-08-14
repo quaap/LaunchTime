@@ -144,17 +144,11 @@
     <string name="transparency">Transparència</string>
     <string name="pref_color_style">Color i Estil</string>
     <string name="pref_app_system">App I Sistema</string>
-    <string name="pref_hide_empty_cat">Amagatall categories buides</string>
     <string name="prefs_new_apps_cat">Cotxe-categorize nou apps</string>
-    <string name="prefs_empty_cats_hid">Les Categories buides seran amagades</string>
-    <string name="prefs_empty_cats_show">Les Categories buides seran mostrades</string>
     <string name="prefs_cat_apps">Apps Serà categorized</string>
     <string name="prefs_cat_no">Apps Serà col·locat en \"Altre\"</string>
     <string name="pref_cat_loc_text">Ubicació de categories</string>
     <string name="pref_cat_loc">Les Categories seran en el %s</string>
-    <string name="pref_cat_sort">La Categoria que ordena</string>
-    <string name="pref_cat_sort_on">Les Categories recordaran ordre de classe seleccionada</string>
-    <string name="pref_cat_sort_off">Les Categories no seran ordenades</string>
     <string name="pref_todd_lock">Toddler Mode</string>
     <string name="pref_todd_lock_summ">Intent de limitar toddler-dany relacionat per tancar amb clau a la
         categoria actual i impedint arrossegant/movent/eliminant. Sortida per entrar al codi en
@@ -166,7 +160,6 @@
     <string name="widget_alreay">Aquest widget és ja en categoria \"%s\"</string>
 
 
-    <string name="icons_pack_desc">Escollir un tema o iconpack</string>
     <string name="icons_pack_name">Escull iconpack/tema</string>
     <string name="icons_pack_default_name">Icones de sistema</string>
 
@@ -341,7 +334,6 @@
     <string name="theme_ladypink">Senyora En Rosa</string>
     <string name="confirm_reset_colors">Voleu restablir els colors per a aquest tema?</string>
     <string name="custom_icon_clear_icon">Esborra la icona personalitzada</string>
- <string name="custom_icon_crop_picture">Selecciona i retalla la imatge</string>
     <string name="custom_icon_icon_packs">Seleccioneu del paquet d\'icones</string>
  <string name="custom_icon_select_icon_pack">Seleccioneu un paquet d\'icones</string>
  <string name="custom_icon_select_icon_type">Seleccioneu el tipus d\'icona</string>

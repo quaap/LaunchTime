@@ -12,16 +12,16 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Typeface;
+
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,41 +189,32 @@ public class ActionMenu {
 
     private int mItemBGColor;
 
-    public void initializeActionMenu() {
+    private void initializeActionMenu() {
         mScreenDim = mMain.getScreenDimensions();
 
         mShortcutActionsList.removeAllViews();
 
-        int bgcolor = mStyle.getCattabBackground();
+        mItemBGColor = mStyle.getCattabBackground();
         int textcolor = mStyle.getCattabTextColor();
 
-        int alpha = Color.alpha(bgcolor);
+        int bgcolor = mStyle.getCalculatedWallpaperColor();
+
+        if (Color.alpha(bgcolor) > 90) {
+
+            int red = Color.red(bgcolor);
+            int green = Color.green(bgcolor);
+            int blue = Color.blue(bgcolor);
+            bgcolor = Color.argb(220, red, green, blue);
+        } else {
+            bgcolor = Color.argb(220, 128, 128, 128);
+            mItemBGColor = Color.argb(240, 255-Color.red(textcolor), 255-Color.green(textcolor), 255-Color.blue(textcolor));
+
+        }
+
         int red = Color.red(bgcolor);
         int green = Color.green(bgcolor);
         int blue = Color.blue(bgcolor);
-
-        if (alpha<50) {
-            red=255 - Color.red(textcolor);
-            green=255 - Color.green(textcolor);
-            blue=255 - Color.blue(textcolor);
-            alpha = 140;
-        } else if (alpha<160) {
-            int alphadiff = 160 - alpha;
-            red -= alphadiff / 2;
-            green -= alphadiff / 2;
-            blue -= alphadiff / 2;
-            alpha = 160;
-        }
-
-
-        mItemBGColor = Color.argb(alpha, red>0?red:0, green>0?green:0, blue>0?blue:0);
-
-        bgcolor = Color.argb(128, 255, 255, 255);
-
-//        int cbgcolor = mStyle.getCattabBackground();
-//        if ((Color.red(cbgcolor) + Color.green(cbgcolor) + Color.blue(cbgcolor))/3 > 128) {
-//            bgcolor = Color.argb(128, 128, 128, 128);
-//        }
+        bgcolor = Color.argb(220, red<200?red+10:red, green<200?green+10:green, blue<200?blue+20:blue);
 
 
         mShortcutActionsPopup.setBackgroundColor(bgcolor);
@@ -234,7 +225,7 @@ public class ActionMenu {
         mIconBar = null;
     }
 
-    public void showBuiltActionMenu(View view) {
+    private void showBuiltActionMenu(View view) {
         //mShortcutActionsPopup.setVisibility(View.VISIBLE);
 
         //FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mShortcutActionsPopup.getLayoutParams();
@@ -383,7 +374,7 @@ public class ActionMenu {
 
 
 
-    public void addExtraActionsToMenu(final TextView categoryTab) {
+    private void addExtraActionsToMenu(final TextView categoryTab) {
         final String category = (String)categoryTab.getTag();
 
         if (!mMain.getCurrentCategory().equals(category)) {
@@ -523,9 +514,9 @@ public class ActionMenu {
         if (mDevModeActivities) {
 
             class Record implements Comparable<Record>{
-                String label;
+                private String label;
                 private ComponentName component;
-                Drawable icon;
+                private Drawable icon;
 
                 @Override
                 public int compareTo(@NonNull Record other) {

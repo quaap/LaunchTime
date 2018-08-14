@@ -137,18 +137,12 @@
  <string name="transparency">Transparência</string>
  <string name="pref_color_style">Cores e estilos</string>
  <string name="pref_app_system">Apps e Sistema</string>
- <string name="pref_hide_empty_cat">Ocultar categorias vazias</string>
- <string name="prefs_new_apps_cat">Categorizar apps novas</string>
- <string name="prefs_empty_cats_hid">As Categorias vazias serão escondidas</string>
- <string name="prefs_empty_cats_show">As Categorias vazias serão mostradas</string>
- <string name="prefs_cat_apps">Apps serão automaticamente categorizadas</string>
+    <string name="prefs_new_apps_cat">Categorizar apps novas</string>
+    <string name="prefs_cat_apps">Apps serão automaticamente categorizadas</string>
  <string name="prefs_cat_no">Apps serão colocadas em \"Outro\"</string>
  <string name="pref_cat_loc_text">Localização das categorias</string>
  <string name="pref_cat_loc">As Categorias estarão no lado %s</string>
- <string name="pref_cat_sort">Ordem das categorias</string>
- <string name="pref_cat_sort_on">A ordem da categoria seleccionada será memorizada</string>
- <string name="pref_cat_sort_off">As Categorias não serão ordenadas</string>
- <string name="pref_todd_lock">Bloquear o menu</string>
+    <string name="pref_todd_lock">Bloquear o menu</string>
  <string name="pref_todd_lock_summ">Bloquear o menu para evitar excluir ou mover categorias, impedindo o arrastar/mover/eliminar. Saída por introdução do código na
         tela.</string>
  <string name="pref_returnhome_summ">Tempo para voltar à categoria principal: %s.</string>
@@ -158,8 +152,7 @@
  <string name="widget_alreay">Este widget já existe na categoria \"%s\"</string>
 
 
- <string name="icons_pack_desc">Escolher um tema ou pacote de ícones</string>
- <string name="icons_pack_name">Escolher pacote de ícones/tema</string>
+    <string name="icons_pack_name">Escolher pacote de ícones/tema</string>
  <string name="icons_pack_default_name">Ícones de sistema</string>
 
  <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
@@ -279,8 +272,7 @@
 
 
  <string name="custom_icon_select_picture">Selecione a imagem</string>
- <string name="custom_icon_crop_picture">Selecione e corte a imagem</string>
- <string name="custom_icon_icon_packs">Selecione de um pacote de ícones</string>
+    <string name="custom_icon_icon_packs">Selecione de um pacote de ícones</string>
  <string name="custom_icon_clear_icon">Apagar ícone personalizado</string>
  <string name="custom_icon_select_icon_type">Selecione o tipo de ícone</string>
  <string name="custom_icon_select_icon_pack">Selecione o pacote de ícones</string>

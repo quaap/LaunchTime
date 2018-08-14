@@ -78,10 +78,7 @@
     
     <!-- APPLICATIONS ET SYSTEME-->
     <string name="pref_app_system">Applications et système</string>
-    <string name="pref_hide_empty_cat">Ne pas afficher les catégories vides</string>
     <string name="prefs_new_apps_cat">Catégorisation des nouvelles applications</string>
-    <string name="prefs_empty_cats_hid">Les Catégories vides seront cachées</string>
-    <string name="prefs_empty_cats_show">Les Catégories vides seront affichée</string>
     <string name="prefs_cat_apps">Les applications seront automatiquement catégorisés</string>
     <string name="prefs_cat_no">Les nouvelles application seront placée dans \"Autres\"</string>
     <string name="pref_returnhome_summ">Temps de retour à la catégorie principale : %s.</string>
@@ -173,7 +170,6 @@
     <string name="reset_color_summ">Cliquez pour remmettre les couleur du thème actuel</string>
     <string name="colors_reset_default">Les couleurs ont étées remisent à zéro.</string>
 
-    <string name="icons_pack_desc">Choisir un thème ou un pack d\'icône</string>
     <string name="icons_pack_name">Choisir un thème ou un pack d\'icône</string>
     <string name="icons_pack_default_name">Icônes système</string>
 
@@ -197,7 +193,6 @@
     <string name="confirm_reset_colors">Vous voulez réinitialiser les couleurs pour ce thème ?</string>
        
     <string name="custom_icon_clear_icon">Effacer l\'icône personnalisée</string>
-    <string name="custom_icon_crop_picture">Sélectionner et recadrer l\'image</string>
     <string name="custom_icon_icon_packs">Sélectionnez dans le pack d\'icônes</string>
     <string name="custom_icon_select_icon_pack">Sélectionner le pack d\'icônes</string>
     <string name="custom_icon_select_icon_type">Sélectionnez le type d\'icône</string>
@@ -208,11 +203,7 @@
     <string name="pref_customize_desc">Changer les icônes et les étiquettes individuelles</string>
     <string name="pref_icon_tint">Teinte de l’icône</string>
     <string name="user_theme">Thème de l’utilisateur %d</string>
-      
-    <string name="pref_cat_sort">La Catégorie qui ordonne</string>
-    <string name="pref_cat_sort_on">Les Catégories rappelleront mandat de classe sélectionnée</string>
-    <string name="pref_cat_sort_off">Les Catégories ne seront pas rangées</string>
-       
+
     <string-array name="sort_strings">
         <item>Nom</item>
         <item>Récemments tilisées</item>

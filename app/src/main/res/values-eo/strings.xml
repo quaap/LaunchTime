@@ -145,17 +145,11 @@
     <string name="transparency">Travidebleco</string>
     <string name="pref_color_style">Koloro Kaj Stilo</string>
     <string name="pref_app_system">App Kaj Sistemo</string>
-    <string name="pref_hide_empty_cat">Kaŝejo malplenaj kategorioj</string>
     <string name="prefs_new_apps_cat">Aŭto-categorize nova apps</string>
-    <string name="prefs_empty_cats_hid">La malplenaj Kategorioj estos kaŝitaj</string>
-    <string name="prefs_empty_cats_show">La malplenaj Kategorioj estos montritaj</string>
     <string name="prefs_cat_apps">Apps Estos categorized</string>
     <string name="prefs_cat_no">Apps Estos metita en \"Alia\"</string>
     <string name="pref_cat_loc_text">Ubicación de kategorioj</string>
     <string name="pref_cat_loc">La Kategorioj estos en la %s</string>
-    <string name="pref_cat_sort">La Kategorio kiu ordigas</string>
-    <string name="pref_cat_sort_on">La Kategorioj memoros ordon de selektita klaso</string>
-    <string name="pref_cat_sort_off">La Kategorioj ne estos ordigitaj</string>
     <string name="pref_todd_lock">Toddler Modo</string>
     <string name="pref_todd_lock_summ">Provo de limigi toddler-rilatigita damaĝo por fermi al
         la aktuala kategorio kaj neebligante trenante/movante/eliminante. Eliro por ŝovi la kodo en
@@ -167,7 +161,6 @@
     <string name="widget_alreay">Ĉi tiu widget estas jam en kategorio \"%s\"</string>
 
 
-    <string name="icons_pack_desc">Elekti temo aŭ iconpack</string>
     <string name="icons_pack_name">Elektas iconpack/temo</string>
     <string name="icons_pack_default_name">Ikonoj de sistemo</string>
 
@@ -342,7 +335,6 @@
     <string name="theme_ladypink">Sinjoro En Rozo</string>
     <string name="confirm_reset_colors">Ĉu vi volas restarigi la kolorojn por ĉi tiu temo?</string>
     <string name="custom_icon_clear_icon">Klara kutima ikono</string>
- <string name="custom_icon_crop_picture">Elektu kaj rikolti bildon</string>
     <string name="custom_icon_icon_packs">Elektu el ikono pack</string>
  <string name="custom_icon_select_icon_pack">Elektu ikono pack</string>
  <string name="custom_icon_select_icon_type">Elektu la ikono-tipon</string>

@@ -4,8 +4,13 @@ package com.quaap.launchtime.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.WallpaperInfo;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -52,6 +57,8 @@ public class Style {
     private final int backgroundDefault = Color.TRANSPARENT;
 
     private int wallpaperColor = Color.TRANSPARENT;
+    private int calculatedWallpaperColor = Color.TRANSPARENT;
+
 
     private int iconTint = Color.TRANSPARENT;
 
@@ -331,7 +338,44 @@ public class Style {
 
         bgDrawables.clear();
 
+        WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
+        if (wm!=null) {
+            mWallpaper = wm.getDrawable();
+            if (mWallpaper==null) {
+                WallpaperInfo wi = wm.getWallpaperInfo();
+                if (wi!=null) {
+                    mWallpaper = wi.loadThumbnail(mContext.getPackageManager());
+                }
+            }
+
+        }
+        if (mWallpaper!=null) {
+            Drawable wallp = mWallpaper.mutate();
+            wallp.setColorFilter(wallpaperColor, PorterDuff.Mode.SRC_ATOP);
+            //wallp = wallp.mutate();
+            Bitmap bm = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas();
+            //c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
+            c.setBitmap(bm);
+            wallp.setBounds(0, 0, bm.getWidth(), bm.getHeight());
+            wallp.draw(c);
+            calculatedWallpaperColor = bm.getPixel(0, 0);
+        } else {
+            calculatedWallpaperColor = wallpaperColor;
+        }
+
     }
+
+
+    public int getCalculatedWallpaperColor() {
+        return calculatedWallpaperColor;
+    }
+
+    public Drawable getWallpaperDrawable() {
+        return mWallpaper;
+    }
+
+    public Drawable mWallpaper;
 
 
     private final Map<String,Drawable> bgDrawables = new WeakHashMap<>();

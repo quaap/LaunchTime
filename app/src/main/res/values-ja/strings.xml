@@ -143,17 +143,11 @@
     <string name="transparency">透明度</string>
     <string name="pref_color_style">色とスタイル</string>
     <string name="pref_app_system">アプリとシステム</string>
-    <string name="pref_hide_empty_cat">空のカテゴリを非表示</string>
     <string name="prefs_new_apps_cat">新しいアプリを自動カテゴリ</string>
-    <string name="prefs_empty_cats_hid">空のカテゴリを非表示にします</string>
-    <string name="prefs_empty_cats_show">空のカテゴリを表示します</string>
     <string name="prefs_cat_apps">アプリはカテゴリに分類されます</string>
     <string name="prefs_cat_no">アプリは \"その他\" に配置されます</string>
     <string name="pref_cat_loc_text">カテゴリロケーション</string>
     <string name="pref_cat_loc">カテゴリは %s になります</string>
-    <string name="pref_cat_sort">カテゴリの並び替えg</string>
-    <string name="pref_cat_sort_on">カテゴリは選択した並び順を記憶します</string>
-    <string name="pref_cat_sort_off">カテゴリを並び替えしません</string>
     <string name="pref_todd_lock">チャイルドモード</string>
     <string name="pref_todd_lock_summ">現在のカテゴリにロックし、ドラッグ/移動/削除を防止することで、
         子供の操作によるダメージを限定します。
@@ -165,7 +159,6 @@
     <string name="widget_alreay">このウィジェットはすでにカテゴリ \"%s\" にあります</string>
 
 
-    <string name="icons_pack_desc">テーマまたはアイコンパックを選択する</string>
     <string name="icons_pack_name">アイコンパック/テーマを選択</string>
     <string name="icons_pack_default_name">システムアイコン</string>
 
@@ -340,7 +333,6 @@
     <string name="theme_ladypink">Lady In Pink</string>
     <string name="confirm_reset_colors">このテーマの色をリセットしますか。</string>
     <string name="custom_icon_clear_icon">カスタムアイコンをクリア</string>
-    <string name="custom_icon_crop_picture">写真を選択して切り抜く</string>
     <string name="custom_icon_icon_packs">アイコンパックから選択</string>
     <string name="custom_icon_select_icon_pack">アイコンパックを選択</string>
     <string name="custom_icon_select_icon_type">アイコンの種類を選択</string>

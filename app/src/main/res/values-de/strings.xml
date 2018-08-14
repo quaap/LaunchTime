@@ -138,19 +138,21 @@
     <string name="brightness">Helligkeit</string>
     <string name="transparency">Transparenz</string>
     <string name="pref_color_style">Farbe und Stil</string>
-    <string name="pref_app_system">App und System</string>
-    <string name="pref_hide_empty_cat">Leere Kategorien ausblenden</string>
-    <string name="prefs_new_apps_cat">Automatische Kategorisierung neuer Apps</string>
-    <string name="prefs_empty_cats_hid">Leere Kategorien werden ausgeblendet</string>
-    <string name="prefs_empty_cats_show">Leere Kategorien werden angezeigt</string>
-    <string name="prefs_cat_apps">Apps werden kategorisiert</string>
+    <string name="pref_app_system">App und System</string><![CDATA[
+    
+    ]]><string name="prefs_new_apps_cat">Automatische Kategorisierung neuer Apps</string><![CDATA[
+    
+    
+    ]]>
+    <string name="prefs_cat_apps">Apps werden kategorisiert</string>
     <string name="prefs_cat_no">Apps werden in \"Andere\"</string>
     <string name="pref_cat_loc_text">Kategorien Lage</string>
-    <string name="pref_cat_loc">Kategorien werden auf %s</string>
-    <string name="pref_cat_sort">Kategorie sortieren</string>
-    <string name="pref_cat_sort_on">Kategorien erinnern sich an die ausgewählte Sortierreihenfolge</string>
-    <string name="pref_cat_sort_off">Kategorien werden nicht sortiert</string>
-    <string name="pref_todd_lock">Kleinkind-Modus</string>
+    <string name="pref_cat_loc">Kategorien werden auf %s</string><![CDATA[
+    
+    
+    
+    ]]>
+    <string name="pref_todd_lock">Kleinkind-Modus</string>
     <string name="pref_todd_lock_summ">Versuch, toddlerbezogene Schäden zu begrenzen, indem du in die
         Aktuelle Kategorie und verhindert das Ziehen / Verschieben / Löschen. Beenden Sie, indem Sie den Code eingeben
         Der Bildschirm.</string>
@@ -158,11 +160,12 @@
     <string name="pref_returnhome">Rückgabe home timeout</string>
 
     <string name="search_hint">Suche. \". \" Ist ein Platzhalter</string>
-    <string name="widget_alreay">Dieses Widget befindet sich bereits in der Kategorie \"%s\"</string>
+    <string name="widget_alreay">Dieses Widget befindet sich bereits in der Kategorie \"%s\"</string><![CDATA[
 
 
-    <string name="icons_pack_desc">Wähle ein Thema oder Iconpack</string>
-    <string name="icons_pack_name">Wähle iconpack / thema</string>
+    
+    ]]>
+    <string name="icons_pack_name">Wähle iconpack / thema</string>
     <string name="icons_pack_default_name">System-Icons</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
@@ -335,7 +338,6 @@
     <string name="theme_ladypink">Dame in rosa</string>
     <string name="confirm_reset_colors">Möchten Sie die Farben für dieses Thema zurücksetzen?</string>
     <string name="custom_icon_clear_icon">Löschen Sie benutzerdefiniertes Symbol</string>
-    <string name="custom_icon_crop_picture">Bild auswählen und zuschneiden</string>
     <string name="custom_icon_icon_packs">Wählen Sie aus dem Icon Pack</string>
     <string name="custom_icon_select_icon_pack">Wählen Sie icon pack</string>
     <string name="custom_icon_select_icon_type">Wählen Sie den Symboltyp aus</string>

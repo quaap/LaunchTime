@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="textcolor_classic">#e9e7e7</color>
-    <color name="textcolorinv_classic">#ee111111</color>
 
-    <color name="btn_background_classic">#99125912</color>
     <color name="cattab_background_classic">#99119911</color>
     <color name="cattabselected_background_classic">#aa77ee77</color>
-    <color name="cattabselected_text_classic">#e9e7e7</color>
-
-    <color name="dragover_background_classic">#775555ee</color>
-
-    <color name="wallpaper_color_classic">#44006A00</color>
-
-    <color name="icon_tint_classic">#00000000</color>
 
 
     <color name="textcolor">#FFDCDCDC</color>

@@ -145,17 +145,11 @@
     <string name="transparency">Прозрачность</string>
     <string name="pref_color_style">Цвет и Оформление</string>
     <string name="pref_app_system">Приложение и Система</string>
-    <string name="pref_hide_empty_cat">Скрывать пустые категории</string>
     <string name="prefs_new_apps_cat">Автоматически сортировать приложения</string>
-    <string name="prefs_empty_cats_hid">Пустые категории будут скрыты</string>
-    <string name="prefs_empty_cats_show">Пустые категории не будут скрыты</string>
     <string name="prefs_cat_apps">Автосортировка для новых приложений включена</string>
     <string name="prefs_cat_no">Новые приложения будут помещаться в категорию \"Прочее\"</string>
     <string name="pref_cat_loc_text">Категория Местоположение</string>
     <string name="pref_cat_loc">Категории будут находится в %s</string>
-    <string name="pref_cat_sort">Сортировка категорий</string>
-    <string name="pref_cat_sort_on">Категории будут поддерживать текущую сортировку</string>
-    <string name="pref_cat_sort_off">Категории не будут подвергнуты сортировке</string>
     <string name="pref_todd_lock">Детский Режим</string>
     <string name="pref_todd_lock_summ">В этом режиме фиксируется выбранная категория и
         отключаются функции перемещения/перетаскивания/удаления. Для выхода из режима нужно ввести
@@ -327,7 +321,6 @@
     <string name="reset_colors_title">Сбросить цвета</string>
     <string name="reset_color_summ">Нажмите, чтобы сбросить текущие цвета темы</string>
     <string name="colors_reset_default">Colors have been reset</string>
-    <string name="icons_pack_desc">Выберите тему или значок-пакет</string>
     <string name="theme_bw">BlackWhite</string>
     <string name="theme_termcap">Termcap</string>
     <string name="theme_coolblue">Cool blue</string>
@@ -335,7 +328,6 @@
     <string name="theme_ladypink">Lady In Pink</string>
     <string name="confirm_reset_colors">Вы хотите сбросить цвета для этой темы?</string>
     <string name="custom_icon_clear_icon">Очистить пользовательский значок</string>
-    <string name="custom_icon_crop_picture">Выберите и обрезайте картинку</string>
     <string name="custom_icon_icon_packs">Выбрать из пакета значков</string>
     <string name="custom_icon_select_icon_pack">Выбрать пакет значков</string>
     <string name="custom_icon_select_icon_type">Выберите тип значка</string>

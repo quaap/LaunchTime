@@ -975,7 +975,7 @@ public class MainActivity extends Activity implements
 
     private synchronized void switchCategory(String category, AnimateDirection dir, boolean bounce) {
         try {
-            String prevCat = mCategory;
+            //String prevCat = mCategory;
             mActionMenu.dismissActionPopup();
             if (category == null) return;
             if (mCategory!=null && !mCategory.equals(category)) {
@@ -989,9 +989,9 @@ public class MainActivity extends Activity implements
                 mCategory = getTopCategory();
             }
 
-            if (prevCat==null || !mCategory.equals(prevCat)) {
+//            if (prevCat==null || !mCategory.equals(prevCat)) {
                 setCategoryTabStyles();
-            }
+//            }
 
 
             mIconSheet = mIconSheets.get(mCategory);
