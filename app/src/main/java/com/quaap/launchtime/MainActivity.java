@@ -1884,7 +1884,7 @@ public class MainActivity extends Activity implements
 
         }
 
-        final AppWidgetHostView appwid = mLoadedWidgets.get(app.getActivityName());
+        final AppWidgetHostView appwid = getAppWidgetHostView(app);
 
         if (appwid != null) {
 
@@ -2169,7 +2169,6 @@ public class MainActivity extends Activity implements
                 if (hostView==null) {
                     Log.d(TAG, "creating new widget" + app.getActivityName() + " " + app.getPackageName());
                     hostView = mWidgetHelper.loadWidget(app);
-                    saveLoadedWidget(app.getComponentName(), hostView);
                 }
 
                 if (hostView==null) {
@@ -2177,6 +2176,7 @@ public class MainActivity extends Activity implements
                     // db().deleteApp(app.getActivityName());
                     return null;
                 }
+                saveLoadedWidget(app.getComponentName(), hostView);
             }
 
             AppWidgetProviderInfo pinfo = hostView.getAppWidgetInfo();

@@ -124,8 +124,8 @@ public class ActionMenu {
             initializeActionMenu();
 
             if (appitem.isWidget()) {
-                AppWidgetHostView appwid = mMain.getAppWidgetHostView(appitem);
-                if (appwid!=null) {
+                AppWidgetHostView hostView = mMain.getAppWidgetHostView(appitem);
+                if (hostView!=null) {
                     addActionMenuItem("Resize", android.R.drawable.arrow_up_float, new Runnable() {
                         @Override
                         public void run() {
