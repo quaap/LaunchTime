@@ -2167,7 +2167,11 @@ public class MainActivity extends Activity implements
                 if (id!=-1) {
                     Log.d(TAG, "loading widget from id " + app.getActivityName() + " " + app.getPackageName());
                     hostView = mWidgetHelper.createWidgetFromId(id);
+                    if (hostView==null) {
+                        mWidgetHelper.widgetRemoved(id);
+                    }
                 }
+
                 if (hostView==null) {
                     Log.d(TAG, "creating new widget" + app.getActivityName() + " " + app.getPackageName());
                     hostView = mWidgetHelper.loadWidget(app);

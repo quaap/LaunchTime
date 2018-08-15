@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -115,7 +116,9 @@ public class Widget {
 
 
     public AppWidgetHostView loadWidget(AppLauncher app) {
-        ComponentName cn = new ComponentName(app.getPackageName(), app.getActivityName());
+        //ComponentName cn = new ComponentName(app.getPackageName(), app.getActivityName());
+
+        ComponentName cn = app.getComponentName();
 
         Log.d("LaunchWidgeth", "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
         // Check that there actually is a widget in the database
@@ -131,8 +134,7 @@ public class Widget {
 
         // Iterate through all infos, trying to find the desired one
         for (final AppWidgetProviderInfo info : infos) {
-            if (info.provider.getClassName().equals(cn.getClassName()) &&
-                    info.provider.getPackageName().equals(cn.getPackageName())) {
+            if (info.provider.equals(cn)) {
                 // We found it!
                 appWidgetInfo = info;
                 break;
@@ -146,7 +148,7 @@ public class Widget {
         // Allocate the hosted widget id
         int appWidgetId = mAppWidgetHost.allocateAppWidgetId();
 
-        if (checkBindPermission(appWidgetId, cn)) return null;
+        if (checkBindPermission(appWidgetId, appWidgetInfo)) return null;
 
         Log.d("LaunchWidgeth", "Allowed to bind");
         Log.d("LaunchWidgeth", "creating widget");
@@ -161,9 +163,9 @@ public class Widget {
         return hostView;
     }
 
-    private boolean checkBindPermission(final int appWidgetId, final ComponentName cn) {
+    private boolean checkBindPermission(final int appWidgetId, final AppWidgetProviderInfo appWidgetInfo) {
         try {
-            boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
+            boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, appWidgetInfo.provider);
 
 
             // Ask the user to allow this app to have access to their widgets
@@ -174,7 +176,11 @@ public class Widget {
                         Log.d("LaunchWidgeth", "asking for permission");
                         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
                         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, cn);
+                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, appWidgetInfo.provider);
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, appWidgetInfo.getProfile());
+                        }
 
                         addEmptyData(intent);
                         mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
