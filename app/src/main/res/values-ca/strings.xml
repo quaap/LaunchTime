@@ -374,5 +374,6 @@
  <string name="hide">Hide</string>
  <string name="show">Show</string>
     <string name="theme_transp">Transparent</string>
+    <string name="resize">Resize</string>
 
 </resources>

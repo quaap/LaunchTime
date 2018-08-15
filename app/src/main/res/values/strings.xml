@@ -377,5 +377,6 @@
     <string name="update_colors">Update colors on default theme</string>
     <string name="switch_default_theme">Switch to default theme and update to new colors</string>
     <string name="theme_transp">Transparent</string>
+    <string name="resize">Resize</string>
 
 </resources>

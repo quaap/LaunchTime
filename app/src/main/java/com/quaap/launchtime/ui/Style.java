@@ -340,12 +340,12 @@ public class Style {
 
         WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
         if (wm!=null) {
-            mWallpaper = wm.getDrawable();
+            WallpaperInfo wi = wm.getWallpaperInfo();
+            if (wi!=null) {
+                mWallpaper = wi.loadThumbnail(mContext.getPackageManager());
+            }
             if (mWallpaper==null) {
-                WallpaperInfo wi = wm.getWallpaperInfo();
-                if (wi!=null) {
-                    mWallpaper = wi.loadThumbnail(mContext.getPackageManager());
-                }
+                mWallpaper = wm.getDrawable();
             }
 
         }
