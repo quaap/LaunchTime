@@ -338,7 +338,12 @@ public class Style {
 
         bgDrawables.clear();
 
+        calculateWallpaperColor();
+    }
+
+    public void calculateWallpaperColor() {
         WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
+        mWallpaper = null;
         if (wm!=null) {
             WallpaperInfo wi = wm.getWallpaperInfo();
             if (wi!=null) {
@@ -365,7 +370,6 @@ public class Style {
         }
 
     }
-
 
     public int getCalculatedWallpaperColor() {
         return calculatedWallpaperColor;

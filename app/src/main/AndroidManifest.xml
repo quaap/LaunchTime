@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="LaunchTime Config"
+            android:label="Config"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +45,16 @@
                 <category android:name="android.intent.category.PREFERENCE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ColorSettingsActivity"
+            android:label="Color Config"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".AboutActivity"
             android:parentActivityName=".MainActivity" />

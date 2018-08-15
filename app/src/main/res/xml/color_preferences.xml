@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="applicationPreference">
+
+    <PreferenceCategory android:title="@string/pref_color_style">
+
+
+        <com.quaap.launchtime.color.ColorDemo
+            android:key="colordemo"
+            />
+
+        <PreferenceScreen
+            android:title="Wallpaper">
+            <intent android:action="android.intent.action.SET_WALLPAPER"/>
+        </PreferenceScreen>
+
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_backgroundcolor"
+            android:key="@string/pref_key_wallpapercolor"
+            android:defaultValue="@color/wallpaper_color"/>
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_icontext"
+            android:key="@string/pref_key_textcolor"
+            android:defaultValue="@color/textcolor"/>
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabtext"
+            android:key="@string/pref_key_cattabtextcolor"
+            android:defaultValue="@color/textcolor"/>
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabback"
+            android:key="@string/pref_key_cattab_background"
+            android:defaultValue="@color/cattab_background" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabsel_text"
+            android:key="@string/pref_key_cattabselected_text"
+            android:defaultValue="@color/cattabselected_text" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_tabsel"
+            android:key="@string/pref_key_cattabselected_background"
+            android:defaultValue="@color/cattabselected_background" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_drag"
+            android:key="@string/pref_key_dragover_background"
+            android:defaultValue="@color/dragover_background" />
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_icon_tint"
+            android:key="@string/pref_key_icon_tint"
+            android:defaultValue="@color/icon_tint" />
+
+        <Preference
+            android:icon="@android:drawable/ic_menu_revert"
+            android:key="@string/pref_key_reset_colors"
+            android:summary="@string/reset_color_summ"
+            android:title="@string/reset_colors_title" />
+
+        <ListPreference
+            android:defaultValue="@string/pref_iconpack_def"
+            android:key="@string/pref_key_icons_pack"
+            android:summary="%s"
+            android:title="@string/icons_pack_name" />
+    </PreferenceCategory>
+
+    <PreferenceScreen
+        android:title="@string/pref_customize"
+        android:summary="@string/pref_customize_desc">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.launchtime"
+            android:targetClass="com.quaap.launchtime.CustomizeLaunchersActivity"/>
+    </PreferenceScreen>
+
+</PreferenceScreen>
