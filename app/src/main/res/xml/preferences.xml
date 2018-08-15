@@ -105,14 +105,19 @@
             android:title="@string/pref_center"
             android:key="@string/pref_key_center_sheet"/>
 
+        <PreferenceScreen
+            android:title="Wallpaper">
+            <intent android:action="android.intent.action.SET_WALLPAPER"/>
+        </PreferenceScreen>
+
+        <com.quaap.launchtime.color.ColorPreference
+            android:title="@string/pref_backgroundcolor"
+            android:key="@string/pref_key_wallpapercolor"
+            android:defaultValue="@color/wallpaper_color"/>
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icontext"
             android:key="@string/pref_key_textcolor"
             android:defaultValue="@color/textcolor"/>
-        <com.quaap.launchtime.color.ColorPreference
-            android:title="Background color"
-            android:key="@string/pref_key_wallpapercolor"
-            android:defaultValue="@color/wallpaper_color"/>
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_tabtext"
             android:key="@string/pref_key_cattabtextcolor"

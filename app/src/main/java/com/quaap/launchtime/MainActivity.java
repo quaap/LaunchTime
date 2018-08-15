@@ -1371,12 +1371,14 @@ public class MainActivity extends Activity implements
             mRenameCategoryButton.setBackgroundColor(mStyle.getCattabBackground());
             mEditWidgetsButton.setBackgroundColor(mStyle.getCattabBackground());
             mOpenPrefsButton.setBackgroundColor(mStyle.getCattabBackground());
+            mOpenPrefs2Button.setBackgroundColor(mStyle.getCattabBackground());
 
             mSortCategoryButton.setTextColor(mStyle.getCattabTextColor());
             mAddCategoryButton.setTextColor(mStyle.getCattabTextColor());
             mRenameCategoryButton.setTextColor(mStyle.getCattabTextColor());
             mEditWidgetsButton.setTextColor(mStyle.getCattabTextColor());
             mOpenPrefsButton.setColorFilter(mStyle.getCattabTextColor());
+            mOpenPrefs2Button.setColorFilter(mStyle.getCattabTextColor());
 
             int c = mStyle.getWallpaperColor();
             mIconSheetBottomFrame.setBackgroundColor(Color.argb(255, Color.red(c), Color.green(c), Color.blue(c)));
