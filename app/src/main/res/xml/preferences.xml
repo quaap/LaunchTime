@@ -72,7 +72,7 @@
     <PreferenceCategory android:title="@string/pref_color_style">
 
         <PreferenceScreen
-            android:title="Colors and iconpacks">
+            android:title="Colors and Theme">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetPackage="com.quaap.launchtime"

@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,12 +98,17 @@ public class ColorDemo extends Preference {
         style.styleCategoryStyle(cat1, Style.CategoryTabStyle.Normal, false);
         style.styleCategoryStyle(catsel, Style.CategoryTabStyle.Selected, false);
 
+        icon1.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.getLauncherFontSize()+1);
         icon1.setTextColor(style.getTextColor());
         Drawable icond1 = icon1.getCompoundDrawables()[1];
+        icond1.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
         icon1.setCompoundDrawables(null, Theme.applyIconTint(icond1, style.getIconTint()),null,null);
 
+
+        icon2.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.getLauncherFontSize()+1);
         icon2.setTextColor(style.getTextColor());
         Drawable icond2 = icon2.getCompoundDrawables()[1];
+        icond2.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
         icon2.setCompoundDrawables(null, Theme.applyIconTint(icond2, style.getIconTint()),null,null);
 
     }

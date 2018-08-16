@@ -6,12 +6,13 @@
     <FrameLayout
         android:id="@+id/demo_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="3dp">
 
         <LinearLayout
             android:id="@+id/demo_iconarea"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <TextView
@@ -40,6 +41,7 @@
             android:layout_gravity="end"
             android:layout_marginRight="22dp"
             android:layout_marginLeft="2dp"
+            android:layout_marginBottom="22dp"
             android:gravity="center"
             android:orientation="vertical">
 
