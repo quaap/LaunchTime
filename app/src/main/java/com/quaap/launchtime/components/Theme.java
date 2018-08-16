@@ -456,26 +456,31 @@ public class Theme {
             Drawable app_icon = iconsHandler.getDefaultAppDrawable(app);
 
 
-            int mask_color = prefs.getInt("icon_tint", getColor(Thing.Mask));
+            int mask_color = prefs.getInt(ctx.getString(R.string.pref_key_icon_tint), getColor(Thing.Mask));
 
            // Log.d("iconi", mask_color + " mask");
 
-            if (Color.alpha(mask_color) > 10) {
-
-                app_icon = app_icon.mutate();
-                if (Color.red(mask_color) == Color.green(mask_color) && Color.red(mask_color) ==  Color.blue(mask_color)) {
-                    app_icon = convertToGrayscale(app_icon, Color.red(mask_color));
-                } else {
-                    PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
-                    app_icon.setColorFilter(mask_color, mode);
-                }
-            }
+            app_icon = applyIconTint(app_icon, mask_color);
 
 
             return app_icon;
         }
 
 
+    }
+
+    public static Drawable applyIconTint(Drawable app_icon, int mask_color) {
+        if (Color.alpha(mask_color) > 10) {
+
+            app_icon = app_icon.mutate();
+            if (mask_color == Color.WHITE) {
+                app_icon = convertToGrayscale(app_icon);
+            } else {
+                PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
+                app_icon.setColorFilter(mask_color, mode);
+            }
+        }
+        return app_icon;
     }
 
 //    public class PolychromeTheme extends BuiltinTheme {
@@ -509,9 +514,9 @@ public class Theme {
 //
 //    }
 
-    private Drawable convertToGrayscale(Drawable drawable, int colorlevel) {
+    private static Drawable convertToGrayscale(Drawable drawable) {
         ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation((255f-colorlevel)/255f);
+        matrix.setSaturation(0);
 
         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
 

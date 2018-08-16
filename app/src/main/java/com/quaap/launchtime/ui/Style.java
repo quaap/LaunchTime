@@ -69,6 +69,7 @@ public class Style {
     private int cattabBackgroundHighContrast;
     private int cattabSelectedBackgroundHighContrast;
 
+    private boolean centeredIcons;
 
     private int launcherIconSize = 55;
     private int launcherSize = 80;
@@ -242,6 +243,8 @@ public class Style {
 
         leftHandCategories = mAppPreferences.getString(mContext.getString(R.string.pref_key_categories_loc), "right").equals("left");
 
+        centeredIcons  = mAppPreferences.getBoolean(mContext.getString(R.string.pref_key_center_sheet), true);
+
         float density = mContext.getResources().getDisplayMetrics().density / 2.0f;
 
         if (density<.75f) density = .75f;
@@ -338,7 +341,12 @@ public class Style {
 
         bgDrawables.clear();
 
+        calculateWallpaperColor();
+    }
+
+    public void calculateWallpaperColor() {
         WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
+        mWallpaper = null;
         if (wm!=null) {
             WallpaperInfo wi = wm.getWallpaperInfo();
             if (wi!=null) {
@@ -365,7 +373,6 @@ public class Style {
         }
 
     }
-
 
     public int getCalculatedWallpaperColor() {
         return calculatedWallpaperColor;
@@ -495,6 +502,10 @@ public class Style {
 
     public boolean isLeftHandCategories() {
         return leftHandCategories;
+    }
+
+    public boolean isCenteredIcons() {
+        return centeredIcons;
     }
 
     public float getCategoryTabFontSize() {

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/demo_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="3dp">
+
+        <LinearLayout
+            android:id="@+id/demo_iconarea"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/demo_launcher2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:drawableTop="@mipmap/launcher"
+                android:gravity="center_horizontal"
+                android:text="App 1" />
+
+            <TextView
+                android:id="@+id/demo_launcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:drawableTop="@mipmap/launcher"
+                android:gravity="center_horizontal"
+                android:text="App 2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/demo_cattabbg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginRight="22dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginBottom="22dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/demo_category_tab_sel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="Selected" />
+
+            <TextView
+                android:id="@+id/demo_category_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="Category" />
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

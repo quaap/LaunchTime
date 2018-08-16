@@ -123,6 +123,11 @@ public class IconsHandler {
         return theme.isBuiltinThemeIconTintable(packageName);
     }
 
+    public boolean isIconTintable() {
+        return theme.isBuiltinThemeIconTintable(iconsPackPackageName);
+    }
+
+
     public Drawable getCustomIcon(ComponentName componentName) {
         Drawable app_icon = null;
         Bitmap custombitmap = SpecialIconStore.loadBitmap(ctx, componentName, SpecialIconStore.IconType.Custom);
