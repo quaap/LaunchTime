@@ -204,9 +204,12 @@ public class ActionMenu {
             int red = Color.red(bgcolor);
             int green = Color.green(bgcolor);
             int blue = Color.blue(bgcolor);
-            bgcolor = Color.argb(220, red, green, blue);
+            int alpha = 200;
+            if (Color.alpha(mItemBGColor)<120) alpha = 235;
+
+            bgcolor = Color.argb(alpha, red, green, blue);
         } else {
-            bgcolor = Color.argb(220, 128, 128, 128);
+            bgcolor = Color.argb(235, 128, 128, 128);
             mItemBGColor = Color.argb(240, 255-Color.red(textcolor), 255-Color.green(textcolor), 255-Color.blue(textcolor));
 
         }
