@@ -461,7 +461,7 @@ public class MainActivity extends Activity implements
 
                 main.mWidgetHelper = GlobState.deleteAndGetWidgetHelper(main);
 
-                main.mPrefs.edit().putInt(key,BuildConfig.VERSION_CODE).apply();
+                main.mPrefs.edit().putInt(key,830).apply();
             }
         }
 
