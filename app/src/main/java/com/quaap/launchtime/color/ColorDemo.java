@@ -1,6 +1,8 @@
 package com.quaap.launchtime.color;
 
 import android.content.Context;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.components.Theme;
 import com.quaap.launchtime.ui.Style;
 
 public class ColorDemo extends Preference {
@@ -44,6 +47,9 @@ public class ColorDemo extends Preference {
         catsel.setTextColor(style.getCattabSelectedText());
         icon.setTextColor(style.getTextColor());
 
+        Drawable d = icon.getCompoundDrawables()[1];
+        icon.setCompoundDrawables(null, Theme.applyIconTint(d, style.getIconTint()),null,null);
+
     }
 
     @Override
@@ -55,7 +61,7 @@ public class ColorDemo extends Preference {
             ((ViewGroup)body.getParent()).removeView(body);
         }
         view.addView(body);
-
+        applyStyle();
         return view;
     }
 }

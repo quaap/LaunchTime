@@ -72,7 +72,7 @@
     <PreferenceCategory android:title="@string/pref_color_style">
 
         <PreferenceScreen
-            android:title="Colors and icons">
+            android:title="Colors">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetPackage="com.quaap.launchtime"
@@ -113,6 +113,21 @@
             android:defaultValue="true"
             android:title="@string/pref_center"
             android:key="@string/pref_key_center_sheet"/>
+
+        <ListPreference
+            android:defaultValue="@string/pref_iconpack_def"
+            android:key="@string/pref_key_icons_pack"
+            android:summary="%s"
+            android:title="@string/icons_pack_name" />
+
+        <PreferenceScreen
+            android:title="@string/pref_customize"
+            android:summary="@string/pref_customize_desc">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.quaap.launchtime"
+                android:targetClass="com.quaap.launchtime.CustomizeLaunchersActivity"/>
+        </PreferenceScreen>
 
     </PreferenceCategory>
 

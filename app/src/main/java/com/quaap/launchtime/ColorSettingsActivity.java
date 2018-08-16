@@ -93,7 +93,7 @@ public class ColorSettingsActivity extends PreferenceActivity {
                                     IconsHandler ich = GlobState.getIconsHandler(getActivity());
                                     ich.getTheme().resetUserColors();
                                     Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
-                                    getActivity().finish();
+                                    //getActivity().finish();
                                     dialog.dismiss();
                                 }
 
@@ -125,18 +125,9 @@ public class ColorSettingsActivity extends PreferenceActivity {
         @Override
         public void onResume() {
             super.onResume();
-            ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
-            setListPreferenceIconsPacksData(iconsPack, this.getActivity());
-            iconsPack.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    getActivity().finish();
-                    return true;
-                }
-            });
 
             IconsHandler iph = GlobState.getIconsHandler(this.getActivity());
-            findPreference("icon_tint").setEnabled(iph.isIconTintable(iconsPack.getValue()));
+            findPreference("icon_tint").setEnabled(iph.isIconTintable());
 
         }
 
@@ -150,11 +141,11 @@ public class ColorSettingsActivity extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-
-        Intent main = new Intent(this, MainActivity.class);
-        //setResult(RESULT_OK);
-        finish();
-        startActivity(main);
+        super.onBackPressed();
+        //Intent main = new Intent(this, MainActivity.class);
+        ////setResult(RESULT_OK);
+        //finish();
+        //startActivity(main);
 
     }
 
@@ -179,25 +170,5 @@ public class ColorSettingsActivity extends PreferenceActivity {
         finish();
     }
 
-    private static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
-        IconsHandler iph = GlobState.getIconsHandler(context);
 
-        iph.loadAvailableIconsPacks();
-
-        Map<String, String> iconsPacks = iph.getAllIconsThemes();
-
-        CharSequence[] entries = new CharSequence[iconsPacks.size()];
-        CharSequence[] entryValues = new CharSequence[iconsPacks.size()];
-
-        int i = 0;
-        for (String packageIconsPack : iconsPacks.keySet()) {
-            entries[i] = iconsPacks.get(packageIconsPack);
-            entryValues[i] = packageIconsPack;
-            i++;
-        }
-
-        lp.setEntries(entries);
-        lp.setDefaultValue(IconsHandler.DEFAULT_PACK);
-        lp.setEntryValues(entryValues);
-    }
 }

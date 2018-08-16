@@ -92,6 +92,16 @@ public class SettingsActivity extends PreferenceActivity {
         @Override
         public void onResume() {
             super.onResume();
+            ListPreference iconsPack = (ListPreference) findPreference("icons-pack");
+            setListPreferenceIconsPacksData(iconsPack, this.getActivity());
+            iconsPack.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    getActivity().finish();
+                    return true;
+                }
+            });
+
         }
     }
 
@@ -126,5 +136,25 @@ public class SettingsActivity extends PreferenceActivity {
         super.onPause();
         finish();
     }
+    private static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
+        IconsHandler iph = GlobState.getIconsHandler(context);
 
+        iph.loadAvailableIconsPacks();
+
+        Map<String, String> iconsPacks = iph.getAllIconsThemes();
+
+        CharSequence[] entries = new CharSequence[iconsPacks.size()];
+        CharSequence[] entryValues = new CharSequence[iconsPacks.size()];
+
+        int i = 0;
+        for (String packageIconsPack : iconsPacks.keySet()) {
+            entries[i] = iconsPacks.get(packageIconsPack);
+            entryValues[i] = packageIconsPack;
+            i++;
+        }
+
+        lp.setEntries(entries);
+        lp.setDefaultValue(IconsHandler.DEFAULT_PACK);
+        lp.setEntryValues(entryValues);
+    }
 }

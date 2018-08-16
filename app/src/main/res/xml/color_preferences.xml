@@ -53,20 +53,8 @@
             android:summary="@string/reset_color_summ"
             android:title="@string/reset_colors_title" />
 
-        <ListPreference
-            android:defaultValue="@string/pref_iconpack_def"
-            android:key="@string/pref_key_icons_pack"
-            android:summary="%s"
-            android:title="@string/icons_pack_name" />
     </PreferenceCategory>
 
-    <PreferenceScreen
-        android:title="@string/pref_customize"
-        android:summary="@string/pref_customize_desc">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:targetPackage="com.quaap.launchtime"
-            android:targetClass="com.quaap.launchtime.CustomizeLaunchersActivity"/>
-    </PreferenceScreen>
+
 
 </PreferenceScreen>
