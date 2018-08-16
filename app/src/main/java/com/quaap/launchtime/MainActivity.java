@@ -241,24 +241,8 @@ public class MainActivity extends Activity implements
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
-        mWidgetHelper = new Widget(this);
 
-        String key = "current";
-        int lastvalue = mPrefs.getInt(key,0);
-        if (lastvalue < 830) {
-
-            if (mAppPreferences.getString(getString(R.string.pref_key_animate_duration), "150").equals("250")) {
-                mAppPreferences.edit().putString(getString(R.string.pref_key_animate_duration), "150").apply();
-            }
-
-            mWidgetHelper.delete();
-            mWidgetHelper.done();
-            mWidgetHelper = new Widget(this);
-
-        }
-
-        mPrefs.edit().putInt(key,BuildConfig.VERSION_CODE).apply();
-
+        mWidgetHelper = GlobState.getWidgetHelper(this);
 
         mQuickRow = new QuickRow(mMainDragListener, this);
 
@@ -458,11 +442,26 @@ public class MainActivity extends Activity implements
 
         private void stage1(MainActivity main) {
             DB db = GlobState.getGlobState(main).getDB();
+            String key = "current";
+            int lastvalue = main.mPrefs.getInt(key,0);
+
             if (db.isFirstRun()) {
                 main.mAppPreferences.edit()
                         .putBoolean(main.getString(R.string.pref_key_show_action_menus), Build.VERSION.SDK_INT >= 25)
                         .putBoolean(main.getString(R.string.pref_key_show_action_extra), Build.VERSION.SDK_INT >= 25)
                         .apply();
+                lastvalue = 0;
+            }
+
+            if (lastvalue < 830) {
+
+                if (main.mAppPreferences.getString(main.getString(R.string.pref_key_animate_duration), "150").equals("250")) {
+                    main.mAppPreferences.edit().putString(main.getString(R.string.pref_key_animate_duration), "150").apply();
+                }
+
+                main.mWidgetHelper = GlobState.deleteAndGetWidgetHelper(main);
+
+                main.mPrefs.edit().putInt(key,BuildConfig.VERSION_CODE).apply();
             }
         }
 
@@ -2180,7 +2179,7 @@ public class MainActivity extends Activity implements
 
                 if (hostView==null) {
                     Log.d(TAG, "creating new widget" + app.getActivityName() + " " + app.getPackageName());
-                    hostView = mWidgetHelper.loadWidget(app);
+                    hostView = mWidgetHelper.loadWidget(this, app);
                 }
 
                 if (hostView==null) {
@@ -2322,7 +2321,7 @@ public class MainActivity extends Activity implements
 
     public void setupWidget() {
         try {
-            mWidgetHelper.popupSelectWidget();
+            mWidgetHelper.popupSelectWidget(this);
         } catch (Throwable t) {
             //very rare
             Toast.makeText(this, "Can't show widgets: " + t.getLocalizedMessage(),Toast.LENGTH_LONG).show();
@@ -3297,7 +3296,7 @@ public class MainActivity extends Activity implements
 
                 }
             } else {
-                AppWidgetHostView appwid = mWidgetHelper.onActivityResult(requestCode, resultCode, data);
+                AppWidgetHostView appwid = mWidgetHelper.onActivityResult(this, requestCode, resultCode, data);
                 if (appwid == null) {
                     Log.d(TAG, "appwid is null.");
                     ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);

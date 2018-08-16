@@ -26,6 +26,7 @@ import com.quaap.launchtime.components.ExceptionHandler;
 import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.ui.Style;
+import com.quaap.launchtime.widgets.Widget;
 
 
 public class GlobState extends Application implements  DB.DBClosedListener {
@@ -41,6 +42,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     private LaunchReceiver packrecv;
     private UnreadReceiver unreadrecv;
     private ShortcutReceiver shortcutrecv;
+    private Widget mWidgetHelper;
 
     public static final boolean enableCrashReporter
             = GlobState.class.getPackage().getName().equals("com.quaap.launch"+"time");
@@ -58,6 +60,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         Categories.init(this);
 
         badger = new Badger(this);
+
+        mWidgetHelper = new Widget(this);
 
         //this.deleteDatabase(DB.DATABASE_NAME);
         mIconsHandler = new IconsHandler(this);
@@ -120,6 +124,21 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     public static Badger getBadger(Context context) {
         return ((GlobState) context.getApplicationContext()).badger;
     }
+
+    public static Widget getWidgetHelper(Context context) {
+        return ((GlobState) context.getApplicationContext()).mWidgetHelper;
+    }
+
+    public static Widget deleteAndGetWidgetHelper(Context context) {
+        GlobState g = (GlobState) context.getApplicationContext();
+        if (g.mWidgetHelper!=null) {
+            g.mWidgetHelper.delete();
+            g.mWidgetHelper.done();
+        }
+        g.mWidgetHelper = new Widget(g);
+        return g.mWidgetHelper;
+    }
+
 
 
     public static ShortcutReceiver getShortcutReceiver(Context context) {

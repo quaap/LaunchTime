@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,22 +46,22 @@ public class Widget {
     final private int REQUEST_BIND_APPWIDGET = 5645;
     private AppWidgetManager mAppWidgetManager;
     private LaunchAppWidgetHost mAppWidgetHost;
-    private final Activity mParent;
+    private final Context mContext;
 
 
-    public Widget(Activity parent) {
-        mParent = parent;
+    public Widget(Context context) {
+        mContext = context;
 
         for (int i=0; i<2; i++) {
             try {
-                mAppWidgetManager = AppWidgetManager.getInstance(mParent);
-                mAppWidgetHost = new LaunchAppWidgetHost(mParent.getApplicationContext(), WIDGET_HOST_ID);
+                mAppWidgetManager = AppWidgetManager.getInstance(mContext);
+                mAppWidgetHost = new LaunchAppWidgetHost(mContext.getApplicationContext(), WIDGET_HOST_ID);
                 mAppWidgetHost.startListening();
                 break;
             } catch (RuntimeException | Error e) {
                 Log.e("LaunchWidget", "Couldn't start appwidgethost", e);
                 if (i==1) {
-                    Toast.makeText(parent, "System error: widgets not available", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "System error: widgets not available", Toast.LENGTH_LONG).show();
                     break;
                 }
                 try {
@@ -81,14 +82,14 @@ public class Widget {
         mAppWidgetHost.deleteHost();
     }
 
-    public void popupSelectWidget() {
+    public void popupSelectWidget(Activity parent) {
         try {
             // Allocate widget id and start widget selection activity
             int appWidgetId = this.mAppWidgetHost.allocateAppWidgetId();
             Intent pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
             pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             addEmptyData(pickIntent); // This is needed work around some weird bug.
-            mParent.startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET);
+            parent.startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET);
         } catch (Throwable t) {
             Log.e("Widget", t.getMessage(), t);
         }
@@ -112,17 +113,21 @@ public class Widget {
         // if (checkBindPermission(widget_id, appWidgetInfo.provider)) return null;
 
         // Create the host view
-        AppWidgetHostView hostView = mAppWidgetHost.createView(mParent, widget_id, appWidgetInfo);
+        AppWidgetHostView hostView = mAppWidgetHost.createView(mContext, widget_id, appWidgetInfo);
         hostView.setAppWidget(widget_id, appWidgetInfo);
 
         return hostView;
     }
 
 
-    public AppWidgetHostView loadWidget(AppLauncher app) {
+    public AppWidgetHostView loadWidget(Activity parent, AppLauncher app) {
         //ComponentName cn = new ComponentName(app.getPackageName(), app.getActivityName());
 
-        ComponentName cn = app.getComponentName();
+        return loadWidget(parent, app.getComponentName());
+    }
+
+    public AppWidgetHostView loadWidget(Activity parent, ComponentName cn) {
+
 
         Log.d("LaunchWidgeth", "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
         // Check that there actually is a widget in the database
@@ -152,14 +157,14 @@ public class Widget {
         // Allocate the hosted widget id
         int appWidgetId = mAppWidgetHost.allocateAppWidgetId();
 
-        if (checkBindPermission(appWidgetId, appWidgetInfo)) return null;
+        if (checkBindPermission(parent, appWidgetId, appWidgetInfo)) return null;
 
         Log.d("LaunchWidgeth", "Allowed to bind");
         Log.d("LaunchWidgeth", "creating widget");
 
 
         // Create the host view
-        AppWidgetHostView hostView = mAppWidgetHost.createView(mParent, appWidgetId, appWidgetInfo);
+        AppWidgetHostView hostView = mAppWidgetHost.createView(mContext, appWidgetId, appWidgetInfo);
 
         // Set the desired widget
         hostView.setAppWidget(appWidgetId, appWidgetInfo);
@@ -167,7 +172,7 @@ public class Widget {
         return hostView;
     }
 
-    private boolean checkBindPermission(final int appWidgetId, final AppWidgetProviderInfo appWidgetInfo) {
+    private boolean checkBindPermission(final Activity parent, final int appWidgetId, final AppWidgetProviderInfo appWidgetInfo) {
         try {
             boolean allowed_to_bind = mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, appWidgetInfo.provider);
 
@@ -187,7 +192,7 @@ public class Widget {
                         }
 
                         addEmptyData(intent);
-                        mParent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
+                        parent.startActivityForResult(intent, REQUEST_BIND_APPWIDGET);
 
                     }
                 }, 500);
@@ -200,7 +205,7 @@ public class Widget {
         return false;
     }
 
-    private AppWidgetHostView configureWidget(Intent data) {
+    private AppWidgetHostView configureWidget(Activity parent, Intent data) {
         // Get the selected widget information
         Bundle extras = data.getExtras();
         try {
@@ -211,7 +216,7 @@ public class Widget {
                 Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
                 intent.setComponent(appWidgetInfo.configure);
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                mParent.startActivityForResult(intent, REQUEST_CREATE_APPWIDGET);
+                parent.startActivityForResult(intent, REQUEST_CREATE_APPWIDGET);
             } else {
                 // Otherwise simply create it
                 return createWidget(data);
@@ -262,14 +267,14 @@ public class Widget {
 //        return mAppWidgetHost.getAppWidgetIds();
 //    }
 
-    public AppWidgetHostView onActivityResult(int requestCode, int resultCode, Intent data) {
+    public AppWidgetHostView onActivityResult(Activity parent, int requestCode, int resultCode, Intent data) {
 
         Log.d("LaunchWidgeth", "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
         // listen for widget manager response
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_PICK_APPWIDGET) {
                 Log.d("LaunchWidgeth", "configureWidget");
-                return configureWidget(data);
+                return configureWidget(parent, data);
             } else if (requestCode == REQUEST_CREATE_APPWIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
                 Log.d("LaunchWidgeth", "createWidget");
                 return createWidget(data);
