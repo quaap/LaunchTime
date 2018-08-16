@@ -4,16 +4,19 @@ package com.quaap.launchtime.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.WallpaperColors;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
@@ -345,33 +348,55 @@ public class Style {
     }
 
     public void calculateWallpaperColor() {
-        WallpaperManager wm = (WallpaperManager)mContext.getSystemService(Context.WALLPAPER_SERVICE);
-        mWallpaper = null;
-        if (wm!=null) {
-            WallpaperInfo wi = wm.getWallpaperInfo();
-            if (wi!=null) {
-                mWallpaper = wi.loadThumbnail(mContext.getPackageManager());
+        try {
+            WallpaperManager wm = (WallpaperManager) mContext.getSystemService(Context.WALLPAPER_SERVICE);
+            mWallpaper = null;
+            if (wm != null) {
+                WallpaperInfo wi = wm.getWallpaperInfo();
+                if (wi != null) {
+                    mWallpaper = wi.loadThumbnail(mContext.getPackageManager());
+                }
+                if (mWallpaper == null) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1 || mContext.checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED) {
+                        mWallpaper = wm.getDrawable();
+                    } else {
+                        WallpaperColors wpc = wm.getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
+
+                        if (wpc != null) {
+                            mWallpaper = new ColorDrawable(wpc.getPrimaryColor().toArgb());
+                        }
+                    }
+                }
+                if (mWallpaper == null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        mWallpaper = wm.getBuiltInDrawable();
+                    }
+                }
             }
+
+
+            if (mWallpaper != null) {
+                Drawable wallp = mWallpaper.mutate();
+                wallp.setColorFilter(wallpaperColor, PorterDuff.Mode.SRC_ATOP);
+                //wallp = wallp.mutate();
+                Bitmap bm = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas();
+                //c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
+                c.setBitmap(bm);
+                wallp.setBounds(0, 0, bm.getWidth(), bm.getHeight());
+                wallp.draw(c);
+                calculatedWallpaperColor = bm.getPixel(0, 0);
+            } else {
+                calculatedWallpaperColor = wallpaperColor;
+            }
+        } catch (Exception e) {
             if (mWallpaper==null) {
-                mWallpaper = wm.getDrawable();
+                mWallpaper = new ColorDrawable(wallpaperColor);
             }
-
+            if (calculatedWallpaperColor == Color.TRANSPARENT) {
+                calculatedWallpaperColor = wallpaperColor;
+            }
         }
-        if (mWallpaper!=null) {
-            Drawable wallp = mWallpaper.mutate();
-            wallp.setColorFilter(wallpaperColor, PorterDuff.Mode.SRC_ATOP);
-            //wallp = wallp.mutate();
-            Bitmap bm = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas();
-            //c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
-            c.setBitmap(bm);
-            wallp.setBounds(0, 0, bm.getWidth(), bm.getHeight());
-            wallp.draw(c);
-            calculatedWallpaperColor = bm.getPixel(0, 0);
-        } else {
-            calculatedWallpaperColor = wallpaperColor;
-        }
-
     }
 
     public int getCalculatedWallpaperColor() {
