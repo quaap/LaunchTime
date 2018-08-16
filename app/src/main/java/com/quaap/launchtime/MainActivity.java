@@ -241,18 +241,24 @@ public class MainActivity extends Activity implements
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
+        mWidgetHelper = new Widget(this);
 
         String key = "current";
-        if (mPrefs.getInt(key,0) < 830) {
+        int lastvalue = mPrefs.getInt(key,0);
+        if (lastvalue < 830) {
 
             if (mAppPreferences.getString(getString(R.string.pref_key_animate_duration), "150").equals("250")) {
                 mAppPreferences.edit().putString(getString(R.string.pref_key_animate_duration), "150").apply();
             }
 
-            mPrefs.edit().putInt(key,BuildConfig.VERSION_CODE).apply();
+            mWidgetHelper.delete();
+            mWidgetHelper.done();
+            mWidgetHelper = new Widget(this);
+
         }
 
-        mWidgetHelper = new Widget(this);
+        mPrefs.edit().putInt(key,BuildConfig.VERSION_CODE).apply();
+
 
         mQuickRow = new QuickRow(mMainDragListener, this);
 

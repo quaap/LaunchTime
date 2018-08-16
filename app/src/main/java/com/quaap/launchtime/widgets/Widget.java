@@ -77,6 +77,10 @@ public class Widget {
         mAppWidgetHost.stopListening();
     }
 
+    public void delete() {
+        mAppWidgetHost.deleteHost();
+    }
+
     public void popupSelectWidget() {
         try {
             // Allocate widget id and start widget selection activity
