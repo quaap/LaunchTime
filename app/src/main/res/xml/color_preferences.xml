@@ -9,11 +9,6 @@
             android:key="colordemo"
             />
 
-        <PreferenceScreen
-            android:title="Wallpaper">
-            <intent android:action="android.intent.action.SET_WALLPAPER"/>
-        </PreferenceScreen>
-
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_backgroundcolor"
             android:key="@string/pref_key_wallpapercolor"
@@ -52,6 +47,49 @@
             android:key="@string/pref_key_reset_colors"
             android:summary="@string/reset_color_summ"
             android:title="@string/reset_colors_title" />
+
+        <ListPreference
+            android:defaultValue="@string/pref_iconpack_def"
+            android:key="@string/pref_key_icons_pack"
+            android:summary="%s"
+            android:title="@string/icons_pack_name" />
+
+
+
+        <ListPreference
+            android:defaultValue="@string/pref_cat_location_values_def"
+            android:title="@string/pref_cat_loc_text"
+            android:entries="@array/pref_cat_location_strings"
+            android:entryValues="@array/pref_cat_location_values"
+            android:summary="@string/pref_cat_loc"
+            android:key="@string/pref_key_categories_loc" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:title="@string/pref_tabsize"
+            android:entries="@array/pref_size_strings"
+            android:entryValues="@array/pref_tab_size_values"
+            android:key="@string/pref_key_tabsize"
+            android:summary="%s" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:title="@string/pref_iconsize"
+            android:entries="@array/pref_size_strings"
+            android:entryValues="@array/pref_tab_size_values"
+            android:key="@string/pref_key_iconsize"
+            android:summary="%s" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_rounded"
+            android:key="@string/pref_key_rounded_tabs"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_center"
+            android:key="@string/pref_key_center_sheet"/>
+
 
     </PreferenceCategory>
 

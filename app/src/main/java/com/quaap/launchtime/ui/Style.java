@@ -69,6 +69,7 @@ public class Style {
     private int cattabBackgroundHighContrast;
     private int cattabSelectedBackgroundHighContrast;
 
+    private boolean centeredIcons;
 
     private int launcherIconSize = 55;
     private int launcherSize = 80;
@@ -241,6 +242,8 @@ public class Style {
         //Checks application preferences and adjust accordingly
 
         leftHandCategories = mAppPreferences.getString(mContext.getString(R.string.pref_key_categories_loc), "right").equals("left");
+
+        centeredIcons  = mAppPreferences.getBoolean(mContext.getString(R.string.pref_key_center_sheet), true);
 
         float density = mContext.getResources().getDisplayMetrics().density / 2.0f;
 
@@ -499,6 +502,10 @@ public class Style {
 
     public boolean isLeftHandCategories() {
         return leftHandCategories;
+    }
+
+    public boolean isCenteredIcons() {
+        return centeredIcons;
     }
 
     public float getCategoryTabFontSize() {

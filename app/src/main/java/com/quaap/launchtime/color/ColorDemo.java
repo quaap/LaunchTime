@@ -1,7 +1,9 @@
 package com.quaap.launchtime.color;
 
 import android.content.Context;
-import android.graphics.ColorFilter;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
 import android.util.AttributeSet;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.quaap.launchtime.GlobState;
@@ -19,9 +22,13 @@ import com.quaap.launchtime.ui.Style;
 
 public class ColorDemo extends Preference {
     FrameLayout body;
+    FrameLayout bg;
+    LinearLayout menu;
+    LinearLayout iconarea;
     TextView cat1;
     TextView catsel;
-    TextView icon;
+    TextView icon1;
+    TextView icon2;
 
     Style style;
 
@@ -29,33 +36,80 @@ public class ColorDemo extends Preference {
         super(context, attrs);
         style = GlobState.getStyle(getContext());
         body = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.color_demo, null);
-        body.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        body.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        cat1 = body.findViewById(R.id.category_tab);
-        catsel = body.findViewById(R.id.category_tab_sel);
+        bg = body.findViewById(R.id.demo_bg);
 
-        icon = body.findViewById(R.id.launcher);
+        menu = body.findViewById(R.id.demo_cattabbg);
+        iconarea = body.findViewById(R.id.demo_iconarea);
+
+        cat1 = body.findViewById(R.id.demo_category_tab);
+        catsel = body.findViewById(R.id.demo_category_tab_sel);
+
+        icon1 = body.findViewById(R.id.demo_launcher);
+        icon2 = body.findViewById(R.id.demo_launcher2);
     }
 
 
     public void applyStyle() {
         style.calculateWallpaperColor();
-        body.setBackgroundColor(style.getCalculatedWallpaperColor());
-        cat1.setBackgroundColor(style.getCattabBackground());
-        cat1.setTextColor(style.getCattabTextColor());
-        catsel.setBackgroundColor(style.getCattabSelectedBackground());
-        catsel.setTextColor(style.getCattabSelectedText());
-        icon.setTextColor(style.getTextColor());
+        Drawable wpd = style.getWallpaperDrawable();
 
-        Drawable d = icon.getCompoundDrawables()[1];
-        icon.setCompoundDrawables(null, Theme.applyIconTint(d, style.getIconTint()),null,null);
+        Bitmap bm = Bitmap.createBitmap(400, 300, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas();
+        //c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
+        c.setBitmap(bm);
+        wpd.setBounds(0, 0, bm.getWidth(), bm.getHeight());
+        wpd.draw(c);
+
+        body.setBackground(new BitmapDrawable(getContext().getResources(), bm));
+        //bm.recycle();
+
+        bg.setBackgroundColor(style.getWallpaperColor());
+
+        int cattabwidth = getContext().getResources().getDimensionPixelSize(R.dimen.cattabbar_width);
+        FrameLayout.LayoutParams ilp = (FrameLayout.LayoutParams)iconarea.getLayoutParams();
+        FrameLayout.LayoutParams mlp = (FrameLayout.LayoutParams)menu.getLayoutParams();
+        if (style.isLeftHandCategories()) {
+            mlp.gravity = Gravity.LEFT;
+            ilp.leftMargin = cattabwidth;
+            ilp.rightMargin = cattabwidth;
+        } else {
+            mlp.gravity = Gravity.RIGHT;
+            ilp.leftMargin=10;
+            ilp.rightMargin=50;
+        }
+
+        if (style.isCenteredIcons()) {
+            ilp.gravity = Gravity.CENTER_HORIZONTAL;
+        } else {
+            ilp.gravity = Gravity.LEFT;
+        }
+        iconarea.setLayoutParams(ilp);
+        menu.setLayoutParams(mlp);
+
+//        cat1.setBackgroundColor(style.getCattabBackground());
+//        cat1.setTextColor(style.getCattabTextColor());
+//
+//        catsel.setBackgroundColor(style.getCattabSelectedBackground());
+//        catsel.setTextColor(style.getCattabSelectedText());
+
+        style.styleCategoryStyle(cat1, Style.CategoryTabStyle.Normal, false);
+        style.styleCategoryStyle(catsel, Style.CategoryTabStyle.Selected, false);
+
+        icon1.setTextColor(style.getTextColor());
+        Drawable icond1 = icon1.getCompoundDrawables()[1];
+        icon1.setCompoundDrawables(null, Theme.applyIconTint(icond1, style.getIconTint()),null,null);
+
+        icon2.setTextColor(style.getTextColor());
+        Drawable icond2 = icon2.getCompoundDrawables()[1];
+        icon2.setCompoundDrawables(null, Theme.applyIconTint(icond2, style.getIconTint()),null,null);
 
     }
 
     @Override
     protected View onCreateView(ViewGroup parent) {
         ViewGroup view = (ViewGroup)super.onCreateView(parent);
-
 
         if (body.getParent()!=null) {
             ((ViewGroup)body.getParent()).removeView(body);
