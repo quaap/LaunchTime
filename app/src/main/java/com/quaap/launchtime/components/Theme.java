@@ -463,8 +463,8 @@ public class Theme {
             if (Color.alpha(mask_color) > 10) {
 
                 app_icon = app_icon.mutate();
-                if (mask_color == Color.WHITE) {
-                    app_icon = convertToGrayscale(app_icon);
+                if (Color.red(mask_color) == Color.green(mask_color) && Color.red(mask_color) ==  Color.blue(mask_color)) {
+                    app_icon = convertToGrayscale(app_icon, Color.red(mask_color));
                 } else {
                     PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
                     app_icon.setColorFilter(mask_color, mode);
@@ -509,9 +509,9 @@ public class Theme {
 //
 //    }
 
-    private Drawable convertToGrayscale(Drawable drawable) {
+    private Drawable convertToGrayscale(Drawable drawable, int colorlevel) {
         ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
+        matrix.setSaturation((255f-colorlevel)/255f);
 
         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
 
