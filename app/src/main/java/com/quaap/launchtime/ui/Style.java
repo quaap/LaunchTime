@@ -223,7 +223,7 @@ public class Style {
             lp.bottomMargin=2;
         } else {
             lp.topMargin=4;
-            lp.bottomMargin=3;
+            lp.bottomMargin=5;
         }
 
         categoryTab.setLayoutParams(lp);
