@@ -184,7 +184,7 @@ public class MainActivity extends Activity implements
 
     public SharedPreferences mAppPreferences;
 
-    private final Map<ComponentName, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
+
     private final Map<AppLauncher,ViewGroup> mAppLauncherViews = Collections.synchronizedMap(new HashMap<AppLauncher,ViewGroup>());
 
     private boolean mChildLock;
@@ -207,9 +207,7 @@ public class MainActivity extends Activity implements
     private Style mStyle;
 
     private AddIconHandler iconHandler;
-    private static final int ADD_ICON = 1;
-    private static final int REMOVE_ALL_ICONS = 2;
-    private static final int NO_ICONS = 3;
+
 
     private static final String TAG = "LaunchTime";
 
@@ -1731,7 +1729,7 @@ public class MainActivity extends Activity implements
 
     private void addAppToIconSheetSend(String category, AppLauncher app, int pos, boolean reuse) {
         Message msg = new Message();
-        msg.arg1 = ADD_ICON;
+        msg.arg1 = AddIconHandler.ADD_ICON;
         Bundle data = new Bundle();
         data.putString("category", category);
         data.putParcelable("componentName", app.getComponentName());
@@ -1773,7 +1771,7 @@ public class MainActivity extends Activity implements
 
     private void removeIconSheetSend(String category) {
         Message msg = new Message();
-        msg.arg1 = REMOVE_ALL_ICONS;
+        msg.arg1 = AddIconHandler.REMOVE_ALL_ICONS;
         Bundle data = new Bundle();
         data.putString("category", category);
         msg.setData(data);
@@ -1797,11 +1795,20 @@ public class MainActivity extends Activity implements
 
     private void showNoIconsSend(String category) {
         Message msg = new Message();
-        msg.arg1 = NO_ICONS;
+        msg.arg1 = AddIconHandler.NO_ICONS;
         Bundle data = new Bundle();
         data.putString("category", category);
         msg.setData(data);
         iconHandler.sendMessage(msg);
+    }
+
+
+    public void removeAppFromIconSheet(AppLauncher app) {
+        if (app.isWidget()) {
+            mWidgetHelper.removeWidget(app.getComponentName());
+        }
+        db().deleteApp(app.getComponentName());
+        repopulateIconSheet(mCategory);
     }
 
     private void addAppToIconSheet(GridLayout iconSheet, AppLauncher app, int pos, boolean reuse) {
@@ -1891,7 +1898,7 @@ public class MainActivity extends Activity implements
 
         }
 
-        final AppWidgetHostView appwid = getAppWidgetHostView(app);
+        final AppWidgetHostView appwid = mWidgetHelper.getAppWidgetHostView(app);
 
         if (appwid != null) {
 
@@ -1938,7 +1945,7 @@ public class MainActivity extends Activity implements
     @SuppressLint("RtlHardcoded")
     public void showWidgetResize(final AppLauncher appitem) {
 
-        AppWidgetHostView appwid = getLoadedAppWidgetHostView(appitem.getComponentName());
+        AppWidgetHostView appwid = mWidgetHelper.getLoadedAppWidgetHostView(appitem.getComponentName());
         if (appwid!=null) {
             //final int resizeMode = appwid.getAppWidgetInfo().resizeMode;
 
@@ -2166,28 +2173,10 @@ public class MainActivity extends Activity implements
         if (app.isWidget()) {
             item = new FrameLayout(this);
 
-            AppWidgetHostView hostView = getLoadedAppWidgetHostView(app.getComponentName());
+            AppWidgetHostView hostView = mWidgetHelper.getOrCreateWidget(this, app.getComponentName());
             if (hostView == null) {
-                int id = getWidgetId(app.getComponentName());
-                if (id!=-1) {
-                    Log.d(TAG, "loading widget from id " + app.getActivityName() + " " + app.getPackageName());
-                    hostView = mWidgetHelper.createWidgetFromId(id);
-                    if (hostView==null) {
-                        mWidgetHelper.widgetRemoved(id);
-                    }
-                }
-
-                if (hostView==null) {
-                    Log.d(TAG, "creating new widget" + app.getActivityName() + " " + app.getPackageName());
-                    hostView = mWidgetHelper.loadWidget(this, app);
-                }
-
-                if (hostView==null) {
-                    Log.d(TAG, "AppWidgetHostView was null for " + app.getActivityName() + " " + app.getPackageName());
-                    // db().deleteApp(app.getActivityName());
-                    return null;
-                }
-                saveLoadedWidget(app.getComponentName(), hostView);
+                db().deleteApp(app.getComponentName());
+                return null;
             }
 
             AppWidgetProviderInfo pinfo = hostView.getAppWidgetInfo();
@@ -2345,7 +2334,7 @@ public class MainActivity extends Activity implements
 
             //Log.d(TAG, actvname + " " + pkgname);
 
-            saveLoadedWidget(cn,appwid);
+            mWidgetHelper.saveLoadedWidget(cn,appwid);
 //            mLoadedWidgets.put(actvname, appwid);
 //            mPrefs.edit().putInt(actvname, appwid.getAppWidgetId()).apply();
             AppLauncher.removeAppLauncher(cn);
@@ -2890,7 +2879,8 @@ public class MainActivity extends Activity implements
                 }
 
                 if (mBeingDragged.isWidget()) {
-                    removeWidget(mBeingDragged);
+                    mWidgetHelper.removeWidget(mBeingDragged.getComponentName());
+                    db().deleteApp(mBeingDragged.getComponentName());
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -2913,30 +2903,6 @@ public class MainActivity extends Activity implements
 
 
 
-    public AppWidgetHostView getAppWidgetHostView(AppLauncher appitem) {
-        return getLoadedAppWidgetHostView(appitem.getComponentName());
-    }
-
-    public AppWidgetHostView getLoadedAppWidgetHostView(ComponentName cn) {
-        return mLoadedWidgets.get(cn);
-    }
-
-    public int getWidgetId(ComponentName cn) {
-        return mPrefs.getInt(cn.toShortString(), -1);
-    }
-
-    public void saveLoadedWidget(ComponentName cn, AppWidgetHostView hostView) {
-        mPrefs.edit().putInt(cn.toShortString(), hostView.getAppWidgetId()).apply();
-        mLoadedWidgets.put(cn, hostView);
-    }
-
-    public void removeWidget(AppLauncher app) {
-        db().deleteApp(app.getComponentName());
-        AppWidgetHostView wid = mLoadedWidgets.remove(app.getComponentName());
-        if (wid != null) {
-            mWidgetHelper.widgetRemoved(wid.getAppWidgetId());
-        }
-    }
 
 
     public boolean isOnQuickRow(View view) {
@@ -4078,6 +4044,13 @@ public class MainActivity extends Activity implements
 
 
     private static class AddIconHandler extends Handler {
+
+        static final int ADD_ICON = 1;
+        static final int REMOVE_ALL_ICONS = 2;
+        static final int NO_ICONS = 3;
+        static final int REMOVE_ICON = 4;
+
+
         private final WeakReference<MainActivity> instref;
         AddIconHandler(MainActivity inst) {
             super();

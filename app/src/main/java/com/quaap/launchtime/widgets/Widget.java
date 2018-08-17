@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +18,9 @@ import android.widget.Toast;
 import com.quaap.launchtime.apps.AppLauncher;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Modified from Silverfish:
@@ -48,10 +51,17 @@ public class Widget {
     private LaunchAppWidgetHost mAppWidgetHost;
     private final Context mContext;
 
+    private SharedPreferences mPrefs;
+
+
+    private final static String TAG = "Widget";
+    
+    private final Map<ComponentName, AppWidgetHostView> mLoadedWidgets = new HashMap<>();
 
     public Widget(Context context) {
         mContext = context;
-
+        mPrefs = context.getSharedPreferences("widgets", Context.MODE_PRIVATE);
+        
         for (int i=0; i<2; i++) {
             try {
                 mAppWidgetManager = AppWidgetManager.getInstance(mContext);
@@ -67,18 +77,81 @@ public class Widget {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e1) {
-                    Log.e("Wodget", e1.getMessage());
+                    Log.e(TAG, e1.getMessage());
                 }
             }
         }
 
     }
 
+    
+    public AppWidgetHostView getOrCreateWidget(Activity parent, ComponentName provider) {
+        AppWidgetHostView hostView = getLoadedAppWidgetHostView(provider);
+        if (hostView == null) {
+            int id = getWidgetId(provider);
+            if (id!=-1) {
+                Log.d(TAG, "loading widget from id " + provider);
+                hostView =createWidgetFromId(id);
+                if (hostView==null) {
+                    removeWidget(provider);
+                    return null;
+                }
+            }
+
+            if (hostView==null) {
+                Log.d(TAG, "creating new widget " + provider);
+                hostView = loadWidget(parent, provider);
+            }
+
+            if (hostView==null) {
+                Log.d(TAG, "AppWidgetHostView was null for " + provider);
+                // db().deleteApp(app.getActivityName());
+                return null;
+            }
+            saveLoadedWidget(provider, hostView);
+        }
+        return hostView;
+    }
+
+    public AppWidgetHostView getAppWidgetHostView(AppLauncher appitem) {
+        return getLoadedAppWidgetHostView(appitem.getComponentName());
+    }
+
+    public AppWidgetHostView getLoadedAppWidgetHostView(ComponentName cn) {
+        return mLoadedWidgets.get(cn);
+    }
+
+    public int getWidgetId(ComponentName cn) {
+        return mPrefs.getInt(cn.toShortString(), -1);
+    }
+
+    public void saveLoadedWidget(ComponentName cn, AppWidgetHostView hostView) {
+        mPrefs.edit().putInt(cn.toShortString(), hostView.getAppWidgetId()).apply();
+        mLoadedWidgets.put(cn, hostView);
+    }
+
+
+
+    public void removeWidget(ComponentName cn) {
+        mPrefs.edit().remove(cn.toShortString()).apply();
+        AppWidgetHostView wid = mLoadedWidgets.remove(cn);
+        if (wid != null) {
+            widgetRemoved(wid.getAppWidgetId());
+        }
+    }
+
+
+
     public void done() {
         mAppWidgetHost.stopListening();
     }
 
     public void delete() {
+        for (ComponentName cn: new ArrayList<>(mLoadedWidgets.keySet())) {
+            removeWidget(cn);
+        }
+        mLoadedWidgets.clear();
+
         mAppWidgetHost.deleteHost();
     }
 
@@ -91,7 +164,7 @@ public class Widget {
             addEmptyData(pickIntent); // This is needed work around some weird bug.
             parent.startActivityForResult(pickIntent, REQUEST_PICK_APPWIDGET);
         } catch (Throwable t) {
-            Log.e("Widget", t.getMessage(), t);
+            Log.e(TAG, t.getMessage(), t);
         }
     }
 
@@ -129,10 +202,10 @@ public class Widget {
     public AppWidgetHostView loadWidget(Activity parent, ComponentName cn) {
 
 
-        Log.d("LaunchWidgeth", "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
+        Log.d(TAG, "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
         // Check that there actually is a widget in the database
         if (cn.getPackageName().isEmpty() && cn.getClassName().isEmpty()) {
-            Log.d("LaunchWidgeth", "DB was empty");
+            Log.d(TAG, "DB was empty");
             return null;
         }
 
@@ -150,7 +223,7 @@ public class Widget {
             }
         }
         if (appWidgetInfo == null) {
-            Log.d("LaunchWidgeth", "app info was null");
+            Log.d(TAG, "app info was null");
             return null; // Stop here
         }
 
@@ -159,8 +232,8 @@ public class Widget {
 
         if (checkBindPermission(parent, appWidgetId, appWidgetInfo)) return null;
 
-        Log.d("LaunchWidgeth", "Allowed to bind");
-        Log.d("LaunchWidgeth", "creating widget");
+        Log.d(TAG, "Allowed to bind");
+        Log.d(TAG, "creating widget");
 
 
         // Create the host view
@@ -182,7 +255,7 @@ public class Widget {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("LaunchWidgeth", "asking for permission");
+                        Log.d(TAG, "asking for permission");
                         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_BIND);
                         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
                         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, appWidgetInfo.provider);
@@ -199,7 +272,7 @@ public class Widget {
                 return true;
             }
         } catch( Exception e) {
-            Log.e("LaunchTime", e.getMessage());
+            Log.e(TAG, e.getMessage(), e);
             return false;
         }
         return false;
@@ -223,7 +296,7 @@ public class Widget {
 
             }
         } catch (Exception | Error e) {
-            Log.e("LaunchWidgeth", e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
         return null;
     }
@@ -257,7 +330,7 @@ public class Widget {
         return null;
     }
 
-    public void widgetRemoved(int appWidgetId) {
+    private void widgetRemoved(int appWidgetId) {
 
         mAppWidgetHost.deleteAppWidgetId(appWidgetId);
 
@@ -269,20 +342,20 @@ public class Widget {
 
     public AppWidgetHostView onActivityResult(Activity parent, int requestCode, int resultCode, Intent data) {
 
-        Log.d("LaunchWidgeth", "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + " resultCode=" + resultCode);
         // listen for widget manager response
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_PICK_APPWIDGET) {
-                Log.d("LaunchWidgeth", "configureWidget");
+                Log.d(TAG, "configureWidget");
                 return configureWidget(parent, data);
             } else if (requestCode == REQUEST_CREATE_APPWIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
-                Log.d("LaunchWidgeth", "createWidget");
+                Log.d(TAG, "createWidget");
                 return createWidget(data);
             } else {
-                Log.d("LaunchWidgeth", "unknown RESULT_OK");
+                Log.d(TAG, "unknown RESULT_OK");
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
-            Log.d("LaunchWidgeth", "RESULT_CANCELED");
+            Log.d(TAG, "RESULT_CANCELED");
             if (data!=null) {
                 int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
                 if (appWidgetId != -1) {

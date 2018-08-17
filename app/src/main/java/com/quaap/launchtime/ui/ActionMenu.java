@@ -124,8 +124,7 @@ public class ActionMenu {
             initializeActionMenu();
 
             if (appitem.isWidget()) {
-                AppWidgetHostView hostView = mMain.getAppWidgetHostView(appitem);
-                if (hostView!=null) {
+                if (appitem.isWidget()) {
                     addActionMenuItem(mMain.getString(R.string.resize), android.R.drawable.arrow_up_float, new Runnable() {
                         @Override
                         public void run() {
@@ -485,12 +484,7 @@ public class ActionMenu {
                 addActionMenuItem(mMain.getString(R.string.remove), R.drawable.recycle, mUseIcons, new Runnable() {
                     @Override
                     public void run() {
-                        if (appitem.isWidget()) {
-                            mMain.removeWidget(appitem);
-                        } else {
-                            mMain.db().deleteApp(appitem.getComponentName());
-                        }
-                        mMain.repopulateIconSheet(mMain.getCurrentCategory());
+                        mMain.removeAppFromIconSheet(appitem);
                     }
                 });
             }
