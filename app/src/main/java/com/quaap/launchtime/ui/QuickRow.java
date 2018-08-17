@@ -1,7 +1,6 @@
 package com.quaap.launchtime.ui;
 
 import android.content.ComponentName;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;

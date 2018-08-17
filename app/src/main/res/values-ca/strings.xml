@@ -376,5 +376,10 @@
     <string name="theme_transp">Transparent</string>
     <string name="resize">Resize</string>
     <string name="pref_backgroundcolor">Background color</string>
+    <string name="pref_extra_actions_summ">Put Uninstall, Remove, and Shortcut on action menu for apps and categories</string>
+ <string name="enable_some_new_features">Configurar noves funcions</string>
+ <string name="autohide_side_menu">Auto-hide the side menu</string>
+ <string name="update_colors">Update colors on default theme</string>
+ <string name="switch_default_theme">Switch to default theme and update to new colors</string>
 
 </resources>

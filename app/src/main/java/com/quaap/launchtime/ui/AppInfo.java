@@ -40,7 +40,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 
-public class AppInfo {
+class AppInfo {
 
     public static PopupWindow showAppinfo(final MainActivity main, View view, AppLauncher appitem) {
         if (appitem == null) return null;

@@ -1,5 +1,6 @@
 package com.quaap.launchtime.color;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -22,16 +23,16 @@ import com.quaap.launchtime.components.Theme;
 import com.quaap.launchtime.ui.Style;
 
 public class ColorDemo extends Preference {
-    FrameLayout body;
-    FrameLayout bg;
-    LinearLayout menu;
-    LinearLayout iconarea;
-    TextView cat1;
-    TextView catsel;
-    TextView icon1;
-    TextView icon2;
+    private final FrameLayout body;
+    private final FrameLayout bg;
+    private final LinearLayout menu;
+    private final LinearLayout iconarea;
+    private final TextView cat1;
+    private final TextView catsel;
+    private final TextView icon1;
+    private final TextView icon2;
 
-    Style style;
+    private final Style style;
 
     public ColorDemo(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -52,6 +53,7 @@ public class ColorDemo extends Preference {
     }
 
 
+    @SuppressLint("RtlHardcoded")
     public void applyStyle() {
         style.calculateWallpaperColor();
         Drawable wpd = style.getWallpaperDrawable();

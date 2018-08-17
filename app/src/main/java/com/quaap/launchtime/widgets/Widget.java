@@ -51,7 +51,7 @@ public class Widget {
     private LaunchAppWidgetHost mAppWidgetHost;
     private final Context mContext;
 
-    private SharedPreferences mPrefs;
+    private final SharedPreferences mPrefs;
 
 
     private final static String TAG = "Widget";
@@ -130,11 +130,11 @@ public class Widget {
         return mLoadedWidgets.get(cn);
     }
 
-    public int getWidgetId(ComponentName cn) {
+    private int getWidgetId(ComponentName cn) {
         return mPrefs.getInt(cn.toShortString(), -1);
     }
 
-    public void saveWidgetId(ComponentName cn, int id) {
+    private void saveWidgetId(ComponentName cn, int id) {
         mPrefs.edit().putInt(cn.toShortString(), id).apply();
     }
 
@@ -195,12 +195,13 @@ public class Widget {
     private AppWidgetHostView createWidget(Intent data) {
         // Get the widget id
         Bundle extras = data.getExtras();
+        if (extras==null) return null;
         int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
 
         return createWidgetFromId(appWidgetId);
     }
 
-    public AppWidgetHostView createWidgetFromId(int widget_id) {
+    private AppWidgetHostView createWidgetFromId(int widget_id) {
         AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(widget_id);
 
         if (appWidgetInfo==null) {
@@ -222,7 +223,7 @@ public class Widget {
         return loadWidget(parent, app.getComponentName());
     }
 
-    public AppWidgetHostView loadWidget(Activity parent, ComponentName cn) {
+    private AppWidgetHostView loadWidget(Activity parent, ComponentName cn) {
 
 
         Log.d(TAG, "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
@@ -305,6 +306,7 @@ public class Widget {
         // Get the selected widget information
         Bundle extras = data.getExtras();
         try {
+            if (extras==null) return null;
             int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
             AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
             if (appWidgetInfo.configure != null) {

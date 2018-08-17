@@ -1,26 +1,18 @@
 package com.quaap.launchtime;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
 import android.view.KeyEvent;
-import android.widget.Toast;
 
-import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.ui.MsgBox;
-
-import java.util.Map;
 
 /**
  * Copyright (C) 2017   Tom Kliethermes

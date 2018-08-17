@@ -372,8 +372,8 @@
     <string name="prompt_config_features">Configure new features</string>
     <string name="hide">Hide</string>
     <string name="show">Show</string>
-    <string name="enable_some_new_features">Enable some new features</string>
-    <string name="autohide_side_menu">Auto-hide the side menu after a timeout.</string>
+    <string name="enable_some_new_features">Configure new features</string>
+    <string name="autohide_side_menu">Auto-hide the side menu</string>
     <string name="update_colors">Update colors on default theme</string>
     <string name="switch_default_theme">Switch to default theme and update to new colors</string>
     <string name="theme_transp">Transparent</string>

@@ -24,7 +24,6 @@ import com.quaap.launchtime.components.Theme;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 
@@ -100,7 +99,7 @@ public class MsgBox {
 
     }
 
-    public static void showNews(final Context context) {
+    private static void showNews(final Context context) {
         StringWriter sw = new StringWriter();
         BufferedReader in = new BufferedReader(new InputStreamReader(context.getResources().openRawResource(R.raw.news)));
         try {

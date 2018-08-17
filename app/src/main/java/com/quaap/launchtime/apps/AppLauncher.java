@@ -12,7 +12,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -370,7 +369,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return this.mLabel.toLowerCase(Locale.getDefault()).compareTo(appLauncher.mLabel.toLowerCase(Locale.getDefault()));
     }
 
-    public void loadIcon(Context context,  Handler handler) {
+    private void loadIcon(Context context, Handler handler) {
         if (iconLoaded()) return;
         Drawable app_icon = null;
         try {
@@ -475,8 +474,8 @@ public class AppLauncher implements Comparable<AppLauncher> {
     private static class IconLoaderTask implements Runnable {
 
         volatile boolean isrunning = true;
-        private WeakReference<Context> mContextRef;
-        private WeakReference<Handler> mHandlerRef;
+        private final WeakReference<Context> mContextRef;
+        private final WeakReference<Handler> mHandlerRef;
 
         private int processed=0;
 

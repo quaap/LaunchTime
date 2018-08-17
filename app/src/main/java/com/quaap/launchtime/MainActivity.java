@@ -1688,7 +1688,7 @@ public class MainActivity extends Activity implements
         }
     }
 
-    public void repopulateIconSheet(String category) {
+    private void repopulateIconSheet(String category) {
         GridLayout iconSheet = mIconSheets.get(category);
 
         removeIconSheetSend(category);
@@ -2913,7 +2913,7 @@ public class MainActivity extends Activity implements
         return isAncestor(mSearchBox.getSearchView(), view);
     }
 
-    public static boolean isAncestor(ViewGroup potentialParent, View potentialChild) {
+    private static boolean isAncestor(ViewGroup potentialParent, View potentialChild) {
 
         if (potentialParent==potentialChild) return true; //self;
 

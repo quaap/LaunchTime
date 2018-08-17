@@ -14,7 +14,6 @@ package com.quaap.launchtime;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.appwidget.AppWidgetProviderInfo;
 import android.content.Intent;
 import android.content.pm.LauncherApps;
 import android.content.pm.ShortcutInfo;
@@ -26,7 +25,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.quaap.launchtime.components.IconsHandler;
-import com.quaap.launchtime.widgets.Widget;
 
 public class PinShortcutActivity extends Activity {
 

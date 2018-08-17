@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.quaap.launchtime.color.ColorDemo;
 import com.quaap.launchtime.components.IconsHandler;
-import com.quaap.launchtime.ui.MsgBox;
 
 import java.util.Map;
 

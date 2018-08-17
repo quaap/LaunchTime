@@ -13,7 +13,6 @@ package com.quaap.launchtime.ui;
  */
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.appwidget.AppWidgetHostView;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -60,7 +59,7 @@ public class ActionMenu {
 
     private static final String TAG = "ActionMenu";
 
-    private MainActivity mMain;
+    private final MainActivity mMain;
 
     private boolean mUseActionMenus = false;
     private boolean mDevModeActivities = true;
@@ -68,17 +67,17 @@ public class ActionMenu {
     private boolean mUseExtraActions = false;
 
     private PopupWindow mAppinfoWindow;
-    private ScrollView mShortcutActionsPopup;
-    private LinearLayout mShortcutActionsList;
-    private Style mStyle;
+    private final ScrollView mShortcutActionsPopup;
+    private final LinearLayout mShortcutActionsList;
+    private final Style mStyle;
     private int mAnimationDuration = 100;
 
     private int mOldNum = 0;
     private ViewGroup mIconBar = null;
-    private boolean mUseIcons = true;
+    private final boolean mUseIcons = true;
     
     private Point mScreenDim;
-    final int mIconW;
+    private final int mIconW;
 
 
     public ActionMenu(MainActivity main) {
@@ -178,7 +177,7 @@ public class ActionMenu {
         return false;
     }
 
-    public void addCancelToMenu() {
+    private void addCancelToMenu() {
         addActionMenuItem(mMain.getString(android.R.string.cancel),
                 android.R.drawable.ic_menu_close_clear_cancel,
                 mUseIcons && mIconBar!=null,

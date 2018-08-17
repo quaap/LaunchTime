@@ -407,7 +407,7 @@ public class Style {
         return mWallpaper;
     }
 
-    public Drawable mWallpaper;
+    private Drawable mWallpaper;
 
 
     private final Map<String,Drawable> bgDrawables = new WeakHashMap<>();
@@ -632,7 +632,7 @@ public class Style {
         animate.setStartDelay(0).start();
     }
 
-    public void ensureVisibleNoAni(View view) {
+    private void ensureVisibleNoAni(View view) {
         view.setAlpha(1);
         view.setScaleX(1);
         view.setScaleY(1);
@@ -646,7 +646,7 @@ public class Style {
     }
 
 
-    public void animateShow(final View view, AnimateDirection from, boolean reverse) {
+    private void animateShow(final View view, AnimateDirection from, boolean reverse) {
 
         if (mAnimationDuration==0) {
             view.clearAnimation();

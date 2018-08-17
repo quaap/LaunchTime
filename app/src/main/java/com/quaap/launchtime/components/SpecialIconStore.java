@@ -59,7 +59,7 @@ public class SpecialIconStore {
 
     public static  Bitmap loadBitmap(Context context, ComponentName cname, IconType iconType) {
 
-        Bitmap bitmap = null;
+        Bitmap bitmap;// = null;
 
 //            for (String fn: context.fileList()) {
 //                Log.d("SpecialIconStore", " I see file " + fn);
