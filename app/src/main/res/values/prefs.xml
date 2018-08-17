@@ -170,6 +170,7 @@
     <string name="pref_key_animate_duration" translatable="false">pref_animate_duration</string>
     <string name="pref_key_use_fullscreen" translatable="false">pref_use_fullscreen</string>
     <string name="pref_key_conf_new_features" translatable="false">pref_conf_new_features</string>
+    <string name="pref_key_reset_widgets" translatable="false">pref_reset_widgets</string>
 
 
 

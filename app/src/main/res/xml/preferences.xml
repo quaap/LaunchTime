@@ -69,10 +69,10 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="@string/pref_color_style">
+    <PreferenceCategory android:title="@string/pref_color_style" >
 
         <PreferenceScreen
-            android:title="Colors and Theme">
+            android:title="@string/pref_color_style">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetPackage="com.quaap.launchtime"
@@ -94,10 +94,13 @@
                 android:targetClass="com.quaap.launchtime.CustomizeLaunchersActivity"/>
         </PreferenceScreen>
 
-    </PreferenceCategory>
-
-
-    <PreferenceCategory android:title="@string/pref_tweaks_lab">
+        <ListPreference
+            android:defaultValue="0"
+            android:title="@string/pref_orient"
+            android:entries="@array/pref_orientation_strings"
+            android:entryValues="@array/pref_orientation_values"
+            android:key="@string/pref_key_orientation"
+            android:summary="%s" />
 
         <ListPreference
             android:defaultValue="-1"
@@ -112,6 +115,11 @@
             android:title="@string/pref_show_catlabel"
             android:key="@string/pref_key_cat_label"
             android:summary="@string/pref_show_catlabel_summ"/>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/pref_tweaks_lab">
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -135,15 +143,15 @@
             android:key="@string/pref_key_show_dropzones"
             android:dependency="pref_show_action_extra"
             android:defaultValue="false"
-            android:title="Show dropzones"
-            android:summary="Uninstall, Remove, and Shortcut are dropzones."/>
+            android:title="@string/pref_show_dropzones"
+            android:summary="@string/pref_show_drops_text"/>
 
         <CheckBoxPreference
             android:dependency="pref_show_action_menus"
             android:defaultValue="false"
-            android:title="DEV activities on action menus"
+            android:title="@string/pref_dev_actions"
             android:key="@string/pref_key_show_action_activities"
-            android:summary="Dev option. { } Could be DANGEROUS: Show ACTION_MAIN activites as action menu items on apps."/>
+            android:summary="@string/pref_dev_actions_text"/>
 
         <ListPreference
             android:defaultValue="3600"
@@ -153,13 +161,6 @@
             android:key="@string/pref_key_return_home"
             android:summary="@string/pref_returnhome_summ" />
 
-        <ListPreference
-            android:defaultValue="0"
-            android:title="@string/pref_orient"
-            android:entries="@array/pref_orientation_strings"
-            android:entryValues="@array/pref_orientation_values"
-            android:key="@string/pref_key_orientation"
-            android:summary="%s" />
 
         <ListPreference
             android:defaultValue="0"
@@ -184,6 +185,11 @@
             android:entryValues="@array/pref_animate_values"
             android:key="@string/pref_key_animate_duration"
             android:summary="@string/pref_animation_speed_summ" />
+
+        <Preference
+            android:key="@string/pref_key_reset_widgets"
+            android:summary="@string/pref_reset_widgets_text"
+            android:title="@string/pref_reset_widgets" />
 
     </PreferenceCategory>
 

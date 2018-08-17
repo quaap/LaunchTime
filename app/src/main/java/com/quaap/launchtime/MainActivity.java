@@ -832,6 +832,7 @@ public class MainActivity extends Activity implements
 
             if (key != null) {
 
+                if (key.equals("showchanges")) return;
 
                 // when the Theme updates many of these prefs at once, it sends "prefsUpdate" first so that we ignore everything until it is done.
                 if (key.equals("prefsUpdate")) {
@@ -1517,6 +1518,8 @@ public class MainActivity extends Activity implements
             catslp = new FrameLayout.LayoutParams(this,null);
         }
 
+        ViewGroup pparent = ((ViewGroup)mOpenPrefs2Button.getParent());
+
         if (mStyle.isLeftHandCategories()) {
             catslp.gravity = LEFT;
             ((FrameLayout.LayoutParams)mShowCats.getLayoutParams()).gravity=Gravity.LEFT|Gravity.BOTTOM;
@@ -1528,6 +1531,8 @@ public class MainActivity extends Activity implements
                 iconsarealp.rightMargin = 2;
             }
 
+            pparent.removeView(mOpenPrefs2Button);
+            pparent.addView(mOpenPrefs2Button,0);
         } else {
             catslp.gravity = Gravity.RIGHT;
             ((FrameLayout.LayoutParams)mShowCats.getLayoutParams()).gravity=Gravity.RIGHT|Gravity.BOTTOM;
@@ -1538,6 +1543,8 @@ public class MainActivity extends Activity implements
                 iconsarealp.leftMargin = 2;
                 iconsarealp.rightMargin = (int) catwidth+1;
             }
+            pparent.removeView(mOpenPrefs2Button);
+            pparent.addView(mOpenPrefs2Button,1);
         }
 //        int origback = mStyle.getCattabBackground();
 //

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
@@ -23,6 +24,7 @@ import com.quaap.launchtime.components.Theme;
 import com.quaap.launchtime.ui.Style;
 
 public class ColorDemo extends Preference {
+    private ViewGroup thisview;
     private final FrameLayout body;
     private final FrameLayout bg;
     private final LinearLayout menu;
@@ -55,10 +57,23 @@ public class ColorDemo extends Preference {
 
     @SuppressLint("RtlHardcoded")
     public void applyStyle() {
+        if (!this.isEnabled()) {
+            body.setBackgroundColor(Color.DKGRAY);
+            body.setVisibility(View.GONE);
+            if (thisview!=null) {
+                thisview.setVisibility(View.GONE);
+            }
+            return;
+        }
+        body.setVisibility(View.VISIBLE);
+        if (thisview!=null) {
+            thisview.setVisibility(View.VISIBLE);
+        }
+
         style.calculateWallpaperColor();
         Drawable wpd = style.getWallpaperDrawable();
 
-        Bitmap bm = Bitmap.createBitmap(400, 300, Bitmap.Config.ARGB_8888);
+        Bitmap bm = Bitmap.createBitmap(400, 240, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas();
         //c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC);
         c.setBitmap(bm);
@@ -117,13 +132,19 @@ public class ColorDemo extends Preference {
 
     @Override
     protected View onCreateView(ViewGroup parent) {
-        ViewGroup view = (ViewGroup)super.onCreateView(parent);
+        thisview = (ViewGroup)super.onCreateView(parent);
 
         if (body.getParent()!=null) {
             ((ViewGroup)body.getParent()).removeView(body);
         }
-        view.addView(body);
+        thisview.addView(body);
         applyStyle();
-        return view;
+        return thisview;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        applyStyle();
     }
 }

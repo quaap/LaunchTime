@@ -148,9 +148,9 @@ public class Widget {
 
     public void removeWidget(ComponentName cn) {
         int id = getWidgetId(cn);
+        mAppWidgetHost.deleteAppWidgetId(id);
         mPrefs.edit().remove(cn.toShortString()).apply();
         mLoadedWidgets.remove(cn);
-        mAppWidgetHost.deleteAppWidgetId(id);
 
     }
 
@@ -171,6 +171,7 @@ public class Widget {
 
     public void delete() {
         for (ComponentName cn: new ArrayList<>(mLoadedWidgets.keySet())) {
+            Log.d(TAG, "removing widget " + cn);
             removeWidget(cn);
         }
         mLoadedWidgets.clear();

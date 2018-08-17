@@ -11,6 +11,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.quaap.launchtime.ui.MsgBox;
 
@@ -73,6 +74,18 @@ public class SettingsActivity extends PreferenceActivity {
                             getActivity().finish();
                         }
                     });
+
+                    return true;
+                }
+            });
+
+            Preference clearwidgets = findPreference(getString(R.string.pref_key_reset_widgets));
+            clearwidgets.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+
+                    GlobState.getWidgetHelper(getActivity()).delete();
+                    Toast.makeText(getActivity(), "Widgets de-allocated", Toast.LENGTH_LONG).show();
 
                     return true;
                 }
