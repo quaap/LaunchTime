@@ -91,12 +91,12 @@ public class DB extends SQLiteOpenHelper {
     private static final String[] appordercolumnsindex = {CATID + ", " + ACTVNAME, INDEX};
 
 
-    private static final String TAB_ORDER_TABLE = "tab_order";
-    private static final String[] tabordercolumns = {CATID, LABEL, LABELFULL, FLAGS, INDEX};
-    private static final String[] tabordercolumntypes = {"TEXT primary key", "TEXT", "TEXT", "SHORT", "INT"};
-    private static final String TAB_ORDER_TABLE_CREATE = buildCreateTableStmt(TAB_ORDER_TABLE, tabordercolumns, tabordercolumntypes);
+    private static final String CATEGORIES_TABLE = "tab_order";
+    private static final String[] categoriescolumns = {CATID, LABEL, LABELFULL, FLAGS, INDEX};
+    private static final String[] categoriescolumntypes = {"TEXT primary key", "TEXT", "TEXT", "SHORT", "INT"};
+    private static final String CATEGORIES_TABLE_CREATE = buildCreateTableStmt(CATEGORIES_TABLE, categoriescolumns, categoriescolumntypes);
 
-    private static final String[] tabordercolumnsindex = {INDEX};
+    private static final String[] categoriescolumnsindex = {INDEX};
 
 
     private static final String APP_HISTORY_TABLE = "apps_hist";
@@ -118,7 +118,7 @@ public class DB extends SQLiteOpenHelper {
 
     private static final String APP_CURSOR_SQL = "select " + ACTVNAME + " _id, " + PKGNAME + " pkg,  app." + LABEL + " label, tab." + LABEL + " category " + ", app." + CUSTOMLABEL + " customlabel" +
             " from " + APP_TABLE + " as app " +
-            " inner join " + TAB_ORDER_TABLE + " as tab on app." + CATID + "=tab." + CATID +
+            " inner join " + CATEGORIES_TABLE + " as tab on app." + CATID + "=tab." + CATID +
             " where (app." + LABEL + " like ? or app." + CUSTOMLABEL + " like ?) and " +  ISWIDGET + "=0 and (" + ISUNINSTALLED+"=0)" +
             " order by LOWER(case when customlabel is null then app.label else customlabel end) ";
 
@@ -188,9 +188,9 @@ public class DB extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(buildIndexStmt(APP_ORDER_TABLE, createind));
         }
 
-        sqLiteDatabase.execSQL(TAB_ORDER_TABLE_CREATE);
-        for (String createind : tabordercolumnsindex) {
-            sqLiteDatabase.execSQL(buildIndexStmt(TAB_ORDER_TABLE, createind));
+        sqLiteDatabase.execSQL(CATEGORIES_TABLE_CREATE);
+        for (String createind : categoriescolumnsindex) {
+            sqLiteDatabase.execSQL(buildIndexStmt(CATEGORIES_TABLE, createind));
         }
 
         sqLiteDatabase.execSQL(APP_HISTORY_TABLE_CREATE);
@@ -250,7 +250,7 @@ public class DB extends SQLiteOpenHelper {
         if (oldVersion<10) {
             ContentValues values = new ContentValues();
             values.put(INDEX, 101);
-            sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{Categories.CAT_SEARCH});
+            sqLiteDatabase.update(CATEGORIES_TABLE, values, CATID + "=?", new String[]{Categories.CAT_SEARCH});
         }
 
         sqLiteDatabase.delete(APP_ORDER_TABLE, PKGNAME + " is null", null);
@@ -644,7 +644,7 @@ public class DB extends SQLiteOpenHelper {
             values.put(FLAGS, flags);
             values.put(INDEX, index);
 
-            db.insert(TAB_ORDER_TABLE, null, values);
+            db.insert(CATEGORIES_TABLE, null, values);
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't add catID " + catID, e);
             return false;
@@ -675,7 +675,7 @@ public class DB extends SQLiteOpenHelper {
             values.put(LABELFULL, displayNameFull);
             values.put(FLAGS, flags);
 
-            db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{catID});
+            db.update(CATEGORIES_TABLE, values, CATID + "=?", new String[]{catID});
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't select catID " + catID, e);
             return false;
@@ -700,7 +700,7 @@ public class DB extends SQLiteOpenHelper {
 
             values.put(FLAGS, flags);
 
-            db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{catID});
+            db.update(CATEGORIES_TABLE, values, CATID + "=?", new String[]{catID});
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't select catID " + catID, e);
 
@@ -738,7 +738,7 @@ public class DB extends SQLiteOpenHelper {
                 setAppCategoryOrder(Categories.CAT_OTHER, otherAppOrder, true);
             }
 
-            db.delete(TAB_ORDER_TABLE, CATID + "=?", new String[]{catID});
+            db.delete(CATEGORIES_TABLE, CATID + "=?", new String[]{catID});
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e("LaunchDB", "Can't delete catID " + catID, e);
@@ -754,7 +754,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(true, TAB_ORDER_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
+        Cursor cursor = db.query(true, CATEGORIES_TABLE, new String[]{CATID}, null, null, null, null, INDEX, null);
         try {
             //Log.d("DB", "getting catagories");
             while (cursor.moveToNext()) {
@@ -775,7 +775,7 @@ public class DB extends SQLiteOpenHelper {
         String display = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABEL}, CATID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(CATEGORIES_TABLE, new String[]{LABEL}, CATID + "=?", new String[]{catID}, null, null, null, null);
         try {
             if (cursor.moveToNext()) {
                 display = cursor.getString(cursor.getColumnIndex(LABEL));
@@ -790,7 +790,7 @@ public class DB extends SQLiteOpenHelper {
         String display = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{LABELFULL}, CATID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(CATEGORIES_TABLE, new String[]{LABELFULL}, CATID + "=?", new String[]{catID}, null, null, null, null);
         try {
             if (cursor.moveToNext()) {
                 display = cursor.getString(cursor.getColumnIndex(LABELFULL));
@@ -805,7 +805,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{FLAGS}, CATID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(CATEGORIES_TABLE, new String[]{FLAGS}, CATID + "=?", new String[]{catID}, null, null, null, null);
         boolean tiny = false;
         try {
             if (cursor.moveToNext()) {
@@ -824,7 +824,7 @@ public class DB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TAB_ORDER_TABLE, new String[]{FLAGS}, CATID + "=?", new String[]{catID}, null, null, null, null);
+        Cursor cursor = db.query(CATEGORIES_TABLE, new String[]{FLAGS}, CATID + "=?", new String[]{catID}, null, null, null, null);
         boolean hidden = false;
         try {
             if (cursor.moveToNext()) {
@@ -865,7 +865,7 @@ public class DB extends SQLiteOpenHelper {
 
                 values.put(INDEX, i);
 
-                db.update(TAB_ORDER_TABLE, values, CATID + "=?", new String[]{cats.get(i)});
+                db.update(CATEGORIES_TABLE, values, CATID + "=?", new String[]{cats.get(i)});
             }
 
             db.setTransactionSuccessful();
@@ -1404,9 +1404,9 @@ public class DB extends SQLiteOpenHelper {
 
         //move search/recent away from top to correct old order.
         //{CATID, LABEL, LABELFULL, FLAGS, INDEX};
-        if (sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=0", null)>0) {
+        if (sqLiteDatabase.update(CATEGORIES_TABLE, values, CATID + "=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=0", null)>0) {
             values.put(INDEX, 0);
-            sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
+            sqLiteDatabase.update(CATEGORIES_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
         }
     }
 
