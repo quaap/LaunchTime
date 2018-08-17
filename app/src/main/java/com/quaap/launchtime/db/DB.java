@@ -149,17 +149,8 @@ public class DB extends SQLiteOpenHelper {
             }
         } else {
             Log.d("db", "opening database");
-//            SharedPreferences p = context.getSharedPreferences(DB.class.toString(), Context.MODE_PRIVATE);
-//            if (!p.getBoolean("removedoldconfig", false)) {
-//                Log.d("db", "remove old com.quaap.launchtime.SettingsActivity");
-//                this.deleteApp("com.quaap.launchtime.SettingsActivity");
-//                p.edit().putBoolean("removedoldconfig", true).apply();
-//            }
         }
 
-//        ContentValues values = new ContentValues();
-//        values.put(ISUNINSTALLED, 0);
-//        this.getWritableDatabase().update(APP_TABLE, values, null, null);
 
     }
 
@@ -245,55 +236,7 @@ public class DB extends SQLiteOpenHelper {
         }
         if (oldVersion<=2) {
 
-            sqLiteDatabase.execSQL(APP_TABLE_CREATE);
-            for (String createind : appcolumnsindex) {
-                sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE, createind));
-            }
-
-            boolean first = true;
-            String cols = "";
-            for (String col : appcolumns) {
-               // if (oldVersion<6 && col.equals(CUSTOMLABEL)) continue;
-                if (first) first = false;
-                else cols += ", ";
-                cols += col;
-
-            }
-
-
-            Log.i("db", "copy to new table");
-
-            sqLiteDatabase.execSQL("insert into " + APP_TABLE + "(" + cols + ") select " + cols + " from " + APP_TABLE_OLD);
-            sqLiteDatabase.execSQL("drop table " + APP_TABLE_OLD);
-
-            sqLiteDatabase.execSQL("alter table " + APP_ORDER_TABLE + " add column " + PKGNAME + " TEXT");
-            sqLiteDatabase.execSQL("alter table " + APP_HISTORY_TABLE + " add column " + PKGNAME + " TEXT");
-
-            Cursor cursor = sqLiteDatabase.query(APP_TABLE, new String[]{ACTVNAME, PKGNAME}, null, null, null, null, ACTVNAME);
-            try {
-                while (cursor.moveToNext()) {
-                    String actv = cursor.getString(cursor.getColumnIndex(ACTVNAME));
-                    String pkg = cursor.getString(cursor.getColumnIndex(PKGNAME));
-
-                    ContentValues values = new ContentValues();
-                    values.put(PKGNAME, pkg);
-                    sqLiteDatabase.update(APP_ORDER_TABLE, values, ACTVNAME + "=?", new String[]{actv});
-                    values.put(PKGNAME, pkg);
-                    sqLiteDatabase.update(APP_HISTORY_TABLE, values, ACTVNAME + "=?", new String[]{actv});
-                }
-            } finally {
-                cursor.close();
-            }
-
-            ContentValues values = new ContentValues();
-            values.put(INDEX, 1);
-
-            //move search/recent away from top to correct old order.
-            //{CATID, LABEL, LABELFULL, FLAGS, INDEX};
-            if (sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=0", null)>0) {
-                values.put(INDEX, 0);
-                sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
-            }
+            upgradeTo2(sqLiteDatabase);
         }
 
         if (oldVersion<6) {
@@ -312,7 +255,6 @@ public class DB extends SQLiteOpenHelper {
 
         sqLiteDatabase.delete(APP_ORDER_TABLE, PKGNAME + " is null", null);
     }
-
     public boolean isFirstRun() {
         return firstRun;
     }
@@ -1412,6 +1354,62 @@ public class DB extends SQLiteOpenHelper {
     public interface DBClosedListener {
         void onDBClosed();
     }
+
+///
+
+
+    public void upgradeTo2(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL(APP_TABLE_CREATE);
+        for (String createind : appcolumnsindex) {
+            sqLiteDatabase.execSQL(buildIndexStmt(APP_TABLE, createind));
+        }
+
+        boolean first = true;
+        String cols = "";
+        for (String col : appcolumns) {
+            // if (oldVersion<6 && col.equals(CUSTOMLABEL)) continue;
+            if (first) first = false;
+            else cols += ", ";
+            cols += col;
+
+        }
+
+
+        Log.i("db", "copy to new table");
+
+        sqLiteDatabase.execSQL(String.format("insert into %s (%s) select %s from %s", APP_TABLE, cols, cols, APP_TABLE_OLD));
+        sqLiteDatabase.execSQL("drop table " + APP_TABLE_OLD);
+
+        sqLiteDatabase.execSQL("alter table " + APP_ORDER_TABLE + " add column " + PKGNAME + " TEXT");
+        sqLiteDatabase.execSQL("alter table " + APP_HISTORY_TABLE + " add column " + PKGNAME + " TEXT");
+
+        Cursor cursor = sqLiteDatabase.query(APP_TABLE, new String[]{ACTVNAME, PKGNAME}, null, null, null, null, ACTVNAME);
+        try {
+            while (cursor.moveToNext()) {
+                String actv = cursor.getString(cursor.getColumnIndex(ACTVNAME));
+                String pkg = cursor.getString(cursor.getColumnIndex(PKGNAME));
+
+                ContentValues values = new ContentValues();
+                values.put(PKGNAME, pkg);
+                sqLiteDatabase.update(APP_ORDER_TABLE, values, ACTVNAME + "=?", new String[]{actv});
+                values.put(PKGNAME, pkg);
+                sqLiteDatabase.update(APP_HISTORY_TABLE, values, ACTVNAME + "=?", new String[]{actv});
+            }
+        } finally {
+            cursor.close();
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(INDEX, 1);
+
+        //move search/recent away from top to correct old order.
+        //{CATID, LABEL, LABELFULL, FLAGS, INDEX};
+        if (sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=0", null)>0) {
+            values.put(INDEX, 0);
+            sqLiteDatabase.update(TAB_ORDER_TABLE, values, CATID + "!=\"" + Categories.CAT_SEARCH + "\" and " + INDEX + "=1", null);
+        }
+    }
+
 
 
 }
