@@ -24,7 +24,7 @@ class LaunchAppWidgetHost extends AppWidgetHost {
 
     //private List<Integer> mAppIds = new ArrayList<>();
 
-    public LaunchAppWidgetHost(Context context, int hostId) {
+    LaunchAppWidgetHost(Context context, int hostId) {
         super(context, hostId);
     }
 
@@ -48,8 +48,13 @@ class LaunchAppWidgetHost extends AppWidgetHost {
 
     @Override
     public void deleteAppWidgetId(int appWidgetId) {
+        clearViews();
         //mAppIds.remove((Object)appWidgetId);
         super.deleteAppWidgetId(appWidgetId);
     }
 
+//    @Override
+//    protected void onProviderChanged(int appWidgetId, AppWidgetProviderInfo appWidget) {
+//        super.onProviderChanged(appWidgetId, appWidget);
+//    }
 }

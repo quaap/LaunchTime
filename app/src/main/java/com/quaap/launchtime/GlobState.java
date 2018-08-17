@@ -27,6 +27,7 @@ import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.db.DB;
 import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
+import com.quaap.launchtime.widgets.WidgetsRestoredReceiver;
 
 
 public class GlobState extends Application implements  DB.DBClosedListener {
@@ -42,6 +43,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     private LaunchReceiver packrecv;
     private UnreadReceiver unreadrecv;
     private ShortcutReceiver shortcutrecv;
+    private WidgetsRestoredReceiver widgetrecv;
+
     private Widget mWidgetHelper;
 
     public static final boolean enableCrashReporter
@@ -108,6 +111,15 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
             }
 
+            {
+                widgetrecv = new WidgetsRestoredReceiver();
+
+                IntentFilter i = new IntentFilter("android.appwidget.action.APPWIDGET_HOST_RESTORED");
+                registerReceiver(widgetrecv, i);
+
+            }
+
+
         }
 
     }
@@ -164,6 +176,10 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         }
         if (unreadrecv!=null) {
             this.unregisterReceiver(unreadrecv);
+        }
+
+        if (widgetrecv!=null) {
+            this.unregisterReceiver(widgetrecv);
         }
 
         if (mDB != null) {

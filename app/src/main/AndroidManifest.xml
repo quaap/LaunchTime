@@ -92,6 +92,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".widgets.WidgetsRestoredReceiver">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_HOST_RESTORED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".FeedbackActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />

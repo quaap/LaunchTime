@@ -82,6 +82,15 @@ public class Widget {
             }
         }
 
+        //mAppWidgetHost.deleteHost();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            for (int oid: mAppWidgetHost.getAppWidgetIds()) {
+                AppWidgetProviderInfo provider = mAppWidgetManager.getAppWidgetInfo(oid);
+                Log.d(TAG, "Widget is allocated: " + provider.provider);
+            }
+        }
+
     }
 
     
@@ -125,22 +134,36 @@ public class Widget {
         return mPrefs.getInt(cn.toShortString(), -1);
     }
 
+    public void saveWidgetId(ComponentName cn, int id) {
+        mPrefs.edit().putInt(cn.toShortString(), id).apply();
+    }
+
+
     public void saveLoadedWidget(ComponentName cn, AppWidgetHostView hostView) {
-        mPrefs.edit().putInt(cn.toShortString(), hostView.getAppWidgetId()).apply();
+        saveWidgetId(cn, hostView.getAppWidgetId());
         mLoadedWidgets.put(cn, hostView);
     }
 
 
 
     public void removeWidget(ComponentName cn) {
+        int id = getWidgetId(cn);
         mPrefs.edit().remove(cn.toShortString()).apply();
-        AppWidgetHostView wid = mLoadedWidgets.remove(cn);
-        if (wid != null) {
-            widgetRemoved(wid.getAppWidgetId());
-        }
+        mLoadedWidgets.remove(cn);
+        mAppWidgetHost.deleteAppWidgetId(id);
+
     }
 
 
+    public void updateWidgetId(int oldId, int newId) {
+        AppWidgetProviderInfo provider = mAppWidgetManager.getAppWidgetInfo(newId);
+        AppWidgetHostView w = mLoadedWidgets.get(provider.provider);
+        if (w!=null) {
+            w.setAppWidget(newId, provider);
+        }
+        saveWidgetId(provider.provider, newId);
+        mAppWidgetHost.deleteAppWidgetId(oldId);
+    }
 
     public void done() {
         mAppWidgetHost.stopListening();
@@ -328,12 +351,6 @@ public class Widget {
             }
         }
         return null;
-    }
-
-    private void widgetRemoved(int appWidgetId) {
-
-        mAppWidgetHost.deleteAppWidgetId(appWidgetId);
-
     }
 
 //    public List<Integer> getAppWidgetIds() {
