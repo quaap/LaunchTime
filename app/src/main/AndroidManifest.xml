@@ -2,14 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.quaap.launchtime"
-    android:versionCode="826"
+    android:versionCode="827"
     android:versionName="0.8.3">
 
     <uses-permission
         android:name="android.permission.BIND_APPWIDGET"
         tools:ignore="ProtectedPermissions" />
 
-    <!-- <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
@@ -38,7 +37,8 @@
         <activity
             android:name=".SettingsActivity"
             android:label="Config"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,7 +48,8 @@
         <activity
             android:name=".ColorSettingsActivity"
             android:label="Color Config"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:parentActivityName=".SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.PREFERENCE" />
@@ -56,8 +57,26 @@
         </activity>
 
         <activity
+            android:name=".FeedbackActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".CrashReportActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".BackupActivity" />
+        <activity android:name=".CustomizeLaunchersActivity" />
+        <activity android:name=".ChooseIconFromPackActivity" />
+        <activity
             android:name=".AboutActivity"
             android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".PinShortcutActivity"
+            android:excludeFromRecents="true"
+            android:autoRemoveFromRecents="true"
+            tools:targetApi="lollipop">
+            <intent-filter>
+                <action android:name="android.content.pm.action.CONFIRM_PIN_SHORTCUT" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".LaunchReceiver"
@@ -91,30 +110,15 @@
                 <action android:name="org.adw.launcher.counter.SEND" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".widgets.WidgetsRestoredReceiver">
+        <receiver
+            android:name=".widgets.WidgetsRestoredReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_HOST_RESTORED" />
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".FeedbackActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
-            android:name=".CrashReportActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".BackupActivity" />
-        <activity android:name=".CustomizeLaunchersActivity" />
-        <activity android:name=".ChooseIconFromPackActivity" />
-        <activity android:name=".PinShortcutActivity"
-            android:excludeFromRecents="true"
-            android:autoRemoveFromRecents="true"
-            tools:targetApi="lollipop">
-            <intent-filter>
-                <action android:name="android.content.pm.action.CONFIRM_PIN_SHORTCUT" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
