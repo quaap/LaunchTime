@@ -107,7 +107,7 @@ public class Theme {
 
 
         BuiltinTheme crystal1= new MonochromeTheme("crystal1", "Crystal")
-                .setColor(Thing.Mask, Color.parseColor("#FF888888"))
+                .setColor(Thing.Mask, Color.parseColor("#CC888888"))
                 .setColor(Thing.Text, Color.argb(255,240,240,240))
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Wallpaper, Color.parseColor("#772955A8"))
@@ -477,7 +477,7 @@ public class Theme {
             //int avg = (Color.red(mask_color) + Color.green(mask_color) + Color.blue(mask_color) ) / 3;
 
             if (Color.red(mask_color)>5 && Color.red(mask_color) == Color.green(mask_color) && Color.red(mask_color) == Color.blue(mask_color) ) {
-                app_icon = setSaturation(app_icon, (255f-Color.red(mask_color))/255f);
+                app_icon = setSaturation(app_icon, (255f-Color.red(mask_color))/255f, Color.alpha(mask_color)/255f);
             } else {
                 PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
                 app_icon.setColorFilter(mask_color, mode);
@@ -519,15 +519,30 @@ public class Theme {
 
     private static ColorMatrixColorFilter colorMatrixColorFilter;
     private static float filterSaturation;
+    private static float filterAlpha;
 
-    private static Drawable setSaturation(Drawable drawable, float saturation) {
+    private static Drawable setSaturation(Drawable drawable, float saturation, float alpha) {
 
-        if (colorMatrixColorFilter==null || saturation!=filterSaturation) {
+        if (colorMatrixColorFilter==null || saturation!=filterSaturation || filterAlpha!=alpha) {
             filterSaturation = saturation;
-            ColorMatrix matrix = new ColorMatrix();
+            filterAlpha = alpha;
 
-            matrix.setSaturation(filterSaturation);
-            colorMatrixColorFilter = new ColorMatrixColorFilter(matrix);
+            ColorMatrix matrixA = new ColorMatrix();
+            matrixA.setSaturation(filterSaturation);
+
+            float[] matrixBItems =
+                    new float[] {
+                            1, 0, 0, 0, 0,
+                            0, 1, 0, 0, 0,
+                            0, 0, 1, 0, 0,
+                            0, 0, 0, alpha,0};
+
+            ColorMatrix matrixB = new ColorMatrix(matrixBItems);
+
+            matrixA.setConcat(matrixB, matrixA);
+
+            colorMatrixColorFilter = new ColorMatrixColorFilter(matrixA);
+
         }
 
 //        ColorMatrix matrix = new ColorMatrix();
