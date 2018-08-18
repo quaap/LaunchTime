@@ -57,18 +57,6 @@ public class ColorDemo extends Preference {
 
     @SuppressLint("RtlHardcoded")
     public void applyStyle() {
-//        if (!this.isEnabled()) {
-//            body.setBackgroundColor(Color.DKGRAY);
-//            body.setVisibility(View.GONE);
-//            if (thisview!=null) {
-//                thisview.setVisibility(View.GONE);
-//            }
-//            return;
-//        }
-//        body.setVisibility(View.VISIBLE);
-//        if (thisview!=null) {
-//            thisview.setVisibility(View.VISIBLE);
-//        }
 
         style.calculateWallpaperColor();
         Drawable wpd = style.getWallpaperDrawable();
@@ -142,9 +130,4 @@ public class ColorDemo extends Preference {
         return thisview;
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        applyStyle();
-    }
 }

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -52,7 +53,6 @@ public class ColorSettingsActivity extends PreferenceActivity {
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
 
-
     }
 
     @Override
@@ -66,11 +66,13 @@ public class ColorSettingsActivity extends PreferenceActivity {
     public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
         ColorDemo colorDemo;
         SharedPreferences prefs;
+        Handler handler;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.color_preferences);
 
+            handler = new Handler();
 
             colorDemo = (ColorDemo)findPreference("colordemo");
 
@@ -150,7 +152,12 @@ public class ColorSettingsActivity extends PreferenceActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            colorDemo.applyStyle();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    colorDemo.applyStyle();
+                }
+            }, 500);
         }
 
     }

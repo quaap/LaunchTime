@@ -107,7 +107,7 @@ public class Theme {
 
 
         BuiltinTheme crystal1= new MonochromeTheme("crystal1", "Crystal")
-                .setColor(Thing.Mask, Color.TRANSPARENT)
+                .setColor(Thing.Mask, Color.parseColor("#FF888888"))
                 .setColor(Thing.Text, Color.argb(255,240,240,240))
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Wallpaper, Color.parseColor("#772955A8"))
@@ -120,7 +120,7 @@ public class Theme {
                 .setColor(Thing.Mask, Color.TRANSPARENT)
                 .setColor(Thing.Text, Color.argb(255,20,20,20))
                 .setColor(Thing.AltText, Color.DKGRAY)
-                .setColor(Thing.Wallpaper, Color.parseColor("#CAEFEFEF"))
+                .setColor(Thing.Wallpaper, Color.argb(255,250,250,250))
                 .setColor(Thing.Background, Color.argb(255,252,252,252))
                 .setColor(Thing.AltBackground, Color.argb(255,252,255,255));
 
@@ -473,8 +473,11 @@ public class Theme {
         if (Color.alpha(mask_color) > 10) {
 
             app_icon = app_icon.mutate();
-            if (mask_color == Color.WHITE) {
-                app_icon = convertToGrayscale(app_icon);
+
+            //int avg = (Color.red(mask_color) + Color.green(mask_color) + Color.blue(mask_color) ) / 3;
+
+            if (Color.red(mask_color)>5 && Color.red(mask_color) == Color.green(mask_color) && Color.red(mask_color) == Color.blue(mask_color) ) {
+                app_icon = setSaturation(app_icon, (255f-Color.red(mask_color))/255f);
             } else {
                 PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
                 app_icon.setColorFilter(mask_color, mode);
@@ -514,13 +517,25 @@ public class Theme {
 //
 //    }
 
-    private static Drawable convertToGrayscale(Drawable drawable) {
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
+    private static ColorMatrixColorFilter colorMatrixColorFilter;
+    private static float filterSaturation;
 
-        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+    private static Drawable setSaturation(Drawable drawable, float saturation) {
 
-        drawable.setColorFilter(filter);
+        if (colorMatrixColorFilter==null || saturation!=filterSaturation) {
+            filterSaturation = saturation;
+            ColorMatrix matrix = new ColorMatrix();
+
+            matrix.setSaturation(filterSaturation);
+            colorMatrixColorFilter = new ColorMatrixColorFilter(matrix);
+        }
+
+//        ColorMatrix matrix = new ColorMatrix();
+//        matrix.setSaturation(saturation);
+//
+//        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+        drawable.setColorFilter(colorMatrixColorFilter);
 
         return drawable;
     }

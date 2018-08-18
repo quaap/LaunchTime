@@ -4,13 +4,6 @@
 
     <PreferenceCategory android:title="@string/pref_color_style">
 
-        <SwitchPreference android:title="Live changes:" android:selectable="false" android:switchTextOff="" android:switchTextOn=""/>
-
-        <com.quaap.launchtime.color.ColorDemo
-            android:key="colordemo"
-            android:selectable="false"
-            />
-
         <ListPreference
             android:icon="@android:drawable/ic_menu_gallery"
             android:defaultValue="@string/pref_iconpack_def"
@@ -23,6 +16,13 @@
             android:key="@string/pref_key_reset_colors"
             android:summary="@string/reset_color_summ"
             android:title="@string/reset_colors_title" />
+
+        <SwitchPreference android:title="Live changes:" android:selectable="false" android:switchTextOff="" android:switchTextOn=""/>
+
+        <com.quaap.launchtime.color.ColorDemo
+            android:key="colordemo"
+            android:selectable="false"
+            />
 
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_backgroundcolor"
