@@ -127,7 +127,7 @@ import static android.view.Gravity.LEFT;
 
 public class MainActivity extends Activity implements
         View.OnLongClickListener, SharedPreferences.OnSharedPreferenceChangeListener,
-        Badger.BadgerCountChangeListener {
+        Badger.BadgerCountChangeListener, Widget.WidgetChangedListener {
 
     // Things are getting very messy.  That's what happens when you figure it out as you go along.
     //TODO: everything needs a major refactor.
@@ -241,6 +241,7 @@ public class MainActivity extends Activity implements
         mPrefs = getSharedPreferences("default", MODE_PRIVATE);
 
         mWidgetHelper = GlobState.getWidgetHelper(this);
+        mWidgetHelper.addWidgetChangedListener(this);
 
         mQuickRow = new QuickRow(mMainDragListener, this);
 
@@ -458,6 +459,7 @@ public class MainActivity extends Activity implements
                 }
 
                 main.mWidgetHelper = GlobState.deleteAndGetWidgetHelper(main);
+                main.mWidgetHelper.addWidgetChangedListener(main);
 
                 main.mPrefs.edit().putInt(key,830).apply();
             }
@@ -2166,6 +2168,18 @@ public class MainActivity extends Activity implements
 //
 //        }
 //    }
+
+    public void onWidgetRemoved(ComponentName provider, AppWidgetHostView view) {
+        AppLauncher app = AppLauncher.getAppLauncher(provider);
+        if (app!=null) {
+            mAppLauncherViews.remove(app);
+            db().deleteApp(app.getComponentName());
+        }
+        AppLauncher.removeAppLauncher(provider);
+        repopulateIconSheet(mCategory);
+
+    }
+
 
     public ViewGroup getLauncherView(final AppLauncher app, boolean smallIcon) {
         return getLauncherView(app, smallIcon, true);

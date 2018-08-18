@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.HapticFeedbackConstants;
 import android.view.InputDevice;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 
 /**
@@ -28,6 +29,8 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
     private OnLongClickListener mLongClickListener;
     private long mLongClickStarted = -1;
 
+    public boolean hasError = false;
+
     private float x;
     private float y;
 
@@ -40,6 +43,12 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
         super(context, animationIn, animationOut);
     }
 
+    @Override
+    protected View getErrorView() {
+        hasError = true;
+        return super.getErrorView();
+
+    }
 
     @Override
     public void setOnLongClickListener(OnLongClickListener listener) {

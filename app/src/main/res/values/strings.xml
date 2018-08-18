@@ -379,11 +379,13 @@
     <string name="theme_transp">Transparent</string>
     <string name="resize">Resize</string>
     <string name="pref_backgroundcolor">Background color</string>
-    <string name="pref_reset_widgets">Reset AppWidgets</string>
-    <string name="pref_reset_widgets_text">If you have appwidgets that seem broken, try this. Warning: this may cause your widgets to lose their configuration.</string>
+    <string name="pref_reset_widgets">Remove and reset appWidgets</string>
+    <string name="pref_reset_widgets_text">Delete all widgets. If you have appwidgets that seem broken, try this.</string>
     <string name="pref_show_dropzones">Show dropzones</string>
     <string name="pref_show_drops_text">Show Uninstall, Remove, and Shortcut as dropzones.</string>
     <string name="pref_dev_actions">DEV activities on action menus</string>
     <string name="pref_dev_actions_text">Dev option. { } Could be DANGEROUS: Show ACTION_MAIN activites as action menu items on apps.</string>
+    <string name="reset_wids_confirm">This will remove all widgets from LaunchTime! Continue?</string>
+    <string name="reset_wids_done">Widgets removed and reset.</string>
 
 </resources>

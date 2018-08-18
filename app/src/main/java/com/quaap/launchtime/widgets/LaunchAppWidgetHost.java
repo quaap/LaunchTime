@@ -48,7 +48,7 @@ class LaunchAppWidgetHost extends AppWidgetHost {
 
     @Override
     public void deleteAppWidgetId(int appWidgetId) {
-        clearViews();
+        //clearViews();
         //mAppIds.remove((Object)appWidgetId);
         super.deleteAppWidgetId(appWidgetId);
     }

@@ -1,5 +1,7 @@
 package com.quaap.launchtime;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.preference.PreferenceFragment;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.ui.MsgBox;
 
 /**
@@ -84,12 +87,33 @@ public class SettingsActivity extends PreferenceActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
 
-                    GlobState.getWidgetHelper(getActivity()).delete();
-                    Toast.makeText(getActivity(), "Widgets de-allocated", Toast.LENGTH_LONG).show();
+                    new AlertDialog.Builder(getActivity())
+
+
+                            .setMessage(R.string.reset_wids_confirm)
+
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    GlobState.getWidgetHelper(getActivity()).delete();
+                                    Toast.makeText(getActivity(), R.string.reset_wids_done, Toast.LENGTH_LONG).show();
+
+                                }
+
+
+                            })
+                            .setNegativeButton(android.R.string.cancel,  new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create().show();
+
 
                     return true;
                 }
             });
+
 
 
         }

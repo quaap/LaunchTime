@@ -87,13 +87,14 @@ public class Widget {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             for (int oid: mAppWidgetHost.getAppWidgetIds()) {
                 AppWidgetProviderInfo provider = mAppWidgetManager.getAppWidgetInfo(oid);
+                if (provider==null) continue;
                 Log.d(TAG, "Widget is allocated: " + provider.provider);
             }
         }
 
     }
 
-    
+
     public AppWidgetHostView getOrCreateWidget(Activity parent, ComponentName provider) {
         AppWidgetHostView hostView = getLoadedAppWidgetHostView(provider);
         if (hostView == null) {
@@ -145,12 +146,15 @@ public class Widget {
     }
 
 
-
     public void removeWidget(ComponentName cn) {
         int id = getWidgetId(cn);
         mAppWidgetHost.deleteAppWidgetId(id);
         mPrefs.edit().remove(cn.toShortString()).apply();
-        mLoadedWidgets.remove(cn);
+        AppWidgetHostView widv = mLoadedWidgets.remove(cn);
+
+        for (WidgetChangedListener wl: mWidgetChangedListeners) {
+            wl.onWidgetRemoved(cn, widv);
+        }
 
     }
 
@@ -166,6 +170,7 @@ public class Widget {
     }
 
     public void done() {
+        mWidgetChangedListeners.clear();
         mAppWidgetHost.stopListening();
     }
 
@@ -387,5 +392,22 @@ public class Widget {
         return null;
     }
 
+
+    private List<WidgetChangedListener> mWidgetChangedListeners = new ArrayList<>();
+
+    public void addWidgetChangedListener(WidgetChangedListener listener) {
+        if(!mWidgetChangedListeners.contains(listener)) {
+            mWidgetChangedListeners.add(listener);
+        }
+    }
+
+    public void removeWidgetChangedListener(WidgetChangedListener listener) {
+        mWidgetChangedListeners.remove(listener);
+    }
+
+
+    public interface WidgetChangedListener {
+        void onWidgetRemoved(ComponentName provider, AppWidgetHostView view);
+    }
 
 }
