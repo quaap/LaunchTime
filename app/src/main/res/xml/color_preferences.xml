@@ -4,10 +4,9 @@
 
     <PreferenceCategory android:title="@string/pref_color_style">
 
-        <SwitchPreference android:title="Live changes:" android:defaultValue="true" android:key="showchanges"/>
+        <SwitchPreference android:title="Live changes:" android:selectable="false" android:switchTextOff="" android:switchTextOn=""/>
 
         <com.quaap.launchtime.color.ColorDemo
-            android:dependency="showchanges"
             android:key="colordemo"
             android:selectable="false"
             />

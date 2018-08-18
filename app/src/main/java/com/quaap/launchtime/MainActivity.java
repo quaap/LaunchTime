@@ -834,8 +834,6 @@ public class MainActivity extends Activity implements
 
             if (key != null) {
 
-                if (key.equals("showchanges")) return;
-
                 // when the Theme updates many of these prefs at once, it sends "prefsUpdate" first so that we ignore everything until it is done.
                 if (key.equals("prefsUpdate")) {
                     prefsUpdate = sharedPreferences.getBoolean(key, false) ? prefsUpdate+1 : prefsUpdate-1;

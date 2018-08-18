@@ -120,7 +120,7 @@ public class Theme {
                 .setColor(Thing.Mask, Color.TRANSPARENT)
                 .setColor(Thing.Text, Color.argb(255,20,20,20))
                 .setColor(Thing.AltText, Color.DKGRAY)
-                .setColor(Thing.Wallpaper, Color.argb(255,250,250,250))
+                .setColor(Thing.Wallpaper, Color.parseColor("#CAEFEFEF"))
                 .setColor(Thing.Background, Color.argb(255,252,252,252))
                 .setColor(Thing.AltBackground, Color.argb(255,252,255,255));
 
@@ -131,7 +131,7 @@ public class Theme {
                 .setColor(Thing.Text, Color.argb(255,240,240,240))
                 .setColor(Thing.AltText, Color.WHITE)
                 .setColor(Thing.Background, Color.TRANSPARENT)
-                .setColor(Thing.Wallpaper, Color.TRANSPARENT)
+                .setColor(Thing.Wallpaper, Color.parseColor("#77132951"))
                 .setColor(Thing.AltBackground, Color.TRANSPARENT);
 
         builtinThemes.put(transp.getPackKey(), transp);
