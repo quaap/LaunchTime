@@ -41,10 +41,10 @@ public class ColorChooser extends FrameLayout {
     private ColorSelectedListener colorSelectedListener;
 
 
-    public ColorChooser(Context context) {
+    public ColorChooser(Context context, int startcolor) {
         super(context);
 
-        init(GlobState.getIconsHandler(context).getIconsPackPackageName());
+        init(GlobState.getIconsHandler(context).getIconsPackPackageName(), startcolor);
     }
 
 //    public ColorChooser(Context context, AttributeSet attrs) {
@@ -57,7 +57,8 @@ public class ColorChooser extends FrameLayout {
 //        init();
 //    }
 
-    private void init(String themename) {
+    private void init(String themename, int startcolor) {
+
         ViewGroup frame = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.activity_color_chooser, this);
 
         colorRed = frame.findViewById(R.id.color_red_seekbar);
@@ -133,6 +134,7 @@ public class ColorChooser extends FrameLayout {
         prefs = getContext().getSharedPreferences("colors" + themename, Context.MODE_PRIVATE);
 
         loadPresets();
+        setColor(startcolor);
 
         doPreview();
     }
@@ -169,27 +171,27 @@ public class ColorChooser extends FrameLayout {
 //        finish();
     }
 
-    private void doPreview() {
+    private int doPreview() {
         int color = getSelectedColor();
         colorHex.setText(String.format("#%08X", color));
         colorPreview.setBackgroundColor(color);
         int tcolor = ~color;
         colorPreview.setTextColor(Color.rgb(Color.red(tcolor), Color.green(tcolor), Color.blue(tcolor)));
 
+        return color;
+
     }
+
 
     public void setColor(int color) {
 
         int red = Color.red(color);
         int green = Color.green(color);
         int blue = Color.blue(color);
-        int bright = 255;
+        int bright;
 
-//        int top = bright - Math.max(Math.max(red,green), blue);
-//        bright -= top/3;
-//        red += top*red/255.0;
-//        green += top*green/255.0;
-//        blue += top*blue/255.0;
+
+        bright = Math.max(Math.max(red, green), blue);
 
         if (Build.VERSION.SDK_INT >= 24) {
             colorAlpha.setProgress(255 - Color.alpha(color), true);
@@ -237,11 +239,26 @@ public class ColorChooser extends FrameLayout {
 
     public int getSelectedColor() {
         int alpha = 255 - colorAlpha.getProgress();
-        float bright = colorBright.getProgress() / 255f;
 
-        int red = (int) (colorRed.getProgress() * bright);
-        int green = (int) (colorGreen.getProgress() * bright);
-        int blue = (int) (colorBlue.getProgress() * bright);
+
+        int red = colorRed.getProgress();
+        int green = colorGreen.getProgress();
+        int blue = colorBlue.getProgress();
+
+        int max = Math.max(Math.max(red, green), blue);
+
+        int add = max - colorBright.getProgress();
+
+        red -= add;
+        green -= add;
+        blue -= add;
+
+        red = red<0?0:red;
+        green = green<0?0:green;
+        blue = blue<0?0:blue;
+        red = red>255?255:red;
+        green = green>255?255:green;
+        blue = blue>255?255:blue;
 
         return Color.argb(alpha, red, green, blue);
     }
@@ -259,7 +276,7 @@ public class ColorChooser extends FrameLayout {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+            doPreview();
         }
     };
 

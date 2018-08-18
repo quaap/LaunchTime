@@ -96,6 +96,7 @@ import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.Badger;
 import com.quaap.launchtime.apps.DefaultApps;
 import com.quaap.launchtime.apps.LaunchApp;
+import com.quaap.launchtime.color.ColorChooser;
 import com.quaap.launchtime.ui.InteractiveScrollView;
 import com.quaap.launchtime.ui.ActionMenu;
 import com.quaap.launchtime.components.Categories;
@@ -346,6 +347,13 @@ public class MainActivity extends Activity implements
         showButtonBar(false, true);
         //lock things up if it was in toddler mode
         checkChildLock();
+
+//        PopupWindow pw = new PopupWindow(this);
+//        int color = Color.parseColor("#CCCCCCCC");
+//        ColorChooser cc = new ColorChooser(this, color);
+//        cc.setColor(color);
+//        pw.setContentView(cc);
+//        pw.showAsDropDown(mIconSheetScroller);
 
     }
 

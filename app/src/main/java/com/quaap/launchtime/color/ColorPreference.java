@@ -61,7 +61,7 @@ public class ColorPreference extends DialogPreference {
 
     @Override
     protected View onCreateDialogView() {
-        picker=new ColorChooser(getContext());
+        picker=new ColorChooser(getContext(), color);
 
         return(picker);
     }
