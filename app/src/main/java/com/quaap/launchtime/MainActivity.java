@@ -1952,106 +1952,109 @@ public class MainActivity extends Activity implements
     @SuppressLint("RtlHardcoded")
     public void showWidgetResize(final AppLauncher appitem) {
 
-        AppWidgetHostView appwid = mWidgetHelper.getLoadedAppWidgetHostView(appitem.getComponentName());
-        if (appwid!=null) {
-            //final int resizeMode = appwid.getAppWidgetInfo().resizeMode;
+//        AppWidgetHostView appwid = mWidgetHelper.getLoadedAppWidgetHostView(appitem.getComponentName());
+//        if (appwid==null) {
+//            Log.e(TAG, "No appwid for " + appitem.getComponentName());
+//            return;
+//        }
+        //final int resizeMode = appwid.getAppWidgetInfo().resizeMode;
 
-            ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.widget_size, null);
+        ViewGroup item = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.widget_size, null);
 
 
-            final PopupWindow pw = new PopupWindow(item,
-                    (int)getResources().getDimension(R.dimen.widget_resize_width),
-                    (int)getResources().getDimension(R.dimen.widget_resize_height));
+        final PopupWindow pw = new PopupWindow(item,
+                (int)getResources().getDimension(R.dimen.widget_resize_width),
+                (int)getResources().getDimension(R.dimen.widget_resize_height));
 
-            pw.setOutsideTouchable(false);
-            pw.setFocusable(true);
+        pw.setOutsideTouchable(false);
+        pw.setFocusable(true);
 
-            Button ok = item.findViewById(R.id.wid_size_ok);
-            ok.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    pw.dismiss();
+        Button ok = item.findViewById(R.id.wid_size_ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pw.dismiss();
+            }
+        });
+
+        Button defaults = item.findViewById(R.id.wid_set_default_size);
+
+        final SeekBar width = item.findViewById(R.id.width_seek);
+        final SeekBar height = item.findViewById(R.id.height_seek);
+
+        final Runnable resize = new Runnable() {
+            @Override
+            public void run() {
+                //Log.d(TAG, (width.getProgress()+1) +","+ (height.getProgress()+1));
+                storeWidgetWCells(appitem, width.getProgress()+1);
+                storeWidgetHCells(appitem, height.getProgress()+1);
+
+                GridLayout.LayoutParams lp = getAppLauncherLayoutParams(mIconSheet, appitem);
+                View widframe = getLauncherView(appitem,false);
+                if (widframe != null) {
+                    widframe.setLayoutParams(lp);
                 }
-            });
+            }
+        };
 
-            Button defaults = item.findViewById(R.id.wid_set_default_size);
-
-            final SeekBar width = item.findViewById(R.id.width_seek);
-            final SeekBar height = item.findViewById(R.id.height_seek);
-
-            final Runnable resize = new Runnable() {
-                @Override
-                public void run() {
-                    //Log.d(TAG, (width.getProgress()+1) +","+ (height.getProgress()+1));
-                    storeWidgetWCells(appitem, width.getProgress()+1);
-                    storeWidgetHCells(appitem, height.getProgress()+1);
-
-                    GridLayout.LayoutParams lp = getAppLauncherLayoutParams(mIconSheet, appitem);
-                    View widframe = getLauncherView(appitem,false);
-                    if (widframe != null) {
-                        widframe.setLayoutParams(lp);
-                    }
+        defaults.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                storeWidgetWCells(appitem, 0);
+                storeWidgetHCells(appitem, 0);
+                GridLayout.LayoutParams lp = getAppLauncherLayoutParams(mIconSheet, appitem);
+                View widframe = getLauncherView(appitem,false);
+                if (widframe != null) {
+                    widframe.setLayoutParams(lp);
                 }
-            };
-
-            defaults.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    storeWidgetWCells(appitem, 0);
-                    storeWidgetHCells(appitem, 0);
-                    GridLayout.LayoutParams lp = getAppLauncherLayoutParams(mIconSheet, appitem);
-                    View widframe = getLauncherView(appitem,false);
-                    if (widframe != null) {
-                        widframe.setLayoutParams(lp);
-                    }
-                    pw.dismiss();
-                }
-            });
+                pw.dismiss();
+            }
+        });
 
 
-            int wcells = getWidgetWCells(appitem);
-            width.setProgress(wcells-1);
-            int hcells = getWidgetHCells(appitem);
-            height.setProgress(hcells-1);
+        int wcells = getWidgetWCells(appitem);
+        width.setProgress(wcells-1);
+        int hcells = getWidgetHCells(appitem);
+        height.setProgress(hcells-1);
 
-            TextView widthLab = item.findViewById(R.id.width_num);
-            bindSeek(width, widthLab, wcells,  mStyle.getMaxWCells(), resize);
-
-
-            TextView heightLab = item.findViewById(R.id.height_num);
-            bindSeek(height, heightLab, hcells,8, resize);
+        TextView widthLab = item.findViewById(R.id.width_num);
+        bindSeek(width, widthLab, wcells,  mStyle.getMaxWCells(), resize);
 
 
-            int xpos = 0;
-            int ypos = mScreenDim.y*2/3;
+        TextView heightLab = item.findViewById(R.id.height_num);
+        bindSeek(height, heightLab, hcells,8, resize);
 
-            int gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
 
-            View widframe = getLauncherView(appitem,false);
-            int [] viewpos = new int[2];
-            if (widframe!=null) {
-                widframe.getLocationOnScreen(viewpos);
+        int xpos = 0;
+        int ypos = mScreenDim.y*2/3;
 
-                if (viewpos[1] > mScreenDim.y*.3) {
-                    ypos = mScreenDim.y/20;
-                }
+        int gravity = Gravity.CENTER_HORIZONTAL|Gravity.TOP;
+
+        View widframe = getLauncherView(appitem,false);
+        int [] viewpos = new int[2];
+        if (widframe!=null) {
+            widframe.getLocationOnScreen(viewpos);
+
+            if (viewpos[1] > mScreenDim.y*.3) {
+                ypos = mScreenDim.y/20;
+            }
 //                else  if (viewpos[1] > mScreenDim.y*.3 && viewpos[1] < mScreenDim.y*.4) {
 //                    mIconSheetScroller.smoothScrollBy(0, (int)(mScreenDim.y*.25));
 //                }
 
-                if (mScreenDim.x>mScreenDim.y) {
-                    gravity = Gravity.LEFT|Gravity.TOP;
-                    if (viewpos[0] > mScreenDim.x * .3) {
-                        xpos = mScreenDim.x / 24;
-                    } else {
-                        xpos = mScreenDim.x * 2 / 3;
-                    }
+            if (mScreenDim.x>mScreenDim.y) {
+                gravity = Gravity.LEFT|Gravity.TOP;
+                if (viewpos[0] > mScreenDim.x * .3) {
+                    xpos = mScreenDim.x / 24;
+                } else {
+                    xpos = mScreenDim.x * 2 / 3;
                 }
-
             }
 
-            pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), gravity, xpos, ypos);
         }
+
+        pw.showAtLocation(findViewById(R.id.icon_and_cat_wrap), gravity, xpos, ypos);
+
 
     }
 

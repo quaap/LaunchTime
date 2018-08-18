@@ -134,15 +134,13 @@ public class ActionMenu {
             initializeActionMenu();
 
             if (appitem.isWidget()) {
-                if (appitem.isWidget()) {
-                    addActionMenuItem(mMain.getString(R.string.resize), android.R.drawable.arrow_up_float, new Runnable() {
-                        @Override
-                        public void run() {
-                            mMain.showWidgetResize(appitem);
-                            mMain.showButtonBar(false, true);
-                        }
-                    });
-                }
+                addActionMenuItem(mMain.getString(R.string.resize), android.R.drawable.arrow_up_float, new Runnable() {
+                    @Override
+                    public void run() {
+                        mMain.showWidgetResize(appitem);
+                        mMain.showButtonBar(false, true);
+                    }
+                });
             }
 
             if (!appitem.isWidget()) {
@@ -399,13 +397,22 @@ public class ActionMenu {
         }
 
         if (mUseExtraActions) {
-            addActionMenuItem(mMain.getString(R.string.rename_category), android.R.drawable.ic_menu_edit, new Runnable() {
+
+            addActionMenuItem(mMain.getString(R.string.add_category), android.R.drawable.ic_menu_add, new Runnable() {
                 @Override
                 public void run() {
-                    mMain.promptRenameCategory(category);
+                    mMain.promptAddCategory();
                 }
             });
+
             if (!Categories.isNoDropCategory((String) categoryTab.getTag())) {
+                addActionMenuItem(mMain.getString(R.string.add_widgets), android.R.drawable.ic_input_add, new Runnable() {
+                    @Override
+                    public void run() {
+                        mMain.setupWidget();
+                    }
+                });
+
                 addActionMenuItem(mMain.getString(R.string.sort_category), android.R.drawable.ic_menu_sort_alphabetically, new Runnable() {
                     @Override
                     public void run() {
@@ -413,12 +420,6 @@ public class ActionMenu {
                     }
                 });
 
-                addActionMenuItem(mMain.getString(R.string.add_widgets), android.R.drawable.ic_input_add, new Runnable() {
-                    @Override
-                    public void run() {
-                        mMain.setupWidget();
-                    }
-                });
             }
 
             if (!Categories.isHiddenCategory((String) categoryTab.getTag())) {
@@ -434,10 +435,10 @@ public class ActionMenu {
             }
 
 
-            addActionMenuItem(mMain.getString(R.string.add_category), android.R.drawable.ic_menu_add, new Runnable() {
+            addActionMenuItem(mMain.getString(R.string.rename_category), android.R.drawable.ic_menu_edit, mUseIcons, new Runnable() {
                 @Override
                 public void run() {
-                    mMain.promptAddCategory();
+                    mMain.promptRenameCategory(category);
                 }
             });
 
