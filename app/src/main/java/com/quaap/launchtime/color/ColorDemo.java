@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.components.Theme;
 import com.quaap.launchtime.ui.Style;
 
@@ -114,7 +115,7 @@ public class ColorDemo extends Preference {
 
         Drawable icond1b = getNewIf(icond1, getContext().getResources());
         icond1b.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
-        icon1.setCompoundDrawables(null, Theme.applyIconTint(icond1b, style.getIconTint()),null,null);
+        icon1.setCompoundDrawables(null, IconsHandler.applyIconTint(icond1b, style.getIconTint()),null,null);
 
 
         icon2.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.getLauncherFontSize()+1);
@@ -122,7 +123,7 @@ public class ColorDemo extends Preference {
 
         Drawable icond2b = getNewIf(icond2, getContext().getResources());
         icond2b.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
-        icon2.setCompoundDrawables(null, Theme.applyIconTint(icond2b, style.getIconTint()),null,null);
+        icon2.setCompoundDrawables(null, IconsHandler.applyIconTint(icond2b, style.getIconTint()),null,null);
 
     }
 

@@ -3,15 +3,19 @@ package com.quaap.launchtime.components;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppLauncher;
 
@@ -470,7 +474,7 @@ public class Theme {
 
            // Log.d("iconi", mask_color + " mask");
 
-            app_icon = applyIconTint(app_icon, mask_color);
+            app_icon = IconsHandler.applyIconTint(app_icon, mask_color);
 
 
             return app_icon;
@@ -479,22 +483,6 @@ public class Theme {
 
     }
 
-    public static Drawable applyIconTint(Drawable app_icon, int mask_color) {
-        if (Color.alpha(mask_color) > 10) {
-
-            app_icon = app_icon.mutate();
-
-            //int avg = (Color.red(mask_color) + Color.green(mask_color) + Color.blue(mask_color) ) / 3;
-
-            if (Color.red(mask_color)>5 && Color.red(mask_color) == Color.green(mask_color) && Color.red(mask_color) == Color.blue(mask_color) ) {
-                app_icon = setSaturation(app_icon, (255f-Color.red(mask_color))/255f, Color.alpha(mask_color)/255f);
-            } else {
-                PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
-                app_icon.setColorFilter(mask_color, mode);
-            }
-        }
-        return app_icon;
-    }
 
 //    public class PolychromeTheme extends BuiltinTheme {
 //        private final int [] mFGColors;
@@ -526,43 +514,5 @@ public class Theme {
 //
 //
 //    }
-
-    private static ColorMatrixColorFilter colorMatrixColorFilter;
-    private static float filterSaturation;
-    private static float filterAlpha;
-
-    private static Drawable setSaturation(Drawable drawable, float saturation, float alpha) {
-
-        if (colorMatrixColorFilter==null || saturation!=filterSaturation || filterAlpha!=alpha) {
-            filterSaturation = saturation;
-            filterAlpha = alpha;
-
-            ColorMatrix matrixA = new ColorMatrix();
-            matrixA.setSaturation(filterSaturation);
-
-            float[] matrixBItems =
-                    new float[] {
-                            1, 0, 0, 0, 0,
-                            0, 1, 0, 0, 0,
-                            0, 0, 1, 0, 0,
-                            0, 0, 0, alpha,0};
-
-            ColorMatrix matrixB = new ColorMatrix(matrixBItems);
-
-            matrixA.setConcat(matrixB, matrixA);
-
-            colorMatrixColorFilter = new ColorMatrixColorFilter(matrixA);
-
-        }
-
-//        ColorMatrix matrix = new ColorMatrix();
-//        matrix.setSaturation(saturation);
-//
-//        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-
-        drawable.setColorFilter(colorMatrixColorFilter);
-
-        return drawable;
-    }
 
 }

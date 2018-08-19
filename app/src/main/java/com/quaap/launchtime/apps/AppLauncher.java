@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.components.IconsHandler;
+import com.quaap.launchtime.components.Theme;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -386,7 +388,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 app_icon = context.getPackageManager().getDefaultActivityIcon();
             }
             if (isLink()) {
-                app_icon = drawLinkSymbol(app_icon, context);
+                app_icon = IconsHandler.drawLinkSymbol(app_icon, context);
             }
 
 
@@ -410,35 +412,6 @@ public class AppLauncher implements Comparable<AppLauncher> {
         });
     }
 
-    private Drawable drawLinkSymbol(Drawable app_icon, Context context) {
-        try {
-            Bitmap newbm = Bitmap.createBitmap(app_icon.getIntrinsicWidth(), app_icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(newbm);
-            app_icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            app_icon.draw(canvas);
-
-            Drawable link;
-            if (Build.VERSION.SDK_INT >= 21) {
-                link = context.getResources().getDrawable(R.drawable.link, context.getTheme());
-            } else {
-                link = context.getResources().getDrawable(R.drawable.link);
-            }
-            if (link!=null) {
-                int tint = GlobState.getStyle(context).getIconTint();
-                if (Color.alpha(tint)>10) {
-                    link.setColorFilter(tint, PorterDuff.Mode.MULTIPLY);
-                }
-                link.setBounds(canvas.getWidth() * 3 / 4, canvas.getHeight() * 3 / 4, canvas.getWidth(), canvas.getHeight());
-                link.draw(canvas);
-            }
-
-            app_icon = new BitmapDrawable(context.getResources(), newbm);
-            //Log.d("loadAppIconAsync", " yo");
-        } catch (Exception | OutOfMemoryError e) {
-            Log.e("loadAppIconAsync", "couldn't make link icon", e);
-        }
-        return app_icon;
-    }
 
     private static final BlockingQueue<AppLauncher> iconQueue = new LinkedBlockingQueue<>();
     private static final Object iconLoaderSync = new Object();

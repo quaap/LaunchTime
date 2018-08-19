@@ -12,12 +12,17 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.LaunchApp;
@@ -373,6 +378,107 @@ public class IconsHandler {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+
+
+
+    private static Drawable currentLinkSymbol;
+    private static int currentIconTint;
+
+
+    public static Drawable drawLinkSymbol(Drawable app_icon, Context context) {
+        try {
+            Bitmap newbm = Bitmap.createBitmap(app_icon.getIntrinsicWidth(), app_icon.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(newbm);
+            app_icon.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            app_icon.draw(canvas);
+
+            int tint = GlobState.getStyle(context).getIconTint();
+            if (tint!=currentIconTint || currentLinkSymbol==null) {
+                Drawable linkSymbol;
+                if (Build.VERSION.SDK_INT >= 21) {
+                    linkSymbol = context.getResources().getDrawable(R.drawable.link, context.getTheme());
+                } else {
+                    linkSymbol = context.getResources().getDrawable(R.drawable.link);
+                }
+
+                if (linkSymbol.getConstantState() == null) {
+                    currentLinkSymbol = linkSymbol.mutate();
+                } else {
+                    currentLinkSymbol = linkSymbol.getConstantState().newDrawable().mutate();
+                }
+                if (Color.alpha(tint) > 10) {
+                    currentLinkSymbol.setColorFilter(tint, PorterDuff.Mode.MULTIPLY);
+                }
+                currentIconTint = tint;
+
+            }
+            currentLinkSymbol.setBounds(canvas.getWidth() * 3 / 4, canvas.getHeight() * 3 / 4, canvas.getWidth(), canvas.getHeight());
+            currentLinkSymbol.draw(canvas);
+
+            app_icon = new BitmapDrawable(context.getResources(), newbm);
+            //Log.d("loadAppIconAsync", " yo");
+        } catch (Exception | OutOfMemoryError e) {
+            Log.e("loadAppIconAsync", "couldn't make link icon", e);
+        }
+        return app_icon;
+    }
+
+
+    public static Drawable applyIconTint(Drawable app_icon, int mask_color) {
+        if (Color.alpha(mask_color) > 10) {
+
+            app_icon = app_icon.mutate();
+
+            //int avg = (Color.red(mask_color) + Color.green(mask_color) + Color.blue(mask_color) ) / 3;
+
+            if (Color.red(mask_color)>5 && Color.red(mask_color) == Color.green(mask_color) && Color.red(mask_color) == Color.blue(mask_color) ) {
+                app_icon = setSaturation(app_icon, (255f-Color.red(mask_color))/255f, Color.alpha(mask_color)/255f);
+            } else {
+                PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
+                app_icon.setColorFilter(mask_color, mode);
+            }
+        }
+        return app_icon;
+    }
+
+    private static ColorMatrixColorFilter colorMatrixColorFilter;
+    private static float filterSaturation;
+    private static float filterAlpha;
+
+    public static Drawable setSaturation(Drawable drawable, float saturation, float alpha) {
+
+        if (colorMatrixColorFilter==null || saturation!=filterSaturation || filterAlpha!=alpha) {
+            filterSaturation = saturation;
+            filterAlpha = alpha;
+
+            ColorMatrix matrixA = new ColorMatrix();
+            matrixA.setSaturation(filterSaturation);
+
+            float[] matrixBItems =
+                    new float[] {
+                            1, 0, 0, 0, 0,
+                            0, 1, 0, 0, 0,
+                            0, 0, 1, 0, 0,
+                            0, 0, 0, alpha,0};
+
+            ColorMatrix matrixB = new ColorMatrix(matrixBItems);
+
+            matrixA.setConcat(matrixB, matrixA);
+
+            colorMatrixColorFilter = new ColorMatrixColorFilter(matrixA);
+
+        }
+
+//        ColorMatrix matrix = new ColorMatrix();
+//        matrix.setSaturation(saturation);
+//
+//        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+
+        drawable.setColorFilter(colorMatrixColorFilter);
+
+        return drawable;
     }
 
 }
