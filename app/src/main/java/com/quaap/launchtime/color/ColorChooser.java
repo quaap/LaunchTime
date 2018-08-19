@@ -41,23 +41,14 @@ public class ColorChooser extends FrameLayout {
     private ColorSelectedListener colorSelectedListener;
 
 
-    public ColorChooser(Context context, int startcolor) {
+    public ColorChooser(Context context) {
         super(context);
 
-        init(GlobState.getIconsHandler(context).getIconsPackPackageName(), startcolor);
+        init(GlobState.getIconsHandler(context).getIconsPackPackageName());
     }
 
-//    public ColorChooser(Context context, AttributeSet attrs) {
-//        super(context, attrs);
-//        init();
-//    }
-//
-//    public ColorChooser(Context context, AttributeSet attrs, int defStyleAttr) {
-//        super(context, attrs, defStyleAttr);
-//        init();
-//    }
 
-    private void init(String themename, int startcolor) {
+    private void init(String themename) {
 
         ViewGroup frame = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.activity_color_chooser, this);
 
@@ -72,8 +63,8 @@ public class ColorChooser extends FrameLayout {
         colorRed.setOnSeekBarChangeListener(colorChange);
         colorGreen.setOnSeekBarChangeListener(colorChange);
         colorBlue.setOnSeekBarChangeListener(colorChange);
-        colorBright.setOnSeekBarChangeListener(colorChange);
         colorAlpha.setOnSeekBarChangeListener(colorChange);
+        colorBright.setOnSeekBarChangeListener(brightChange);
 
 
         colorHex.setCursorVisible(false);
@@ -134,7 +125,6 @@ public class ColorChooser extends FrameLayout {
         prefs = getContext().getSharedPreferences("colors" + themename, Context.MODE_PRIVATE);
 
         loadPresets();
-        setColor(startcolor);
 
         doPreview();
     }
@@ -182,14 +172,17 @@ public class ColorChooser extends FrameLayout {
 
     }
 
+    int red;
+    int green;
+    int blue;
 
     public void setColor(int color) {
 
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
+        red = Color.red(color);
+        green = Color.green(color);
+        blue = Color.blue(color);
         int bright;
-
+        colorBright.setMax(512);
 
         bright = Math.max(Math.max(red, green), blue);
 
@@ -245,40 +238,96 @@ public class ColorChooser extends FrameLayout {
         int green = colorGreen.getProgress();
         int blue = colorBlue.getProgress();
 
-        int max = Math.max(Math.max(red, green), blue);
-
-        int add = max - colorBright.getProgress();
-
-        red -= add;
-        green -= add;
-        blue -= add;
-
-        red = red<0?0:red;
-        green = green<0?0:green;
-        blue = blue<0?0:blue;
-        red = red>255?255:red;
-        green = green>255?255:green;
-        blue = blue>255?255:blue;
+//        int max = Math.max(Math.max(red, green), blue);
+//
+//        int add = max - colorBright.getProgress();
+//
+//        red -= add;
+//        green -= add;
+//        blue -= add;
+//
+//        red = red<0?0:red;
+//        green = green<0?0:green;
+//        blue = blue<0?0:blue;
+//        red = red>255?255:red;
+//        green = green>255?255:green;
+//        blue = blue>255?255:blue;
 
         return Color.argb(alpha, red, green, blue);
     }
 
     private final SeekBar.OnSeekBarChangeListener colorChange = new SeekBar.OnSeekBarChangeListener() {
+
+        boolean wastouched;
+
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            if (wastouched) {
+                if (seekBar == colorRed) red = colorRed.getProgress();
+                if (seekBar == colorGreen) green = colorGreen.getProgress();
+                if (seekBar == colorBlue) blue = colorBlue.getProgress();
+                colorBright.setProgress(Math.max(Math.max(red, green), blue));
+            }
             doPreview();
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
             colorHex.setCursorVisible(false);
+            wastouched = true;
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             doPreview();
+            wastouched = false;
         }
     };
+
+    private final SeekBar.OnSeekBarChangeListener brightChange = new SeekBar.OnSeekBarChangeListener() {
+
+        boolean wastouched;
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            if (wastouched) {
+//            int red = colorRed.getProgress();
+//            int green = colorGreen.getProgress();
+//            int blue = colorBlue.getProgress();
+
+                int max = Math.max(Math.max(red, green), blue);
+
+                int add = max - colorBright.getProgress();
+
+                red -= add;
+                green -= add;
+                blue -= add;
+
+//            red = red<0?0:red;
+//            green = green<0?0:green;
+//            blue = blue<0?0:blue;
+                colorRed.setProgress(red > 255 ? 255 : red<0?0:red);
+                colorGreen.setProgress(green > 255 ? 255 : green<0?0:green);
+                colorBlue.setProgress(blue > 255 ? 255 : blue<0?0:blue);
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            colorHex.setCursorVisible(false);
+            wastouched = true;
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            red = red<0?0:red;
+            green = green<0?0:green;
+            blue = blue<0?0:blue;
+            doPreview();
+            wastouched = false;
+        }
+    };
+
 
     private final View.OnClickListener setColorListener = new View.OnClickListener() {
         @Override
