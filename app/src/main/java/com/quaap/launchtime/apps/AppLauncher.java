@@ -371,7 +371,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return this.mLabel.toLowerCase(Locale.getDefault()).compareTo(appLauncher.mLabel.toLowerCase(Locale.getDefault()));
     }
 
-    private void loadIcon(Context context, Handler handler) {
+    public void loadAppIcon(Context context, Handler handler) {
         if (iconLoaded()) return;
         Drawable app_icon = null;
         try {
@@ -402,14 +402,20 @@ public class AppLauncher implements Comparable<AppLauncher> {
 
         mIconDrawable = app_icon;
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mIconImage != null) {
-                    mIconImage.setImageDrawable(mIconDrawable);
+        if (handler!=null) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mIconImage != null) {
+                        mIconImage.setImageDrawable(mIconDrawable);
+                    }
                 }
+            });
+        } else {
+            if (mIconImage != null) {
+                mIconImage.setImageDrawable(mIconDrawable);
             }
-        });
+        }
     }
 
 
@@ -475,7 +481,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
                         if (inst == null) {
                             isrunning = false;
                         } else {
-                            inst.loadIcon(context, handler);
+                            inst.loadAppIcon(context, handler);
                             processed++;
                         }
 
