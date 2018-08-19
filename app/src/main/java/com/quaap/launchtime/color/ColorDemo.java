@@ -2,6 +2,7 @@ package com.quaap.launchtime.color;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -33,6 +34,8 @@ public class ColorDemo extends Preference {
     private final TextView catsel;
     private final TextView icon1;
     private final TextView icon2;
+    private final Drawable icond1;
+    private final Drawable icond2;
 
     private final Style style;
 
@@ -52,6 +55,9 @@ public class ColorDemo extends Preference {
 
         icon1 = body.findViewById(R.id.demo_launcher);
         icon2 = body.findViewById(R.id.demo_launcher2);
+        icond1 = icon1.getCompoundDrawables()[1];
+        icond2 = icon2.getCompoundDrawables()[1];
+
     }
 
 
@@ -105,17 +111,29 @@ public class ColorDemo extends Preference {
 
         icon1.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.getLauncherFontSize()+1);
         icon1.setTextColor(style.getTextColor());
-        Drawable icond1 = icon1.getCompoundDrawables()[1];
-        icond1.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
-        icon1.setCompoundDrawables(null, Theme.applyIconTint(icond1, style.getIconTint()),null,null);
+
+        Drawable icond1b = getNewIf(icond1, getContext().getResources());
+        icond1b.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
+        icon1.setCompoundDrawables(null, Theme.applyIconTint(icond1b, style.getIconTint()),null,null);
 
 
         icon2.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.getLauncherFontSize()+1);
         icon2.setTextColor(style.getTextColor());
-        Drawable icond2 = icon2.getCompoundDrawables()[1];
-        icond2.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
-        icon2.setCompoundDrawables(null, Theme.applyIconTint(icond2, style.getIconTint()),null,null);
 
+        Drawable icond2b = getNewIf(icond2, getContext().getResources());
+        icond2b.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());
+        icon2.setCompoundDrawables(null, Theme.applyIconTint(icond2b, style.getIconTint()),null,null);
+
+    }
+
+    private static Drawable getNewIf(Drawable d, Resources res) {
+        Drawable.ConstantState cd = d.getConstantState();
+        if (cd!=null) {
+            d = cd.newDrawable(res);
+        } else {
+            d.mutate();
+        }
+        return d;
     }
 
     @Override
