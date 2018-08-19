@@ -116,13 +116,24 @@ public class Theme {
 
         builtinThemes.put(crystal1.getPackKey(), crystal1);
 
+
+        BuiltinTheme charcoal = new MonochromeTheme("charcoal", "Charcoal")
+                .setColor(Thing.Mask, Color.parseColor("#4F1D1D1D"))
+                .setColor(Thing.Text, Color.parseColor("#EFBBBBBB"))
+                .setColor(Thing.AltText, Color.LTGRAY)
+                .setColor(Thing.Wallpaper, Color.parseColor("#C2505050"))
+                .setColor(Thing.Background, Color.parseColor("#DD434343"))
+                .setColor(Thing.AltBackground, Color.parseColor("#e3353535"));
+
+        builtinThemes.put(charcoal.getPackKey(), charcoal);
+
         BuiltinTheme paper= new MonochromeTheme("whitepaper", "White paper")
-                .setColor(Thing.Mask, Color.TRANSPARENT)
+                .setColor(Thing.Mask, Color.parseColor("#CB404040"))
                 .setColor(Thing.Text, Color.argb(255,20,20,20))
                 .setColor(Thing.AltText, Color.DKGRAY)
-                .setColor(Thing.Wallpaper, Color.argb(255,250,250,250))
-                .setColor(Thing.Background, Color.argb(255,252,252,252))
-                .setColor(Thing.AltBackground, Color.argb(255,252,255,255));
+                .setColor(Thing.Wallpaper, Color.parseColor("#DBF2F2F2"))
+                .setColor(Thing.Background, Color.parseColor("#C3F7F7F7"))
+                .setColor(Thing.AltBackground, Color.parseColor("#9FEFF2F2"));
 
         builtinThemes.put(paper.getPackKey(), paper);
 
@@ -151,7 +162,6 @@ public class Theme {
 
             builtinThemes.put(u.getPackKey(), u);
         }
-
 
 
         BuiltinTheme bwicon = new MonochromeTheme("bwicon", ctx.getString(R.string.theme_bw))

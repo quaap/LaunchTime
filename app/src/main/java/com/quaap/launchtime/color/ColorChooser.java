@@ -182,9 +182,10 @@ public class ColorChooser extends FrameLayout {
         green = Color.green(color);
         blue = Color.blue(color);
         int bright;
-        colorBright.setMax(512);
 
         bright = Math.max(Math.max(red, green), blue);
+        int min = Math.min(Math.min(red, green), blue);
+        colorBright.setMax(bright+(255-min));
 
         if (Build.VERSION.SDK_INT >= 24) {
             colorAlpha.setProgress(255 - Color.alpha(color), true);
@@ -266,7 +267,10 @@ public class ColorChooser extends FrameLayout {
                 if (seekBar == colorRed) red = colorRed.getProgress();
                 if (seekBar == colorGreen) green = colorGreen.getProgress();
                 if (seekBar == colorBlue) blue = colorBlue.getProgress();
-                colorBright.setProgress(Math.max(Math.max(red, green), blue));
+                int max = Math.max(Math.max(red, green), blue);
+                int min = Math.min(Math.min(red, green), blue);
+                colorBright.setProgress(max);
+                colorBright.setMax(max+(255-min));
             }
             doPreview();
         }
