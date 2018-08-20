@@ -894,7 +894,7 @@ public class MainActivity extends Activity implements
                     iconHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            switchCategory(mCategory);
+                            //switchCategory(mCategory);
                             if (repop2) {
                                 mQuickRow.repopulate();
 
