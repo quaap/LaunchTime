@@ -148,6 +148,7 @@ public class MainActivity extends Activity implements
     private InteractiveScrollView mCategoriesScroller;
     private Map<String, TextView> mCategoryTabs;
     private Map<View, String> mRevCategoryMap;
+    private View mCategoryTabsWrap;
     private volatile String mCategory;
     private ImageView mShowButtons;
     private ImageView mHideButtons;
@@ -236,6 +237,8 @@ public class MainActivity extends Activity implements
 
         //Setup some of our globals utils
 
+        iconHandler = new AddIconHandler(this);
+
         mPackageMan = getApplicationContext().getPackageManager();
         mAppPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -262,8 +265,6 @@ public class MainActivity extends Activity implements
         mSearchBox = new SearchBox(this, mIconSheetScroller);
 
         mLaunchApp = new LaunchApp(this);
-
-        iconHandler = new AddIconHandler(this);
 
         mInitCalled = false;
         mInitCalling = false;
@@ -325,7 +326,7 @@ public class MainActivity extends Activity implements
 
         if (!skiphome) {
             //move the page to the right scroll position
-            mIconSheetScroller.postDelayed(new Runnable() {
+            iconHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mIconSheetScroller.scrollTo(0, mPrefs.getInt("scrollpos" + mCategory, 0));
@@ -720,7 +721,7 @@ public class MainActivity extends Activity implements
             //db().backup("After install");
 
             //Show the help screen on very first run.
-            mCategoriesScroller.postDelayed(new Runnable() {
+            iconHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent help = new Intent(MainActivity.this, AboutActivity.class);
@@ -768,7 +769,12 @@ public class MainActivity extends Activity implements
     };
 
     private void scrollToCategoryTab() {
-        mCategoriesScroller.smoothScrollTo(0, mCategoryTabs.get(mCategory).getTop()-20);
+        if (mCategory!=null) {
+            View cattab = mCategoryTabs.get(mCategory);
+            if (cattab!=null) {
+                mCategoriesScroller.smoothScrollTo(0, cattab.getTop() - 20);
+            }
+        }
     }
 
     private String getNextCategory(String category, int dir) {
@@ -885,7 +891,7 @@ public class MainActivity extends Activity implements
                 } else {
 
                     final boolean repop2 = repop;
-                    mCategoriesScroller.postDelayed(new Runnable() {
+                    iconHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             switchCategory(mCategory);
@@ -1008,7 +1014,7 @@ public class MainActivity extends Activity implements
             checkConfig();
 
             //refresh icons on page
-            mIconSheetHolder.postDelayed(new Runnable() {
+            iconHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     repopulateIconSheet(mCategory);
@@ -1079,7 +1085,7 @@ public class MainActivity extends Activity implements
             }, mAnimationDuration);
 
 //
-//            mIconSheetHolder.postDelayed(new Runnable() {
+//            iconHandler.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
 //                    animateUpShow(mIconsArea);
@@ -1208,7 +1214,7 @@ public class MainActivity extends Activity implements
             if (alreadyOnHome && !mChildLock) {
 
                 // If we are on home screen, reset most things and go to top category.
-                mCategoriesScroller.postDelayed(new Runnable() {
+                iconHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1472,7 +1478,7 @@ public class MainActivity extends Activity implements
 
             mOkToAutohide = (int)(Math.random()*10000000)+2;
             final int okhidse = mOkToAutohide;
-            mCategoriesLayout.postDelayed(new Runnable() {
+            iconHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (isAutohide() && mOkToAutohide==okhidse) showCats(false);
@@ -1488,18 +1494,18 @@ public class MainActivity extends Activity implements
 
     private void showCats(boolean show) {
         cancelHide();
-        final View cats = findViewById(R.id.category_tabs_wrap);
+
         showButtonBar(false,false);
 
         if (!show) {
-            if (cats.getVisibility() == View.VISIBLE) {
-                mStyle.animateDownHide(cats);
+            if (mCategoryTabsWrap.getVisibility() == View.VISIBLE) {
+                mStyle.animateDownHide(mCategoryTabsWrap);
             }
             mStyle.animateUpShow(mShowCats);
         } else {
             mStyle.animateDownHide(mShowCats);
-            if (cats.getVisibility() == View.GONE) {
-                mStyle.animateUpShow(cats);
+            if (mCategoryTabsWrap.getVisibility() == View.GONE) {
+                mStyle.animateUpShow(mCategoryTabsWrap);
             }
         }
         mActionMenu.dismissActionPopup();
@@ -1519,9 +1525,8 @@ public class MainActivity extends Activity implements
             iconsarealp = new FrameLayout.LayoutParams(this,null);
         }
 
-        View cats = findViewById(R.id.category_tabs_wrap);
 
-        FrameLayout.LayoutParams catslp = (FrameLayout.LayoutParams)cats.getLayoutParams();
+        FrameLayout.LayoutParams catslp = (FrameLayout.LayoutParams)mCategoryTabsWrap.getLayoutParams();
         if (catslp==null){
             catslp = new FrameLayout.LayoutParams(this,null);
         }
@@ -1939,7 +1944,7 @@ public class MainActivity extends Activity implements
             }
             //Log.d("widcol2", "wDp=" + wDp + " w=" + w + " wcells=" + wcells  + " cellwidth=" + cellwidth + " r=" + cellwidth * wcells);
             //Log.d("widcol2", "hDp=" + hDp + " hDpf=" + hDpf + " h=" + h + " hcells=" + hcells  + " cellheight=" + cellheight + " r=" + cellheight * hcells);
-            appwid.postDelayed(new Runnable() {
+            iconHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     appwid.updateAppWidgetSize(null, wDp, hDpf, wDp, hDpf);
@@ -3684,28 +3689,35 @@ public class MainActivity extends Activity implements
         mRemoveAppText = findViewById(R.id.remove_dz_txt);
 
         mLinkDropzone = findViewById(R.id.link_dropzone);
-        mLinkDropzone.setOnDragListener(mMainDragListener);
 
         mLinkDropzonePeek = findViewById(R.id.link_dropzone_peek);
 
         //((TextView) findViewById(R.id.link_dz_text)).setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.linkicon);
 
+        mCategoryTabsWrap = findViewById(R.id.category_tabs_wrap);
 
         mCategoriesScroller = findViewById(R.id.layout_categories_scroller);
-
-        mIconSheetScroller.setHSwipeListener(mHSwipeListener);
-        mCategoriesScroller.setHSwipeListener(mHSwipeListener);
-
         mProgressBar = findViewById(R.id.progressBar);
-
-
+        mShowButtons = findViewById(R.id.show_buttonbar);
+        mHideButtons = findViewById(R.id.hide_buttonbar);
+        mShowCats = findViewById(R.id.show_cats_buttom);
 
         mIconSheets = new TreeMap<>();
         mCategoryTabs = new TreeMap<>();
         mRevCategoryMap = new HashMap<>();
         mRevCategoryMap.put(mQuickRow.getGridLayout(), QuickRow.QUICK_ROW_CAT);
 
-        mShowButtons = findViewById(R.id.show_buttonbar);
+        mSortCategoryButton = findViewById(R.id.btn_sort_cat);
+        mAddCategoryButton = findViewById(R.id.btn_add_cat);
+        mRenameCategoryButton = findViewById(R.id.btn_rename_cat);
+
+        mEditWidgetsButton = findViewById(R.id.btn_widgets);
+        mOpenPrefsButton = findViewById(R.id.btn_prefs);
+        mOpenPrefs2Button = findViewById(R.id.btn_prefs2);
+
+
+
+        mLinkDropzone.setOnDragListener(mMainDragListener);
 
         mShowButtons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3717,7 +3729,6 @@ public class MainActivity extends Activity implements
         });
 
 
-        mHideButtons = findViewById(R.id.hide_buttonbar);
 
         mHideButtons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3729,7 +3740,6 @@ public class MainActivity extends Activity implements
         });
 
 
-        mShowCats = findViewById(R.id.show_cats_buttom);
         mShowCats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -3740,15 +3750,6 @@ public class MainActivity extends Activity implements
                 }
             }
         });
-
-        mSortCategoryButton = findViewById(R.id.btn_sort_cat);
-        mAddCategoryButton = findViewById(R.id.btn_add_cat);
-        mRenameCategoryButton = findViewById(R.id.btn_rename_cat);
-
-        mEditWidgetsButton = findViewById(R.id.btn_widgets);
-        mOpenPrefsButton = findViewById(R.id.btn_prefs);
-        mOpenPrefs2Button = findViewById(R.id.btn_prefs2);
-
 
 
         mSortCategoryButton.setOnClickListener(new View.OnClickListener() {
@@ -3804,6 +3805,9 @@ public class MainActivity extends Activity implements
                 hideCatsIfAutoHide(false);
             }
         });
+
+        mIconSheetScroller.setHSwipeListener(mHSwipeListener);
+        mCategoriesScroller.setHSwipeListener(mHSwipeListener);
 
     }
 
@@ -3909,7 +3913,7 @@ public class MainActivity extends Activity implements
     private void checkChildLock() {
         View kid_escape_area = findViewById(R.id.kid_escape_area);
         View decorView = getWindow().getDecorView();
-        // View catswrap = findViewById(R.id.category_tabs_wrap);
+
         if (mDumbMode) {
             switchCategory(Categories.CAT_DUMB);
         }
