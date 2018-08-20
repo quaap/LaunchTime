@@ -915,17 +915,17 @@ public class MainActivity extends Activity implements
 
                 //Delete our icon cache so the labels can be regenerated.
                 if (key.equals(getString(R.string.pref_key_textcolor)) || key.equals(getString(R.string.pref_key_iconsize)) || key.equals("icon-update")) {
-                    mAppLauncherViews.clear();
+                    clearImageViews();
                     repop = true;
                 }
                 if (key.equals(getString(R.string.pref_key_icon_tint)) || key.equals("prefsUpdate")) {
                     AppLauncher.clearIcons();
-                    mAppLauncherViews.clear();
+                    clearImageViews();
                     repop = true;
                 }
                 if (key.equals(getString(R.string.pref_key_icons_pack))) {
                     AppLauncher.clearIcons();
-                    mAppLauncherViews.clear();
+                    clearImageViews();
 
                     //mIconSheet.removeAllViews();
                     IconsHandler ich = GlobState.getIconsHandler(this);
@@ -2202,6 +2202,16 @@ public class MainActivity extends Activity implements
     }
 
 
+    private void clearImageViews() {
+//        for (AppLauncher app: mAppLauncherViews.keySet()) {
+//            app.clearImageViews();
+//        }
+
+        mAppLauncherViews.clear();
+
+    }
+
+
     public ViewGroup getLauncherView(final AppLauncher app, boolean smallIcon) {
         return getLauncherView(app, smallIcon, true);
     }
@@ -2291,7 +2301,7 @@ public class MainActivity extends Activity implements
                 setLayoutSize(iconLabel, mStyle.getLauncherSize(), mStyle.getLauncherSize()/2.1);
 
             }
-            app.setIconImage(iconImage);
+            app.addIconImage(iconImage);
             app.loadAppIconAsync(this);
 
             ComponentName compName = app.getBaseComponentName();

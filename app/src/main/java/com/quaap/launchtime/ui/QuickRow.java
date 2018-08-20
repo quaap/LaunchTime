@@ -168,9 +168,8 @@ public class QuickRow {
               newstuff = true; //app could have been uninstalled
             } else if (compname.equals(app.getComponentName())) {
                 //Log.d("Quick", "Found: " + compname.flattenToString());
-                AppLauncher qapp = AppLauncher.createAppLauncher(app, true);
-                quickRowApps.add(qapp);
-                qapp.loadAppIconAsync(mQuickRow.getContext());
+               // AppLauncher qapp = AppLauncher.createAppLauncher(app, true);
+                quickRowApps.add(app);
 
             }
 

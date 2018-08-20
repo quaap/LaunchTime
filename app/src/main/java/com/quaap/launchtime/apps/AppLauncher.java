@@ -26,8 +26,10 @@ import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.components.Theme;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -181,9 +183,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     private final boolean mWidget;
 
     private volatile Drawable mIconDrawable;
-    private volatile ImageView mIconImage;
-
-
+    final private List<ImageView> mIconImage = new ArrayList<>(1);
 
     private AppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {
         mActivityName = activityName;
@@ -337,20 +337,35 @@ public class AppLauncher implements Comparable<AppLauncher> {
         return mIconDrawable != null;
     }
 
-    public void setIconImage(ImageView iconImage) {
-        mIconImage = iconImage;
+    public void addIconImage(ImageView iconImage) {
+        mIconImage.add(iconImage);
         if (mIconDrawable != null) {
-            mIconImage.setImageDrawable(mIconDrawable);
+            //Log.d("icon1", mLabel +  " " + mIconDrawable+"");
+            iconImage.setImageDrawable(mIconDrawable);
         }
+    }
+
+    public void clearImageViews() {
+        mIconImage.clear();
     }
 
     public Drawable getIconDrawable() {
         return mIconDrawable;
     }
 
+    public void setIconDrawable(Drawable drawable) {
+        mIconDrawable = drawable;
+        if (mIconImage.size()>0) {
+            //Log.d("icon2", mLabel +  " " + mIconDrawable+"");
+            for (ImageView im: mIconImage) {
+                im.setImageDrawable(mIconDrawable);
+            }
+        }
+    }
+
     public void clearDrawable() {
         mIconDrawable = null;
-        mIconImage = null;
+        mIconImage.clear();
     }
 
     @Override
@@ -400,21 +415,17 @@ public class AppLauncher implements Comparable<AppLauncher> {
             app_icon = context.getPackageManager().getDefaultActivityIcon();
         }
 
-        mIconDrawable = app_icon;
+        final Drawable app_iconf = app_icon;
 
         if (handler!=null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mIconImage != null) {
-                        mIconImage.setImageDrawable(mIconDrawable);
-                    }
+                    setIconDrawable(app_iconf);
                 }
             });
         } else {
-            if (mIconImage != null) {
-                mIconImage.setImageDrawable(mIconDrawable);
-            }
+            setIconDrawable(app_iconf);
         }
     }
 
