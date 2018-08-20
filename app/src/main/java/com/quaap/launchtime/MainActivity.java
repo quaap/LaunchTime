@@ -96,7 +96,6 @@ import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.Badger;
 import com.quaap.launchtime.apps.DefaultApps;
 import com.quaap.launchtime.apps.LaunchApp;
-import com.quaap.launchtime.color.ColorChooser;
 import com.quaap.launchtime.ui.InteractiveScrollView;
 import com.quaap.launchtime.ui.ActionMenu;
 import com.quaap.launchtime.components.Categories;
@@ -291,10 +290,16 @@ public class MainActivity extends Activity implements
 
         if (mInitCalling) return;
         if (mInitCalled) {
-            myResume();
+            iconHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                   myResume();
+                }
+            },100);
         } else {
             mStartupTask = new StartupTask(this, true, startat);
             mStartupTask.execute();
+            //mStartupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
     }
@@ -497,6 +502,7 @@ public class MainActivity extends Activity implements
 
             mCompletedStage = 3;
 
+
             try {
 
                 if (launchers != null) {
@@ -510,13 +516,13 @@ public class MainActivity extends Activity implements
                         mCompletedStage = 4;
                     }
 
-                    if (mShowProgress) main.incProgressBar(1);
-
-                    if (main.mCategory.equals(Categories.CAT_SEARCH)) {
-                        main.populateRecentApps();
-                    } else {
-                        main.repopulateIconSheet(main.mCategory);
-                    }
+//                    if (mShowProgress) main.incProgressBar(1);
+//
+//                    if (main.mCategory.equals(Categories.CAT_SEARCH)) {
+//                        main.populateRecentApps();
+//                    } else {
+//                        main.repopulateIconSheet(main.mCategory);
+//                    }
                     if (mShowProgress) main.incProgressBar(1);
 
                     main.firstRunPostApps();
@@ -527,10 +533,14 @@ public class MainActivity extends Activity implements
 
                 if (mShowProgress) main.incProgressBar(1);
 
-                main.myResume();
+                main.iconHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        main.myResume();
+                    }
+                },100);
                 mCompletedStage = 6;
                 if (mShowProgress) main.incProgressBar(1);
-
                 main.mStartupTask = null;
 
             } catch (Throwable t) {
@@ -721,14 +731,14 @@ public class MainActivity extends Activity implements
             //db().backup("After install");
 
             //Show the help screen on very first run.
-            iconHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent help = new Intent(MainActivity.this, AboutActivity.class);
-                    help.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(help);
-                }
-            }, 3000);
+//            iconHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Intent help = new Intent(MainActivity.this, AboutActivity.class);
+//                    help.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(help);
+//                }
+//            }, 3000);
 
         }
 
