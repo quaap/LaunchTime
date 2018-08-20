@@ -408,9 +408,9 @@ public class IconsHandler {
                 } else {
                     currentLinkSymbol = linkSymbol.getConstantState().newDrawable().mutate();
                 }
-                if (Color.alpha(tint) > 10) {
-                    currentLinkSymbol.setColorFilter(tint, PorterDuff.Mode.MULTIPLY);
-                }
+
+                applyIconTint(currentLinkSymbol, tint);
+
                 currentIconTint = tint;
 
             }
@@ -426,28 +426,27 @@ public class IconsHandler {
     }
 
 
-    public static Drawable applyIconTint(Drawable app_icon, int mask_color) {
+    public static void applyIconTint(final Drawable app_icon, int mask_color) {
         if (Color.alpha(mask_color) > 10) {
 
-            app_icon = app_icon.mutate();
+            app_icon.mutate();
 
             //int avg = (Color.red(mask_color) + Color.green(mask_color) + Color.blue(mask_color) ) / 3;
 
             if (Color.red(mask_color)>5 && Color.red(mask_color) == Color.green(mask_color) && Color.red(mask_color) == Color.blue(mask_color) ) {
-                app_icon = setSaturation(app_icon, (255f-Color.red(mask_color))/255f, Color.alpha(mask_color)/255f);
+                setSaturation(app_icon, (255f-Color.red(mask_color))/255f, Color.alpha(mask_color)/255f);
             } else {
                 PorterDuff.Mode mode = PorterDuff.Mode.MULTIPLY;
                 app_icon.setColorFilter(mask_color, mode);
             }
         }
-        return app_icon;
     }
 
     private static ColorMatrixColorFilter colorMatrixColorFilter;
     private static float filterSaturation;
     private static float filterAlpha;
 
-    public static Drawable setSaturation(Drawable drawable, float saturation, float alpha) {
+    public static void setSaturation(final Drawable drawable, float saturation, float alpha) {
 
         if (colorMatrixColorFilter==null || saturation!=filterSaturation || filterAlpha!=alpha) {
             filterSaturation = saturation;
@@ -478,7 +477,6 @@ public class IconsHandler {
 
         drawable.setColorFilter(colorMatrixColorFilter);
 
-        return drawable;
     }
 
 }

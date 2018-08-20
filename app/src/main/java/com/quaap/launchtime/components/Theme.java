@@ -474,7 +474,7 @@ public class Theme {
 
            // Log.d("iconi", mask_color + " mask");
 
-            app_icon = IconsHandler.applyIconTint(app_icon, mask_color);
+            IconsHandler.applyIconTint(app_icon, mask_color);
 
 
             return app_icon;
