@@ -467,15 +467,50 @@ public class MainActivity extends Activity implements
             }
 
             if (lastvalue < 830) {
+                main.mPrefs.edit().putInt(key,830).apply();
 
                 if (main.mAppPreferences.getString(main.getString(R.string.pref_key_animate_duration), "150").equals("250")) {
                     main.mAppPreferences.edit().putString(main.getString(R.string.pref_key_animate_duration), "150").apply();
                 }
 
+                WindowManager wm = ((WindowManager) main.getSystemService(Context.WINDOW_SERVICE));
+
+                int orientationPref = Integer.parseInt(main.mAppPreferences.getString(main.getString(R.string.pref_key_orientation), "-1"));
+                if (orientationPref==-1 && wm!=null) {
+
+                    Display display = wm.getDefaultDisplay();
+                    int rotation = display.getRotation();
+                    int orientation = main.getResources().getConfiguration().orientation;
+
+
+                    switch (rotation) {
+                        case Surface.ROTATION_180:
+                        case Surface.ROTATION_0:
+                            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                orientationPref = 3;
+                            } else {
+                                orientationPref = 2;
+                            }
+                            break;
+                        case Surface.ROTATION_270:
+                        case Surface.ROTATION_90:
+                        default:
+                            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                orientationPref = 3;
+                            } else {
+                                orientationPref = 2;
+                            }
+
+                            break;
+                    }
+
+
+                    main.mAppPreferences.edit().putString(main.getString(R.string.pref_key_orientation), orientationPref + "").apply();
+                }
+
                 main.mWidgetHelper = GlobState.deleteAndGetWidgetHelper(main);
                 main.mWidgetHelper.addWidgetChangedListener(main);
 
-                main.mPrefs.edit().putInt(key,830).apply();
             }
         }
 
@@ -1260,42 +1295,7 @@ public class MainActivity extends Activity implements
             readAnimationDuration();
             mActionMenu.readActionMenuConfig();
 
-            WindowManager wm = ((WindowManager) this.getSystemService(Context.WINDOW_SERVICE));
-
-
-            int orientationPref = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_orientation), "-1"));
-            if (orientationPref==-1 && wm!=null) {
-
-                Display display = wm.getDefaultDisplay();
-                int rotation = display.getRotation();
-                int orientation = getResources().getConfiguration().orientation;
-
-
-                switch (rotation) {
-                    case Surface.ROTATION_180:
-                    case Surface.ROTATION_0:
-                        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                            orientationPref = 3;
-                        } else {
-                            orientationPref = 2;
-                        }
-                        break;
-                    case Surface.ROTATION_270:
-                    case Surface.ROTATION_90:
-                    default:
-                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            orientationPref = 3;
-                        } else {
-                            orientationPref = 2;
-                        }
-
-                        break;
-                }
-
-
-                mAppPreferences.edit().putString(getString(R.string.pref_key_orientation), orientationPref + "").apply();
-            }
-
+            int orientationPref = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_orientation), "0"));
 
             switch (orientationPref) {
                 case 0:
