@@ -96,6 +96,7 @@ import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.apps.Badger;
 import com.quaap.launchtime.apps.DefaultApps;
 import com.quaap.launchtime.apps.LaunchApp;
+import com.quaap.launchtime.components.Theme;
 import com.quaap.launchtime.ui.InteractiveScrollView;
 import com.quaap.launchtime.ui.ActionMenu;
 import com.quaap.launchtime.components.Categories;
@@ -894,7 +895,7 @@ public class MainActivity extends Activity implements
             if (key != null) {
 
                 // when the Theme updates many of these prefs at once, it sends "prefsUpdate" first so that we ignore everything until it is done.
-                if (key.equals("prefsUpdate")) {
+                if (key.equals(Theme.PREFS_UPDATE_KEY)) {
                     prefsUpdate = sharedPreferences.getBoolean(key, false) ? prefsUpdate+1 : prefsUpdate-1;
                     if (prefsUpdate<0) prefsUpdate=0;
                 }
@@ -918,7 +919,7 @@ public class MainActivity extends Activity implements
                     clearImageViews();
                     repop = true;
                 }
-                if (key.equals(getString(R.string.pref_key_icon_tint)) || key.equals("prefsUpdate")) {
+                if (key.equals(getString(R.string.pref_key_icon_tint)) || key.equals(Theme.PREFS_UPDATE_KEY)) {
                     AppLauncher.clearIcons();
                     clearImageViews();
                     repop = true;
@@ -989,7 +990,7 @@ public class MainActivity extends Activity implements
                     }
 
                 }
-                if (key.toLowerCase().contains("cat") || key.equals("prefsUpdate")) {
+                if (key.toLowerCase().contains("cat") || key.equals(Theme.PREFS_UPDATE_KEY)) {
                     setCategoryTabStyles();
                 }
             }

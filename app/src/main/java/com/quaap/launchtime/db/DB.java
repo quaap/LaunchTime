@@ -21,6 +21,7 @@ import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.FsTools;
 import com.quaap.launchtime.components.SpecialIconStore;
+import com.quaap.launchtime.components.Theme;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -1294,9 +1295,9 @@ public class DB extends SQLiteOpenHelper {
                 FsTools.loadSharedPreferencesFromFile(mContext.getSharedPreferences("default", Context.MODE_PRIVATE), mContext.getFileStreamPath("default.prefs"));
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-                prefs.edit().putBoolean("prefsUpdate", true).commit();
+                prefs.edit().putBoolean(Theme.PREFS_UPDATE_KEY, true).commit();
                 FsTools.loadSharedPreferencesFromFile(prefs, mContext.getFileStreamPath("main.prefs"));
-                prefs.edit().remove("prefsUpdate").commit();
+                prefs.edit().remove(Theme.PREFS_UPDATE_KEY).commit();
 
 
                 close();

@@ -388,4 +388,7 @@
     <string name="pref_show_drops_text">Show Uninstall, Remove, and Shortcut as dropzones.</string>
     <string name="pref_dev_actions">DEV activities on action menus</string>
     <string name="pref_dev_actions_text">Dev option. { } Could be DANGEROUS: Show ACTION_MAIN activites as action menu items on apps.</string>
+    <string name="theme_crystal">Crystal</string>
+    <string name="theme_charcoal">Carbon</string>
+    <string name="theme_paper">White paper</string>
 </resources>

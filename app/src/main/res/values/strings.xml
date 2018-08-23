@@ -387,5 +387,8 @@
     <string name="pref_dev_actions_text">Dev option. { } Could be DANGEROUS: Show ACTION_MAIN activites as action menu items on apps.</string>
     <string name="reset_wids_confirm">This will remove all widgets from LaunchTime! Continue?</string>
     <string name="reset_wids_done">Widgets removed and reset.</string>
+    <string name="theme_crystal">Crystal</string>
+    <string name="theme_charcoal">Carbon</string>
+    <string name="theme_paper">White paper</string>
 
 </resources>

@@ -40,13 +40,17 @@ import java.util.Map;
 public class Theme {
 
 
-    public final static String NEW_SYS = "newish";
+    //public final static String NEW_SYS = "newish";
+    public static final String PREFS_UPDATE_KEY = "prefsUpdate";
 
     private enum Thing {Mask, Text, AltText, Background, AltBackground, Wallpaper}
 
+    private final int [] COLOR_PREFS_REFS = {R.string.pref_key_icon_tint, R.string.pref_key_cattab_background,
+            R.string.pref_key_cattabselected_background, R.string.pref_key_cattabselected_text,
+            R.string.pref_key_cattabtextcolor, R.string.pref_key_cattabtextcolorinv,
+            R.string.pref_key_wallpapercolor,  R.string.pref_key_textcolor};
 
-    private final String [] COLOR_PREFS = {"icon_tint", "cattab_background", "cattabselected_background", "cattabselected_text",  "cattabtextcolor", "cattabtextcolorinv",
-            "wallpapercolor",  "textcolor"};
+    private final String [] COLOR_PREFS;
 
     private final Thing [] THING_MAP = {Thing.Mask, Thing.Background, Thing.AltBackground, Thing.AltText, Thing.Text, Thing.Background, Thing.Wallpaper, Thing.Text};
 
@@ -75,9 +79,16 @@ public class Theme {
 
     Theme(Context ctx, IconsHandler ich) {
         this.ctx = ctx;
+
+        COLOR_PREFS = new String[COLOR_PREFS_REFS.length];
+        for (int i=0; i<COLOR_PREFS_REFS.length; i++) {
+            COLOR_PREFS[i] = ctx.getString(COLOR_PREFS_REFS[i]);
+        }
+
         prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
         iconsHandler = ich;
         initBuiltinIconThemes();
+
     }
 
 
@@ -85,10 +96,10 @@ public class Theme {
     //TODO: load these from a file / other package
 
     private void initBuiltinIconThemes() {
-        builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
+        //builtinThemes.put(IconsHandler.DEFAULT_PACK, new DefaultTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name)));
 
         int[] defcolors = getColorDefaults();
-        BuiltinTheme newish = new MonochromeTheme(NEW_SYS, ctx.getString(R.string.icons_pack_default_name) + " 2")
+        BuiltinTheme newish = new MonochromeTheme(IconsHandler.DEFAULT_PACK, ctx.getString(R.string.icons_pack_default_name))
                 .setColor(Thing.Mask, defcolors[0])
                 .setColor(Thing.Text, defcolors[4])
                 .setColor(Thing.AltText, defcolors[3])
@@ -110,7 +121,7 @@ public class Theme {
         builtinThemes.put(classic.getPackKey(), classic);
 
 
-        BuiltinTheme crystal1= new MonochromeTheme("crystal1", "Crystal")
+        BuiltinTheme crystal1= new MonochromeTheme("crystal1", ctx.getString(R.string.theme_crystal))
                 .setColor(Thing.Mask, Color.parseColor("#CC888888"))
                 .setColor(Thing.Text, Color.argb(255,240,240,240))
                 .setColor(Thing.AltText, Color.WHITE)
@@ -121,7 +132,7 @@ public class Theme {
         builtinThemes.put(crystal1.getPackKey(), crystal1);
 
 
-        BuiltinTheme charcoal = new MonochromeTheme("charcoal", "Charcoal")
+        BuiltinTheme charcoal = new MonochromeTheme("charcoal", ctx.getString(R.string.theme_charcoal))
                 .setColor(Thing.Mask, Color.parseColor("#4F1D1D1D"))
                 .setColor(Thing.Text, Color.parseColor("#EFBBBBBB"))
                 .setColor(Thing.AltText, Color.LTGRAY)
@@ -131,7 +142,7 @@ public class Theme {
 
         builtinThemes.put(charcoal.getPackKey(), charcoal);
 
-        BuiltinTheme paper= new MonochromeTheme("whitepaper", "White paper")
+        BuiltinTheme paper= new MonochromeTheme("whitepaper", ctx.getString(R.string.theme_paper))
                 .setColor(Thing.Mask, Color.parseColor("#CB404040"))
                 .setColor(Thing.Text, Color.argb(255,20,20,20))
                 .setColor(Thing.AltText, Color.DKGRAY)
@@ -283,7 +294,7 @@ public class Theme {
 
         SharedPreferences.Editor themeedit = ctx.getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
 
-        prefs.edit().putBoolean("prefsUpdate", true).apply();
+        prefs.edit().putBoolean(Theme.PREFS_UPDATE_KEY, true).apply();
         SharedPreferences.Editor appedit = prefs.edit();
 
         try {
@@ -297,7 +308,7 @@ public class Theme {
 
         } finally {
             appedit.apply();
-            prefs.edit().remove("prefsUpdate").apply();
+            prefs.edit().remove(PREFS_UPDATE_KEY).apply();
             themeedit.apply();
         }
     }
@@ -325,7 +336,7 @@ public class Theme {
         Log.d("Theme", "restoreUserColors");
         SharedPreferences themeprefs = ctx.getSharedPreferences("theme",Context.MODE_PRIVATE);
 
-        prefs.edit().putBoolean("prefsUpdate", true).apply();
+        prefs.edit().putBoolean(PREFS_UPDATE_KEY, true).apply();
 
         SharedPreferences.Editor appedit = prefs.edit();
 
@@ -337,7 +348,7 @@ public class Theme {
             }
         } finally {
             appedit.apply();
-            prefs.edit().remove("prefsUpdate").apply();
+            prefs.edit().remove(PREFS_UPDATE_KEY).apply();
         }
         return themeprefs.contains(getThemePrefName(COLOR_PREFS[0]));
     }
@@ -410,7 +421,7 @@ public class Theme {
             Log.d("Theme", "applyTheme");
 
             SharedPreferences appprefs = prefs;
-            prefs.edit().putBoolean("prefsUpdate", true).apply();
+            prefs.edit().putBoolean(PREFS_UPDATE_KEY, true).apply();
 
             SharedPreferences.Editor appedit = appprefs.edit();
             try {
@@ -426,7 +437,7 @@ public class Theme {
                 }
             } finally {
                 appedit.apply();
-                prefs.edit().remove("prefsUpdate").apply();
+                prefs.edit().remove(PREFS_UPDATE_KEY).apply();
             }
 
         }

@@ -238,7 +238,7 @@ public class MsgBox {
 
 
                         if (resetColorsCheck.isChecked()) {
-                            editor.putString(context.getString(R.string.pref_key_icons_pack), Theme.NEW_SYS);
+                            editor.putString(context.getString(R.string.pref_key_icons_pack), IconsHandler.DEFAULT_PACK);
                         }
                         editor.apply();
 
