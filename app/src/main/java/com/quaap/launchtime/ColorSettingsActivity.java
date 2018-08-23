@@ -95,12 +95,9 @@ public class ColorSettingsActivity extends PreferenceActivity {
                                     ich.getTheme().resetUserColors();
                                     Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
                                     //getActivity().finish();
-                                    Intent intent = getActivity().getIntent();
-                                    getActivity().overridePendingTransition(0, 0);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    getActivity().finish();
-                                    getActivity().overridePendingTransition(0, 0);
-                                    getActivity().startActivity(intent);
+
+                                    reload();
+
                                     dialog.dismiss();
                                 }
 
@@ -117,9 +114,19 @@ public class ColorSettingsActivity extends PreferenceActivity {
                 }
             });
 
+
             prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             prefs.registerOnSharedPreferenceChangeListener(this);
 
+        }
+
+        private void reload() {
+            Intent intent = getActivity().getIntent();
+            getActivity().overridePendingTransition(0, 0);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            getActivity().finish();
+            getActivity().overridePendingTransition(0, 0);
+            getActivity().startActivity(intent);
         }
 
         @Override
@@ -151,11 +158,16 @@ public class ColorSettingsActivity extends PreferenceActivity {
         }
 
         @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, final String pref) {
+
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    colorDemo.applyStyle();
+                    if (pref.equals(getString(R.string.pref_key_icons_pack))) {
+                        reload();
+                    } else {
+                        colorDemo.applyStyle();
+                    }
                 }
             }, 500);
         }
