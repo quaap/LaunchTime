@@ -278,7 +278,7 @@ public class MainActivity extends Activity implements
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        prefsUpdate = 0;
+//        prefsUpdate = 0;
 
         //in case the task didn't complete
         int startat = 0;

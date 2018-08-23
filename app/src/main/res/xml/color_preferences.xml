@@ -55,7 +55,8 @@
         <com.quaap.launchtime.color.ColorPreference
             android:title="@string/pref_icon_tint"
             android:key="@string/pref_key_icon_tint"
-            android:defaultValue="@color/icon_tint" />
+            android:defaultValue="@color/icon_tint"
+            android:summary="@string/pref_icon_tint_summ"/>
 
         <ListPreference
             android:defaultValue="@string/pref_cat_location_values_def"

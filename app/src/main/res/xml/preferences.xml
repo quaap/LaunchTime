@@ -35,11 +35,11 @@
             android:summary="@string/dumbmode_summ"
             android:paddingBottom="6dp" />
 
-        <PreferenceScreen
-            android:title="@string/pref_system"
-            android:summary="@string/pref_system_summ">
-            <intent android:action="android.settings.SETTINGS"/>
-        </PreferenceScreen>
+        <!--<PreferenceScreen-->
+            <!--android:title="@string/pref_system"-->
+            <!--android:summary="@string/pref_system_summ">-->
+            <!--<intent android:action="android.settings.SETTINGS"/>-->
+        <!--</PreferenceScreen>-->
 
         <PreferenceScreen
             android:title="@string/pref_senddat"
@@ -58,13 +58,6 @@
                 android:targetPackage="com.quaap.launchtime"
                 android:targetClass="com.quaap.launchtime.BackupActivity"/>
         </PreferenceScreen>
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/prefs_new_apps_cat"
-            android:key="@string/pref_key_autocat"
-            android:summaryOn="@string/prefs_cat_apps"
-            android:summaryOff="@string/prefs_cat_no" />
 
     </PreferenceCategory>
 
@@ -120,6 +113,13 @@
 
 
     <PreferenceCategory android:title="@string/pref_tweaks_lab">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/prefs_new_apps_cat"
+            android:key="@string/pref_key_autocat"
+            android:summaryOn="@string/prefs_cat_apps"
+            android:summaryOff="@string/prefs_cat_no" />
 
         <CheckBoxPreference
             android:defaultValue="true"

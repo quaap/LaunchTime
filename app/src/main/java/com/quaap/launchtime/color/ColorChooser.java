@@ -341,7 +341,7 @@ public class ColorChooser extends FrameLayout {
         }
     };
 
-    private final int numpresets = 64;
+    private final int numpresets = 32;
 
     private void addPreset(int color) {
         SharedPreferences.Editor edit = prefs.edit();
