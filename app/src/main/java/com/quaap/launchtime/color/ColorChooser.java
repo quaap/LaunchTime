@@ -347,18 +347,18 @@ public class ColorChooser extends FrameLayout {
         SharedPreferences.Editor edit = prefs.edit();
         // edit.clear();
 
-        int top = numpresets - 2;
-        for (int i = top; i >= 0; i--) {
-            int oldcolor = prefs.getInt("color" + i, Integer.MIN_VALUE);
-            if (oldcolor == color) {
-                top = i - 1;
-                break;
-            }
-        }
+//        int top = numpresets - 2;
+//        for (int i = top; i >= 0; i--) {
+//            int oldcolor = prefs.getInt("color" + i, Integer.MIN_VALUE);
+//            if (oldcolor == color) {
+//                top = i - 1;
+//                break;
+//            }
+//        }
 
-        for (int i = top; i >= 0; i--) {
+        for (int i = numpresets; i >= 0; i--) {
             int oldcolor = prefs.getInt("color" + i, Integer.MIN_VALUE);
-            if (color != Integer.MIN_VALUE) {
+            if (oldcolor!=color &&  oldcolor != Integer.MIN_VALUE) {
                 edit.putInt("color" + (i + 1), oldcolor);
             }
 
@@ -396,8 +396,9 @@ public class ColorChooser extends FrameLayout {
         outframe.setPadding(6,6,6,6);
 
         FrameLayout frame = new FrameLayout(getContext());
+        //frame.setPadding(6,6,6,6);
         //frame.setBackgroundColor(Color.BLACK);
-        frame.setBackgroundResource(R.drawable.transparentgrid);
+        frame.setBackgroundResource(R.drawable.bwg);
 
         TextView c = new TextView(getContext());
         c.setText("   ");
