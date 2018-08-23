@@ -390,4 +390,5 @@
     <string name="theme_charcoal">Carbon</string>
     <string name="theme_paper">White paper</string>
     <string name="pref_icon_tint_summ">This color will be applied to icons. To deactivate, set full transparency. To desaturate colors, use gray (where R=B=G). For full grayscale, use white.</string>
+    <string name="set_wallpaper">Device wallpaper</string>
 </resources>

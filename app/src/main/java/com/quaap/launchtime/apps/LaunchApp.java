@@ -2,7 +2,9 @@ package com.quaap.launchtime.apps;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -214,7 +216,14 @@ public class LaunchApp {
 
     private boolean isValidActivity(Intent intent) {
         List<ResolveInfo> list = activity.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
+
+        if (list.size() > 0) {
+            ActivityInfo ai = list.get(0).activityInfo;
+            if (ai != null && (ai.permission==null || activity.checkCallingOrSelfPermission(ai.permission)==PackageManager.PERMISSION_GRANTED)) {
+                return ai.enabled && ai.exported;
+            }
+        }
+        return false;
     }
 
 }

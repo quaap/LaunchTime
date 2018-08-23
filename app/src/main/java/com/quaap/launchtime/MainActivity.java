@@ -700,6 +700,9 @@ public class MainActivity extends Activity implements
 
                 ResolveInfo ri = activities.get(i);
 
+                if (ri == null || ri.activityInfo==null || !ri.activityInfo.exported || !ri.activityInfo.enabled) {
+                    continue;
+                }
                 String actvname = ri.activityInfo.name;
                 ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
 

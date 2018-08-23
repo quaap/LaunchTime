@@ -553,7 +553,7 @@ public class ActionMenu {
                 for (ResolveInfo ri : activities) {
 
                     try {
-                        if (ri == null || ri.activityInfo == null || !ri.activityInfo.exported) {
+                        if (ri == null || ri.activityInfo == null  || !ri.activityInfo.enabled || !ri.activityInfo.exported) {
                             continue;
                         }
 
