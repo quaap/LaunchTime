@@ -510,9 +510,7 @@ public class MainActivity extends Activity implements
                     main.mAppPreferences.edit().putString(main.getString(R.string.pref_key_orientation), orientationPref + "").apply();
                 }
 
-                main.mWidgetHelper = GlobState.deleteAndGetWidgetHelper(main);
-                main.mWidgetHelper.addWidgetChangedListener(main);
-
+                main.mWidgetHelper.delete();
             }
         }
 
@@ -1014,11 +1012,8 @@ public class MainActivity extends Activity implements
     @Override
     public void onDestroy() {
         mAppPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        try {
-            mWidgetHelper.done();
-        } catch (Exception e) {
-            Log.e(TAG, "Exception killing widgets", e);
-        }
+        mWidgetHelper.removeWidgetChangedListener(this);
+
         super.onDestroy();
     }
 

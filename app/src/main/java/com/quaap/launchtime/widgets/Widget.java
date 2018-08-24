@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.quaap.launchtime.apps.AppLauncher;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -399,6 +400,11 @@ public class Widget {
         if(!mWidgetChangedListeners.contains(listener)) {
             mWidgetChangedListeners.add(listener);
         }
+    }
+
+
+    public List<WidgetChangedListener> getWidgetChangedListeners() {
+        return Collections.unmodifiableList(mWidgetChangedListeners);
     }
 
     public void removeWidgetChangedListener(WidgetChangedListener listener) {

@@ -56,7 +56,7 @@ public class AppLauncher implements Comparable<AppLauncher> {
     public static final String ACTION_PACKAGE = "ACTION.PACKAGE";
     private static final String OREOSHORTCUT = "OREOSHORTCUT:";
     public static final String OLDSHORTCUT = "OLDSHORTCUT:";
-    private static final int THREAD_TIMEOUT = 10;
+    private static final int THREAD_TIMEOUT = 5;
 
 
     public static AppLauncher createAppLauncher(String activityName, String packageName, String label, String category, boolean isWidget) {
@@ -446,10 +446,12 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 iconLoader = new IconLoaderTask(context, handler);
                 try {
                     //AsyncTask.THREAD_POOL_EXECUTOR.execute(iconLoader);
-                    //new Thread(iconLoader).start();
                     GlobState.execute(context, iconLoader);
                 } catch (Throwable t) {
                     Log.e("loadAppIconAsync", t.getMessage(), t);
+                    if (!iconLoader.isrunning) {
+                        new Thread(iconLoader).start();
+                    }
 
                 }
             }
@@ -462,6 +464,9 @@ public class AppLauncher implements Comparable<AppLauncher> {
     }
 
 
+    //We do this because we know we will process many icon loading tasks in a row (ie at startup), and
+    // there's no need to restart a thread or even a runnable for each one.
+    // This way we just get a thread and keep it until we're done
     private static class IconLoaderTask implements Runnable {
 
         volatile boolean isrunning = true;

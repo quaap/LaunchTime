@@ -164,17 +164,6 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         return ((GlobState) context.getApplicationContext()).mWidgetHelper;
     }
 
-    public static Widget deleteAndGetWidgetHelper(Context context) {
-        GlobState g = (GlobState) context.getApplicationContext();
-        if (g.mWidgetHelper!=null) {
-            g.mWidgetHelper.delete();
-            g.mWidgetHelper.done();
-        }
-        g.mWidgetHelper = new Widget(g);
-        return g.mWidgetHelper;
-    }
-
-
 
     public static ShortcutReceiver getShortcutReceiver(Context context) {
         return ((GlobState) context.getApplicationContext()).shortcutrecv;
@@ -191,6 +180,13 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     @Override
     public void onTerminate() {
         //mThreadPool.shutdown();
+        try {
+            if (mWidgetHelper!=null) {
+                mWidgetHelper.done();
+            }
+        } catch (Exception e) {
+            Log.e("Glob", "Exception killing widgets", e);
+        }
 
         if (packrecv!=null) {
             this.unregisterReceiver(packrecv);
