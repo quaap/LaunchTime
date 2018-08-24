@@ -204,13 +204,11 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
     private static class ListLoaderTask extends  AsyncTask<String,Void,AppLauncher> {
         final ViewHolder viewholder;
         final WeakReference<AppCursorAdapter> appadaptref;
-        @SuppressLint("StaticFieldLeak")
-        final
-        Context context;
+        final WeakReference<Context> contextref;
 
         ListLoaderTask(AppCursorAdapter appadapt, ViewHolder viewholder, Context context) {
             appadaptref = new WeakReference<>(appadapt);
-            this.context = context;
+            this.contextref = new WeakReference<>(context);
             this.viewholder = viewholder;
         }
 
@@ -225,7 +223,8 @@ public class AppCursorAdapter extends ResourceCursorAdapter implements StaticLis
             if (app != null) {
                 //Context context = contextref.get();
                 AppCursorAdapter appadapt = appadaptref.get();
-                if (appadapt==null) return;
+                Context context = contextref.get();
+                if (appadapt==null || context==null) return;
                 app.loadAppIconAsync(context);
                 View v = appadapt.mMain.getLauncherView(app, false, false);
 

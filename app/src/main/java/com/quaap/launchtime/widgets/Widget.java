@@ -62,7 +62,22 @@ public class Widget {
     public Widget(Context context) {
         mContext = context;
         mPrefs = context.getSharedPreferences("widgets", Context.MODE_PRIVATE);
-        
+
+        setupHost(context);
+
+        //mAppWidgetHost.deleteHost();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            for (int oid: mAppWidgetHost.getAppWidgetIds()) {
+                AppWidgetProviderInfo provider = mAppWidgetManager.getAppWidgetInfo(oid);
+                if (provider==null) continue;
+                Log.d(TAG, "Widget is allocated: " + provider.provider);
+            }
+        }
+
+    }
+
+    private void setupHost(Context context) {
         for (int i=0; i<2; i++) {
             try {
                 mAppWidgetManager = AppWidgetManager.getInstance(mContext);
@@ -82,17 +97,6 @@ public class Widget {
                 }
             }
         }
-
-        //mAppWidgetHost.deleteHost();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            for (int oid: mAppWidgetHost.getAppWidgetIds()) {
-                AppWidgetProviderInfo provider = mAppWidgetManager.getAppWidgetInfo(oid);
-                if (provider==null) continue;
-                Log.d(TAG, "Widget is allocated: " + provider.provider);
-            }
-        }
-
     }
 
 
@@ -181,8 +185,10 @@ public class Widget {
             removeWidget(cn);
         }
         mLoadedWidgets.clear();
-
+        mAppWidgetHost.stopListening();
         mAppWidgetHost.deleteHost();
+
+        setupHost(mContext);
     }
 
     public void popupSelectWidget(Activity parent) {

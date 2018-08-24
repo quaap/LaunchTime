@@ -14,6 +14,7 @@ package com.quaap.launchtime;
  */
 
 import android.app.Application;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -53,7 +54,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     private Executor mThreadPool;
 
     public static final boolean enableCrashReporter
-            = GlobState.class.getPackage().getName().equals("com.quaap.launch"+"time");
+            = GlobState.class.getPackage().getName().equals("com.qua" + "ap.launch"+"time");
+
 
     public static GlobState getGlobState(Context context) {
         return (GlobState) context.getApplicationContext();
@@ -121,7 +123,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
             {
                 shortcutrecv = new ShortcutReceiver();
 
-                IntentFilter i = new IntentFilter("com.android.launcher.action.INSTALL_SHORTCUT");
+                IntentFilter i = new IntentFilter(ShortcutReceiver.INSTALL_SHORTCUT);
                 registerReceiver(shortcutrecv, i);
 
             }
@@ -129,7 +131,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
             {
                 widgetrecv = new WidgetsRestoredReceiver();
 
-                IntentFilter i = new IntentFilter("android.appwidget.action.APPWIDGET_HOST_RESTORED");
+                IntentFilter i = new IntentFilter(AppWidgetManager.ACTION_APPWIDGET_HOST_RESTORED);
                 registerReceiver(widgetrecv, i);
 
             }
@@ -163,7 +165,6 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     public static Widget getWidgetHelper(Context context) {
         return ((GlobState) context.getApplicationContext()).mWidgetHelper;
     }
-
 
     public static ShortcutReceiver getShortcutReceiver(Context context) {
         return ((GlobState) context.getApplicationContext()).shortcutrecv;

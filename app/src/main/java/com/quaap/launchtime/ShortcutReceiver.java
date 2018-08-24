@@ -29,13 +29,14 @@ import com.quaap.launchtime.db.DB;
 
 public class ShortcutReceiver extends BroadcastReceiver {
 
+    public static final String INSTALL_SHORTCUT  = "com.android.launcher.action.INSTALL_SHORTCUT";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (GlobState.enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(context));
         try {
             String action = intent.getAction();
-            if ("com.android.launcher.action.INSTALL_SHORTCUT".equals(action)) {
+            if (INSTALL_SHORTCUT.equals(action)) {
 
 //                Log.d("ShortcutCatch", "intent received " + intent);
                 Bundle extras = intent.getExtras();
