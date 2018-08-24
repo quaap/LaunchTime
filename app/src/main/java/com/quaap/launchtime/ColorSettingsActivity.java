@@ -160,10 +160,11 @@ public class ColorSettingsActivity extends PreferenceActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, final String pref) {
 
+            final String iconspackkey = getString(R.string.pref_key_icons_pack);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (pref.equals(getString(R.string.pref_key_icons_pack))) {
+                    if (pref.equals(iconspackkey)) {
                         reload();
                     } else {
                         colorDemo.applyStyle();
