@@ -144,19 +144,23 @@ public class ChooseIconFromPackActivity extends Activity {
             mIconSize = (int)mContext.getResources().getDimension(R.dimen.icon_width);
         }
 
+        @Override
         public int getCount() {
             return mDrawableNames.size();
         }
 
+        @Override
         public Object getItem(int position) {
-            return mDrawableNames.get(position);
+            return mDrawables.get(position);
         }
 
+        @Override
         public long getItemId(int position) {
             return position;
         }
 
         // create a new ImageView for each item referenced by the Adapter
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
             if (convertView == null) {
