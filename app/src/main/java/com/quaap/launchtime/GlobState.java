@@ -17,8 +17,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.quaap.launchtime.apps.Badger;
 import com.quaap.launchtime.components.Categories;
@@ -29,6 +31,7 @@ import com.quaap.launchtime.ui.Style;
 import com.quaap.launchtime.widgets.Widget;
 import com.quaap.launchtime.widgets.WidgetsRestoredReceiver;
 
+import java.util.concurrent.Executor;
 
 public class GlobState extends Application implements  DB.DBClosedListener {
 
@@ -47,6 +50,8 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
     private Widget mWidgetHelper;
 
+    private Executor mThreadPool;
+
     public static final boolean enableCrashReporter
             = GlobState.class.getPackage().getName().equals("com.quaap.launch"+"time");
 
@@ -59,6 +64,16 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         super.onCreate();
 
         if (enableCrashReporter && !BuildConfig.DEBUG) Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+
+        //might as well use the Async pool.
+        mThreadPool = AsyncTask.THREAD_POOL_EXECUTOR; //new ThreadPoolExecutor(0,3,30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+
+        mThreadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Global", "Threadpool pre-started");
+            }
+        });
 
         Categories.init(this);
 
@@ -124,6 +139,14 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
     }
 
+    public static void execute(Context context, Runnable runnable) {
+        ((GlobState) context.getApplicationContext()).mThreadPool.execute(runnable);
+    }
+
+    public static Executor getExecutor(Context context) {
+        return ((GlobState) context.getApplicationContext()).mThreadPool;
+    }
+
     public static Style getStyle(Context context) {
         return ((GlobState) context.getApplicationContext()).mStyle;
     }
@@ -167,6 +190,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
     @Override
     public void onTerminate() {
+        //mThreadPool.shutdown();
 
         if (packrecv!=null) {
             this.unregisterReceiver(packrecv);
@@ -182,10 +206,12 @@ public class GlobState extends Application implements  DB.DBClosedListener {
             this.unregisterReceiver(widgetrecv);
         }
 
+
         if (mDB != null) {
             mDB.close();
         }
 
+        //mThreadPool.shutdownNow();
         super.onTerminate();
     }
 
