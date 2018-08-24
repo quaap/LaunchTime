@@ -446,7 +446,8 @@ public class AppLauncher implements Comparable<AppLauncher> {
                 iconLoader = new IconLoaderTask(context, handler);
                 try {
                     //AsyncTask.THREAD_POOL_EXECUTOR.execute(iconLoader);
-                    new Thread(iconLoader).start();
+                    //new Thread(iconLoader).start();
+                    GlobState.execute(context, iconLoader);
                 } catch (Throwable t) {
                     Log.e("loadAppIconAsync", t.getMessage(), t);
 

@@ -299,7 +299,7 @@ public class MainActivity extends Activity implements
             },100);
         } else {
             mStartupTask = new StartupTask(this, true, startat);
-            mStartupTask.execute();
+            mStartupTask.executeOnExecutor(GlobState.getExecutor(this));
             //mStartupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -1008,7 +1008,7 @@ public class MainActivity extends Activity implements
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        checkChildLock();
+        //checkChildLock();
     }
 
     @Override
@@ -4022,57 +4022,65 @@ public class MainActivity extends Activity implements
         if (db().getCategoryDisplay(category)==null) {
             db().addCategory(category, Categories.getCatLabel(this, category), Categories.getCatFullLabel(this, category), Categories.isTinyCategory(Categories.CAT_DUMB),true, 100);
             createIconSheet(category, -2);
-            final List<AppLauncher> appLauncherss = processActivities(false);
-            List<ComponentName> apps = new ArrayList<>();
-            List<String> onlyTypes = new ArrayList<>();
-            onlyTypes.add("camera");
-            onlyTypes.add("phone");
-            onlyTypes.add("msg");
-            onlyTypes.add("music");
-            DefaultApps.checkDefaultApps(this, appLauncherss, apps, onlyTypes);
+            Runnable setup = new Runnable() {
+                @Override
+                public void run() {
+                    final List<AppLauncher> appLauncherss = processActivities(false);
+                    List<ComponentName> apps = new ArrayList<>();
+                    List<String> onlyTypes = new ArrayList<>();
+                    onlyTypes.add("camera");
+                    onlyTypes.add("phone");
+                    onlyTypes.add("msg");
+                    onlyTypes.add("music");
+                    DefaultApps.checkDefaultApps(MainActivity.this, appLauncherss, apps, onlyTypes);
 
-            String [] needs = new String[] {"calc", "clock", "calendar", "maps"};
+                    String [] needs = new String[] {"calc", "clock", "calendar", "maps"};
 
 
-            NEEDS:
-            for(String key: needs) {
-                for (AppLauncher app: appLauncherss) {
-                    String packagename = app.getPackageName().toLowerCase();
-                    if (packagename.contains(key)) {
-                        apps.add(app.getComponentName());
-                        continue NEEDS;
+                    NEEDS:
+                    for(String key: needs) {
+                        for (AppLauncher app: appLauncherss) {
+                            String packagename = app.getPackageName().toLowerCase();
+                            if (packagename.contains(key)) {
+                                apps.add(app.getComponentName());
+                                continue NEEDS;
+                            }
+                        }
                     }
-                }
-            }
 
 
-            for(ComponentName ap: apps) {
-                Log.d(TAG, "Trying " + ap);
-                if (ap!=null) {
-                    AppLauncher app = db().getApp(ap);
-                    if (app==null) {
-                        Log.d(TAG, "null app for " + ap);
-                    } else {
-                        AppLauncher applauncher = app.makeAppLink();
-                        applauncher.setCategory(category);
-                        db().addApp(applauncher);
-                        //addAppToIconSheet(category, applauncher, true);
-                        // applauncher.loadAppIconAsync(this,mPackageMan);
+                    for(ComponentName ap: apps) {
+                        Log.d(TAG, "Trying " + ap);
+                        if (ap!=null) {
+                            AppLauncher app = db().getApp(ap);
+                            if (app==null) {
+                                Log.d(TAG, "null app for " + ap);
+                            } else {
+                                AppLauncher applauncher = app.makeAppLink();
+                                applauncher.setCategory(category);
+                                db().addApp(applauncher);
+                                //addAppToIconSheet(category, applauncher, true);
+                                // applauncher.loadAppIconAsync(this,mPackageMan);
 
+                            }
+                        } else {
+                            Log.d(TAG, "null ap");
+                        }
                     }
-                } else {
-                    Log.d(TAG, "null ap");
+                    mAppPreferences.edit().putBoolean(getString(R.string.pref_key_toddler_lock), true).apply();
+
+                    //iconHandler.post()checkChildLock();
+
                 }
-            }
+            };
+            GlobState.execute(this, setup);
+
+        } else {
+
+            mAppPreferences.edit().putBoolean(getString(R.string.pref_key_toddler_lock), true).apply();
+
+            //checkChildLock();
         }
-
-        mAppPreferences.edit().putBoolean(getString(R.string.pref_key_toddler_lock), true).apply();
-
-        //switchCategory(Categories.CAT_DUMB);
-//        mChildLock=true;
-//        mChildLockSetup = false;
-
-        checkChildLock();
 
 
     }
