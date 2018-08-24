@@ -192,10 +192,14 @@ public class IconPack {
 //
 //        return icons;
 //    }
-
     public Set<String> getUniqueIconNames() {
+            return getUniqueIconNames(Integer.MAX_VALUE);
+    }
+
+    public Set<String> getUniqueIconNames(int maxnum) {
         Set<String> iconNames = new LinkedHashSet<>();
         Set<String> iconValues = new LinkedHashSet<>();
+        int count = 0;
         for (String key: packagesDrawables.keySet()) {
             //Log.d("Iconpack", "Key = " + key);
             try {
@@ -206,6 +210,9 @@ public class IconPack {
                     if (id > 0) {
                         iconNames.add(key);
                         //Log.d("Iconpack", "value = " + value);
+                        if (++count>=maxnum) {
+                            break;
+                        }
                     }
                 }
             } catch (Exception | Error e){

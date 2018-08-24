@@ -124,6 +124,11 @@ public class IconsHandler {
 //        return theme.isBuiltinThemeIconTintable(iconsPackPackageName);
 //    }
 
+
+    public IconPack getIconPack() {
+        return iconPack;
+    }
+
     public boolean isIconTintable(String packageName) {
         return theme.isBuiltinThemeIconTintable(packageName);
     }

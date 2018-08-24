@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,9 +22,12 @@ import android.widget.TextView;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
+import com.quaap.launchtime.components.IconPack;
 import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.components.Theme;
 import com.quaap.launchtime.ui.Style;
+
+import java.util.Set;
 
 public class ColorDemo extends Preference {
     private ViewGroup thisview;
@@ -54,8 +58,28 @@ public class ColorDemo extends Preference {
         cat1 = body.findViewById(R.id.demo_category_tab);
         catsel = body.findViewById(R.id.demo_category_tab_sel);
 
+        IconsHandler iph = GlobState.getIconsHandler(context);
+
         icon1 = body.findViewById(R.id.demo_launcher);
         icon2 = body.findViewById(R.id.demo_launcher2);
+
+        try {
+            IconPack ip = iph.getIconPack();
+            if (ip != null) {
+                String[] icons = ip.getUniqueIconNames(2).toArray(new String[2]);
+
+                if (icons.length > 0) {
+                    icon1.setCompoundDrawables(null, ip.get(icons[0]), null, null);
+                    if (icons.length > 1) {
+                        icon2.setCompoundDrawables(null, ip.get(icons[1]), null, null);
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Log.e(this.getClass().getSimpleName(), t.getMessage(), t);
+        }
+
+
         icond1 = icon1.getCompoundDrawables()[1];
         icond2 = icon2.getCompoundDrawables()[1];
 
