@@ -13,6 +13,7 @@ package com.quaap.launchtime.ui;
  */
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +49,7 @@ import com.quaap.launchtime.MainActivity;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppLauncher;
 import com.quaap.launchtime.components.Categories;
+import com.quaap.launchtime.widgets.Widget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -157,6 +159,8 @@ public class ActionMenu {
             addOreoShortcutsToMenu(shortcutInfos);
 
             addDevModeActivitiesToMenu(appitem);
+
+//            addWidgetsToMenu(view, appitem);
 
             addExtraActionsToMenu(view, appitem);
 
@@ -455,6 +459,34 @@ public class ActionMenu {
 
     }
 
+//    private void addWidgetsToMenu(final View view, final AppLauncher appitem) {
+//        final Widget wh = GlobState.getWidgetHelper(mMain);
+//        for (AppWidgetProviderInfo prov: wh.getWidgetsForPackage(appitem.getPackageName())) {
+//            String label;
+//            Drawable icon;
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                label = prov.loadLabel(mMain.getPackageManager());
+//                icon = prov.loadIcon(mMain, 0);
+//            } else {
+//                label = prov.label;
+//                try {
+//                    icon = mMain.getPackageManager().getActivityIcon(appitem.getBaseComponentName());
+//                } catch (PackageManager.NameNotFoundException e) {
+//                    icon=null;
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//
+//
+//            addActionMenuItem("W-" + label, icon, false, new Runnable() {
+//                @Override
+//                public void run() {
+//                    mMain.setupWidget();
+//                }
+//            });
+//        }
+//    }
 
     private void addExtraActionsToMenu(final View view, final AppLauncher appitem) {
 

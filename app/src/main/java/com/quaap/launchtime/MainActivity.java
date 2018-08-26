@@ -1342,10 +1342,6 @@ public class MainActivity extends Activity implements
 
         //Log.d(TAG,"bg:" + mStyle.getWallpaperColor());
 
-        itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
-        itemClickedAnim.setDuration(200);
-        itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-
         boolean autohideCats = isAutohide();
         try {
 
@@ -3828,6 +3824,10 @@ public class MainActivity extends Activity implements
 
         mIconSheetScroller.setHSwipeListener(mHSwipeListener);
         mCategoriesScroller.setHSwipeListener(mHSwipeListener);
+
+        itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
+        itemClickedAnim.setDuration(200);
+        itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
 
     }
 

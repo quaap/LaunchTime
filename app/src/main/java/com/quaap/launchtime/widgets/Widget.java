@@ -3,6 +3,7 @@ package com.quaap.launchtime.widgets;
 import android.app.Activity;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.os.Process;
+import android.os.UserHandle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -239,7 +242,7 @@ public class Widget {
     private AppWidgetHostView loadWidget(Activity parent, ComponentName cn) {
 
 
-        Log.d(TAG, "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
+        //Log.d(TAG, "Loaded from db: " + cn.getClassName() + " - " + cn.getPackageName());
         // Check that there actually is a widget in the database
         if (cn.getPackageName().isEmpty() && cn.getClassName().isEmpty()) {
             Log.d(TAG, "DB was empty");
@@ -263,6 +266,10 @@ public class Widget {
             Log.d(TAG, "app info was null");
             return null; // Stop here
         }
+        return loadWidget(parent, appWidgetInfo);
+    }
+
+    private AppWidgetHostView loadWidget(Activity parent, AppWidgetProviderInfo appWidgetInfo) {
 
         // Allocate the hosted widget id
         int appWidgetId = mAppWidgetHost.allocateAppWidgetId();
@@ -368,9 +375,6 @@ public class Widget {
         return null;
     }
 
-//    public List<Integer> getAppWidgetIds() {
-//        return mAppWidgetHost.getAppWidgetIds();
-//    }
 
     public AppWidgetHostView onActivityResult(Activity parent, int requestCode, int resultCode, Intent data) {
 
@@ -397,6 +401,24 @@ public class Widget {
 
         }
         return null;
+    }
+
+
+    public List<AppWidgetProviderInfo> getWidgetsForPackage(String packageName) {
+        List<AppWidgetProviderInfo> provs;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            UserHandle user = UserHandle.getUserHandleForUid(Process.myUid());
+            provs =  mAppWidgetManager.getInstalledProvidersForPackage(packageName, user);
+
+        } else {
+            provs = new ArrayList<>();
+            for (AppWidgetProviderInfo prov: mAppWidgetManager.getInstalledProviders()) {
+                if (prov.provider.getPackageName().equals(packageName)) {
+                    provs.add(prov);
+                }
+            }
+        }
+        return provs;
     }
 
 
