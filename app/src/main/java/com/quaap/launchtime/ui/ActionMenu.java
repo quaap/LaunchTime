@@ -13,6 +13,7 @@ package com.quaap.launchtime.ui;
  */
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
@@ -143,6 +144,24 @@ public class ActionMenu {
                         mMain.showButtonBar(false, true);
                     }
                 });
+
+
+                final Widget wh = GlobState.getWidgetHelper(mMain);
+
+                if (wh.getConfigure(appitem.getComponentName())!=null) {
+                    addActionMenuItem("Configure", android.R.drawable.ic_menu_preferences, new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                wh.configureWidget(mMain, appitem.getComponentName());
+                                mMain.showButtonBar(false, true);
+                            } catch (Throwable t) {
+                                Log.e(TAG, "Couldn't add configure", t);
+                            }
+                        }
+                    });
+                }
+
             }
 
             if (!appitem.isWidget()) {

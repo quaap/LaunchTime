@@ -207,12 +207,18 @@ public class Widget {
         }
     }
 
-
-    private AppWidgetHostView createWidget(Intent data) {
+    private int getAppWidgetIdFromIntent(Intent data) {
         // Get the widget id
         Bundle extras = data.getExtras();
-        if (extras==null) return null;
-        int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+        if (extras==null) return -1;
+
+        return extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+
+    }
+
+    private AppWidgetHostView createWidget(Intent data) {
+
+        int appWidgetId = getAppWidgetIdFromIntent(data);
 
         return createWidgetFromId(appWidgetId);
     }
@@ -324,11 +330,22 @@ public class Widget {
 
     private AppWidgetHostView configureWidget(Activity parent, Intent data) {
         // Get the selected widget information
-        Bundle extras = data.getExtras();
         try {
-            if (extras==null) return null;
-            int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
-            AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+            int appWidgetId = getAppWidgetIdFromIntent(data);
+            return configureWidget(parent, appWidgetId);
+        } catch (Exception | Error e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+        return null;
+    }
+
+    public AppWidgetHostView configureWidget(Activity parent, ComponentName provider){
+        return configureWidget(parent,getWidgetId(provider));
+    }
+
+    public AppWidgetHostView configureWidget(Activity parent, int appWidgetId){
+        AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+        if (appWidgetInfo!=null) {
             if (appWidgetInfo.configure != null) {
                 // If the widget wants to be configured then start its configuration activity
                 Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
@@ -337,15 +354,22 @@ public class Widget {
                 parent.startActivityForResult(intent, REQUEST_CREATE_APPWIDGET);
             } else {
                 // Otherwise simply create it
-                return createWidget(data);
-
+                return createWidgetFromId(appWidgetId);
             }
-        } catch (Exception | Error e) {
-            Log.e(TAG, e.getMessage(), e);
         }
         return null;
     }
 
+    public ComponentName getConfigure(ComponentName provider) {
+        return getConfigure(getWidgetId(provider));
+    }
+
+
+    public ComponentName getConfigure(int appWidgetId) {
+        AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+        if (appWidgetInfo==null) return null;
+        return appWidgetInfo.configure;
+    }
 
     private void addEmptyData(Intent pickIntent) {
         // This is needed work around some weird bug.
@@ -359,18 +383,15 @@ public class Widget {
 
     public ComponentName getComponentNameFromIntent(Intent data) {
         if (data!=null) {
-            Bundle extras = data.getExtras();
-            if (extras!=null) {
-                int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+            int appWidgetId = getAppWidgetIdFromIntent(data);
+            if (appWidgetId != -1) {
 
-                if (appWidgetId != -1) {
-
-                    AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
-                    if (appWidgetInfo != null) {
-                        return appWidgetInfo.provider;
-                    }
+                AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+                if (appWidgetInfo != null) {
+                    return appWidgetInfo.provider;
                 }
             }
+
         }
         return null;
     }
@@ -393,9 +414,12 @@ public class Widget {
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Log.d(TAG, "RESULT_CANCELED");
             if (data!=null) {
-                int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+                int appWidgetId = getAppWidgetIdFromIntent(data);
+                AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
                 if (appWidgetId != -1) {
-                    mAppWidgetHost.deleteAppWidgetId(appWidgetId);
+                    if (appWidgetInfo==null || getWidgetId(appWidgetInfo.provider)==-1) {
+                        mAppWidgetHost.deleteAppWidgetId(appWidgetId);
+                    }
                 }
             }
 
