@@ -1,11 +1,16 @@
-In 0.8.3: 
- * Translation help wanted! 
- * Option to add Uninstall/Remove on action menus. 
+In 0.8.3:
+ * Translation help wanted!
+ * Configure widgets.
+ * Widget fixes.
+ * Icon tint improvements.
+ * Improved theme and color choosing.
+ * Many action menu improvements.
+ * Option to add Uninstall/Remove on action menus.
  * Ability to remove dropzone 
  * Action menus on categories. 
  * Improved start-up and install behavior.
+ * Many bugs fixed.
 
- 
 In 0.8.2: 
  * Resizable widgets! 
  * Better default widget sizes. 
@@ -15,8 +20,6 @@ In 0.8.2:
  * Better action menu. 
  * Detailed appinfo on action menu.
 
-
- 
 In 0.8.1: 
  * Autohide the menu! 
  * Better menu appearence. 
@@ -30,29 +33,24 @@ In 0.8.1:
  * Fix Oreo crash loading iconpacks. 
  * Fix a few bugs and crashes.
 
- 
 In 0.7.6: 
  * Enable pinned shortcuts on Oreo (Android 8). 
  * Fix unread counts on Oreo (Android 8). 
  * Prevent a few rare crashes. 
  * More apps categorized.
 
- 
 In 0.7.5: 
  * More apps categorized. 
  * Updated German translations. 
  * Recognize new apps installed on Oreo.
 
- 
 In 0.7.4: 
  * Fix crashes and other bugs.
 
- 
 In 0.7.3: 
  * Better widgets support. 
  * Swipe left and right to switch categories. 
  * Better large screen/tablet support. 
  * Fixes and speedups. 
-
 
 Go to Settings->Help for links to submit feature requests, bugs, and pull requests.

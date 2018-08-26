@@ -149,7 +149,7 @@ public class ActionMenu {
                 final Widget wh = GlobState.getWidgetHelper(mMain);
 
                 if (wh.getConfigure(appitem.getComponentName())!=null) {
-                    addActionMenuItem("Configure", android.R.drawable.ic_menu_preferences, new Runnable() {
+                    addActionMenuItem(mMain.getString(R.string.configure_widget), android.R.drawable.ic_menu_preferences, new Runnable() {
                         @Override
                         public void run() {
                             try {
