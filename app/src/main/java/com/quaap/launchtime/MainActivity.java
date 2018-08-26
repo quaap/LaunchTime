@@ -3316,13 +3316,13 @@ public class MainActivity extends Activity implements
                 AppWidgetHostView appwid = mWidgetHelper.onActivityResult(this, requestCode, resultCode, data);
                 if (appwid == null) {
                     Log.d(TAG, "appwid is null.");
-                    ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
-                    if (cn != null) {
-                        Log.d(TAG, "classname is " + cn.getClassName());
-                        db().deleteApp(cn);
-                    } else {
+//                    ComponentName cn = mWidgetHelper.getComponentNameFromIntent(data);
+//                    if (cn != null) {
+//                        Log.d(TAG, "classname is " + cn.getClassName());
+//                        //db().deleteApp(cn);
+//                    } else {
                         super.onActivityResult(requestCode, resultCode, data);
-                    }
+//                    }
                 } else {
                     addWidget(appwid);
                 }

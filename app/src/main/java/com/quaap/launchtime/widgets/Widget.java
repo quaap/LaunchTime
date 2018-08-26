@@ -231,9 +231,13 @@ public class Widget {
         }
         // if (checkBindPermission(widget_id, appWidgetInfo.provider)) return null;
 
-        // Create the host view
-        AppWidgetHostView hostView = mAppWidgetHost.createView(mContext, widget_id, appWidgetInfo);
-        hostView.setAppWidget(widget_id, appWidgetInfo);
+        AppWidgetHostView hostView = getLoadedAppWidgetHostView(appWidgetInfo.provider);
+
+        if (hostView==null || hostView.getAppWidgetId()!=widget_id) {
+            // Create the host view
+            hostView = mAppWidgetHost.createView(mContext, widget_id, appWidgetInfo);
+            hostView.setAppWidget(widget_id, appWidgetInfo);
+        }
 
         return hostView;
     }
