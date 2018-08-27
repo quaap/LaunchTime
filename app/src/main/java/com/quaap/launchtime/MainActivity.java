@@ -1846,6 +1846,7 @@ public class MainActivity extends Activity implements
                         if (!app.iconLoaded()) {
                             app.loadAppIconAsync(this);
                         }
+                        item.setTranslationX(0);
                         ViewGroup parent = (ViewGroup) item.getParent();
                         if (parent != null) parent.removeView(item);
                         GridLayout.LayoutParams lp = getAppLauncherLayoutParams(iconSheet, app);
@@ -2596,7 +2597,7 @@ public class MainActivity extends Activity implements
                         if (isAppLauncher) {
                             if (!isNoDrop && !isCurrent) {
                                 mBeingDragged.setCategory(category);
-                                db().updateAppCategory(mBeingDragged.getActivityName(), mBeingDragged.getPackageName(), category);
+                                db().updateAppCategory(mBeingDragged.getComponentName(), category);
                                 mMainDragListener.onDrag(iconSheet, event);
                             }
                         } else {
@@ -3675,6 +3676,64 @@ public class MainActivity extends Activity implements
             db().setAppCategoryOrder(category, apps);
         }
 
+    }
+
+    public void promptRecategorize(final String category) {
+
+        MsgBox.alert(this,
+                getString(R.string.cat_recategorize),
+                getString(R.string.recat_prompt),
+                true,
+                true,
+                new Runnable() {
+            @Override
+            public void run() {
+                recategorize(category);
+            }
+        });
+    }
+
+
+    public void recategorize(final String category) {
+
+        GlobState.execute(this, new Runnable() {
+            @Override
+            public void run() {
+                int moved = 0;
+                final int dir = mStyle.isLeftHandCategories()?-1:1;
+                for (AppLauncher app: db().getApps(category)) {
+                    String newCat = Categories.getCategoryForComponent(MainActivity.this, app.getBaseComponentName(),true,null);
+                    if (newCat!=null && !newCat.equals(category)) {
+                        //Log.d(TAG, app.getLabel() +" " + newCat);
+                        moved++;
+                        app.setCategory(newCat);
+                        db().updateAppCategory(app.getComponentName(), newCat);
+                        final View appview = mAppLauncherViews.get(app);
+                        if (appview!=null) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    appview.animate().translationXBy(dir*mScreenDim.x).setDuration(mAnimationDuration).start();
+                                }
+                            });
+                        }
+                       // addAppToIconSheet(newCat, app, true);
+                    }
+                }
+
+                final String text =  getString(R.string.moved_apps, moved);
+
+                iconHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        db().setAppCategoryOrder(category, mIconSheets.get(category));
+                        repopulateIconSheet(category);
+                        hideHiddenCategories();
+                        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT ).show();
+                    }
+                });
+            }
+        });
     }
 
     private Long getInstallTime(String packagename) {

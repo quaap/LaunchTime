@@ -13,8 +13,6 @@ package com.quaap.launchtime.ui;
  */
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.appwidget.AppWidgetHostView;
-import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -137,31 +135,7 @@ public class ActionMenu {
             initializeActionMenu();
 
             if (appitem.isWidget()) {
-                addActionMenuItem(mMain.getString(R.string.resize), android.R.drawable.arrow_up_float, new Runnable() {
-                    @Override
-                    public void run() {
-                        mMain.showWidgetResize(appitem);
-                        mMain.showButtonBar(false, true);
-                    }
-                });
-
-
-                final Widget wh = GlobState.getWidgetHelper(mMain);
-
-                if (wh.getConfigure(appitem.getComponentName())!=null) {
-                    addActionMenuItem(mMain.getString(R.string.configure_widget), android.R.drawable.ic_menu_preferences, new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                wh.configureWidget(mMain, appitem.getComponentName());
-                                mMain.showButtonBar(false, true);
-                            } catch (Throwable t) {
-                                Log.e(TAG, "Couldn't add configure", t);
-                            }
-                        }
-                    });
-                }
-
+                addWidgetActionsToMenu(appitem);
             }
 
             if (!appitem.isWidget()) {
@@ -196,6 +170,33 @@ public class ActionMenu {
 
 
         return false;
+    }
+
+    private void addWidgetActionsToMenu(final AppLauncher appitem) {
+        addActionMenuItem(mMain.getString(R.string.resize), android.R.drawable.arrow_up_float, new Runnable() {
+            @Override
+            public void run() {
+                mMain.showWidgetResize(appitem);
+                mMain.showButtonBar(false, true);
+            }
+        });
+
+
+        final Widget wh = GlobState.getWidgetHelper(mMain);
+
+        if (wh.getConfigure(appitem.getComponentName())!=null) {
+            addActionMenuItem(mMain.getString(R.string.configure_widget), android.R.drawable.ic_menu_preferences, new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        wh.configureWidget(mMain, appitem.getComponentName());
+                        mMain.showButtonBar(false, true);
+                    } catch (Throwable t) {
+                        Log.e(TAG, "Couldn't add configure", t);
+                    }
+                }
+            });
+        }
     }
 
     private void addCancelToMenu() {
@@ -443,6 +444,12 @@ public class ActionMenu {
                     }
                 });
 
+                addActionMenuItem(mMain.getString(R.string.cat_recategorize), android.R.drawable.ic_menu_agenda, new Runnable() {
+                    @Override
+                    public void run() {
+                        mMain.promptRecategorize(category);
+                    }
+                });
             }
 
             if (!Categories.isHiddenCategory((String) categoryTab.getTag())) {
@@ -456,6 +463,7 @@ public class ActionMenu {
                     }
                 });
             }
+
 
 
             addActionMenuItem(mMain.getString(R.string.rename_category), android.R.drawable.ic_menu_edit, mUseIcons, new Runnable() {

@@ -121,8 +121,11 @@ public class SearchBox {
         quickdevsett.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MsgBox.show(mMainActivity, mMainActivity.getString(android.R.string.dialog_alert_title),
-                        mMainActivity.getString(R.string.devops_warn), new Runnable() {
+                MsgBox.alert(mMainActivity, mMainActivity.getString(android.R.string.dialog_alert_title),
+                        mMainActivity.getString(R.string.devops_warn),
+                        true,
+                        true,
+                        new Runnable() {
                     @Override
                     public void run() {
                         launchActivity("com.android.settings",

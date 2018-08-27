@@ -42,42 +42,54 @@ import java.io.StringWriter;
 public class MsgBox {
 
 
-    private static void show(Context context, String title, String message) {
+    public static void alert(Context context, String title, String message, boolean ok, boolean cancel, final Runnable action) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
 
-        builder.setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    public static void show(Context context, String title, String message, final Runnable run) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(message);
-
-        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (run!=null) {
-                    run.run();
+        if (ok){
+            builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (action!=null) action.run();
+                    dialog.dismiss();
                 }
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton(android.R.string.cancel, null);
+            });
+        }
+        if (cancel){
+            builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        }
+
 
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
+//    public static void show(Context context, String title, String message, final Runnable run) {
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        builder.setTitle(title);
+//        builder.setMessage(message);
+//
+//        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if (run!=null) {
+//                    run.run();
+//                }
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.setNegativeButton(android.R.string.cancel, null);
+//
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//    }
+//
 
 
     public static void showNewsMessage(final Context context, SharedPreferences prefs) {

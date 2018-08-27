@@ -529,6 +529,11 @@ public class DB extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public void updateAppCategory(ComponentName comp, String catID) {
+        updateAppCategory(comp.getClassName(), comp.getPackageName(), catID);
+    }
+
+
     public void updateAppCategory(String actvname, String pkgname, String catID) {
         SQLiteDatabase db = this.getWritableDatabase();
 
