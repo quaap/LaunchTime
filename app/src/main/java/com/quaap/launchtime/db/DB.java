@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
 public class DB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "db";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     private static final String ACTVNAME = "actvname";
     private static final String PKGNAME = "pkgname";
@@ -244,14 +244,15 @@ public class DB extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL("alter table " + APP_TABLE + " add column " + CUSTOMLABEL + " TEXT");
         }
 
-        if (oldVersion<9) {
-            buildCatTable(sqLiteDatabase);
-        }
 
         if (oldVersion<10) {
             ContentValues values = new ContentValues();
             values.put(INDEX, 101);
             sqLiteDatabase.update(CATEGORIES_TABLE, values, CATID + "=?", new String[]{Categories.CAT_SEARCH});
+        }
+
+        if (oldVersion<11) {
+            buildCatTable(sqLiteDatabase);
         }
 
         sqLiteDatabase.delete(APP_ORDER_TABLE, PKGNAME + " is null", null);
@@ -1093,6 +1094,31 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
+//    private String condensePackname(String packageOrActivityname) {
+//
+//        packageOrActivityname = packageOrActivityname
+//                .replaceAll("\\bcom\\b", "c")
+//                .replaceAll("\\borg\\b", "o")
+//                .replaceAll("\\bmobi\\b", "m")
+//                .replaceAll("\\bmobile\\b", "mi")
+//                .replaceAll("\\bnet\\b", "n")
+//                .replaceAll("\\bair\\b", "a")
+//                .replaceAll("\\bandroid\\b", "an")
+//        ;
+//
+//        return packageOrActivityname;
+//    }
+
+
+    private String condensePackname(String packageOrActivityname) {
+
+        packageOrActivityname = packageOrActivityname
+                .replaceAll("\\bcom\\b", "")
+        ;
+
+        return packageOrActivityname;
+    }
+
     public String getCategoryForPackage(String packagename) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -1100,12 +1126,13 @@ public class DB extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(
                 APP_CAT_MAP_TABLE, new String[]{CATID},
-                PKGNAME + "=?",   new String[]{packagename}, null, null, LEVEL + "");
+                PKGNAME + "=?",   new String[]{condensePackname(packagename)}, null, null, LEVEL + "");
 
         String catid = null;
         try {
             if (cursor.moveToNext()) {
                 catid = cursor.getString(cursor.getColumnIndex(CATID));
+                catid = Categories.unabbreviate(catid);
             }
         } finally {
             cursor.close();
@@ -1121,12 +1148,13 @@ public class DB extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(
                 APP_CAT_MAP_TABLE, new String[]{CATID},
-                ACTVNAME + "=?",   new String[]{activityname}, null, null, LEVEL + "");
+                ACTVNAME + "=?",   new String[]{condensePackname(activityname)}, null, null, LEVEL + "");
 
         String catid = null;
         try {
             if (cursor.moveToNext()) {
                 catid = cursor.getString(cursor.getColumnIndex(CATID));
+                catid = Categories.unabbreviate(catid);
             }
         } finally {
             cursor.close();

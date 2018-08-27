@@ -56,7 +56,6 @@ public class Categories {
     private static final String[] CAT_SPECIALS = {CAT_OTHER, CAT_TALK, CAT_HIDDEN, CAT_SEARCH};
     private static final String[] CAT_NODROP = {CAT_SEARCH};
 
-
     public static final String[] DefCategoryOrder = {
             CAT_TALK,
             CAT_GAMES,
@@ -76,6 +75,16 @@ public class Categories {
         resources = context.getResources();
 
         mCategorKeywords = getCategoryKeywords();
+    }
+
+    public static String unabbreviate(String abbr) {
+        if (abbr==null) return null;
+        for (String cat: DefCategoryOrder) {
+            if (cat.startsWith(abbr)) {
+                return cat;
+            }
+        }
+        return null;
     }
 
     public static String getCategoryForAction(Context context, String action) {
