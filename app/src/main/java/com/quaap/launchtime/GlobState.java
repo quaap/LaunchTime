@@ -70,12 +70,12 @@ public class GlobState extends Application implements  DB.DBClosedListener {
         //might as well use the Async pool.
         mThreadPool = AsyncTask.THREAD_POOL_EXECUTOR; //new ThreadPoolExecutor(0,3,30, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
-        mThreadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("Global", "Threadpool pre-started");
-            }
-        });
+       // mThreadPool.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.d("Global", "Threadpool pre-started");
+//            }
+//        });
 
         Categories.init(this);
 
@@ -142,7 +142,14 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     }
 
     public static void execute(Context context, Runnable runnable) {
-        ((GlobState) context.getApplicationContext()).mThreadPool.execute(runnable);
+        try {
+            //In case we can't use the thread pool in the future, start a dumb thread.
+            ((GlobState) context.getApplicationContext()).mThreadPool.execute(runnable);
+        } catch (Throwable t) {
+            Log.e("Global", t.getMessage(), t);
+
+            new SafeThread(runnable).start();
+        }
     }
 
     public static Executor getExecutor(Context context) {
@@ -215,5 +222,21 @@ public class GlobState extends Application implements  DB.DBClosedListener {
     @Override
     public void onDBClosed() {
         mDB = null;
+    }
+
+
+    private static class SafeThread extends Thread {
+        public SafeThread(Runnable target) {
+            super(target);
+        }
+
+        @Override
+        public void run() {
+            try {
+                super.run();
+            } catch (Throwable t) {
+                Log.e("Global", t.getMessage(), t);
+            }
+        }
     }
 }
