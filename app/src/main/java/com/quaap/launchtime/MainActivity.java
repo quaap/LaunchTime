@@ -3702,20 +3702,23 @@ public class MainActivity extends Activity implements
                 int moved = 0;
                 final int dir = mStyle.isLeftHandCategories()?-1:1;
                 for (AppLauncher app: db().getApps(category)) {
+                    if (!app.isNormalApp()) continue;
                     String newCat = Categories.getCategoryForComponent(MainActivity.this, app.getBaseComponentName(),true,null);
                     if (newCat!=null && !newCat.equals(category)) {
                         //Log.d(TAG, app.getLabel() +" " + newCat);
                         moved++;
                         app.setCategory(newCat);
                         db().updateAppCategory(app.getComponentName(), newCat);
-                        final View appview = mAppLauncherViews.get(app);
-                        if (appview!=null) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    appview.animate().translationXBy(dir*mScreenDim.x).setDuration(mAnimationDuration).start();
-                                }
-                            });
+                        if (mAnimationDuration>0) {
+                            final View appview = mAppLauncherViews.get(app);
+                            if (appview != null) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        appview.animate().translationXBy(dir * mScreenDim.x).setDuration(mAnimationDuration).start();
+                                    }
+                                });
+                            }
                         }
                        // addAppToIconSheet(newCat, app, true);
                     }
@@ -3723,7 +3726,7 @@ public class MainActivity extends Activity implements
 
                 final String text =  getString(R.string.moved_apps, moved);
 
-                iconHandler.post(new Runnable() {
+                iconHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         db().setAppCategoryOrder(category, mIconSheets.get(category));
@@ -3731,7 +3734,7 @@ public class MainActivity extends Activity implements
                         hideHiddenCategories();
                         Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT ).show();
                     }
-                });
+                },500);
             }
         });
     }
