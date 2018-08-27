@@ -5,14 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -20,10 +14,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.quaap.launchtime.GlobState;
-import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.Categories;
 import com.quaap.launchtime.components.IconsHandler;
-import com.quaap.launchtime.components.Theme;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

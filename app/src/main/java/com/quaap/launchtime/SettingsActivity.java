@@ -15,7 +15,6 @@ import android.preference.PreferenceFragment;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.ui.MsgBox;
 
 /**

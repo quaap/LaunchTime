@@ -3,19 +3,12 @@ package com.quaap.launchtime.components;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.apps.AppLauncher;
 

@@ -1,6 +1,5 @@
 package com.quaap.launchtime.apps;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;

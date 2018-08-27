@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.IconsHandler;
-import com.quaap.launchtime.components.Theme;
 
 import java.io.BufferedReader;
 import java.io.IOException;

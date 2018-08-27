@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
@@ -24,10 +23,7 @@ import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
 import com.quaap.launchtime.components.IconPack;
 import com.quaap.launchtime.components.IconsHandler;
-import com.quaap.launchtime.components.Theme;
 import com.quaap.launchtime.ui.Style;
-
-import java.util.Set;
 
 public class ColorDemo extends Preference {
     private ViewGroup thisview;
