@@ -131,7 +131,7 @@
 
     </LinearLayout>
 
-    <com.quaap.launchtime.ui.StaticListView
+    <com.quaap.launchtime_official.ui.StaticListView
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -8,8 +8,8 @@
         android:summary="@string/pref_help_about">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.quaap.launchtime"
-            android:targetClass="com.quaap.launchtime.AboutActivity"/>
+            android:targetPackage="com.quaap.launchtime_official"
+            android:targetClass="com.quaap.launchtime_official.AboutActivity"/>
     </PreferenceScreen>
 
 
@@ -46,8 +46,8 @@
             android:summary="@string/pref_senddat_summ">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetPackage="com.quaap.launchtime"
-                android:targetClass="com.quaap.launchtime.FeedbackActivity"/>
+                android:targetPackage="com.quaap.launchtime_official"
+                android:targetClass="com.quaap.launchtime_official.FeedbackActivity"/>
         </PreferenceScreen>
 
         <PreferenceScreen
@@ -55,8 +55,8 @@
             android:summary="@string/pref_backup_summ">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetPackage="com.quaap.launchtime"
-                android:targetClass="com.quaap.launchtime.BackupActivity"/>
+                android:targetPackage="com.quaap.launchtime_official"
+                android:targetClass="com.quaap.launchtime_official.BackupActivity"/>
         </PreferenceScreen>
 
     </PreferenceCategory>
@@ -68,8 +68,8 @@
             android:title="@string/pref_color_style">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetPackage="com.quaap.launchtime"
-                android:targetClass="com.quaap.launchtime.ColorSettingsActivity"/>
+                android:targetPackage="com.quaap.launchtime_official"
+                android:targetClass="com.quaap.launchtime_official.ColorSettingsActivity"/>
         </PreferenceScreen>
 
 
@@ -83,8 +83,8 @@
             android:summary="@string/pref_customize_desc">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetPackage="com.quaap.launchtime"
-                android:targetClass="com.quaap.launchtime.CustomizeLaunchersActivity"/>
+                android:targetPackage="com.quaap.launchtime_official"
+                android:targetClass="com.quaap.launchtime_official.CustomizeLaunchersActivity"/>
         </PreferenceScreen>
 
         <ListPreference
