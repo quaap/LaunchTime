@@ -394,4 +394,9 @@
     <string name="pref_icon_tint_summ">This color will be applied to icons. To deactivate, set full transparency. To desaturate colors, use gray (where R=B=G). For full grayscale, use white.</string>
     <string name="set_wallpaper">Device wallpaper</string>
     <string name="configure_widget">Configure</string>
+    <string name="reset_wids_confirm">This will remove all widgets from LaunchTime! Continue?</string>
+ <string name="reset_wids_done">Widgets removed and reset.</string>
+ <string name="moved_apps">Apps moved: %d</string>
+ <string name="cat_recategorize">Recategorize</string>
+ <string name="recat_prompt">This action will attempt to recategorize the apps in this category, possibly moving them to other categories. Proceed?</string>
 </resources>
