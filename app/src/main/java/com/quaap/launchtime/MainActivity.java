@@ -254,13 +254,10 @@ public class MainActivity extends Activity implements
 
         mActionMenu = new ActionMenu(this);
 
+        mStyle = GlobState.getStyle(this);
 
         //Load resources and init the form members
         initUI();
-
-        mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
-
-        mIconsArea.setOnDragListener(iconSheetDropRedirector);
 
         mSearchBox = new SearchBox(this, mIconSheetScroller);
 
@@ -600,7 +597,6 @@ public class MainActivity extends Activity implements
         mCategory = mPrefs.getString("category", getTopCategory());
         latestCategory = mCategory;
 
-        mStyle = GlobState.getStyle(this);
         GlobState.getBadger(this).setBadgerCountChangeListener(this);
 
         mAppPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -3793,6 +3789,10 @@ public class MainActivity extends Activity implements
         mOpenPrefsButton = findViewById(R.id.btn_prefs);
         mOpenPrefs2Button = findViewById(R.id.btn_prefs2);
 
+        itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
+        itemClickedAnim.setDuration(200);
+        itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+
 
 
         mLinkDropzone.setOnDragListener(mMainDragListener);
@@ -3887,9 +3887,9 @@ public class MainActivity extends Activity implements
         mIconSheetScroller.setHSwipeListener(mHSwipeListener);
         mCategoriesScroller.setHSwipeListener(mHSwipeListener);
 
-        itemClickedAnim = new ScaleAnimation(.85f,1,.85f,1,Animation.RELATIVE_TO_SELF,.5f,Animation.RELATIVE_TO_SELF,.5f);
-        itemClickedAnim.setDuration(200);
-        itemClickedAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        mIconSheetHolder.setOnDragListener(iconSheetDropRedirector);
+
+        mIconsArea.setOnDragListener(iconSheetDropRedirector);
 
     }
 
@@ -3920,7 +3920,6 @@ public class MainActivity extends Activity implements
     public void showButtonBar(boolean makevisible, boolean hideCats) {
         if (mChildLock) return;
 
-
 //        StackTraceElement from = Thread.currentThread().getStackTrace()[3];
 //
 //        Log.d(TAG,"showButtonBar(" + makevisible + ", " + hideCats + ") from "  + from.getMethodName() + " line " + from.getLineNumber());
@@ -3929,7 +3928,7 @@ public class MainActivity extends Activity implements
             mActionCategory = mCategory;
             showHiddenCategories();
             if (!mActionMenu.useExtraActions()) {
-                if (mCategory.equals(Categories.CAT_SEARCH)) {
+                if (mCategory!=null && mCategory.equals(Categories.CAT_SEARCH)) {
                     mSortCategoryButton.setVisibility(View.INVISIBLE);
                     mEditWidgetsButton.setVisibility(View.INVISIBLE);
                 } else {
