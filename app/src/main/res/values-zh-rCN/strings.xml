@@ -1,0 +1,217 @@
+<resources>
+
+    <!-- Note: there are some translatable strings in prefs.xml as well -->
+
+    <string name="app_name">LaunchTime</string>
+
+
+    <string name="remove_launcher">移除</string>
+    <string name="uninstall_app">卸载</string>
+    <string name="app_was_uninstalled">应用程序已被卸载</string>
+    <string name="uninstall_canceled">已取消卸载</string>
+    <string name="could_not_uninstall">无法卸载此应用。</string>
+
+    <string name="category_Search">搜索</string>
+    <string name="category_Talk">通讯</string>
+    <string name="category_Games">游戏</string>
+    <string name="category_Internet">互网络</string>
+    <string name="category_Media">音频</string>
+    <string name="category_Graphics">图像</string>
+    <string name="category_Utilities">工具</string>
+    <string name="category_Other">其他</string>
+    <string name="category_Settings">设置</string>
+    <string name="category_Hidden">隐藏</string>
+    <string name="category_Dumb">老人机</string>
+
+    <string name="category_Search_full">搜索 &amp; 最近使用</string>
+    <string name="category_Talk_full">通讯 &amp; 社交</string>
+    <string name="category_Games_full">游戏 &amp; 娱乐</string>
+    <string name="category_Internet_full">网络</string>
+    <string name="category_Media_full">音频 &amp; 音乐</string>
+    <string name="category_Graphics_full">图像 &amp; 视频</string>
+    <string name="category_Utilities_full">工具</string>
+    <string name="category_Other_full">其他</string>
+    <string name="category_Settings_full">设置 &amp; 系统</string>
+    <string name="category_Hidden_full">隐藏</string>
+    <string name="category_Dumb_full">老人机模式</string>
+
+
+    <string name="search_apps">应用搜索</string>
+    <string name="recent_apps">最近使用</string>
+
+    <string name="sort_category">排序方式</string>
+    <string name="add_widgets">添加小部件</string>
+    <string name="add_category">新建分类</string>
+    <string name="rename_category">编辑分类</string>
+
+    <string name="remove">移除</string>
+    <string name="done">完成</string>
+    <string name="cancel">取消</string>
+    <string name="rename_cat">重命名分类</string>
+    <string name="rename_cat2">重命名此分类</string>
+    <string name="rename_cat3">重命名此特殊分类（不会影响其现有功能）</string>
+    <string name="no_rename">无法重命名此分类</string>
+    <string name="add_cat">新建分类</string>
+    <string name="add_cat2">新建分类</string>
+    <string name="no_add_cat">无法添加分类</string>
+    <string name="delete_cat">是否删除此分类？</string>
+    <string name="delete_cat_prompt">您确定要删除此分类吗？</string>
+    <string name="delete">删除</string>
+    <string name="cat_deleted">分类已删除。该分类中的应用已被移至 %s 分类</string>
+    <string name="no_delete_cat">无法删除此分类</string>
+
+    <string name="short_name">短名称</string>
+    <string name="full_name">长名称（可选）</string>
+
+
+    <string name="pref_orient">屏幕方向</string>
+    <string name="pref_about">帮助</string>
+    <string name="pref_help_about">帮助与关于</string>
+
+    <string name="send">发送</string>
+    <string name="send_comment">备注（选填）：</string>
+    <string name="remove_data">请取消选中您不想发送的项目</string>
+    <string name="sent_success">数据已成功发送。感谢您的反馈！</string>
+    <string name="sent_failed">数据传输失败：</string>
+    <string name="backup_and_restore">备份与还原</string>
+    <string name="backup_explain">If you have everything the way you like it, or are about to make         some big changes, take a backup! Please note that these backups will be deleted if you         uninstall the app, so use the \"Copy selected backup to filesystem\" button to save ones         you want to keep.</string>
+    <string name="restore_selected_backup">还原选中的备份</string>
+    <string name="delete_selected_backup">删除选中的备份</string>
+    <string name="copy_selected_backup">将选中的备份复制至用户存储</string>
+    <string name="load_a_backup">从用户存储中导入备份</string>
+    <string name="there_was_a_problem">遇到了一个问题</string>
+    <string name="add_a_comment">添加备注</string>
+    <string name="send_error_report">发送错误报告</string>
+
+    <string name="no_backup_selected">没有选中任何备份</string>
+    <string name="opt_name">可选名称 (Optional name)</string>
+    <string name="new_backup">新建备份</string>
+    <string name="backup_success">备份成功！</string>
+    <string name="backup_failed">备份失败</string>
+    <string name="confirm_restore1">是否还原？</string>
+    <string name="confirm_restore2">还原后，一切在还原点之后的作出的修改将会丢失。</string>
+    <string name="restore">还原</string>
+    <string name="restore_successful">还原成功！即将重新启动本应用。</string>
+    <string name="restore_failed_rollback">还原失败。正在退回还原前版本</string>
+    <string name="restore_failed2">还原失败。数据库状态未知。</string>
+    <string name="confirm_delete1">是否删除？</string>
+    <string name="confirm_delete2">您确定要删除此备份吗？</string>
+    <string name="delete_success">删除成功！</string>
+    <string name="delete_failed">删除失败</string>
+    <string name="copy_sucess">复制成功！</string>
+    <string name="copy_failed">复制失败</string>
+    <string name="perm_granted">成功！继续吧。</string>
+    <string name="perm_not_granted">Boo</string>
+    <string name="app">应用</string>
+    <string name="config">选项</string>
+    <string name="pref_senddat">发送应用数据</string>
+    <string name="pref_backup">备份与还原</string>
+    <string name="pref_backup_summ">备份或还原 LaunchTime 的数据（包括分类、应用顺序、最近应用，等等）</string>
+    <string name="pref_system">系统设置</string>
+    <string name="pref_system_summ">打开系统设置</string>
+    <string name="pref_tabsize">分类大小</string>
+    <string name="pref_iconsize">应用图标大小</string>
+    <string name="pref_icontext">应用名称颜色</string>
+    <string name="pref_tabtext">其他分类名称颜色</string>
+    <string name="pref_tabback">其他分类背景颜色</string>
+    <string name="pref_tabsel_text">当前分类名称颜色</string>
+    <string name="pref_tabsel">当前分类背景颜色</string>
+    <string name="pref_drag">拖动时悬停处背景颜色</string>
+    <string name="choose_your_color">请选择颜色</string>
+    <string name="red">红色</string>
+    <string name="green">绿色</string>
+    <string name="blue">蓝色</string>
+    <string name="brightness">亮度</string>
+    <string name="transparency">透明度</string>
+    <string name="pref_color_style">颜色与样式</string>
+    <string name="pref_app_system">应用与系统</string>
+    <string name="prefs_new_apps_cat">自动分类新应用</string>
+    <string name="prefs_cat_apps">新应用将被自动分类</string>
+    <string name="prefs_cat_no">新应用将被置于 “其他” 分类中</string>
+    <string name="pref_cat_loc_text">分类栏位置</string>
+    <string name="pref_cat_loc">分类栏将位于屏幕</string>
+    <string name="pref_todd_lock">保护模式</string>
+    <string name="pref_returnhome_summ">不使用桌面时，%s 后自动返回第一个分类。</string>
+    <string name="pref_returnhome">超时自动返回主分类</string>
+
+    <string name="search_hint">在此搜索。通配符为：“.”</string>
+    <string name="widget_alreay">此小部件已存在于分类 “%s” 中</string>
+
+
+    <string name="icons_pack_name">选择图标包/主题</string>
+    <string name="icons_pack_default_name">系统图标</string>
+
+    <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
+
+    <string name="sort_prompt_title">排序方式</string>
+    <string name="kid_escape_text">请输入：%s</string>
+    <string name="reset_db">是否重置数据库？</string>
+    <string name="reset_db_explain">即将重新创建数据库，所有应用将根据您的 “自动分类新应用” 设置重新分类。</string>
+    <string name="reset">重置</string>
+    <string name="clear_recent">清除最近使用的应用？</string>
+    <string name="clear">清除</string>
+    <string name="reset_database">重置数据库</string>
+
+
+
+
+    <string name="about_app">&lt;h1&gt;帮助与关于&lt;/h1&gt;             &lt;p&gt;欢迎使用 LaunchTime！&lt;/p&gt;             &lt;p&gt;LaunchTime 是开源软件。See the full license and sourcecode             &lt;a href=\"https://github.com/quaap/LaunchTime\"&gt;here&lt;/a&gt;.&lt;/p&gt;              &lt;p&gt;Report any issues, feedback, or suggestions             &lt;a href=\"https://github.com/quaap/LaunchTime/issues\"&gt;here&lt;/a&gt;.&lt;/p&gt;              &lt;p&gt;This program was written by             &lt;a href=\'http://quaap.com/D/programming-index?from=LaunchTime\'&gt;Tom Kliethermes&lt;/a&gt;&lt;/p&gt;             &lt;p&gt;To see this page again, click the small up arrow near the bottom of the screen, then            the wrench icon, then \"Help and About\".&lt;/p&gt;             &lt;h1&gt;Help&lt;/h1&gt;              &lt;p&gt;Main parts of LaunchTime:&lt;/p&gt;               &lt;p&gt;* QuickBar: The bar across the bottom which holds commonly used apps. It scrolls              left and right if needed.&lt;/p&gt;              &lt;p&gt;* Category tab: The side menu listing the categories. It scrolls up and down if              needed.&lt;/p&gt;              &lt;p&gt;* Category / Icon area: The main portion of the screen with the Apps. It scrolls up              and down if needed.&lt;/p&gt;              &lt;p&gt;* Searchbox: Search for Apps by name.  Found in the \"Search/Recent\" category.&lt;/p&gt;              &lt;p&gt;* Recent Apps: A list of Apps you\'ve used recently.  Found in the \"Search/Recent\"              category.&lt;/p&gt;              &lt;p&gt;* Action bar: Has buttons to sort, rename, and add categories, as well as add              Widgets and access the Settings menu. Click the small up arrow above the QuickBar to              display.&lt;/p&gt;                &lt;h2&gt;Moving&lt;/h2&gt;              &lt;p&gt;Apps, Widgets, and Categories can be moved and re-arranged by long clicking and             dragging them to the desired destination.&lt;/p&gt;              &lt;p&gt;To move an App or a Widget into a different category, drag it and drop it onto the             category tab. The App will be removed from the source and placed into the new             category.&lt;/p&gt;              &lt;p&gt;To place an App or a Widget into the QuickBar, drag it and drop it onto the QuickBar.             The App will remain in the original category, but will also be accessible in the             QuickBar.&lt;/p&gt;               &lt;h2&gt;Removing and Uninstalling&lt;h2&gt;              &lt;h3&gt;Uninstalling&lt;/h3&gt;              &lt;p&gt;To uninstall an App, go to the App\'s category and begin to drag the icon. The             \"Uninstall\" zone will appear in the bottom right corner. Drop the App onto the             \"Uninstall\" zone and you will be prompted to uninstall the App.&lt;/p&gt;              &lt;h3&gt;Removing&lt;/h3&gt;              &lt;p&gt;If you begin dragging a Category tab, a QuickBar icon, a Widget, a Shortcut (link),             or an icon from the Recent Apps area, a \"Remove\" zone appears instead.  If the item             is dropped in the Remove zone, the item will be removed without a prompt, but the App             will not be uninstalled.&lt;/p&gt;               &lt;h3&gt;Hiding Apps&lt;/h3&gt;              &lt;p&gt;To hide an app, begin dragging it, and the \"Hidden\" category tab will appear on             the side menu.  You may need to drag the App over the menu and hover near the bottom if              it is scrolled off the screen. Drop the app on the \"Hidden\" category tab.&lt;/p&gt;              &lt;p&gt;To access the \"Hidden\" category later, clicking the up arrow near the bottom will             display the tab, allowing you to click on it.&lt;/p&gt;               &lt;h2&gt;Searching&lt;/h2&gt;              &lt;p&gt;Go to the \"Search/Recent\" category tab.  Begin typing in the Searchbox.  Matching             Apps will be displayed below the Searchbox. You can use a period (\".\") as a wildcard             character.  If only a period is entered, all installed apps will be displayed.&lt;/p&gt;              &lt;p&gt;You can drag apps from the search results and place them into categories.&lt;/p&gt;               &lt;h2&gt;Settings&lt;/h2&gt;              &lt;p&gt;Clicking the small up arrow at the bottom right (or bottom left if you\'ve configured             a left-side menu) will expand an actions menu over the QuickBar.  This menu allows you             to Sort the current category, Rename the current category, Add a new category, Add a             Widget to the current category, and show the Settings page.&lt;/p&gt;              &lt;p&gt;Clicking the up arrow also shows any hidden category tabs to allow clicking on             them.&lt;/p&gt;               &lt;h2&gt;Widgets/AppWidgets&lt;/h2&gt;              &lt;p&gt;To add a widget to the current category, Click the small up arrow near the bottom of             the screen, then click \"Add Widget\".  A system menu will appear with the available             widgets.  Select one.  You may be prompted to \"Allow LaunchTime to access the             Widget\'s data.  You must \"accept\" to add the widget.  Clicking the \"Always allow\"             checkbox is recommended, or you will be prompted every time LaunchTime (re)starts, for             each widget you have added.&lt;/p&gt;               &lt;h2&gt;Toddler Mode&lt;/h2&gt;              &lt;p&gt;To enter \"Toddler Mode\", select the desired category, then go to the settings page             and click \"Toddler Mode\". Then click back. Once Toddler Mode is entered, the QuickBar             is hidden, the category tabs are disabled, and apps cannot be moved, removed, or             uninstalled. To exit Toddler Mode, type the code given at the bottom of the screen.&lt;/p&gt;              &lt;p&gt;This allows you to create a special category with toddler-safe apps which your             toddler is prevented from exiting.&lt;/p&gt;              &lt;p&gt;&lt;b&gt;Note that Toddler Mode is &lt;i&gt;not fool-proof&lt;/i&gt;.  For example: the status             dropdown menu will still be available, any hardware buttons will still function, and             the long-press of the \"home\" (circle) key may still bring up Google, etc.&lt;/b&gt; If             possible, I will make it \"safer\" in the future.&lt;/p&gt;               &lt;h2&gt;Backups&lt;/h2&gt;              &lt;p&gt;Backups are kept internal to the app and will be deleted if you uninstall. To save             a backup, use the \"external backup\" buttons to copy it to the filesystem.&lt;/p&gt;</string>
+    <string name="link">快捷方式</string>
+    <string name="reset_colors_title">重置主题颜色</string>
+    <string name="reset_color_summ">点击这里即可重置当前主题的颜色</string>
+    <string name="confirm_reset_colors">您确定要重置此主题的配色吗？</string>
+    <string name="colors_reset_default">颜色已重置</string>
+    <string name="theme_bw">黑白</string>
+    <string name="theme_redplanet">红色星球</string>
+    <string name="theme_ladypink">粉妆女士</string>
+
+
+    <string name="custom_icon_select_picture">从图库中选择</string>
+    <string name="custom_icon_icon_packs">从图标包中选择</string>
+    <string name="custom_icon_clear_icon">清除自定义图标</string>
+    <string name="custom_icon_select_icon_type">选择图标来源</string>
+    <string name="custom_icon_select_icon_pack">从图标包中选择</string>
+
+    <string name="custom_icon_text">设置自定义名称</string>
+    <string name="custom_instruct">点击应用图标即可更换本启动器中显示的图标，点击应用名称即可修改本启动器中显示的名称。</string>
+    <string name="pref_customize">自定义应用</string>
+    <string name="pref_customize_desc">修改启动器内显示的应用图标与名称</string>
+    <string name="user_theme">使用主题 %d</string>
+    <string name="pref_icon_tint">应用图标着色</string>
+    <string name="pref_show_badges">显示应用未读角标</string>
+    <string name="pref_hide_menu">隐藏分类栏</string>
+    <string name="pref_amimation_speed">动画时长（毫秒）</string>
+    <string name="theme_classic">经典</string>
+    <string name="nothing_in_cat">这里什么都没有</string>
+    <string name="pref_show_catlabel">显示当前分类名称</string>
+    <string name="pref_show_catlabel_summ">启用“自动隐藏分类栏”时，在顶部显示当前分类完整名称</string>
+    <string name="pref_rounded">对分类使用圆角</string>
+    <string name="pref_center">居中图标</string>
+    <string name="pref_numcolspor_label">竖屏时列数手动设置</string>
+    <string name="pref_numcolsland_label">横屏时列数手动设置</string>
+    <string name="pref_tweaks_lab">新功能与优化</string>
+    <string name="devops_warn">这些选项可能会使应用崩溃！是否继续？</string>
+    <string name="pref_show_action">长按后显示菜单</string>
+    <string name="appinfo_label">应用信息</string>
+    <string name="appinfo_insettings">在系统设置中查看</string>
+    <string name="width">宽度</string>
+    <string name="height">高度</string>
+    <string name="defaults">默认</string>
+    <string name="activate_dumbmode">老人机模式</string>
+    <string name="pref_extra_actions_title">额外的菜单操作</string>
+    <string name="pref_extra_actions_summ">将卸载/删除与应用快捷方式添加至应用和分类的长按菜单中</string>
+    <string name="pref_key_show_action_menus_summ">长按应用时显示菜单</string>
+    <string name="prompt_config_features">试试新功能吧</string>
+    <string name="hide">隐藏</string>
+    <string name="show">显示</string>
+    <string name="enable_some_new_features">试试新功能</string>
+    <string name="autohide_side_menu">在一段时间后自动隐藏侧栏</string>
+    <string name="resize">调整大小</string>
+    <string name="pref_backgroundcolor">背景颜色</string>
+    <string name="reset_wids_confirm">这将移除您在 LaunchTime 中添加的一切小部件！是否继续？</string>
+    <string name="configure_widget">选项</string>
+    <string name="moved_apps">已移动 %d 个应用</string>
+    <string name="cat_recategorize">重新自动分类</string>
+
+
+</resources>
