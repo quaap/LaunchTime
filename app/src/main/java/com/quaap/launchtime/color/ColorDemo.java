@@ -65,9 +65,11 @@ public class ColorDemo extends Preference {
                 String[] icons = ip.getUniqueIconNames(2).toArray(new String[2]);
 
                 if (icons.length > 0) {
-                    icon1.setCompoundDrawables(null, ip.get(icons[0]), null, null);
+                    Drawable d1 = ip.get(icons[0]);
+                    if (d1!=null) icon1.setCompoundDrawables(null, d1, null, null);
                     if (icons.length > 1) {
-                        icon2.setCompoundDrawables(null, ip.get(icons[1]), null, null);
+                        Drawable d2 = ip.get(icons[1]);
+                        if (d2!=null) icon2.setCompoundDrawables(null, d2, null, null);
                     }
                 }
             }
@@ -150,6 +152,7 @@ public class ColorDemo extends Preference {
     }
 
     private static Drawable getNewIf(Drawable d, Resources res) {
+        if (d==null) return res.getDrawable(R.mipmap.launcher).mutate();
         Drawable.ConstantState cd = d.getConstantState();
         if (cd!=null) {
             d = cd.newDrawable(res);
