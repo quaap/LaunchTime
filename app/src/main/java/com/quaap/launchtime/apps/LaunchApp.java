@@ -219,7 +219,10 @@ public class LaunchApp {
         if (list.size() > 0) {
             ActivityInfo ai = list.get(0).activityInfo;
             if (ai != null && (ai.permission==null || activity.checkCallingOrSelfPermission(ai.permission)==PackageManager.PERMISSION_GRANTED)) {
-                return ai.enabled && ai.exported;
+                int enabledflag = activity.getPackageManager().getComponentEnabledSetting(intent.getComponent());
+
+                return ai.exported && (enabledflag == PackageManager.COMPONENT_ENABLED_STATE_ENABLED || enabledflag == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT && ai.enabled);
+                //return ai.enabled && ai.exported;
             }
         }
         return false;

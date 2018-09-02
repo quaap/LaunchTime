@@ -694,11 +694,18 @@ public class MainActivity extends Activity implements
 
                 ResolveInfo ri = activities.get(i);
 
-                if (ri == null || ri.activityInfo==null || !ri.activityInfo.exported || !ri.activityInfo.enabled) {
+                if (ri == null || ri.activityInfo==null || !ri.activityInfo.exported) {
                     continue;
                 }
+
                 String actvname = ri.activityInfo.name;
                 ComponentName appcn = new ComponentName(ri.activityInfo.packageName, actvname);
+
+                int enabledflag = mPackageMan.getComponentEnabledSetting(appcn);
+
+                if (!(enabledflag == PackageManager.COMPONENT_ENABLED_STATE_ENABLED || (enabledflag==PackageManager.COMPONENT_ENABLED_STATE_DEFAULT && ri.activityInfo.enabled))) {
+                    continue;
+                }
 
                 if (!pmactvnames.contains(appcn)) {
                     pmactvnames.add(appcn);
