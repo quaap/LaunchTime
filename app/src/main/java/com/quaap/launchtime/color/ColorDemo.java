@@ -35,8 +35,8 @@ public class ColorDemo extends Preference {
     private final TextView catsel;
     private final TextView icon1;
     private final TextView icon2;
-    private final Drawable icond1;
-    private final Drawable icond2;
+    private Drawable icond1;
+    private Drawable icond2;
 
     private final Style style;
 
@@ -54,12 +54,20 @@ public class ColorDemo extends Preference {
         cat1 = body.findViewById(R.id.demo_category_tab);
         catsel = body.findViewById(R.id.demo_category_tab_sel);
 
-        IconsHandler iph = GlobState.getIconsHandler(context);
-
         icon1 = body.findViewById(R.id.demo_launcher);
         icon2 = body.findViewById(R.id.demo_launcher2);
 
+
+        setIcons();
+
+    }
+
+    private void setIcons() {
         try {
+            icon1.setCompoundDrawables(null, getNewIf(null, getContext().getResources()), null, null);
+            icon2.setCompoundDrawables(null, getNewIf(null, getContext().getResources()), null, null);
+
+            IconsHandler iph = GlobState.getIconsHandler(getContext());
             IconPack ip = iph.getIconPack();
             if (ip != null) {
                 String[] icons = ip.getUniqueIconNames(2).toArray(new String[2]);
@@ -71,16 +79,15 @@ public class ColorDemo extends Preference {
                         Drawable d2 = ip.get(icons[1]);
                         if (d2!=null) icon2.setCompoundDrawables(null, d2, null, null);
                     }
+
                 }
             }
         } catch (Throwable t) {
             Log.e(this.getClass().getSimpleName(), t.getMessage(), t);
         }
 
-
         icond1 = icon1.getCompoundDrawables()[1];
         icond2 = icon2.getCompoundDrawables()[1];
-
     }
 
 
@@ -134,6 +141,8 @@ public class ColorDemo extends Preference {
 
         icon1.setTextSize(TypedValue.COMPLEX_UNIT_PX, style.getLauncherFontSize()+1);
         icon1.setTextColor(style.getTextColor());
+
+        setIcons();
 
         Drawable icond1b = getNewIf(icond1, getContext().getResources());
         icond1b.setBounds(0,0,style.getLauncherIconSize(),style.getLauncherIconSize());

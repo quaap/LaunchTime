@@ -115,6 +115,7 @@ public class IconsHandler {
         // inbuilt theme icons, nothing to do
         if (theme.isBuiltinTheme(iconsPackPackageName)) {
             if (!hasusercolors) theme.getBuiltinTheme(iconsPackPackageName).applyTheme();
+            iconPack = null;
             return;
         }
         iconPack = new IconPack(ctx,iconsPackPackageName);
