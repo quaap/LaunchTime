@@ -3924,7 +3924,7 @@ public class MainActivity extends Activity implements
     }
 
 
-    //initialize the form members
+    private int upclickednum = 0;
 
     public void showButtonBar(boolean makevisible, boolean hideCats) {
         if (mChildLock) return;
@@ -3948,6 +3948,15 @@ public class MainActivity extends Activity implements
                 mStyle.animateUpShow(mIconSheetBottomFrame);
             } else {
                 mStyle.animateUpShow(mOpenPrefs2Button);
+                if (upclickednum<3) {
+                    upclickednum = mPrefs.getInt("upclicked",0);
+                    if (upclickednum<3) {
+                        Toast.makeText(this, R.string.cat_actions_moved, Toast.LENGTH_LONG).show();
+                        upclickednum++;
+                        mPrefs.edit().putInt("upclicked", upclickednum).apply();
+                    }
+                }
+
             }
             mStyle.animateDownHide(mShowButtons);
 
