@@ -886,6 +886,8 @@ public class DB extends SQLiteOpenHelper {
 
     public void setAppCategoryOrder(String catID, ViewGroup container) {
 
+        if (container==null) return;
+
         List<AppLauncher> apps = new ArrayList<>();
 
         for (int i = 0; i < container.getChildCount(); i++) {

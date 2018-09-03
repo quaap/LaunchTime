@@ -1057,6 +1057,7 @@ public class MainActivity extends Activity implements
 
 
             mIconSheet = mIconSheets.get(mCategory);
+            if (mIconSheet==null) return;
 
             //Check the screen rotation and changes column count, if needed
             checkConfig();
@@ -1684,6 +1685,7 @@ public class MainActivity extends Activity implements
 
     private void createIconSheet(String category, int pos) {
         final GridLayout iconSheet = new GridLayout(MainActivity.this);
+        if (mIconSheet == null) mIconSheet = iconSheet;
         mIconSheets.put(category, iconSheet);
         mRevCategoryMap.put(iconSheet, category);
         iconSheet.setColumnCount(mColumns);
@@ -1742,7 +1744,7 @@ public class MainActivity extends Activity implements
             // Log.d(TAG, app.getActivityName());
         }
 
-        if (apps.size()>0) {
+        if (apps.size()>0 && iconSheet!=null) {
             db().setAppCategoryOrder(category, iconSheet);
         }
         if (db().getAppCount(category) == 0) {
