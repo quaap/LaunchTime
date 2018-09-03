@@ -753,8 +753,8 @@ public class ActionMenu {
                         query.setShortcutIds(Collections.singletonList(appitem.getLinkUri()));
                         query.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED);
                         List<ShortcutInfo> shortcuts = launcherApps.getShortcuts(query,android.os.Process.myUserHandle());
+                        q.setPackage(appitem.getPackageName());
                         if (shortcuts!=null && shortcuts.size()>0) {
-                            q.setPackage(appitem.getPackageName());
                             q.setActivity(shortcuts.get(0).getActivity());
                         }
                     } else {
