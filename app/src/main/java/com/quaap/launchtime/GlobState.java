@@ -88,9 +88,9 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
         mStyle = new Style(this, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
 
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 25) {
             {
-                packrecv = new LaunchReceiver(); //extended from BroadcastReceiver class
+                packrecv = new LaunchReceiver();
                 IntentFilter i = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
                 i.addDataScheme("package");
                 registerReceiver(packrecv, i);
@@ -105,7 +105,7 @@ public class GlobState extends Application implements  DB.DBClosedListener {
 
             }
             {
-                unreadrecv = new UnreadReceiver(); //extended from BroadcastReceiver class
+                unreadrecv = new UnreadReceiver();
 
                 IntentFilter iu = new IntentFilter(UnreadReceiver.DEFAULT_ACTION);
                 registerReceiver(unreadrecv, iu);

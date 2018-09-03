@@ -35,18 +35,30 @@ public class LaunchReceiver extends BroadcastReceiver {
 
         try {
             String action = intent.getAction();
+            if (action==null) return;
 
             Uri data = intent.getData();
+            Log.d("Launchy", "intent:" + intent + ", data: " + data);
             if (data==null) return;
+
             String packageName = data.getEncodedSchemeSpecificPart();
+            if (packageName==null) return;
+
+            Intent packageIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
 
             boolean wasACTION_PACKAGE_CHANGED = false;
             if (Intent.ACTION_PACKAGE_CHANGED.equals(action)) {
                 wasACTION_PACKAGE_CHANGED = true;
                 try {
-                    PackageManager pm = context.getPackageManager();
 
-                    Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
+//                    String [] comps = intent.getStringArrayExtra(
+//                            Intent.EXTRA_CHANGED_COMPONENT_NAME_LIST);
+//
+//                    for (String cmp: comps) {
+//                        Log.d("CHANGED", " " + cmp);
+//                    }
+
+
                     if (packageIntent == null) {
                         action = Intent.ACTION_PACKAGE_REMOVED;
                     } else {
@@ -66,9 +78,6 @@ public class LaunchReceiver extends BroadcastReceiver {
                 try {
                     DB db = ((GlobState) context.getApplicationContext()).getDB();
 
-                    PackageManager pm = context.getPackageManager();
-
-                    Intent packageIntent = pm.getLaunchIntentForPackage(packageName);
                     if (packageIntent==null) {
                         return;
                     }
