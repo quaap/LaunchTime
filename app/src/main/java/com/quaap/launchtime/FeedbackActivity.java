@@ -17,7 +17,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -54,7 +53,7 @@ public class FeedbackActivity extends Activity {
 
     private final LinkedHashMap<String,String> scrubbednames = new LinkedHashMap<>();
     private final Map<String,Boolean> includes = new HashMap<>();
-    private final List<AppLauncher> apps = new ArrayList<>();
+    //private final List<AppLauncher> apps = new ArrayList<>();
     private final Map<String,AppLauncher> appMap = new HashMap<>();
     private String version;
     private String appname;
@@ -93,20 +92,20 @@ public class FeedbackActivity extends Activity {
                 }
 
                 if (count>0) {
-                    AsyncTask<Void, Void, String> sendItAsync = new AsyncTask<Void, Void, String>() {
-
+                    GlobState.execute(FeedbackActivity.this, new Runnable() {
                         @Override
-                        protected String doInBackground(Void... voids) {
-                            return sendData();
+                        public void run() {
+                            final String message = sendData();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(FeedbackActivity.this, message, Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            });
                         }
+                    });
 
-                        @Override
-                        protected void onPostExecute(String message) {
-                            Toast.makeText(FeedbackActivity.this, message, Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    };
-                    sendItAsync.execute();
                 } else {
                     Toast.makeText(FeedbackActivity.this, "Must select something, otherwise there's no point in sending!", Toast.LENGTH_LONG).show();
                 }
@@ -183,7 +182,7 @@ public class FeedbackActivity extends Activity {
         for (ComponentName componentName: actnames) {
             AppLauncher app = db.getApp(componentName);
             if (app==null) continue;
-            apps.add(app);
+            //apps.add(app);
 
             String activityname = makeCompname(componentName);
 
