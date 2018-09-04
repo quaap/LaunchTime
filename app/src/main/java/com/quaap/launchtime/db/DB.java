@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import android.database.sqlite.SQLiteStatement;
@@ -140,7 +141,19 @@ public class DB extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
         mDBClosedListener = dBClosedListener;
-        this.getWritableDatabase();//force onCreate();
+
+
+        try {
+            this.getWritableDatabase(); //force onCreate();
+        } catch (SQLiteException se) {
+            Log.e("db", se.getMessage(), se);
+            try {
+                Thread.sleep(1000);
+                this.getWritableDatabase();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (isFirstRun()) {
             Log.d("db", "first run: creating categories");
