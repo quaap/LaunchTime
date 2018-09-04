@@ -181,7 +181,7 @@ public class ColorSettingsActivity extends PreferenceActivity {
         super.onBackPressed();
         //Intent main = new Intent(this, MainActivity.class);
         ////setResult(RESULT_OK);
-        //finish();
+        finish();
         //startActivity(main);
 
     }
@@ -196,16 +196,16 @@ public class ColorSettingsActivity extends PreferenceActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        finish();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        finish();
+//    }
 
     private static void setListPreferenceIconsPacksData(ListPreference lp, Context context) {
         IconsHandler iph = GlobState.getIconsHandler(context);

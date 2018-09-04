@@ -38,36 +38,45 @@
             android:name=".SettingsActivity"
             android:label="Config"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.PREFERENCE" />
-            </intent-filter>
+            android:parentActivityName=".MainActivity"
+            android:excludeFromRecents="true"
+            android:exported="false">
         </activity>
         <activity
             android:name=".ColorSettingsActivity"
             android:label="Color Config"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".SettingsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.PREFERENCE" />
-            </intent-filter>
+            android:parentActivityName=".SettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false">
         </activity>
 
         <activity
             android:name=".FeedbackActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:parentActivityName=".SettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false" />
         <activity
             android:name=".CrashReportActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".BackupActivity" />
-        <activity android:name=".CustomizeLaunchersActivity" />
-        <activity android:name=".ChooseIconFromPackActivity" />
+        <activity android:name=".BackupActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:parentActivityName=".SettingsActivity"/>
+        <activity android:name=".CustomizeLaunchersActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:parentActivityName=".SettingsActivity"/>
+        <activity android:name=".ChooseIconFromPackActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:parentActivityName=".SettingsActivity"/>
         <activity
             android:name=".AboutActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".SettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"/>
 
         <activity android:name=".PinShortcutActivity"
             android:excludeFromRecents="true"

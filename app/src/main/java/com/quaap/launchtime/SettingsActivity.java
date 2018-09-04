@@ -145,15 +145,15 @@ public class SettingsActivity extends PreferenceActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        finish();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        finish();
+//    }
 
 }
