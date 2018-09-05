@@ -2,6 +2,7 @@ package com.quaap.launchtime.widgets;
 
 import android.appwidget.AppWidgetHostView;
 import android.content.Context;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.InputDevice;
 import android.view.MotionEvent;
@@ -34,13 +35,15 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
     private float x;
     private float y;
 
+    final int slop;
 
     public LaunchAppWidgetHostView(Context context) {
-        super(context);
+        this(context, 0, 0);
     }
 
     public LaunchAppWidgetHostView(Context context, int animationIn, int animationOut) {
         super(context, animationIn, animationOut);
+        slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     @Override
@@ -60,34 +63,39 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mLongClickListener == null) return false;
 
+       // Log.d("Widget", ev.getY() + " " + ev + " ");
 
         switch (ev.getActionMasked()) {
 
             case MotionEvent.ACTION_DOWN:
-                x=ev.getX();
-                y=ev.getY();
                 mLongClickStarted = System.currentTimeMillis();
                 final long starttime = mLongClickStarted;
-                this.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mLongClickListener != null && mLongClickStarted == starttime) {
-                            wasLong = true;
-                            mLongClickListener.onLongClick(LaunchAppWidgetHostView.this);
-                            performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                x=ev.getX();
+                y=ev.getY();
+
+                if (y>getPaddingTop()*2 && x>getPaddingLeft()*2 && y<getHeight()-getPaddingBottom()*2 && x<getWidth()-getPaddingRight()*2) {
+                    this.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mLongClickListener != null && mLongClickStarted != -1 && mLongClickStarted == starttime) {
+                                wasLong = true;
+                                mLongClickListener.onLongClick(LaunchAppWidgetHostView.this);
+                                performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                            }
                         }
-                    }
-                }, ViewConfiguration.getLongPressTimeout());
+                    }, ViewConfiguration.getLongPressTimeout());
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                final int slop  = ViewConfiguration.get(getContext()).getScaledTouchSlop();
                 if (Math.abs(x - ev.getX()) > slop || Math.abs(y - ev.getY()) > slop) { //moved too much, not a longclick
                     mLongClickStarted = -1;
+                    wasLong = false;
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_HOVER_EXIT:
             case MotionEvent.ACTION_OUTSIDE:
+                wasLong = false;
             case MotionEvent.ACTION_UP:
                 mLongClickStarted = -1;
                 if (wasLong) {                        // setSource is a hack to let us know to ignore that cancel.
@@ -95,6 +103,9 @@ public class LaunchAppWidgetHostView extends AppWidgetHostView {
                     wasLong = false;
                     return true;
                 }
+                break;
+            default:
+                Log.d("Widget", ev + " " + ev.getActionMasked() + " " + ev.getDownTime());
         }
 
 

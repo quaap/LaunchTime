@@ -2309,11 +2309,12 @@ public class MainActivity extends Activity implements
             ComponentName compName = app.getBaseComponentName();
             int bcount = GlobState.getBadger(this).getUnreadCount(compName);
             updateAppBadgeCount(item, bcount);
+
+            item.setOnLongClickListener(this);
+            item.setOnDragListener(mMainDragListener);
         }
         item.setTag(app);
         item.setClickable(true);
-        item.setOnLongClickListener(this);
-        item.setOnDragListener(mMainDragListener);
 
         if (reuse) {
             mAppLauncherViews.put(app, item);
