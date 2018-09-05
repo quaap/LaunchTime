@@ -929,13 +929,17 @@ public class DB extends SQLiteOpenHelper {
             db.delete(APP_ORDER_TABLE, CATID + "=?", new String[]{catID}); //CATID, PKGNAME, INDEX};
 
             for (int i = 0; i < actvnames.size(); i++) {
-                ContentValues values = new ContentValues();
-                values.put(CATID, catID);
-                values.put(ACTVNAME, actvnames.get(i).getClassName());
-                values.put(PKGNAME, actvnames.get(i).getPackageName());
-                values.put(INDEX, i);
-                db.insert(APP_ORDER_TABLE, null, values);
-               // Log.d("db", "  " + i + " " + actvnames.get(i).getPackageName());
+                try {
+                    ContentValues values = new ContentValues();
+                    values.put(CATID, catID);
+                    values.put(ACTVNAME, actvnames.get(i).getClassName());
+                    values.put(PKGNAME, actvnames.get(i).getPackageName());
+                    values.put(INDEX, i);
+                    db.insert(APP_ORDER_TABLE, null, values);
+                } catch (Exception e) {
+                    Log.e("LaunchDB", "Can't setAppCategoryOrder for catID " + catID, e);
+                }
+                // Log.d("db", "  " + i + " " + actvnames.get(i).getPackageName());
             }
 
             db.setTransactionSuccessful();
@@ -943,7 +947,9 @@ public class DB extends SQLiteOpenHelper {
             Log.e("LaunchDB", "Can't setAppCategoryOrder for catID " + catID, e);
 
         } finally {
-            db.endTransaction();
+            if (db.inTransaction()) {
+                db.endTransaction();
+            }
         }
     }
 
