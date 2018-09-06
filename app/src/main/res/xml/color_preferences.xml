@@ -19,40 +19,40 @@
 
         <SwitchPreference android:title="Live changes:" android:selectable="false" android:switchTextOff="" android:switchTextOn=""/>
 
-        <com.quaap.launchtime.color.ColorDemo
+        <com.quaap.launchtime_official.color.ColorDemo
             android:key="colordemo"
             android:selectable="false"
             />
 
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_backgroundcolor"
             android:key="@string/pref_key_wallpapercolor"
             android:defaultValue="@color/wallpaper_color"/>
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_icontext"
             android:key="@string/pref_key_textcolor"
             android:defaultValue="@color/textcolor"/>
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabtext"
             android:key="@string/pref_key_cattabtextcolor"
             android:defaultValue="@color/textcolor"/>
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabback"
             android:key="@string/pref_key_cattab_background"
             android:defaultValue="@color/cattab_background" />
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabsel_text"
             android:key="@string/pref_key_cattabselected_text"
             android:defaultValue="@color/cattabselected_text" />
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_tabsel"
             android:key="@string/pref_key_cattabselected_background"
             android:defaultValue="@color/cattabselected_background" />
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_drag"
             android:key="@string/pref_key_dragover_background"
             android:defaultValue="@color/dragover_background" />
-        <com.quaap.launchtime.color.ColorPreference
+        <com.quaap.launchtime_official.color.ColorPreference
             android:title="@string/pref_icon_tint"
             android:key="@string/pref_key_icon_tint"
             android:defaultValue="@color/icon_tint"

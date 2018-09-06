@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:scrollbarAlwaysDrawVerticalTrack="true"
-    tools:context="com.quaap.launchtime.color.ColorChooser">
+    tools:context="com.quaap.launchtime_official.color.ColorChooser">
 
     <LinearLayout
         android:layout_width="match_parent"
