@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Translate only the "_strings" entries -->
+
+    <string-array name="pref_autohide_cat_strings">
+        <item>Immediately</item>
+        <item>Never</item>
+        <item>After &#189; second</item>
+        <item>After 1 seconds</item>
+        <item>After 1&#189; seconds *</item>
+        <item>After 2 seconds</item>
+        <item>After 2&#189; seconds</item>
+        <item>After 3 seconds</item>
+        <item>After 4 seconds</item>
+        <item>After 15 seconds</item>
+        <item>After 30 seconds</item>
+        <item>After 60 seconds</item>
+    </string-array>
+
+    <string-array name="pref_return_home_strings">
+        <item>immediately</item>
+        <item>after 30 seconds</item>
+        <item>after 1 minute</item>
+        <item>after 5 minutes</item>
+        <item>after 30 minutes</item>
+        <item>after 1 hour</item>
+        <item>after 1 day</item>
+        <item>never</item>
+    </string-array>
+
+
+    <string-array name="pref_orientation_strings">
+        <item>System</item>
+        <item>Rotate as needed</item>
+        <item>Force Portrait</item>
+        <item>Force Landscape</item>
+    </string-array>
+
+
+    <string-array name="pref_size_strings">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>X-Large</item>
+    </string-array>
+
+
+    <string-array name="pref_cat_location_strings">
+        <item>Right</item>
+        <item>Left</item>
+    </string-array>
+    
+
+
+</resources>

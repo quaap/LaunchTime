@@ -1,3 +1,6 @@
+In 0.8.4:
+ * Fix bugs and crashes.
+
 In 0.8.3:
  * Translation help wanted!
  * Configure widgets.
