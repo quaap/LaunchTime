@@ -1,49 +1,49 @@
 <resources>
 
-    <!-- Note: there are some translatable strings in prefs.xml as well -->
+    <!-- This section translated to Spanish by MillerHollinger-->
+    <!-- á é í ó ú ñ ¡ ¿ -->
 
     <string name="app_name">LaunchTime</string>
 
+    <string name="remove_launcher">Quitar</string>
+    <string name="uninstall_app">Deinstalar</string>
+    <string name="app_was_uninstalled">La aplicación fue deinstalada</string>
+    <string name="uninstall_canceled">Deinstalacion cancelado</string>
+    <string name="could_not_uninstall">No podía deinstalar la aplicación</string>
 
-    <string name="remove_launcher">Remove</string>
-    <string name="uninstall_app">Uninstall</string>
-    <string name="app_was_uninstalled">Application was uninstalled</string>
-    <string name="uninstall_canceled">Uninstall cancelled</string>
-    <string name="could_not_uninstall">Application could not be uninstalled</string>
-
-    <string name="category_Search">Search</string>
+    <string name="category_Search">Busca</string>
     <string name="category_Talk">Comm.</string>
-    <string name="category_Games">Games</string>
+    <string name="category_Games">Videojuegos</string> <!-- Assumed "videogames" is meant. If just "Games" is meant, replace with "juegos". -->
     <string name="category_Internet">Internet</string>
     <string name="category_Media">Audio</string>
-    <string name="category_Graphics">Graphics</string>
-    <string name="category_Utilities">Utilities</string>
-    <string name="category_Other">Other</string>
-    <string name="category_Settings">Settings</string>
-    <string name="category_Hidden">Hidden</string>
-    <string name="category_Dumb">Dumb</string>
+    <string name="category_Graphics">Gráficos</string>
+    <string name="category_Utilities">Utilidades</string>
+    <string name="category_Other">Otro</string>
+    <string name="category_Settings">Configuractión</string>
+    <string name="category_Hidden">Escondido</string>
+    <string name="category_Dumb">Tonto</string>
 
-    <string name="category_Search_full">Search &amp; Recent</string>
-    <string name="category_Talk_full">Communication</string>
-    <string name="category_Games_full">Games &amp; Amusements</string>
+    <string name="category_Search_full">Busca &amp; Reciente</string>
+    <string name="category_Talk_full">Communicación</string>
+    <string name="category_Games_full">Videojuegos &amp; Diversiónes</string>
     <string name="category_Internet_full">Internet</string>
-    <string name="category_Media_full">Audio &amp; Music</string>
-    <string name="category_Graphics_full">Graphics &amp; Video</string>
-    <string name="category_Utilities_full">Utilities &amp; Tools</string>
-    <string name="category_Other_full">Other</string>
-    <string name="category_Settings_full">Settings &amp; System</string>
-    <string name="category_Hidden_full">Hidden</string>
-    <string name="category_Dumb_full">Dumb Phone</string>
+    <string name="category_Media_full">Audio &amp; Músico</string>
+    <string name="category_Graphics_full">Gráficos &amp; Video</string>
+    <string name="category_Utilities_full">Utilidades &amp; Téchnicas</string>
+    <string name="category_Other_full">Otro</string>
+    <string name="category_Settings_full">Configuractión &amp; Sistemo</string>
+    <string name="category_Hidden_full">Escondido</string>
+    <string name="category_Dumb_full">Teléfono tonto</string>
 
+    
+    <string name="search_apps">Buscar tus Apps</string>
+    <string name="recent_apps">Apps recientes</string>
 
-    <string name="search_apps">Search your Apps</string>
-    <string name="recent_apps">Recent Apps</string>
-
-    <string name="sort_category">Sort\nCategory</string>
-    <string name="add_widgets">Add\nWidgets</string>
-    <string name="add_category">Add\nCategory</string>
-    <string name="rename_category">Edit\nCategory</string>
-
+    <string name="sort_category">Clasificar\nCategoría</string>
+    <string name="add_widgets">Añadir\nAparatos</string>
+    <string name="add_category">Añadir\nCategoría</string>
+    <string name="rename_category">Editar\nCategoría</string>
+    <!-- End of translations by MillerHollinger. -->
     <string name="remove">Remove</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
@@ -64,7 +64,7 @@
     <string name="short_name">Short Name</string>
     <string name="full_name">Full Name (optional)</string>
     <string name="is_tiny">Is Tiny</string>
-
+    
 
     <string name="pref_orient">Orientation</string>
     <string name="pref_about">Help</string>
