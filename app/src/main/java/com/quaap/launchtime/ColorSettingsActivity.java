@@ -67,10 +67,13 @@ public class ColorSettingsActivity extends PreferenceActivity {
         ColorDemo colorDemo;
         SharedPreferences prefs;
         Handler handler;
+        String iconspackkey = "";
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.color_preferences);
+            iconspackkey = getString(R.string.pref_key_icons_pack);
 
             handler = new Handler();
 
@@ -116,7 +119,6 @@ public class ColorSettingsActivity extends PreferenceActivity {
 
 
             prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            prefs.registerOnSharedPreferenceChangeListener(this);
 
         }
 
@@ -154,23 +156,25 @@ public class ColorSettingsActivity extends PreferenceActivity {
 //                }
 //            });
 
+            prefs.registerOnSharedPreferenceChangeListener(this);
 
         }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, final String pref) {
 
-            final String iconspackkey = getString(R.string.pref_key_icons_pack);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (pref.equals(iconspackkey)) {
-                        reload();
-                    } else {
-                        colorDemo.applyStyle();
+            if (handler!=null && pref!=null && colorDemo!=null) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (pref.equals(iconspackkey)) {
+                            reload();
+                        } else {
+                            colorDemo.applyStyle();
+                        }
                     }
-                }
-            }, 500);
+                }, 500);
+            }
         }
 
     }
