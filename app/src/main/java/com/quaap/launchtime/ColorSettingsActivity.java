@@ -1,5 +1,6 @@
 package com.quaap.launchtime;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -81,12 +82,14 @@ public class ColorSettingsActivity extends PreferenceActivity {
 
             colorDemo.applyStyle();
 
+            final Activity activity = getActivity();
+
             Preference colorbutton = findPreference(getString(R.string.pref_key_reset_colors));
             colorbutton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
 
-                    new AlertDialog.Builder(getActivity())
+                    new AlertDialog.Builder(activity)
 
                             .setTitle(R.string.reset_colors_title)
                             .setMessage(R.string.confirm_reset_colors)
@@ -94,12 +97,14 @@ public class ColorSettingsActivity extends PreferenceActivity {
                             .setPositiveButton(R.string.reset_colors_title, new DialogInterface.OnClickListener() {
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    IconsHandler ich = GlobState.getIconsHandler(getActivity());
+                                    IconsHandler ich = GlobState.getIconsHandler(activity);
                                     ich.getTheme().resetUserColors();
-                                    Toast.makeText(getActivity(), R.string.colors_reset_default,Toast.LENGTH_SHORT).show();
+                                    if (!activity.isDestroyed() && !activity.isFinishing()) {
+                                        Toast.makeText(activity, R.string.colors_reset_default, Toast.LENGTH_SHORT).show();
+                                        reload();
+                                    }
                                     //getActivity().finish();
 
-                                    reload();
 
                                     dialog.dismiss();
                                 }
