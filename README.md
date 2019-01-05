@@ -16,7 +16,8 @@ landscape support.
 ![LaunchTime new](https://quaap.com/D/media/sc2.jpg) 
 ![LaunchTime new](https://quaap.com/D/media/sc3.jpg)
 
-_For a full feature list, see details.md_
+ _Changelog.md contains the latest features update_
 
-_For a full changelog, see changelog.md_
+_Details.md contains more details on functionality of this_
 
+_credits.md is a list of those who contribute_
