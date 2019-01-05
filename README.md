@@ -16,20 +16,6 @@ landscape support.
 ![LaunchTime new](https://quaap.com/D/media/sc2.jpg) 
 ![LaunchTime new](https://quaap.com/D/media/sc3.jpg)
 
-Features
-----------
-* Configurable app categories in a scrollable side menu.
-* Scrolling QuickBar on the bottom for easy access to your favorite apps.
-* Text search to find apps.
-* List of recent apps.
-* Multiple widget support (no resizing yet)
-* Rearrange/sort icons and menu items.
-* Shortcut/link support.
-* Supports both portrait and landscape mode.
-* Can hide apps you don't want but can't uninstall.
-* Back up and restore your settings.
-
-
 Credits
 --------
 I developed this after testing and using several alternative FOSS Launchers, the most influential
