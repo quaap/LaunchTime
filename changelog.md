@@ -1,4 +1,4 @@
---------------------------Launch Time Changelog-----------------------
+--------Launch Time Changelog--------
 New features in 0.8.2
 -----------
 * Resizable widgets!
