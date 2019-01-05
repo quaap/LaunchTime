@@ -30,7 +30,6 @@ Features
 * Back up and restore your settings.
 
 
-
 Categorization
 ----------
 On the first run, or when a new app is installed, an attempt is made to place each app into its
