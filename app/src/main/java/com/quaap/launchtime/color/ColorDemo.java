@@ -26,7 +26,6 @@ import com.quaap.launchtime.components.IconsHandler;
 import com.quaap.launchtime.ui.Style;
 
 public class ColorDemo extends Preference {
-    private ViewGroup thisview;
     private final FrameLayout body;
     private final FrameLayout bg;
     private final LinearLayout menu;
@@ -173,7 +172,7 @@ public class ColorDemo extends Preference {
 
     @Override
     protected View onCreateView(ViewGroup parent) {
-        thisview = (ViewGroup)super.onCreateView(parent);
+        ViewGroup thisview = (ViewGroup) super.onCreateView(parent);
 
         if (body.getParent()!=null) {
             ((ViewGroup)body.getParent()).removeView(body);

@@ -1127,9 +1127,13 @@ public class MainActivity extends Activity implements
                         }
                     }
 
-                    //Actually switch the icon sheet.
-                    mIconSheetHolder.removeAllViews();
-                    mIconSheetHolder.addView(mIconSheet);
+                    try {
+                        //Actually switch the icon sheet.
+                        mIconSheetHolder.removeAllViews();
+                        mIconSheetHolder.addView(mIconSheet);
+                    } catch(Exception e) {
+                        Log.e(this.getClass().getSimpleName(), "switchCategory", e);
+                    }
                 }
             }, mAnimationDuration);
 

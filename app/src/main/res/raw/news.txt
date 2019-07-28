@@ -1,3 +1,6 @@
+In 0.8.5:
+ * Small fixes and packages updates.
+
 In 0.8.4:
  * Fix bugs and crashes.
 

@@ -106,7 +106,7 @@ public class Categories {
         String category = null;
         if (uri.contains("sms") || uri.contains("call") || uri.contains("tel:") || uri.contains("contact")) {
             category = CAT_TALK;
-        } else if (uri.contains("aud") || uri.contains("aud")) {
+        } else if (uri.contains("aud") || uri.contains("snd")) {
             category = CAT_MEDIA;
         } else if (uri.contains("http")) {
             category = CAT_INTERNET;

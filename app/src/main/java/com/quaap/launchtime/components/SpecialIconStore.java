@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,7 @@ public class SpecialIconStore {
     private static String makeSafeName(String name) {
 
         try {
-            byte[] inbytes = name.getBytes("UTF-8");
+            byte[] inbytes = name.getBytes(StandardCharsets.UTF_8);
 
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] shabytes = md.digest(inbytes);

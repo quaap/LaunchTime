@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1194,7 +1195,7 @@ public class DB extends SQLiteOpenHelper {
         int count = 0;
         try {
             db.beginTransaction();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             String sql = "INSERT INTO " + APP_CAT_MAP_TABLE + " values(?,?,?,?)";
             SQLiteStatement statement = db.compileStatement(sql);
 

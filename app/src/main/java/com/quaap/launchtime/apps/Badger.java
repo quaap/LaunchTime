@@ -33,7 +33,8 @@ public class Badger {
     public Badger(Context context) {
         prefs = context.getSharedPreferences("badges", Context.MODE_PRIVATE);
         for (String cname: prefs.getAll().keySet()) {
-            unreadCount.put(ComponentName.unflattenFromString(cname), (prefs.getInt(cname, 0)));
+            ComponentName cn = ComponentName.unflattenFromString(cname);
+            if (cn!=null) unreadCount.put(cn, (prefs.getInt(cname, 0)));
         }
     }
 

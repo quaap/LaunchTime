@@ -146,7 +146,7 @@ public class IconPack {
                                         drawableName = xpp.getAttributeValue(i);
                                     }
                                 }
-                                if (!packagesDrawables.containsKey(componentName)) {
+                                if (componentName!=null && drawableName!=null && !packagesDrawables.containsKey(componentName)) {
                                     packagesDrawables.put(componentName, drawableName);
                                 }
                                 break;

@@ -29,9 +29,6 @@ import com.quaap.launchtime.components.IconsHandler;
 public class PinShortcutActivity extends Activity {
 
 
-    //private Widget mWidgetHelper;
-    private LauncherApps.PinItemRequest mRequest;
-
     @TargetApi(Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +47,8 @@ public class PinShortcutActivity extends Activity {
             return;
         }
 
-        mRequest = launcherApps.getPinItemRequest(intent);
+        //private Widget mWidgetHelper;
+        LauncherApps.PinItemRequest mRequest = launcherApps.getPinItemRequest(intent);
 
         if (mRequest == null) {
             finish();
