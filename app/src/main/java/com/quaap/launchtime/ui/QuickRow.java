@@ -102,7 +102,7 @@ public class QuickRow {
         mQuickRow.postDelayed(new Runnable() {
             @Override
             public void run() {
-                float num = mMainActivity.getScreenDimensions().x / mStyle.getLauncherSize() - 1;
+                float num = mMainActivity.getScreenDimensions().x / (float)mStyle.getLauncherSize() - 1;
 
                 //Log.d("Quick", "cols = " + num);
                 FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mQuickRow.getLayoutParams();

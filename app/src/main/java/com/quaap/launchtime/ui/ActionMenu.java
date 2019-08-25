@@ -633,7 +633,7 @@ public class ActionMenu {
 
                         //Log.d(TAG, label + " " + ri.activityInfo.packageName + " " + ri.activityInfo.name + " " + ri.activityInfo.permission);
 
-                        if (label == null || label.toString().trim().equals("") || names.contains(label.toString().trim())) {
+                        if (label.toString().trim().equals("") || names.contains(label.toString().trim())) {
                             label = ri.activityInfo.name
                                     .replaceAll("^.*[.$]|Activity", "")
                                     .replaceAll("(\\P{Lu})(\\p{Lu})", "$1 $2");
@@ -850,7 +850,7 @@ public class ActionMenu {
             itemText.setTextSize(TypedValue.COMPLEX_UNIT_SP, mStyle.getCategoryTabFontSize()-1);
 
 
-            if (label!=null && label.length()>30) label = label.substring(0,28) + "...";
+            if (label.length()>30) label = label.substring(0,28) + "...";
             itemText.setText(label);
             itemIcon = item.findViewById(R.id.action_menu_icon);
             itemIcon.setImageDrawable(icon);

@@ -106,7 +106,7 @@ public class SpecialIconStore {
     private static String makeSafeName(String name) {
 
         try {
-            byte[] inbytes = name.getBytes(StandardCharsets.UTF_8);
+            byte[] inbytes = name.getBytes("UTF-8");
 
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] shabytes = md.digest(inbytes);

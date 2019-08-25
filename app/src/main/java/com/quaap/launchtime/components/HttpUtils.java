@@ -56,7 +56,7 @@ public class HttpUtils {
                 OutputStream os = conn.getOutputStream();
                 InputStream in = null;
                 try {
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
                     writer.write(getPostDataString(postDataParams));
 
                     writer.flush();

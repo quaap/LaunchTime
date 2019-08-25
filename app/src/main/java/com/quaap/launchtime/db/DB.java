@@ -1195,7 +1195,7 @@ public class DB extends SQLiteOpenHelper {
         int count = 0;
         try {
             db.beginTransaction();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             String sql = "INSERT INTO " + APP_CAT_MAP_TABLE + " values(?,?,?,?)";
             SQLiteStatement statement = db.compileStatement(sql);
 
