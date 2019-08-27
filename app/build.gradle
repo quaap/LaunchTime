@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.quaap.launchtime"
+        applicationId "com.quaap.launchtime_official"
         minSdkVersion 18
         targetSdkVersion 28
 
