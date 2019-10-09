@@ -64,7 +64,7 @@
     <string name="is_tiny">Verkleinern</string>
 
 
-    <string name="pref_orient">Orientierung</string>
+    <string name="pref_orient">Ausrichtung</string>
     <string name="pref_about">Hilfe</string>
     <string name="pref_help_about">Hilfe und über</string>
 
@@ -76,9 +76,7 @@
     <string name="sent_success">Daten erfolgreich gesendet. Danke</string>
     <string name="sent_failed">Datentransfer fehlgeschlagen:</string>
     <string name="backup_and_restore">Sicherung und Wiederherstellung</string>
-    <string name="backup_explain">Wenn du alles so hast, wie du es magst oder du
-        große Änderungen machen willst, mache vorher ein Backup! Bitte beachte, dass diese Backups gelöscht werden, wenn die App
-        deinstalliert wird. Verwende daher die Schaltfläche "Ausgewählte Sicherung auf Dateisystem kopieren", um sie zu speichern.</string>
+    <string name="backup_explain">Wenn du alles so hast, wie du es magst oder du große Änderungen machen willst, mache vorher ein Backup! Bitte beachte, dass diese Backups gelöscht werden, wenn die App deinstalliert wird. Verwende daher die Schaltfläche "Ausgewählte Sicherung auf Dateisystem kopieren", um sie zu speichern.</string>
     <string name="take_new_backup">Neue Sicherung machen</string>
     <string name="restore_selected_backup">Wiederherstellung der ausgewählten Sicherung</string>
     <string name="delete_selected_backup">Ausgewählte Sicherung löschen</string>
@@ -94,7 +92,7 @@
     <string name="no_backup_selected">Keine ausgewählt</string>
 <string name="opt_name">optionaler Name</string>
     <string name="new_backup">Neue Sicherung</string>
-    <string name="take_backup">Take backup</string>
+    <string name="take_backup">Backup auswählen</string>
     <string name="backup_success">Sicherung erfolgreich!</string>
     <string name="backup_failed">Sicherung fehlgeschlagen</string>
     <string name="select_file_restore">Wähle Datei zum wiederherstellen</string>
@@ -105,7 +103,7 @@
     <string name="restore_successful">Wiederherstellung erfolgreich! Es wird nun neu gestartet.</string>
     <string name="restore_failed_rollback">Wiederherstellung fehlgeschlagen. Zurückrollen</string>
     <string name="restore_failed2">Wiederherstellung fehlgeschlagen. Datenbankstatus unbekannt</string>
-    <string name="confirm_delete1">löschen?</string>
+    <string name="confirm_delete1">Löschen?</string>
     <string name="confirm_delete2">Sind Sie sicher, dass die Sicherung löschen möchten \'</string>
     <string name="delete_success">Löschen erfolgreich</string>
     <string name="delete_failed">Löschen fehlgeschlagen</string>
@@ -114,7 +112,7 @@
     <string name="select_save_location">Ort zum Speichern auswählen</string>
     <string name="perm_granted">Juhu! Versuchen Sie es erneut.</string>
     <string name="perm_not_granted">Buh!</string>
-    <string name="app">app</string>
+    <string name="app">App</string>
     <string name="config">Konfiguration</string>
     <string name="previously_deleted">Bisher gelöscht</string>
     <string name="pref_senddat">App-Daten senden</string>
@@ -130,7 +128,7 @@
     <string name="pref_tabback">Registerkarte Hintergrundfarbe</string>
     <string name="pref_tabsel_text">Ausgewählte Textfarbe</string>
     <string name="pref_tabsel">Ausgewählte Farbe</string>
-    <string name="pref_drag">Drag over color</string>
+    <string name="pref_drag">Farbe beim Verschieben</string>
     <string name="choose_your_color">Wähle deine Farbe</string>
     <string name="red">Rot</string>
     <string name="green">Grün</string>
@@ -152,12 +150,10 @@
     
     
     ]]>
-    <string name="pref_todd_lock">Kleinkind-Modus</string>
-    <string name="pref_todd_lock_summ">Versuch, toddlerbezogene Schäden zu begrenzen, indem du in die
-        Aktuelle Kategorie und verhindert das Ziehen / Verschieben / Löschen. Beenden Sie, indem Sie den Code eingeben
-        Der Bildschirm.</string>
+    <string name="pref_todd_lock">Kinder-Modus</string>
+    <string name="pref_todd_lock_summ">Versucht, durch Kinder verursachte Änderungen zu begrenzen, indem die Kategorie nicht veränderbar ist und das Ziehen / Verschieben / Löschen deaktiviert ist. Beenden Sie, indem Sie den Code eingeben am Bildschirm eingeben.</string>
     <string name="pref_returnhome_summ">Wenn weg, gehen Sie in die oberste Kategorie: %s.</string>
-    <string name="pref_returnhome">Rückgabe home timeout</string>
+    <string name="pref_returnhome">Zeitlimit zurück zum Startbildschirm</string>
 
     <string name="search_hint">Suche. \". \" Ist ein Platzhalter</string>
     <string name="widget_alreay">Dieses Widget befindet sich bereits in der Kategorie \"%s\"</string><![CDATA[
@@ -165,19 +161,19 @@
 
     
     ]]>
-    <string name="icons_pack_name">Wähle iconpack / thema</string>
+    <string name="icons_pack_name">Wähle Icon Pack / Thema</string>
     <string name="icons_pack_default_name">System-Icons</string>
 
     <string name="letters">BCDFGHJKLMNPQRSTVWXZ</string>
 
 <string name="sort_prompt_title">Kategorie sortieren nach</string>
     <string name="kid_escape_text">Drücken Sie \'%s\'</string>
-    <string name="reset_db">die Datenbank zurücksetzen</string>
+    <string name="reset_db">Die Datenbank zurücksetzen?</string>
     <string name="reset_db_explain">Die Datenbank wird neu erstellt und alle Apps werden angezeigt
         Neu kategorisiert nach Ihrer \"auto-categorize apps\" Einstellung.</string>
     <string name="reset">Zurücksetzen</string>
-    <string name="clear_recent">Neue Artikel löschen</string>
-    <string name="clear">Klar</string>
+    <string name="clear_recent">Neue Elemente löschen</string>
+    <string name="clear">Löschen</string>
     <string name="reset_database">Datenbank zurücksetzen</string>
 
 
@@ -221,8 +217,7 @@
 
             <p>Hauptteile von LaunchTime:</p>
 
-             <p>* QuickBar: Die Bar über dem Boden, die häufig verwendete Apps enthält. Es rollt
-             Links und rechts, wenn nötig.</p>
+             <p>* QuickBar: Die Bar über dem Boden, die häufig verwendete Apps enthält. Es rollt links und rechts, wenn nötig.</p>
              <p>* Registerkarte Kategorie: Das Seitenmenü mit den Kategorien. Es rollt auf und ab, wenn
              Benötigt.</p>
              <p>* Kategorie / Icon-Bereich: Der Hauptteil des Bildschirms mit den Apps. Es rollt nach oben
@@ -231,46 +226,40 @@
              <p>* Aktuelle Apps: Eine Liste von Apps, die du kürzlich benutzt hast. Gefunden in der "Suche / jüngsten"
              Kategorie.</p>
              <p>* Aktionsleiste: Schaltflächen zum Sortieren, Umbenennen und Hinzufügen von Kategorien sowie Hinzufügen
-             Widgets und Zugriff auf das Menü Einstellungen. Klicken Sie auf den kleinen Pfeil oberhalb der QuickBar
-             Anzeigen.</p>
+             Widgets und Zugriff auf das Einstellungsmenü. Klicken Sie auf den kleinen Pfeil oberhalb der QuickBar
+             um es anzuzeigen.</p>
 
 
 
             <h2>Verschieben</h2>
 
-            <p>Apps, Widgets und Kategorien können durch langes Klicken verschoben und neu arrangiert werden
-            Zieht sie an das gewünschte Ziel.</p>
+            <p>Apps, Widgets und Kategorien können durch langes Klicken verschoben und neu arrangiert werden ziehen Sie sie an das gewünschte Ziel.</p>
 
-            <p>Um eine App oder ein Widget in eine andere Kategorie zu verschieben, ziehen Sie sie und legen Sie sie auf die
-            Kategorie-Tab. Die App wird aus der Quelle entfernt und in die neue platziert
-            Kategorie.</p>
+            <p>Um eine App oder ein Widget in eine andere Kategorie zu verschieben, ziehen Sie sie und legen Sie sie auf den
+              Kategorie-Tab. Die App wird aus der Quelle entfernt und in die neue Kategorie platziert.</p>
 
             <p>Um eine App oder ein Widget in die QuickBar zu platzieren, ziehen Sie sie und legen Sie sie auf die QuickBar.
-            Die App bleibt in der ursprünglichen Kategorie, wird aber auch in der
-            QuickBar.</p>
+            Die App bleibt in der ursprünglichen Kategorie, wird aber auch über der QuickBar erreichbar sein.</p>
 <h2>Entfernen und Deinstallieren<h2>
 
             <h3>Deinstallieren</h3>
 
-            <p>Um eine App zu deinstallieren, geh in die App der App und fang an, das Icon zu ziehen. Das
-            \"Uninstall \" Zone wird in der unteren rechten Ecke angezeigt. Drop die App auf die
-            \"Deinstallieren" Zone und du wirst aufgefordert, die App zu deinstallieren.</p>
+            <p>Um eine App zu deinstallieren, gehen Sie in die Kategorie der App und ziehen Sie das Icon. Die \"Deinstallieren\" Zone wird in der unteren rechten Ecke angezeigt. Ziehen Sie nun die App auf die \"Deinstallieren\" Zone und Sie werden aufgefordert, die App zu deinstallieren.</p>
 
-            <h3>Entfernen von</h3>
+            <h3>Entfernen</h3>
 
             <p>Wenn Sie anfangen, eine Registerkarte Kategorie zu ziehen, ein QuickBar-Symbol, ein Widget, eine Verknüpfung (Link),
-            Oder ein Symbol aus dem Bereich "Neuer Apps", erscheint stattdessen eine Zone "Entfernen". Wenn der Gegenstand
-            Wird in der Entfernungszone gelöscht, das Element wird ohne Aufforderung entfernt, aber die App
-            Wird nicht deinstalliert.</p>
+            oder ein Symbol aus dem Bereich "Neuer Apps", erscheint stattdessen eine Zone "Entfernen". Wenn das Element
+          in der Entfernungszone gelöscht wird, das Element wird ohne Aufforderung entfernt, aber die App
+          wird nicht deinstalliert.</p>
 
 
             <h3>Apps ausblenden</h3>
 
-            <p>Um eine App zu verstecken, ziehe sie an und es erscheint die Registerkarte "Hidden"
-            Das Seitenmenü. Möglicherweise müssen Sie die App über das Menü ziehen und in der Nähe der Unterseite schweben, wenn
-             Es wird vom Bildschirm gescrollt. Drop die App auf der Registerkarte "Hidden".</p>
+            <p>Um eine App zu verstecken, ziehe sie an und es erscheint die Registerkarte "Versteckt" beim Seitenmenü. 
+            Möglicherweise müssen Sie die App über das Menü ziehen und in der Nähe der Unterseite schweben, wenn es wird vom Bildschirm gescrollt. Drop die App auf der Registerkarte "Verstecken".</p>
 
-            <p>Um später auf die "versteckte" Kategorie zuzugreifen, klicken Sie auf den Pfeil nach unten
+            <p>Um später auf die Kategorie "Versteckt" zuzugreifen, klicken Sie auf den Pfeil nach unten
             Zeigen Sie die Registerkarte an, damit Sie darauf klicken können.</p>
 
 
@@ -304,30 +293,24 @@
             Jedes Widget, das du hinzugefügt hast.</p>
 
 
-            <h2>Kleinkind-Modus</h2>
+            <h2>Kinder-Modus</h2>
 
-            <p>Um den "Kleinkind-Modus" einzugeben, wählen Sie die gewünschte Kategorie aus und gehen dann zur Einstellungsseite
-            Und klicken Sie auf "Kleinkind-Modus". Dann klicke zurück. Sobald Kleinkind-Modus eingegeben wird, ist die QuickBar
-            Ist ausgeblendet, die Kategorien-Tabs sind deaktiviert und Apps können nicht verschoben, entfernt oder gelöscht werden
-            Deinstalliert Um den Kleinkind-Modus zu verlassen, geben Sie den Code ein, der am unteren Rand des Bildschirms angegeben wird.</p>
+            <p>Um den "Kinder-Modus" einzugeben, wählen Sie die gewünschte Kategorie aus und gehen dann zur Einstellungsseite
+            Und klicken Sie auf "Kinder-Modus". Dann klicke zurück. Sobald Kinder-Modus eingegeben wird, ist die QuickBar ausgeblendet, die Kategorien-Tabs sind deaktiviert und Apps können nicht verschoben, entfernt, gelöscht oder deinstalliert werden. Um den Kinder-Modus zu verlassen, geben Sie den Code ein, der am unteren Rand des Bildschirms angegeben wird.</p>
 
-            <p>Dies ermöglicht Ihnen, eine spezielle Kategorie mit Kleinkind-sicheren Apps zu erstellen, die Ihre
-            Kleinkind ist vom Verlassen gehindert.</p>
+            <p>Dies ermöglicht Ihnen, eine spezielle Kategorie mit Kinder-sicheren Apps zu erstellen, die Ihr
+            Kind ist vom Verlassen gehindert.</p>
 
-            <p><b>Beachten Sie, dass Kleinkind-Modus ist<i>nicht narrensicher</i>. Zum Beispiel: der Status
-            Dropdown-Menü ist immer noch verfügbar, alle Hardware-Tasten funktionieren immer noch, und
-            Die Langzeitpresse der \"home\" (Kreis) -Taste kann noch Google aufrufen, etc.</B>Wenn
-            Möglich, ich werde es "sicherer" in der Zukunft machen.</p>
+            <p><b>Beachten Sie, dass Kinder-Modus ist<i>nicht narrensicher</i>. Zum Beispiel: der Status des Dropdown-Menüs ist immer noch verfügbar, alle Hardware-Tasten funktionieren immer noch, und die Langzeitpresse der \"Home\" (Kreis) -Taste kann noch Google aufrufen, etc.</B>Wenn möglich, ich werde es "sicherer" in der Zukunft machen.</p>
 
 
             <h2>Sicherungen</h2>
 
-            <p>Sicherungen werden intern in der App gespeichert und werden gelöscht, wenn du deinstallierst. Speichern
-            Ein Backup, verwenden Sie die "externe Backup" -Tasten, um es in das Dateisystem zu kopieren.</p>
+            <p>Sicherungen werden intern in der App gespeichert und werden gelöscht, wenn Sie die App deinstallieren. Um ein Backup zu erstellen, verwenden Sie die "externe Backup" -Tasten, um es in das Dateisystem zu kopieren.</p>
 
             ]]>
     </string>
-    <string name="link">Shortcut</string>
+    <string name="link">Verknüpfung</string>
     <string name="reset_colors_title">Farben zurücksetzen</string>
     <string name="reset_color_summ">Klicken Sie hier, um die Farben des aktuellen Themas zurückzusetzen</string>
     <string name="colors_reset_default">Farben wurden zurückgesetzt</string>
@@ -335,73 +318,73 @@
     <string name="theme_termcap">Termcap</string>
     <string name="theme_coolblue">Kühles Blau</string>
     <string name="theme_redplanet">Roter Planet</string>
-    <string name="theme_ladypink">Dame in rosa</string>
+    <string name="theme_ladypink">Dame in pink</string>
     <string name="confirm_reset_colors">Möchten Sie die Farben für dieses Thema zurücksetzen?</string>
     <string name="custom_icon_clear_icon">Löschen Sie benutzerdefiniertes Symbol</string>
     <string name="custom_icon_icon_packs">Wählen Sie aus dem Icon Pack</string>
-    <string name="custom_icon_select_icon_pack">Wählen Sie icon pack</string>
+    <string name="custom_icon_select_icon_pack">Wählen Sie Icon Pack</string>
     <string name="custom_icon_select_icon_type">Wählen Sie den Symboltyp aus</string>
     <string name="custom_icon_select_picture">Bild auswählen</string>
     <string name="custom_icon_text">Set benutzerdefinierte Label</string>
     <string name="custom_instruct">Klicken Sie auf das Symbol, um das Symbol zu ändern. Klicken Sie auf den Text, um den Text zu ändern.</string>
-    <string name="pref_customize">Anpassen der App-Trägerraketen</string>
+    <string name="pref_customize">Anpassen des App Launchers</string>
     <string name="pref_customize_desc">Ändern Sie einzelne Symbole und Etiketten</string>
     <string name="pref_icon_tint">Symbol-Tönung</string>
     <string name="user_theme">Benutzer-Thema %d</string>
-    <string name="pref_show_badges">App ungelesene Zählungen anzeigen</string>
+    <string name="pref_show_badges">App ungelesene Benachrichtigungen anzeigen</string>
     <string name="pref_hide_menu">Kategorienmenü ausblenden</string>
     <string name="pref_amimation_speed">Animations millisekunden</string>
     <string name="theme_classic">Klassisch</string>
     <string name="nothing_in_cat">Nichts zu zeigen</string>
     <string name="pref_show_catlabel">Kategorielabel</string>
     <string name="pref_show_catlabel_summ">Kategorielabel im automatischen Versteckmodus anzeigen</string>
-    <string name="pref_center">Center icons</string>
-    <string name="pref_numcolspor_label">Force num columns portrait</string>
-    <string name="pref_numcolsland_label">Force num columns landscape</string>
+    <string name="pref_center">Mittige Icons</string>
+    <string name="pref_numcolspor_label">Erzwinge num columns portrait</string>
+    <string name="pref_numcolsland_label">Erzwinge num columns landscape</string>
     <string name="pref_tweaks_lab">Neue Funktionen und Verbesserungen</string>
     <string name="devops_warn">Diese Optionen können gefährlich sein! Vorgehen?</string>
     <string name="pref_rounded">Abgerundete Formen</string>
-    <string name="pref_show_action">Show action menus</string>
+    <string name="pref_show_action">Zeige Aktionsmenüs</string>
     <string name="appinfo_label">Appinfo</string>
     <string name="appinfo_insettings">In Settings</string>
-    <string name="width">Width</string>
-    <string name="height">Height</string>
-    <string name="defaults">Defaults</string>
-    <string name="activate_dumbmode">Dumbphone mode</string>
+    <string name="width">Breite</string>
+    <string name="height">Höhe</string>
+    <string name="defaults">Standard</string>
+    <string name="activate_dumbmode">Dumbphone Modus</string>
     <string name="dumbmode_summ">Lock into a special category with a useful subset of apps to reduce distractions. This is an experimental feature.</string>
     <string name="category_Dumb">Dumb</string>
     <string name="category_Dumb_full">Dumb Phone</string>
-    <string name="is_hidden">Is Hidden</string>
-    <string name="pref_extra_actions_title">Extra menu actions</string>
-    <string name="pref_key_show_action_menus_summ">Show popup menu actions on long-click of an app.</string>
-    <string name="prompt_config_features">Configure new features</string>
-    <string name="hide">Hide</string>
-    <string name="show">Show</string>
+    <string name="is_hidden">Ist versteckt</string>
+    <string name="pref_extra_actions_title">Extra Aktionsmenü</string>
+    <string name="pref_key_show_action_menus_summ">Zeige Popup Menü Aktionen bei Lang-Gedrückthalten einer App.</string>
+    <string name="prompt_config_features">Konfiguriere neue Funktionen</string>
+    <string name="hide">Verstecke</string>
+    <string name="show">Zeige</string>
     <string name="theme_transp">Transparent</string>
-    <string name="resize">Resize</string>
-    <string name="pref_backgroundcolor">Background color</string>
-    <string name="pref_extra_actions_summ">Put Uninstall, Remove, and Shortcut on action menu for apps and categories</string>
+    <string name="resize">Größe ändern</string>
+    <string name="pref_backgroundcolor">Hintergrundfarbe</string>
+    <string name="pref_extra_actions_summ">Füge Deinstallieren, Entfernen, und Verknüpfung in den Aktionsmenü der Apps und Kategorieren</string>
     <string name="enable_some_new_features">Konfigurieren Sie neue Funktionen</string>
-    <string name="autohide_side_menu">Auto-hide the side menu</string>
-    <string name="update_colors">Update colors on default theme</string>
-    <string name="switch_default_theme">Switch to default theme and update to new colors</string>
-    <string name="pref_reset_widgets">Remove and reset appWidgets</string>
-    <string name="pref_reset_widgets_text">Delete all widgets. If you have appwidgets that seem broken, try this.</string>
-    <string name="pref_show_dropzones">Show dropzones</string>
-    <string name="pref_show_drops_text">Show Uninstall, Remove, and Shortcut as dropzones.</string>
-    <string name="pref_dev_actions">DEV activities on action menus</string>
-    <string name="pref_dev_actions_text">Dev option. { } Could be DANGEROUS: Show ACTION_MAIN activites as action menu items on apps.</string>
-    <string name="theme_crystal">Crystal</string>
-    <string name="theme_charcoal">Carbon</string>
-    <string name="theme_paper">White paper</string>
-    <string name="pref_icon_tint_summ">This color will be applied to icons. To deactivate, set full transparency. To desaturate colors, use gray (where R=B=G). For full grayscale, use white.</string>
-    <string name="set_wallpaper">Device wallpaper</string>
-    <string name="configure_widget">Configure</string>
-    <string name="reset_wids_confirm">This will remove all widgets from LaunchTime! Continue?</string>
-    <string name="reset_wids_done">Widgets removed and reset.</string>
-    <string name="moved_apps">Apps moved: %d</string>
-    <string name="cat_recategorize">Recategorize</string>
-    <string name="recat_prompt">This action will attempt to recategorize the apps in this category, possibly moving them to other categories. Proceed?</string>
-    <string name="cat_actions_moved">Long-press a category name for category options</string>
+    <string name="autohide_side_menu">Automatisch ausblenden des Seitenmenü</string>
+    <string name="update_colors">Wende des Farben Standardthema an</string>
+    <string name="switch_default_theme">Wechsle zum Standardthema und update to new colors</string>
+    <string name="pref_reset_widgets">Lösche und wiederherstellen von Widgets</string>
+    <string name="pref_reset_widgets_text">Lösche alle Widgets. Wenn Sie fehlerhafte Widgets haben, versuchen Sie das.</string>
+    <string name="pref_show_dropzones">Zeige Dropzone</string>
+    <string name="pref_show_drops_text">Zeige Deinstallieren, Entfernen, und Verknüpfung als Dropzone.</string>
+    <string name="pref_dev_actions">ENTWICKLER Aktivitäten als Aktionsmenü</string>
+    <string name="pref_dev_actions_text">Entwickler Option. { } Könnte GEFÄHRLICH sein : Zeigt ACTION_MAIN Aktivitäten als Aktionitems auf dem Menü wie Apps.</string>
+    <string name="theme_crystal">Kristall</string>
+    <string name="theme_charcoal">Karbon</string>
+    <string name="theme_paper">Weißes Papier</string>
+    <string name="pref_icon_tint_summ">Diese Farbe wird auf Icons angewendet. Um es zu deaktiviren, setze es auf volle Transparenz. Um die Farben zu entsättigen, verwendete grau (wobei R=B=G). Für volle Grauskale, verwende weiß.</string>
+    <string name="set_wallpaper">Hintergrundbild setzten</string>
+    <string name="configure_widget">Konfigurieren</string>
+    <string name="reset_wids_confirm">Dies wird alle Widgets von LaunchTime entfernen! Fortführen?</string>
+    <string name="reset_wids_done">Widgets entfernt und wiederhergestellt.</string>
+    <string name="moved_apps">Apps verschoben: %d</string>
+    <string name="cat_recategorize">Rekategorisieren</string>
+    <string name="recat_prompt">Diese Aktion wird versuchen die Apps in die Kategorien zuzuordnen, möglicherweise werden die in andere Kategorien verschoben. Fortfahren?</string>
+    <string name="cat_actions_moved">Lang-Gedrückthalten einer Kategorie um Kategorieoptionen anzeigen</string>
 
 </resources>
