@@ -58,7 +58,17 @@ class AppInfo {
             PackageInfo pi = main.getPackageManager().getPackageInfo(packagename, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS | PackageManager.GET_CONFIGURATIONS);
 
             String name = pi.applicationInfo.loadLabel(main.getPackageManager()).toString();
-            itemText.setText(name);
+            String link = appitem.getLinkUri();
+            if (link == null) {
+                itemText.setText(name);
+            } else {
+                itemText.setText(main.getString(R.string.link_to, name));
+                data
+                        .append(main.getText(R.string.link))
+                        .append(":\n")
+                        .append(link)
+                        .append("\n\n");
+            }
 
             icon.setImageDrawable(pi.applicationInfo.loadIcon(main.getPackageManager()));
 
