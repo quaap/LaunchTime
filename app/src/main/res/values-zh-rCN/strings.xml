@@ -213,6 +213,6 @@
     <string name="moved_apps">已移动 %d 个应用</string>
     <string name="cat_recategorize">重新自动分类</string>
     <string name="cat_actions_moved">Long-press a category name for category options</string>
-
+   <string name="link_to">Shortcut to:\n%s</string>
 
 </resources>

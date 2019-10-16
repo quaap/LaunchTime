@@ -403,5 +403,6 @@
     <string name="cat_recategorize">Recategorize</string>
     <string name="recat_prompt">This action will attempt to recategorize the apps in this category, possibly moving them to other categories. Proceed?</string>
     <string name="cat_actions_moved">Long-press a category name for category options</string>
+   <string name="link_to">Shortcut to:\n%s</string>
 
 </resources>
