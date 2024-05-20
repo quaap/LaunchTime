@@ -606,6 +606,7 @@ co.wakarimasen.chanexplorer=In
 .google.android.apps.iosched=Ut
 .google.android.diskusage=Se
 .google.android.gms=Ut
+.google.android.gm=Co
 .google.android.location=Ut
 .google.android.maps.mytracks=Ut
 .google.android.marvin.talkback=Co

@@ -306,7 +306,7 @@ public class MainActivity extends Activity implements
     private void myResume() {
         //Check how long we've been gone
         long pausetime = mPrefs.getLong("pausetime", -1);
-        int homesetting = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_return_home), "9999999"));
+        int homesetting = Integer.parseInt(getPreference(R.string.pref_key_return_home, "9999999"));
 
 
         //We go "home" if it's been longer than the timeout
@@ -316,7 +316,7 @@ public class MainActivity extends Activity implements
             skiphome = true;
             mQuickRow.scrollToStart();
             mCategoriesScroller.smoothScrollTo(0, 0);
-        } else {
+        } else if (mCategory==null) {
             mCategory = mPrefs.getString("category", getTopCategory());
         }
 
@@ -325,7 +325,6 @@ public class MainActivity extends Activity implements
             mCategory = Categories.CAT_TALK;
         }
         switchCategory(mCategory);
-
 
         if (!skiphome) {
             //move the page to the right scroll position
@@ -468,13 +467,13 @@ public class MainActivity extends Activity implements
             if (lastvalue < 830) {
                 main.mPrefs.edit().putInt(key,830).apply();
 
-                if (main.mAppPreferences.getString(main.getString(R.string.pref_key_animate_duration), "150").equals("250")) {
+                if (main.getPreference(R.string.pref_key_animate_duration, "150").equals("250")) {
                     main.mAppPreferences.edit().putString(main.getString(R.string.pref_key_animate_duration), "150").apply();
                 }
 
                 WindowManager wm = ((WindowManager) main.getSystemService(Context.WINDOW_SERVICE));
 
-                int orientationPref = Integer.parseInt(main.mAppPreferences.getString(main.getString(R.string.pref_key_orientation), "-1"));
+                int orientationPref = Integer.parseInt(main.getPreference(R.string.pref_key_orientation, "-1"));
                 if (orientationPref==-1 && wm!=null) {
 
                     Display display = wm.getDefaultDisplay();
@@ -1127,9 +1126,13 @@ public class MainActivity extends Activity implements
                         }
                     }
 
-                    //Actually switch the icon sheet.
-                    mIconSheetHolder.removeAllViews();
-                    mIconSheetHolder.addView(mIconSheet);
+                    try {
+                        //Actually switch the icon sheet.
+                        mIconSheetHolder.removeAllViews();
+                        mIconSheetHolder.addView(mIconSheet);
+                    } catch(Exception|Error e) {
+                        Log.e(this.getClass().getSimpleName(), "switchCategory", e);
+                    }
                 }
             }, mAnimationDuration);
 
@@ -1168,13 +1171,15 @@ public class MainActivity extends Activity implements
 
         //change the selected tab to the full label name
         final TextView catTab = mCategoryTabs.get(mCategory);
+        if (catTab==null) return;
 
+        final String text = db().getCategoryDisplayFull(mCategory);
         if (mAnimationDuration>0) {
             int initheight = catTab.getHeight();
             if (catTab.getVisibility()!=View.VISIBLE) initheight = 0;
             int finalheight = initheight;
 
-            if (db().getCategoryDisplayFull(mCategory).length()>catTab.getText().length()) {
+            if (text.length()>catTab.getText().length()) {
                 finalheight = (int)(catTab.getHeight()*1.5);
             }
             if (finalheight==0) {
@@ -1183,11 +1188,11 @@ public class MainActivity extends Activity implements
             mStyle.animateChangingSize(catTab, initheight, finalheight, null, new Runnable() {
                 @Override
                 public void run() {
-                    catTab.setText(db().getCategoryDisplayFull(mCategory));
+                    catTab.setText(text);
                 }
             });
         } else {
-            catTab.setText(db().getCategoryDisplayFull(mCategory));
+            catTab.setText(text);
         }
 
         catTab.setVisibility(View.VISIBLE);
@@ -1262,6 +1267,8 @@ public class MainActivity extends Activity implements
             Log.d("LaunchTime", " new intent " + alreadyOnHome);
             if (alreadyOnHome && !mChildLock) {
 
+                //mPrefs.edit().putString("category",getTopCategory()).apply();
+                switchCategory(getTopCategory());
                 // If we are on home screen, reset most things and go to top category.
                 iconHandler.postDelayed(new Runnable() {
                     @Override
@@ -1272,7 +1279,6 @@ public class MainActivity extends Activity implements
                             mCategoriesScroller.smoothScrollTo(0, 0);
                             showButtonBar(false, true);
                             mIconSheetScroller.smoothScrollTo(0, 0);
-                            switchCategory(getTopCategory());
                             mQuickRow.scrollToStart();
                             mIconSheetScroller.smoothScrollTo(0, 0);
                             mCategoriesScroller.smoothScrollTo(0, 0);
@@ -1287,6 +1293,11 @@ public class MainActivity extends Activity implements
         }
     }
 
+    private String getPreference(int key, String defValue) {
+       String val = mAppPreferences.getString(getString(key), defValue);
+       return val==null?defValue:val;
+    }
+
     private void readPrefs() {
 
         //Checks application preferences and adjust accordingly
@@ -1299,7 +1310,7 @@ public class MainActivity extends Activity implements
             readAnimationDuration();
             mActionMenu.readActionMenuConfig();
 
-            int orientationPref = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_orientation), "0"));
+            int orientationPref = Integer.parseInt(getPreference(R.string.pref_key_orientation, "0"));
 
             switch (orientationPref) {
                 case 0:
@@ -1324,7 +1335,7 @@ public class MainActivity extends Activity implements
 
 
     private void readAnimationDuration() {
-        mAnimationDuration = Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_animate_duration), "150"));
+        mAnimationDuration = Integer.parseInt(getPreference(R.string.pref_key_animate_duration, "150"));
         mActionMenu.setAnimationDuration(mAnimationDuration);
         //if (mAnimationDuration==0) mAnimationDuration=1; //small hack to make everything still work
     }
@@ -1349,7 +1360,8 @@ public class MainActivity extends Activity implements
         boolean autohideCats = isAutohide();
         try {
 
-            String force = mAppPreferences.getString(isLandscape()?getString(R.string.pref_key_columns_landscape):getString(R.string.pref_key_columns_portrait), "0");
+            String force = isLandscape() ? getPreference(R.string.pref_key_columns_landscape, "0") : getPreference(R.string.pref_key_columns_portrait, "0");
+            //String force = mAppPreferences.getString(isLandscape()?getString(R.string.pref_key_columns_landscape):getString(R.string.pref_key_columns_portrait), "0");
             if (force.equals("0")) {
                 mScreenDim = getScreenDimensions();
                 //float launcherw = getResources().getDimension(R.dimen.launcher_width);
@@ -1601,11 +1613,11 @@ public class MainActivity extends Activity implements
     }
 
     private boolean isAutohide() {
-        return !mAppPreferences.getString(getString(R.string.pref_key_autohide_cats_timeout), "-1").equals("-1");
+        return !getPreference(R.string.pref_key_autohide_cats_timeout, "-1").equals("-1");
     }
 
     private int getAutohideTimeout() {
-        return Integer.parseInt(mAppPreferences.getString(getString(R.string.pref_key_autohide_cats_timeout), "1500"));
+        return Integer.parseInt(getPreference(R.string.pref_key_autohide_cats_timeout, "1500"));
     }
 
     public LaunchApp getAppLauncher() {
@@ -2835,7 +2847,7 @@ public class MainActivity extends Activity implements
                 return true;
             }
 
-            if (droppedOnTag!=null && droppedOnTag instanceof AppLauncher) {
+            if (droppedOnTag instanceof AppLauncher) {
                 if (((AppLauncher)droppedOnTag).isWidget()) {
                     target = (GridLayout) droppedOn.getParent();
                 }
@@ -3154,24 +3166,26 @@ public class MainActivity extends Activity implements
     private void showHiddenCategories() {
         //Log.d(TAG,"showHiddenCategories");
         for (String cat: db().getCategories()) {
-            final View cattab = mCategoryTabs.get(cat);
-            if (mCategoryTabs!=null && cat!=null && cattab!=null) {
-                if (mAnimationDuration>0 && cattab.getVisibility() == View.GONE) {
+            if (mCategoryTabs!=null) {
+                final View cattab = mCategoryTabs.get(cat);
+                if (cat != null && cattab != null) {
+                    if (mAnimationDuration > 0 && cattab.getVisibility() == View.GONE) {
 
-                    //Log.d(TAG,"showHiddenCategories " + cat);
-                    int finalheight = cattab.getHeight();
-                    if (finalheight<=0) {
-                        finalheight = 30;
-                    }
-                    mStyle.animateChangingSize(cattab, 1, finalheight, new Runnable() {
-                        @Override
-                        public void run() {
-                            cattab.setVisibility(View.VISIBLE);
+                        //Log.d(TAG,"showHiddenCategories " + cat);
+                        int finalheight = cattab.getHeight();
+                        if (finalheight <= 0) {
+                            finalheight = 30;
                         }
-                    }, null);
+                        mStyle.animateChangingSize(cattab, 1, finalheight, new Runnable() {
+                            @Override
+                            public void run() {
+                                cattab.setVisibility(View.VISIBLE);
+                            }
+                        }, null);
 
-                } else {
-                    cattab.setVisibility(View.VISIBLE);
+                    } else {
+                        cattab.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }
@@ -3184,7 +3198,7 @@ public class MainActivity extends Activity implements
         }
 
         for (String cat : db().getCategories()) {
-            boolean isNewCat = mCategoryJustCreated!=null && cat.equals(mCategoryJustCreated);
+            boolean isNewCat = cat.equals(mCategoryJustCreated);
 
             final TextView cattab = mCategoryTabs.get(cat);
 
@@ -3483,10 +3497,12 @@ public class MainActivity extends Activity implements
         if (db().updateCategory(category, newDisplayName, newDisplayFullName, isTiny, isHidden)) {
 
             TextView categoryTab = mCategoryTabs.get(category);
-            if (category.equals(mCategory)) {
-                categoryTab.setText(newDisplayFullName);
-            } else {
-                categoryTab.setText(newDisplayName);
+            if (categoryTab!=null) {
+                if (category.equals(mCategory)) {
+                    categoryTab.setText(newDisplayFullName);
+                } else {
+                    categoryTab.setText(newDisplayName);
+                }
             }
         } else {
             Toast.makeText(MainActivity.this, R.string.no_rename, Toast.LENGTH_SHORT).show();
@@ -3598,7 +3614,8 @@ public class MainActivity extends Activity implements
 
             if (category.equals(mCategory) && appsInCat) {
                 switchCategory(Categories.CAT_OTHER);
-                mCategoryTabs.get(Categories.CAT_OTHER).setVisibility(View.VISIBLE);
+                categoryTab = mCategoryTabs.get(Categories.CAT_OTHER);
+                if (categoryTab!=null) categoryTab.setVisibility(View.VISIBLE);
                 return true;
             } else if (category.equals(mCategory)) {
                 switchCategory(getTopCategory());
@@ -3921,6 +3938,7 @@ public class MainActivity extends Activity implements
         Intent settingsIntent = new Intent(activity, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         activity.startActivity(settingsIntent);
     }
 
@@ -4181,7 +4199,7 @@ public class MainActivity extends Activity implements
         static final int ADD_ICON = 1;
         static final int REMOVE_ALL_ICONS = 2;
         static final int NO_ICONS = 3;
-        static final int REMOVE_ICON = 4;
+        //static final int REMOVE_ICON = 4;
 
 
         private final WeakReference<MainActivity> instref;

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.quaap.launchtime"
-    android:versionCode="841"
-    android:versionName="0.8.4">
+    android:versionCode="850"
+    android:versionName="0.8.5">
 
     <uses-permission
         android:name="android.permission.BIND_APPWIDGET"
@@ -33,6 +33,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="quaap.com"
+                    android:pathPrefix="/LaunchTimeApp" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".SettingsActivity"
@@ -40,16 +51,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".MainActivity"
             android:excludeFromRecents="true"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".ColorSettingsActivity"
             android:label="Color Config"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".SettingsActivity"
             android:excludeFromRecents="true"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
 
         <activity
             android:name=".FeedbackActivity"
@@ -60,25 +69,29 @@
         <activity
             android:name=".CrashReportActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".BackupActivity"
+        <activity
+            android:name=".BackupActivity"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:parentActivityName=".SettingsActivity"/>
-        <activity android:name=".CustomizeLaunchersActivity"
+            android:parentActivityName=".SettingsActivity" />
+        <activity
+            android:name=".CustomizeLaunchersActivity"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:parentActivityName=".SettingsActivity"/>
-        <activity android:name=".ChooseIconFromPackActivity"
+            android:parentActivityName=".SettingsActivity" />
+        <activity
+            android:name=".ChooseIconFromPackActivity"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:parentActivityName=".SettingsActivity"/>
+            android:parentActivityName=".SettingsActivity" />
         <activity
             android:name=".AboutActivity"
             android:parentActivityName=".SettingsActivity"
             android:excludeFromRecents="true"
-            android:exported="false"/>
+            android:exported="false" />
 
-        <activity android:name=".PinShortcutActivity"
+        <activity
+            android:name=".PinShortcutActivity"
             android:excludeFromRecents="true"
             android:autoRemoveFromRecents="true"
             tools:targetApi="lollipop">

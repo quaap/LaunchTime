@@ -210,9 +210,9 @@ public class AppLauncher implements Comparable<AppLauncher> {
             mCategory = category;
             //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  cat " + category);
         } else if (autocat) {
-            mCategory = Categories.getCategoryFromPiCat(ri.activityInfo.applicationInfo);
+            mCategory = Categories.getCategoryForComponent(context, mActivityName, mPackageName, true, ri.activityInfo.applicationInfo);
             if (mCategory==null) {
-                mCategory = Categories.getCategoryForComponent(context, mActivityName, mPackageName, true, ri.activityInfo.applicationInfo);
+                mCategory = Categories.getCategoryFromPiCat(ri.activityInfo.applicationInfo);
             }
 
             //Log.d("LaunchTime", mPackageName + ", " + ri.activityInfo.name + ", " + mLabel + "  auto " + category);

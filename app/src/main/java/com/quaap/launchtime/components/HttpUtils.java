@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class HttpUtils {
     @NonNull
     public static String sendPostData(String requestURL, HashMap<String, String> postDataParams) {
         URL url;
-        String response = "";
+        StringBuilder response = new StringBuilder();
         try {
 
             System.setProperty("http.keepAlive", "false");
@@ -68,12 +69,12 @@ public class HttpUtils {
                         String line;
                         BufferedReader br = new BufferedReader(new InputStreamReader(in));
                         while ((line = br.readLine()) != null) {
-                            response += line + "\n";
+                            response.append(line).append("\n");
                         }
                         br.close();
 
                     } else {
-                        response = "Code " + responseCode;
+                        response = new StringBuilder("Code " + responseCode);
                     }
 
                 } finally {
@@ -105,9 +106,9 @@ public class HttpUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response=e.getLocalizedMessage();
+            response = new StringBuilder(e.getLocalizedMessage());
         }
-        return response;
+        return response.toString();
     }
 
 
