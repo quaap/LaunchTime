@@ -1,28 +1,28 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion=35
     defaultConfig {
-        applicationId "com.quaap.launchtime"
+        applicationId="com.quaap.launchtime"
         minSdkVersion 28
         targetSdkVersion 35
 
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled=false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     lint {
         disable 'MissingTranslation'
     }
-    buildToolsVersion '35.0.1'
+    buildToolsVersion='35.0.1'
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility=JavaVersion.VERSION_17
+        targetCompatibility=JavaVersion.VERSION_17
     }
-    namespace 'com.quaap.launchtime'
+    namespace='com.quaap.launchtime'
 }
 
 dependencies {
