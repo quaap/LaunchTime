@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="850"
-    android:versionName="0.8.5">
+    android:versionCode="860"
+    android:versionName="0.8.6">
 
     <uses-permission
         android:name="android.permission.BIND_APPWIDGET"
