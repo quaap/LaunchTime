@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.quaap.launchtime"
     android:versionCode="850"
     android:versionName="0.8.5">
 
@@ -12,10 +11,15 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+            android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
     <application
         android:name=".GlobState"
         android:allowBackup="true"
@@ -37,7 +41,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -55,14 +59,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".MainActivity"
             android:excludeFromRecents="true"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
             android:name=".ColorSettingsActivity"
             android:label="Color Config"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".SettingsActivity"
             android:excludeFromRecents="true"
-            android:exported="false"></activity>
+            android:exported="false"/>
 
         <activity
             android:name=".FeedbackActivity"
@@ -99,7 +103,7 @@
             android:excludeFromRecents="true"
             android:autoRemoveFromRecents="true"
             android:exported="true"
-            tools:targetApi="lollipop">
+            >
             <intent-filter>
                 <action android:name="android.content.pm.action.CONFIRM_PIN_SHORTCUT" />
             </intent-filter>

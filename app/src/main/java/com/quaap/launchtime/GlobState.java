@@ -108,23 +108,23 @@ public class GlobState extends Application implements  DB.DBClosedListener {
                 unreadrecv = new UnreadReceiver();
 
                 IntentFilter iu = new IntentFilter(UnreadReceiver.DEFAULT_ACTION);
-                registerReceiver(unreadrecv, iu);
+                registerReceiver(unreadrecv, iu, RECEIVER_EXPORTED);
 
                 iu = new IntentFilter(UnreadReceiver.APEX_ACTION);
-                registerReceiver(unreadrecv, iu);
+                registerReceiver(unreadrecv, iu, RECEIVER_EXPORTED);
 
                 iu = new IntentFilter(UnreadReceiver.SONY_ACTION);
-                registerReceiver(unreadrecv, iu);
+                registerReceiver(unreadrecv, iu, RECEIVER_EXPORTED);
 
                 iu = new IntentFilter(UnreadReceiver.ADW_ACTION);
-                registerReceiver(unreadrecv, iu);
+                registerReceiver(unreadrecv, iu, RECEIVER_EXPORTED);
             }
 
             {
                 shortcutrecv = new ShortcutReceiver();
 
                 IntentFilter i = new IntentFilter(ShortcutReceiver.INSTALL_SHORTCUT);
-                registerReceiver(shortcutrecv, i);
+                registerReceiver(shortcutrecv, i, RECEIVER_EXPORTED);
 
             }
 

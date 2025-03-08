@@ -277,14 +277,16 @@ public class FsTools {
 
         List<File> files = new ArrayList<>();
 
-
         try {
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(srcFile));
             try {
                 ZipEntry zipEntry;
                 while ((zipEntry = zipInputStream.getNextEntry()) !=null) {
                     File destFile = new File(destDir, zipEntry.getName());
-
+                    String canonicalPath = destFile.getCanonicalPath();
+                    if (!canonicalPath.startsWith(destDir.getCanonicalPath())) {
+                      throw new IOException("Zip file traversal");
+                    }
                     if (!destFile.getParentFile().exists()) {
                         if (!destFile.getParentFile().mkdirs()) continue;
                     }

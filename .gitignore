@@ -5,6 +5,7 @@
 /.idea/libraries
 /.idea/caches/
 /.idea/codeStyles/
+/.idea
 /app/release/
 .DS_Store
 /build

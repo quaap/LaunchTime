@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 35
     defaultConfig {
         applicationId "com.quaap.launchtime"
-        minSdkVersion 18
-        targetSdkVersion 32
+        minSdkVersion 28
+        targetSdkVersion 35
 
     }
     buildTypes {
@@ -17,6 +17,12 @@ android {
     lint {
         disable 'MissingTranslation'
     }
+    buildToolsVersion '35.0.1'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    namespace 'com.quaap.launchtime'
 }
 
 dependencies {
