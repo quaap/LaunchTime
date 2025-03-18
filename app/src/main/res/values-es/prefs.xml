@@ -36,9 +36,9 @@
 
     <string-array name="pref_orientation_strings">
         <item>Sistema</item>
-        <item>Rotate Cuando necesitado</item>
-        <item>Retrato de fuerza</item>
-        <item>Paisaje de fuerza</item>
+        <item>Rotar cuando sea necesario</item>
+        <item>Forzar Retrato</item>
+        <item>Forzar Paisaje</item>
     </string-array>
 
 
@@ -55,8 +55,8 @@
     
 
     <string-array name="pref_cat_location_strings">
-        <item>Correcto</item>
-        <item>A la izquierda</item>
+        <item>Derecha</item>
+        <item>Izquierda</item>
     </string-array>
 
     
