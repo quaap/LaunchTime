@@ -1,0 +1,90 @@
+org.mozilla.firefox,Internet|Browser
+org.aprsdroid.app,Science & Education
+se.parkster.client.android,Travel & Local
+greenzones.app,Travel & Local
+fr.tramb.park4night,Travel & Local
+eu.womo_stellplatz.finderfree,Travel & Local
+de.promobil.mobillife,Travel & Local
+de.adac.tourset,Travel & Local
+de.sky.online,Entertainment
+de.pharmatechnik.meineapotheke,Medical
+de.payback.client.android,Shopping
+de.gratisbroker.android.mobileapp,Finance
+de.ewe.go.app,Auto & Vehicles
+de.adac.mobile.pannenhilfe,Auto & Vehicles
+com.teslamotors.tesla,Auto & Vehicles
+de.etecture.ekz.onleihe,Multimedia
+de.darc.ev,News & Magazines
+com.viasat.techtools,Business
+com.valvesoftware.android.steam.community,Entertainment
+com.ubnt.usurvey,Tools
+com.ubnt.easyunifi,Tools
+com.synology.dsvideo,Videoplayer & Editors
+com.synology.DSfile,Productivity
+com.synology.DSaudio,Music & Audio
+com.solocode.anton,Science & Education
+com.eutelsat.kasatpointer,Business
+com.eutelsat.kasatpointerfma,Business
+com.enbw.ev,Auto & Vehicles
+com.ebay.mobile,Shopping
+com.ebay.kleinanzeigen,Shopping
+com.disney.disneyplus,Entertainment
+com.digitalchargingsolutions.b2c,Auto & Vehicles
+com.db.pbc.phototan.db,Finance
+com.db.businessline.cardapp,Finance
+com.campingcarpark.campingcarpark,Travel & Local
+com.amazon.mShop.android.business.shopping,Shopping
+tv.pluto.android,Entertainment
+net.thunderbird.android,Messaging
+com.ubnt.unifi.protect,Multimedia
+com.paypal.android.p2pmobile,Finance
+com.ptvag.android.adacgasprices,Auto & Vehicles
+com.liamcottle.meshcore.android,Science & Education
+io.ionic.meshcom,Science & Education
+foundation.e.browser,Internet
+foundation.e.calendar,Calendar & Agenda
+foundation.e.camera,photography
+foundation.e.mail,messaging
+app.lawnchair.play,system
+com.americanexpress.android.acctsvcs.de,finance
+com.avast.android.antivirus.one,tools
+foundation.e.apps,Internet
+foundation.e.blissweather,weather
+foundation.e.message,messaging
+foundation.e.notes,productivity
+foundation.e.pdfviewer,entertainment
+foundation.e.tasks,productivity
+advanced.scientific.calculator.calc991.plus,productivity
+appinventor.ai_elroyjetson123.Playmobil_NCC1701,game
+at.bitfire.nophonespam,system
+biz.aventer.playmobilncc1701,game
+biz.aventer.tasmotadashboard,tools
+com.coulombtech,auto & vehicles
+com.github.android,productivity
+com.google.android.projection.gearhead.xunlocked,tools
+com.ibm.de.gapp.dkv.prod,medical
+com.ihunuo.ykr_hn_2005a_tlw66,game
+com.interrait.mymazda,auto & vehicles
+com.kunzisoft.hardware.key,tools
+com.lego.legobuildinginstructions,game
+com.panasonic.technicsaudioconnect,tools
+com.phlabbe94.hamradio,Science & Education
+com.sumusltd.woad,Science & Education
+de.crystop.crystopapp,auto & vehicles
+de.eplus.mappecc.client.android.nettokom,connectivity
+de.gratisbroker.android.securetan,finance
+de.materna.bbk.mobile.app,tools
+eu.epicompany.wero.wallet,finance
+foundation.e.webapk_murenaio,system
+me.jmh.authenticatorpro,tools
+org.woheller69.dumpseeker,travel & locals
+com.dragons.aurora,system
+com.foobnix.pdf.reader,books & reference
+com.netflix.mediaclient.ui.launch.UIWebViewActivity,entertainment
+com.noctuasoftware.stellarium_free,Education
+com.stellariumlabs.stellarium.mobile.StellariumFree,Education
+com.phlabbe94.hamradio.MainActivity,Science & Education
+de.adac.mobile.navigation.ui.onboarding.StartActivity,Auto & Vehicles
+com.ricohimaging.imagesync.TitleActivity,Photography
+com.rtbishop.look4sat.presentation.MainActivity,Science & Education
+com.sierrawireless.mhswatcher.MainScreen,Communication

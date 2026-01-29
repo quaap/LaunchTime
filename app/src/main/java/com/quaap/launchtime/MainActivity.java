@@ -3716,6 +3716,20 @@ public class MainActivity extends Activity implements
         });
     }
 
+    public void promptRecategorizeAll(final String category) {
+
+        MsgBox.alert(this,
+                getString(R.string.cat_recategorize_all),
+                getString(R.string.recat_prompt_all),
+                true,
+                true,
+                new Runnable() {
+            @Override
+            public void run() {
+                recategorizeAll();
+            }
+        });
+    }
 
     public void recategorize(final String category) {
 
@@ -3754,6 +3768,49 @@ public class MainActivity extends Activity implements
                     public void run() {
                         db().setAppCategoryOrder(category, mIconSheets.get(category));
                         repopulateIconSheet(category);
+                        hideHiddenCategories();
+                        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT ).show();
+                    }
+                },500);
+            }
+        });
+    }
+
+    public void recategorizeAll() {
+
+        GlobState.execute(this, new Runnable() {
+            @Override
+            public void run() {
+                int moved = 0;
+                final int dir = mStyle.isLeftHandCategories()?-1:1;
+                for (AppLauncher app: db().getAllApps()) {
+                    if (!app.isNormalApp()) continue;
+                    String newCat = Categories.getCategoryForComponent(MainActivity.this, app.getBaseComponentName(),true,null);
+                    if (newCat!=null) {
+                        //Log.d(TAG, app.getLabel() +" " + newCat);
+                        moved++;
+                        app.setCategory(newCat);
+                        db().updateAppCategory(app.getComponentName(), newCat);
+                        if (mAnimationDuration>0) {
+                            final View appview = mAppLauncherViews.get(app);
+                            if (appview != null) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        appview.animate().translationXBy(dir * mScreenDim.x).setDuration(mAnimationDuration).start();
+                                    }
+                                });
+                            }
+                        }
+                       // addAppToIconSheet(newCat, app, true);
+                    }
+                }
+
+                final String text =  getString(R.string.moved_apps, moved);
+
+                iconHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
                         hideHiddenCategories();
                         Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT ).show();
                     }

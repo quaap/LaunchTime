@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.os.Build;
+import android.util.Log;
 
 import com.quaap.launchtime.GlobState;
 import com.quaap.launchtime.R;
@@ -14,6 +15,12 @@ import com.quaap.launchtime.db.DB;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -47,6 +54,12 @@ public class Categories {
     private static final String CAT_Utilities = "Utilities";
     public static final String CAT_OTHER = "Other";
     private static final String CAT_SETTINGS = "Settings";
+    private static final String CAT_SYSTEM = "System";
+    private static final String CAT_MONEY = "Finance";
+    private static final String CAT_HEALTH = "Health";
+    private static final String CAT_SCIENCE = "Science";
+    private static final String CAT_TRAVEL = "Travel";
+    private static final String CAT_CAR = "Car";
     public static final String CAT_HIDDEN = "Hidden";
     public static final String CAT_DUMB = "Dumb__";
 
@@ -63,13 +76,152 @@ public class Categories {
             CAT_MEDIA,
             CAT_GRAPHICS,
             CAT_Utilities,
-            CAT_SETTINGS,
+						CAT_MONEY,
+						CAT_SCIENCE,
+						CAT_HEALTH,
+						CAT_TRAVEL,
+						CAT_CAR,
+            CAT_SYSTEM,
             CAT_OTHER,
             CAT_SEARCH,
+            CAT_SETTINGS,
             CAT_HIDDEN
     };
 
     private static Map<String, String[]> mCategorKeywords;
+		private static Map<String, String> CategoryMap;
+
+		private static void loadCategories(Context context) {
+		    if (CategoryMap != null) return;
+
+		    CategoryMap = new HashMap<>();
+
+		    try (BufferedReader reader = new BufferedReader(
+		            new InputStreamReader(context.getResources().openRawResource(R.raw.apps_categories)))) {
+
+		        String line;
+		        boolean firstLine = true;
+
+		        while ((line = reader.readLine()) != null) {
+		            if (firstLine) {
+		                firstLine = false;
+		                continue;
+		            }
+
+		            String[] parts = line.split(",", 2);
+		            if (parts.length < 2) continue;
+
+		            String pkg = parts[0].trim();
+		            String categoryRaw = parts[1].trim();
+		            String firstCategory = categoryRaw.contains("|")
+		                    ? categoryRaw.substring(0, categoryRaw.indexOf("|"))
+		                    : categoryRaw;
+
+		            CategoryMap.put(pkg, firstCategory);
+		        }
+
+		        Log.d("Categories", "CSV geladen, Einträge: " + CategoryMap.size());
+
+		    } catch (Exception e) {
+		        Log.e("Categories", "CSV konnte nicht geladen werden!", e);
+		    }
+		}
+
+		public static String getCategoryFromCsv(Context context, ApplicationInfo appinfo) {
+		    if (appinfo == null) return null;
+
+				return getCategoryFromCsv(context, appinfo.packageName);
+		}
+
+		public static String getCategoryFromCsv(Context context, String pkgname) {
+		    if (pkgname == null) return null;
+		    loadCategories(context);
+
+		    String Cat = CategoryMap.get(pkgname);
+				Log.d("Categories", "Package: " + pkgname + ", Kategorie: " + Cat);
+		    if (Cat == null) return null;
+
+		    switch (Cat.toLowerCase()) {
+		        case "games":
+		        case "game":
+						case "strategy":
+						case "action":
+		            return CAT_GAMES;
+
+		        case "internet":
+		        case "browser":
+		        case "communication":
+		            return CAT_INTERNET;
+
+		        case "multimedia":
+		        case "audio":
+		        case "video":
+		        case "entertainment":
+						case "reading":
+						case "videoplayer & editors":
+						case "music & audio":
+						case "news & magazines":
+						case "books & reference":
+		            return CAT_MEDIA;
+
+		        case "graphics":
+		        case "photography":
+		        case "image":
+		            return CAT_GRAPHICS;
+
+		        case "office":
+		        case "productivity":
+		        case "task":
+		        case "writing":
+		        case "tools":
+		        case "business":
+						case "calendar & agenda":
+		            return CAT_Utilities;
+
+		        case "social":
+						case "connectivity":
+						case "messaging":
+		            return CAT_TALK;
+
+		        case "sports & health":
+						case "health & fitness":
+						case "medicine":
+						case "medical":
+						case "health":
+						case "fitness":
+		            return CAT_HEALTH;
+
+		        case "money":
+						case "finance":
+						case "bank":
+		            return CAT_MONEY;
+
+		        case "science & education":
+						case "translation & dictionary":
+						case "education":
+						case "dictionary":
+						case "translation":
+		            return CAT_SCIENCE;
+
+		        case "auto & vehicles":
+		            return CAT_CAR;
+
+		        case "travel & local":
+						case "maps & navigation":
+						case "maps":
+						case "navigation":
+						case "weather":
+						case "travel":
+		            return CAT_TRAVEL;
+
+		        case "system":
+						case "personalization":
+		            return CAT_SYSTEM;
+
+		        default:
+		            return null;
+		    }
+		}
 
     public static void init(Context context) {
         resources = context.getResources();
@@ -142,8 +294,15 @@ public class Categories {
 
     public static String getCategoryForComponent(Context context, String actvname, String pkgname, boolean guess, ApplicationInfo ai) {
 
-        String catact = getCategoryForActivity(context, actvname, false);
-        String catpack = getCategoryForPackage(context, pkgname, false);
+				String catact = getCategoryFromCsv(context, actvname);
+        if (catact == null) {
+        	catact = getCategoryForActivity(context, actvname, false);
+				}
+
+				String catpack = getCategoryFromCsv(context, pkgname);
+				if (catpack == null) {
+	        catpack = getCategoryForPackage(context, pkgname, false);
+				}
 
         String category = catact;
         if (category==null || category.equals(CAT_OTHER)) category = catpack;
@@ -191,7 +350,7 @@ public class Categories {
                     break;
 
                 case ApplicationInfo.CATEGORY_MAPS:
-                    cat = CAT_INTERNET;
+                    cat = CAT_TRAVEL;
                     break;
 
                 case ApplicationInfo.CATEGORY_NEWS:
@@ -285,6 +444,12 @@ public class Categories {
         catmap.put(CAT_SETTINGS, R.string.category_Settings);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden);
         catmap.put(CAT_DUMB, R.string.category_Dumb);
+        catmap.put(CAT_SYSTEM, R.string.category_System);
+        catmap.put(CAT_MONEY, R.string.category_Money);
+        catmap.put(CAT_SCIENCE, R.string.category_Science);
+        catmap.put(CAT_CAR, R.string.category_Car);
+        catmap.put(CAT_TRAVEL, R.string.category_Travel);
+        catmap.put(CAT_HEALTH, R.string.category_Health);
         return context.getString(catmap.get(category));
     }
 
@@ -300,6 +465,12 @@ public class Categories {
         catmap.put(CAT_OTHER, R.string.category_Other_full);
         catmap.put(CAT_SETTINGS, R.string.category_Settings_full);
         catmap.put(CAT_HIDDEN, R.string.category_Hidden_full);
+        catmap.put(CAT_SYSTEM, R.string.category_System_full);
+        catmap.put(CAT_MONEY, R.string.category_Money_full);
+        catmap.put(CAT_HEALTH, R.string.category_Health_full);
+        catmap.put(CAT_SCIENCE, R.string.category_Science_full);
+        catmap.put(CAT_CAR, R.string.category_Car_full);
+        catmap.put(CAT_TRAVEL, R.string.category_Travel_full);
         catmap.put(CAT_DUMB, R.string.category_Dumb_full);
         return context.getString(catmap.get(category));
     }

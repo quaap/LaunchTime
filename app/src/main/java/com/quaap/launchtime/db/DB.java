@@ -325,6 +325,48 @@ public class DB extends SQLiteOpenHelper {
         return appLauncher;
     }
 
+		public List<AppLauncher> getAllApps() {
+
+		    List<AppLauncher> apps = new ArrayList<>();
+
+		    SQLiteDatabase db = this.getReadableDatabase();
+		    Cursor cursor = db.query(APP_TABLE, appcolumns, null, null, null, null, null);
+
+		    try {
+		        int idxActv   = cursor.getColumnIndex(ACTVNAME);
+		        int idxPkg    = cursor.getColumnIndex(PKGNAME);
+		        int idxLabel  = cursor.getColumnIndex(LABEL);
+		        int idxCat    = cursor.getColumnIndex(CATID);
+		        int idxWidget = cursor.getColumnIndex(ISWIDGET);
+		        int idxCustom = cursor.getColumnIndex(CUSTOMLABEL);
+
+		        while (cursor.moveToNext()) {
+
+		            String actvname    = cursor.getString(idxActv);
+		            String pkgname     = cursor.getString(idxPkg);
+		            String label       = cursor.getString(idxLabel);
+		            String catID       = cursor.getString(idxCat);
+		            boolean widget     = cursor.getShort(idxWidget) == 1;
+		            String customlabel = cursor.getString(idxCustom);
+
+		            AppLauncher appLauncher = AppLauncher.createAppLauncher(
+		                    actvname,
+		                    pkgname,
+		                    customlabel == null ? label : customlabel,
+		                    catID,
+		                    widget
+		            );
+
+		            apps.add(appLauncher);
+		        }
+
+		    } finally {
+		        cursor.close();
+		    }
+
+		    return apps;
+		}
+
     public boolean appHasCustomLabel(ComponentName appname) {
         String actvname = appname.getClassName();
         String pkgname =  appname.getPackageName();

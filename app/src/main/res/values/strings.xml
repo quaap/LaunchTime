@@ -22,6 +22,12 @@
     <string name="category_Settings">Settings</string>
     <string name="category_Hidden">Hidden</string>
     <string name="category_Dumb">Dumb</string>
+    <string name="category_Health">Health</string>
+    <string name="category_System">System</string>
+    <string name="category_Money">Finance</string>
+    <string name="category_Science">Science</string>
+    <string name="category_Car">Car</string>
+    <string name="category_Travel">Travel</string>
 
     <string name="category_Search_full">Search &amp; Recent</string>
     <string name="category_Talk_full">Communication</string>
@@ -34,6 +40,12 @@
     <string name="category_Settings_full">Settings &amp; System</string>
     <string name="category_Hidden_full">Hidden</string>
     <string name="category_Dumb_full">Dumb Phone</string>
+    <string name="category_Health_full">Health</string>
+	  <string name="category_System_full">System</string>
+    <string name="category_Money_full">Finance</string>
+    <string name="category_Science_full">Science &amp; Education</string>
+    <string name="category_Car_full">Car &amp; Vehicles</string>
+    <string name="category_Travel_full">Travel &amp; Local</string>
 
 
     <string name="search_apps">Search your Apps</string>
@@ -395,7 +407,9 @@
     <string name="configure_widget">Configure</string>
     <string name="moved_apps">Apps moved: %d</string>
     <string name="cat_recategorize">Recategorize</string>
+    <string name="cat_recategorize_all">Recategorize all Categories</string>
     <string name="recat_prompt">This action will attempt to recategorize the apps in this category, possibly moving them to other categories. Proceed?</string>
+    <string name="recat_prompt_all">This action will attempt to recategorize the apps in all categories, possibly moving them to other categories. Proceed?</string>
     <string name="cat_actions_moved">Long-press a category name for category options</string>
 
 

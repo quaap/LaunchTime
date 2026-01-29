@@ -450,6 +450,12 @@ public class ActionMenu {
                         mMain.promptRecategorize(category);
                     }
                 });
+                addActionMenuItem(mMain.getString(R.string.cat_recategorize_all), android.R.drawable.ic_menu_agenda, new Runnable() {
+                    @Override
+                    public void run() {
+                        mMain.promptRecategorizeAll(category);
+                    }
+                });
             }
 
             if (!Categories.isHiddenCategory((String) categoryTab.getTag())) {

@@ -15,23 +15,35 @@
     <string name="category_Talk">Komm.</string>
     <string name="category_Games">Spiele</string>
     <string name="category_Internet">Internet</string>
-    <string name="category_Media">Audio</string>
+    <string name="category_Media">Unterhaltung</string>
     <string name="category_Graphics">Grafiken</string>
-    <string name="category_Utilities">Dienstprogramme</string>
+    <string name="category_Utilities">Tools</string>
     <string name="category_Other">Andere</string>
     <string name="category_Settings">Einstellungen</string>
     <string name="category_Hidden">Versteckt</string>
+    <string name="category_Health">Gesundheit</string>
+    <string name="category_System">System</string>
+    <string name="category_Money">Finanzen</string>
+    <string name="category_Science">Wissen</string>
+    <string name="category_Car">Autos</string>
+    <string name="category_Travel">Reisen</string>
 
     <string name="category_Search_full">Suchen &amp; Letzte</string>
     <string name="category_Talk_full">Kommunikation</string>
-    <string name="category_Games_full">Spiele &amp; Amusements</string>
+    <string name="category_Games_full">Spiele</string>
     <string name="category_Internet_full">Internet</string>
-    <string name="category_Media_full">Audio &amp; Musik</string>
+    <string name="category_Media_full">Unterhaltung</string>
     <string name="category_Graphics_full">Grafik &amp; Video</string>
-    <string name="category_Utilities_full">Dienstprogramme &amp; Werkzeuge</string>
+    <string name="category_Utilities_full">Tools &amp; Werkzeuge</string>
     <string name="category_Other_full">Andere</string>
     <string name="category_Settings_full">Einstellungen &amp; System</string>
     <string name="category_Hidden_full">Ausgeblendet</string>
+    <string name="category_Health_full">Gesundheit</string>
+    <string name="category_System_full">System</string>
+    <string name="category_Money_full">Finanzen</string>
+    <string name="category_Science_full">Wissen &amp; Lernen</string>
+    <string name="category_Car_full">Autos &amp; Fahrzeuge</string>
+    <string name="category_Travel_full">Reisen</string>
 
 
     <string name="search_apps">Apps durchsuchen</string>
@@ -244,7 +256,7 @@
 
             <h3>Deinstallieren</h3>
 
-            <p>Um eine App zu deinstallieren, gehen Sie in die Kategorie der App und ziehen Sie das Icon. Die \"Deinstallieren\" Zone wird in der unteren rechten Ecke angezeigt. Ziehen Sie nun die App auf die \"Deinstallieren\" Zone und Sie werden aufgefordert, die App zu deinstallieren.</p>
+            <p>Um eine App zu deinstallierenmain/java/com/quaap/launchtime/db/DB.java, gehen Sie in die Kategorie der App und ziehen Sie das Icon. Die \"Deinstallieren\" Zone wird in der unteren rechten Ecke angezeigt. Ziehen Sie nun die App auf die \"Deinstallieren\" Zone und Sie werden aufgefordert, die App zu deinstallieren.</p>
 
             <h3>Entfernen</h3>
 
@@ -384,7 +396,9 @@
     <string name="reset_wids_done">Widgets entfernt und wiederhergestellt.</string>
     <string name="moved_apps">Apps verschoben: %d</string>
     <string name="cat_recategorize">Rekategorisieren</string>
-    <string name="recat_prompt">Diese Aktion wird versuchen die Apps in die Kategorien zuzuordnen, möglicherweise werden die in andere Kategorien verschoben. Fortfahren?</string>
+    <string name="cat_recategorize_all">Rekategorisieren aller Kategories</string>
+    <string name="recat_prompt">Diese Aktion wird versuchen die Apps in dieser Kategorien neu zuzuordnen, möglicherweise werden die in andere Kategorien verschoben. Fortfahren?</string>
+    <string name="recat_prompt_all">Diese Aktion wird versuchen die Apps in allen Kategorien neu zuzuordnen, möglicherweise werden die in andere Kategorien verschoben. Fortfahren?</string>
     <string name="cat_actions_moved">Lang-Gedrückthalten einer Kategorie um Kategorieoptionen anzeigen</string>
 
 </resources>
