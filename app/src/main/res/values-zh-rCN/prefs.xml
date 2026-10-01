@@ -3,54 +3,176 @@
 
     <!-- Translate only the "_strings" entries -->
 
+
+    <string-array translatable="false" name="pref_columns_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+    </string-array>
+
+    <string-array translatable="false" name="pref_animate_values">
+        <item>0</item>
+        <item>50</item>
+        <item>100</item>
+        <item>150</item>
+        <item>200</item>
+        <item>250</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+    </string-array>
+
+
+    <string-array translatable="false" name="pref_autohide_cat_values">
+        <item>0</item>
+        <item>-1</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
+        <item>4000</item>
+        <item>15000</item>
+        <item>30000</item>
+        <item>60000</item>
+    </string-array>
+
     <string-array name="pref_autohide_cat_strings">
-        <item>Immediately</item>
-        <item>Never</item>
-        <item>After &#189; second</item>
-        <item>After 1 seconds</item>
-        <item>After 1&#189; seconds *</item>
-        <item>After 2 seconds</item>
-        <item>After 2&#189; seconds</item>
-        <item>After 3 seconds</item>
-        <item>After 4 seconds</item>
-        <item>After 15 seconds</item>
-        <item>After 30 seconds</item>
-        <item>After 60 seconds</item>
+        <item>离开后立即隐藏</item>
+        <item>从不隐藏</item>
+        <item>离开 &#189; 秒后</item>
+        <item>离开 1 秒后</item>
+        <item>离开 1&#189; 秒后 *</item>
+        <item>离开 2 秒后</item>
+        <item>离开 2&#189; 秒后</item>
+        <item>离开 3 秒后</item>
+        <item>离开 4 秒后</item>
+        <item>离开 15 秒后</item>
+        <item>离开 30 秒后</item>
+        <item>离开 60 秒后</item>
+    </string-array>
+
+    <string-array translatable="false" name="pref_return_home_values">
+        <item>0</item>
+        <item>30</item>
+        <item>60</item>
+        <item>300</item>
+        <item>1800</item>
+        <item>3600</item>
+        <item>86400</item>
+        <item>31536000</item>
     </string-array>
 
     <string-array name="pref_return_home_strings">
-        <item>immediately</item>
-        <item>after 30 seconds</item>
-        <item>after 1 minute</item>
-        <item>after 5 minutes</item>
-        <item>after 30 minutes</item>
-        <item>after 1 hour</item>
-        <item>after 1 day</item>
-        <item>never</item>
+        <item>立即</item>
+        <item>30 秒后</item>
+        <item>5 分钟后</item>
+        <item>1 分钟后</item>
+        <item>30 分钟后</item>
+        <item>1 小时后</item>
+        <item>1 天后</item>
+        <item>从不</item>
     </string-array>
 
+
+    <string-array translatable="false" name="pref_orientation_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
     <string-array name="pref_orientation_strings">
-        <item>System</item>
-        <item>Rotate as needed</item>
-        <item>Force Portrait</item>
-        <item>Force Landscape</item>
+        <item>跟随系统</item>
+        <item>自动旋转</item>
+        <item>强制竖屏</item>
+        <item>强制横屏</item>
     </string-array>
 
+
+    <string-array translatable="false" name="pref_tab_size_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
     <string-array name="pref_size_strings">
-        <item>Small</item>
-        <item>Medium</item>
-        <item>Large</item>
-        <item>X-Large</item>
+        <item>小杯</item>
+        <item>中杯</item>
+        <item>大杯</item>
+        <item>特大杯</item>
     </string-array>
 
+    <string translatable="false" name="pref_cat_location_values_def">right</string>
+    <string-array translatable="false" name="pref_cat_location_values">
+        <item>right</item>
+        <item>left</item>
+    </string-array>
 
     <string-array name="pref_cat_location_strings">
-        <item>Right</item>
-        <item>Left</item>
+        <item>右侧</item>
+        <item>左侧</item>
     </string-array>
-    
+
+    <string translatable="false" name="pref_iconpack_def">default</string>
+
+
+
+    <!-- keys -->
+
+    <string name="pref_key_toddler_lock" translatable="false">prefs_toddler_lock</string>
+    <string name="pref_key_dumbmode" translatable="false">prefs_dumbmode</string>
+    <string name="pref_key_autocat" translatable="false">prefs_autocat</string>
+    <string name="pref_key_categories_loc" translatable="false">pref_categories_loc</string>
+    <string name="pref_key_tabsize" translatable="false">preference_tabsize</string>
+    <string name="pref_key_iconsize" translatable="false">preference_iconsize</string>
+    <string name="pref_key_rounded_tabs" translatable="false">pref_rounded_tabs</string>
+    <string name="pref_key_center_sheet" translatable="false">pref_center_sheet</string>
+    <string name="pref_key_textcolor" translatable="false">textcolor</string>
+    <string name="pref_key_wallpapercolor" translatable="false">wallpapercolor</string>
+    <string name="pref_key_cattabtextcolor" translatable="false">cattabtextcolor</string>
+    <string name="pref_key_cattab_background" translatable="false">cattab_background</string>
+    <string name="pref_key_cattabtextcolorinv" translatable="false">cattabtextcolorinv</string>
+    <string name="pref_key_cattabselected_text" translatable="false">cattabselected_text</string>
+    <string name="pref_key_cattabselected_background" translatable="false">cattabselected_background</string>
+    <string name="pref_key_icons_pack" translatable="false">icons-pack</string>
+
+    <string name="pref_key_dragover_background" translatable="false">dragover_background</string>
+    <string name="pref_key_icon_tint" translatable="false">icon_tint</string>
+    <string name="pref_key_reset_colors" translatable="false">reset_colors</string>
+    <string name="pref_key_autohide_cats_timeout" translatable="false">pref_autohide_cats_timeout</string>
+    <string name="pref_key_cat_label" translatable="false">prefs_cat_label</string>
+    <string name="pref_key_show_badges" translatable="false">pref_show_badges</string>
+    <string name="pref_key_show_action_menus" translatable="false">pref_show_action_menus</string>
+    <string name="pref_key_show_action_extra" translatable="false">pref_show_action_extra</string>
+    <string name="pref_key_show_dropzones" translatable="false">pref_show_dropzones</string>
+    <string name="pref_key_show_action_activities" translatable="false">pref_show_action_activities</string>
+    <string name="pref_key_return_home" translatable="false">pref_return_home</string>
+    <string name="pref_key_orientation" translatable="false">preference_orientation</string>
+    <string name="pref_key_columns_portrait" translatable="false">pref_columns_portrait</string>
+    <string name="pref_key_columns_landscape" translatable="false">pref_columns_landscape</string>
+    <string name="pref_key_animate_duration" translatable="false">pref_animate_duration</string>
+    <string name="pref_key_use_fullscreen" translatable="false">pref_use_fullscreen</string>
+    <string name="pref_key_conf_new_features" translatable="false">pref_conf_new_features</string>
+    <string name="pref_key_reset_widgets" translatable="false">pref_reset_widgets</string>
+
+
 
 
 </resources>
